@@ -80,6 +80,9 @@ class FirstIntro extends StatelessWidget {
                           height: 250,
                         ),
                       ),
+                      SizedBox(
+                        height: 20,
+                      ),
                       GestureDetector(
                           child: Center(
                             child: Container(

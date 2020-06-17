@@ -16,13 +16,6 @@ class _ThirdIntroState extends State<ThirdIntro> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Center(
-                child: Image.asset(
-                  'assets/images/logo.png',
-                  width: 30,
-                  height: 30,
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.only(left: 300),
                 child: Container(
@@ -72,7 +65,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                 ),
               ),
               SizedBox(
-                height: 25,
+                height: 35,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -91,6 +84,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                     SizedBox(height: 6),
                     Text('Add Image'),
                   ]),
+                  SizedBox(height: 12),
                   Column(children: [
                     Container(
                         width: 100,
@@ -108,7 +102,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                   ])
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 30),
               Form(
                   child: Column(
                 children: [
@@ -136,7 +130,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                         )),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 200, top: 15),
+                    padding: const EdgeInsets.only(right: 200, top: 25),
                     child: Text(
                       'Quantity in Stock',
                       style: TextStyle(fontSize: 17),
@@ -149,7 +143,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                         'Total Products available in Stock',
                         style: TextStyle(fontSize: 12, color: Colors.red),
                       ),
-                      SizedBox(width: 90),
+                      SizedBox(width: 70),
                       Container(
                         width: 60,
                         height: 30,
@@ -166,7 +160,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                     ]),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 17, right: 17),
+                    padding: const EdgeInsets.only(left: 25, right: 25),
                     child: SliderTheme(
                       data: SliderTheme.of(context).copyWith(
                         activeTrackColor: Colors.grey[400],
@@ -206,7 +200,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                     'When to alert on low stock',
                     style: TextStyle(fontSize: 12, color: Colors.red),
                   ),
-                  SizedBox(width: 120),
+                  SizedBox(width: 80),
                   Container(
                     width: 60,
                     height: 30,
@@ -223,7 +217,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                 ]),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 17, right: 17),
+                padding: const EdgeInsets.only(left: 25, right: 25),
                 child: SliderTheme(
                   data: SliderTheme.of(context).copyWith(
                     activeTrackColor: Colors.grey[400],
