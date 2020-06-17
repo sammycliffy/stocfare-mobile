@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/intro_pages/second_intro.dart';
 
 class FirstIntro extends StatelessWidget {
   @override
@@ -79,20 +80,27 @@ class FirstIntro extends StatelessWidget {
                           height: 250,
                         ),
                       ),
-                      Center(
-                        child: Container(
-                          height: 40,
-                          width: 200,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.red),
-                              borderRadius: BorderRadius.circular(20)),
+                      GestureDetector(
                           child: Center(
-                              child: Text(
-                            'Explore',
-                            style: TextStyle(color: Colors.red),
-                          )),
-                        ),
-                      )
+                            child: Container(
+                              height: 40,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Center(
+                                  child: Text(
+                                'Explore',
+                                style: TextStyle(color: Colors.red),
+                              )),
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SecondIntro()));
+                          })
                     ]),
               )
             ],
