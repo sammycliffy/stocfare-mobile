@@ -14,71 +14,16 @@ class _FourthIntroPageState extends State<FourthIntroPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(10.0),
+            child: appBar(context),
+          )),
+      body: ListView(
         children: [
           SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10, left: 50),
-            child: Container(
-              height: 40,
-              width: 320,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.red, width: 3)),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    child: Container(
-                      height: 40,
-                      width: 150,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(15),
-                            bottomLeft: Radius.circular(15)),
-                      ),
-                      child: Center(
-                          child: Text(
-                        'Add Single Product',
-                        style: TextStyle(color: Colors.red),
-                      )),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  SizedBox(
-                    width: 14,
-                  ),
-                  GestureDetector(
-                    child: Container(
-                      height: 40,
-                      width: 150,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(15),
-                            bottomRight: Radius.circular(15)),
-                      ),
-                      child: Center(
-                          child: Text(
-                        'Add Multiple Product',
-                        style: TextStyle(color: Colors.white),
-                      )),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ThirdIntro()));
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
           SizedBox(
             height: 40,
           ),
@@ -245,6 +190,30 @@ class _FourthIntroPageState extends State<FourthIntroPage> {
                               },
                             ),
                           ),
+                          GestureDetector(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 5, left: 200),
+                              child: Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.grey, width: 3),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Center(
+                                    child: Icon(Icons.assessment,
+                                        color: Colors.grey, size: 40)),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 200),
+                            child: Text('Add Barcode'),
+                          )
                         ],
                       ),
                     ),
@@ -257,4 +226,65 @@ class _FourthIntroPageState extends State<FourthIntroPage> {
       ),
     );
   }
+}
+
+Widget appBar(context) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 10, left: 12),
+    child: Container(
+      height: 40,
+      width: 320,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.red, width: 3)),
+      child: Row(
+        children: [
+          GestureDetector(
+            child: Container(
+              height: 40,
+              width: 150,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    bottomLeft: Radius.circular(15)),
+              ),
+              child: Center(
+                  child: Text(
+                'Add Single Product',
+                style: TextStyle(color: Colors.red),
+              )),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          SizedBox(
+            width: 14,
+          ),
+          GestureDetector(
+            child: Container(
+              height: 40,
+              width: 150,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(15),
+                    bottomRight: Radius.circular(15)),
+              ),
+              child: Center(
+                  child: Text(
+                'Add Multiple Product',
+                style: TextStyle(color: Colors.white),
+              )),
+            ),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ThirdIntro()));
+            },
+          ),
+        ],
+      ),
+    ),
+  );
 }

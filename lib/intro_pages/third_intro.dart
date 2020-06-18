@@ -120,7 +120,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                       border: InputBorder.none,
                     )),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.only(left: 40, right: 40),
                 child: TextFormField(
@@ -132,8 +132,20 @@ class _ThirdIntroState extends State<ThirdIntro> {
                       border: InputBorder.none,
                     )),
               ),
+              SizedBox(height: 10),
               Padding(
-                padding: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.only(left: 40, right: 40),
+                child: TextFormField(
+                    validator: (val) =>
+                        val.length < 11 ? 'Enter a valid Phone no' : null,
+                    decoration: InputDecoration(
+                      hintText: 'Unit Price',
+                      filled: true,
+                      border: InputBorder.none,
+                    )),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 180, top: 25),
                 child: Text(
                   'Quantity in Stock',
                   style: TextStyle(fontSize: 17),
