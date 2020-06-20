@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:stockfare_mobile/intro_pages/second_intro.dart';
 
 class FirstIntro extends StatelessWidget {
@@ -89,7 +90,8 @@ class FirstIntro extends StatelessWidget {
                               height: 40,
                               width: 200,
                               decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.red),
+                                  border:
+                                      Border.all(color: Colors.red, width: 3),
                                   borderRadius: BorderRadius.circular(20)),
                               child: Center(
                                   child: Text(
@@ -101,8 +103,10 @@ class FirstIntro extends StatelessWidget {
                           onTap: () {
                             Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => SecondIntro()));
+                                PageTransition(
+                                    type:
+                                        PageTransitionType.leftToRightWithFade,
+                                    child: SecondIntro()));
                           })
                     ]),
               )

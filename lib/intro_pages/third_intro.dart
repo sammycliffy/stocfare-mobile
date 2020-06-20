@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:stockfare_mobile/intro_pages/multiple_product.dart';
+import 'package:stockfare_mobile/intro_pages/success_product.dart';
+
+import 'common_intro_widgets/app_bar.dart';
 
 class ThirdIntro extends StatefulWidget {
   @override
@@ -14,59 +18,17 @@ class _ThirdIntroState extends State<ThirdIntro> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(10.0),
+            child: AppBarProducts(),
+          )),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(height: 20),
-          Container(
-            height: 40,
-            width: 320,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.red, width: 3)),
-            child: Row(
-              children: [
-                Container(
-                  height: 40,
-                  width: 150,
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        bottomLeft: Radius.circular(15)),
-                  ),
-                  child: Center(
-                      child: Text(
-                    'Add Single Product',
-                    style: TextStyle(color: Colors.white),
-                  )),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                GestureDetector(
-                  child: Container(
-                    height: 40,
-                    width: 150,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(15),
-                          bottomRight: Radius.circular(15)),
-                    ),
-                    child: Center(
-                        child: Text(
-                      'Add Multiple Product',
-                      style: TextStyle(color: Colors.red),
-                    )),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(_createRoute());
-                  },
-                ),
-              ],
-            ),
-          ),
           SizedBox(
             height: 35,
           ),
@@ -268,7 +230,13 @@ class _ThirdIntroState extends State<ThirdIntro> {
                   )),
                 ),
               ),
-              onTap: () {})
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.leftToRight,
+                        child: SuccessProduct()));
+              })
         ],
       ),
     );
