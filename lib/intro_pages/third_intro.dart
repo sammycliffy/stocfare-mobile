@@ -28,10 +28,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 20),
-          SizedBox(
-            height: 35,
-          ),
+          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -101,7 +98,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                     validator: (val) =>
                         val.length < 11 ? 'Enter a valid Phone no' : null,
                     decoration: InputDecoration(
-                      hintText: 'Unit Price',
+                      hintText: 'Product Price',
                       filled: true,
                       border: InputBorder.none,
                     )),

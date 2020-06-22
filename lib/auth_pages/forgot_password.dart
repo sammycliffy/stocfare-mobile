@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:stockfare_mobile/auth_pages/signup.dart';
 
-import 'forgot_password.dart';
-
-class Login extends StatefulWidget {
+class ForgotPassword extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _ForgotPassword createState() => _ForgotPassword();
 }
 
-class _LoginState extends State<Login> {
+class _ForgotPassword extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,25 +21,25 @@ class _LoginState extends State<Login> {
               child:
                   Image.asset('assets/images/logo.png', width: 40, height: 40)),
           SizedBox(
-            height: 40,
+            height: 30,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 40),
             child: Text(
-              'Login',
+              'Forgot Password',
               style: TextStyle(
                   fontSize: 30, fontWeight: FontWeight.bold, color: Colors.red),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 40),
-            child: Text('Secure login to your stockfare app',
+            child: Text('Enter the 6 digit that was sent to your phone',
                 style: TextStyle(
                   fontSize: 14,
                 )),
           ),
           SizedBox(
-            height: 40,
+            height: 30,
           ),
           Form(
             child: Column(
@@ -52,15 +48,30 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.only(left: 40, right: 40),
                   child: TextFormField(
                       validator: (val) =>
-                          val.length < 11 ? 'Email Address or Phone' : null,
+                          val.length < 11 ? 'Emaill Address or Phone' : null,
                       decoration: InputDecoration(
-                        hintText: 'Email Address or Phone',
+                        hintText: 'Enter digit number',
                         filled: true,
                         border: InputBorder.none,
                       )),
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 40, right: 40),
+                  child: TextFormField(
+                      obscureText: true,
+                      validator: (val) =>
+                          val.length < 11 ? 'Enter Digit number' : null,
+                      decoration: InputDecoration(
+                        hintText: 'New Password',
+                        filled: true,
+                        border: InputBorder.none,
+                      )),
+                ),
+                SizedBox(
+                  height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 40, right: 40),
@@ -69,7 +80,7 @@ class _LoginState extends State<Login> {
                       validator: (val) =>
                           val.length < 11 ? 'Emaill Address or Phone' : null,
                       decoration: InputDecoration(
-                        hintText: 'Password',
+                        hintText: 'Confirm Password',
                         filled: true,
                         border: InputBorder.none,
                       )),
@@ -77,22 +88,8 @@ class _LoginState extends State<Login> {
                 SizedBox(
                   height: 10,
                 ),
-                Padding(
-                    padding: const EdgeInsets.only(left: 150),
-                    child: InkWell(
-                      child: Text(
-                        'Forgot Password?',
-                        style: TextStyle(fontSize: 14, color: Colors.red),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ForgotPassword()));
-                      },
-                    )),
                 SizedBox(
-                  height: 100,
+                  height: 60,
                 ),
                 GestureDetector(
                     child: Center(
@@ -104,43 +101,34 @@ class _LoginState extends State<Login> {
                             borderRadius: BorderRadius.circular(20)),
                         child: Center(
                             child: Text(
-                          'Login',
+                          'Update',
                           style: TextStyle(
                               color: Colors.red, fontWeight: FontWeight.bold),
                         )),
                       ),
                     ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.leftToRightWithFade,
-                              child: Login()));
-                    }),
+                    onTap: () {}),
                 SizedBox(height: 120),
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 120),
+                      padding: const EdgeInsets.only(left: 150),
                       child: Text(
-                        'New to Stockfare?',
+                        'Back to',
                         style: TextStyle(
                           fontSize: 14,
                         ),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: GestureDetector(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: InkWell(
                         child: Text(
-                          'Signup',
+                          'Login',
                           style: TextStyle(fontSize: 14, color: Colors.red),
                         ),
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SignupPage()));
+                          Navigator.pop(context);
                         },
                       ),
                     ),

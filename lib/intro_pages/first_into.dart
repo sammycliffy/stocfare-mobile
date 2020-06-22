@@ -104,8 +104,7 @@ class FirstIntro extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 PageTransition(
-                                    type:
-                                        PageTransitionType.leftToRightWithFade,
+                                    type: PageTransitionType.rightToLeft,
                                     child: SecondIntro()));
                           })
                     ]),

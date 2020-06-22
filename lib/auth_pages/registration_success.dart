@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:stockfare_mobile/auth_pages/login.dart';
-import 'package:stockfare_mobile/intro_pages/sales_intro.dart';
+import 'package:stockfare_mobile/main_pages/common_widget/main_app_bar.dart';
+import 'package:stockfare_mobile/subscription/starter.dart';
 
-class SuccessSold extends StatelessWidget {
+class SuccessRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,15 +13,24 @@ class SuccessSold extends StatelessWidget {
           children: [
             Image.asset('assets/images/product_added.png'),
             Text(
-              'Products Sold',
+              'Registration',
               style: TextStyle(fontSize: 25, color: Colors.blue[800]),
             ),
             Text(
               'Successfully',
               style: TextStyle(fontSize: 25, color: Colors.blue[800]),
             ),
+            Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Text(
+                'Congratulations!!! Welcome to stockfare. You are now ready to automate your inventory management system',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+            ),
             SizedBox(
-              height: 150,
+              height: 50,
             ),
             GestureDetector(
                 child: Center(
@@ -33,7 +42,7 @@ class SuccessSold extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20)),
                     child: Center(
                         child: Text(
-                      'Login',
+                      'Continue',
                       style: TextStyle(
                           color: Colors.red, fontWeight: FontWeight.bold),
                     )),
@@ -44,7 +53,7 @@ class SuccessSold extends StatelessWidget {
                       context,
                       PageTransition(
                           type: PageTransitionType.leftToRightWithFade,
-                          child: Login()));
+                          child: StarterPage()));
                 })
           ],
         ));

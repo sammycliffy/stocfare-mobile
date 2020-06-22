@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:stockfare_mobile/intro_pages/success_product.dart';
-import 'package:stockfare_mobile/intro_pages/third_intro.dart';
 
 import 'common_intro_widgets/app_bar.dart';
 

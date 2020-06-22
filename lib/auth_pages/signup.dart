@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:stockfare_mobile/auth_pages/signup.dart';
+import 'package:stockfare_mobile/auth_pages/registration_success.dart';
 
 import 'forgot_password.dart';
+import 'login.dart';
 
-class Login extends StatefulWidget {
+class SignupPage extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _SignupPage createState() => _SignupPage();
 }
 
-class _LoginState extends State<Login> {
+class _SignupPage extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,31 +20,31 @@ class _LoginState extends State<Login> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 20,
+            height: 10,
           ),
           Center(
               child:
                   Image.asset('assets/images/logo.png', width: 40, height: 40)),
           SizedBox(
-            height: 40,
+            height: 20,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 40),
             child: Text(
-              'Login',
+              'Signup',
               style: TextStyle(
                   fontSize: 30, fontWeight: FontWeight.bold, color: Colors.red),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 40),
-            child: Text('Secure login to your stockfare app',
+            child: Text('Signup to enjoy Stockfare inventory management system',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 12,
                 )),
           ),
           SizedBox(
-            height: 40,
+            height: 20,
           ),
           Form(
             child: Column(
@@ -54,13 +55,43 @@ class _LoginState extends State<Login> {
                       validator: (val) =>
                           val.length < 11 ? 'Email Address or Phone' : null,
                       decoration: InputDecoration(
-                        hintText: 'Email Address or Phone',
+                        hintText: 'Business Name',
                         filled: true,
                         border: InputBorder.none,
                       )),
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 12,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 40, right: 40),
+                  child: TextFormField(
+                      obscureText: true,
+                      validator: (val) =>
+                          val.length < 11 ? 'Emaill Address or Phone' : null,
+                      decoration: InputDecoration(
+                        hintText: 'Business Address',
+                        filled: true,
+                        border: InputBorder.none,
+                      )),
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 40, right: 40),
+                  child: TextFormField(
+                      obscureText: true,
+                      validator: (val) =>
+                          val.length < 11 ? 'Emaill Address or Phone' : null,
+                      decoration: InputDecoration(
+                        hintText: 'Email Address',
+                        filled: true,
+                        border: InputBorder.none,
+                      )),
+                ),
+                SizedBox(
+                  height: 12,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 40, right: 40),
@@ -75,24 +106,37 @@ class _LoginState extends State<Login> {
                       )),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 12,
                 ),
                 Padding(
-                    padding: const EdgeInsets.only(left: 150),
-                    child: InkWell(
-                      child: Text(
-                        'Forgot Password?',
-                        style: TextStyle(fontSize: 14, color: Colors.red),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ForgotPassword()));
-                      },
-                    )),
+                  padding: const EdgeInsets.only(left: 40, right: 40),
+                  child: TextFormField(
+                      obscureText: true,
+                      validator: (val) =>
+                          val.length < 11 ? 'Emaill Address or Phone' : null,
+                      decoration: InputDecoration(
+                        hintText: 'Phone',
+                        filled: true,
+                        border: InputBorder.none,
+                      )),
+                ),
                 SizedBox(
-                  height: 100,
+                  height: 12,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 40, right: 40),
+                  child: TextFormField(
+                      obscureText: true,
+                      validator: (val) =>
+                          val.length < 11 ? 'Emaill Address or Phone' : null,
+                      decoration: InputDecoration(
+                        hintText: 'Referral (Optional)',
+                        filled: true,
+                        border: InputBorder.none,
+                      )),
+                ),
+                SizedBox(
+                  height: 30,
                 ),
                 GestureDetector(
                     child: Center(
@@ -104,7 +148,7 @@ class _LoginState extends State<Login> {
                             borderRadius: BorderRadius.circular(20)),
                         child: Center(
                             child: Text(
-                          'Login',
+                          'Signup',
                           style: TextStyle(
                               color: Colors.red, fontWeight: FontWeight.bold),
                         )),
@@ -113,17 +157,16 @@ class _LoginState extends State<Login> {
                     onTap: () {
                       Navigator.push(
                           context,
-                          PageTransition(
-                              type: PageTransitionType.leftToRightWithFade,
-                              child: Login()));
+                          MaterialPageRoute(
+                              builder: (context) => SuccessRegister()));
                     }),
-                SizedBox(height: 120),
+                SizedBox(height: 50),
                 Row(
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 120),
                       child: Text(
-                        'New to Stockfare?',
+                        'Already registered?',
                         style: TextStyle(
                           fontSize: 14,
                         ),
@@ -133,14 +176,12 @@ class _LoginState extends State<Login> {
                       padding: const EdgeInsets.only(left: 10),
                       child: GestureDetector(
                         child: Text(
-                          'Signup',
+                          'Login',
                           style: TextStyle(fontSize: 14, color: Colors.red),
                         ),
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SignupPage()));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Login()));
                         },
                       ),
                     ),
