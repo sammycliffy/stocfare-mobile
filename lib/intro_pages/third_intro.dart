@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:stockfare_mobile/intro_pages/multiple_product.dart';
 import 'package:stockfare_mobile/intro_pages/success_product.dart';
 
 import 'common_intro_widgets/app_bar.dart';
@@ -238,17 +237,4 @@ class _ThirdIntroState extends State<ThirdIntro> {
       ),
     );
   }
-}
-
-Route _createRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => MultiplePage(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
-      var end = Offset.zero;
-      var tween = Tween(begin: begin, end: end);
-      var offsetAnimation = animation.drive(tween);
-      return child;
-    },
-  );
 }

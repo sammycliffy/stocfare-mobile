@@ -3,10 +3,10 @@ import 'package:page_transition/page_transition.dart';
 import 'package:stockfare_mobile/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/main_pages/common_widget/main_app_bar.dart';
 import 'package:stockfare_mobile/subscription/classic.dart';
-import 'package:stockfare_mobile/subscription/premium.dart';
+import 'package:stockfare_mobile/subscription/starter.dart';
 import 'package:stockfare_mobile/subscription/success_subscription.dart';
 
-class StarterPage extends StatelessWidget {
+class PremiumPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,13 +28,9 @@ class StarterPage extends StatelessWidget {
             ),
             SizedBox(height: 45),
             Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-              Text(
-                'Starter',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
               InkWell(
                 child: Text(
-                  'Classic',
+                  'Starter',
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -46,7 +42,7 @@ class StarterPage extends StatelessWidget {
               ),
               InkWell(
                 child: Text(
-                  'Premium',
+                  'Classic',
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -55,7 +51,14 @@ class StarterPage extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(_createRoute1());
                 },
-              )
+              ),
+              Text(
+                'Premium',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ]),
             SizedBox(
               height: 20,
@@ -106,7 +109,7 @@ class StarterPage extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 50, top: 25),
+              padding: const EdgeInsets.only(left: 50, top: 30),
               child: Row(
                 children: [
                   Container(
@@ -228,7 +231,7 @@ class StarterPage extends StatelessWidget {
 
 Route _createRoute() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => ClassicPage(),
+    pageBuilder: (context, animation, secondaryAnimation) => StarterPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
@@ -241,7 +244,7 @@ Route _createRoute() {
 
 Route _createRoute1() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => PremiumPage(),
+    pageBuilder: (context, animation, secondaryAnimation) => ClassicPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;

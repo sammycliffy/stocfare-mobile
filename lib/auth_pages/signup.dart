@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:stockfare_mobile/auth_pages/registration_success.dart';
-
-import 'forgot_password.dart';
 import 'login.dart';
 
 class SignupPage extends StatefulWidget {
@@ -44,7 +41,7 @@ class _SignupPage extends State<SignupPage> {
                 )),
           ),
           SizedBox(
-            height: 20,
+            height: 22,
           ),
           Form(
             child: Column(
@@ -61,7 +58,7 @@ class _SignupPage extends State<SignupPage> {
                       )),
                 ),
                 SizedBox(
-                  height: 12,
+                  height: 16,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 40, right: 40),
@@ -76,7 +73,7 @@ class _SignupPage extends State<SignupPage> {
                       )),
                 ),
                 SizedBox(
-                  height: 12,
+                  height: 16,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 40, right: 40),
@@ -91,7 +88,7 @@ class _SignupPage extends State<SignupPage> {
                       )),
                 ),
                 SizedBox(
-                  height: 12,
+                  height: 16,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 40, right: 40),
@@ -106,7 +103,7 @@ class _SignupPage extends State<SignupPage> {
                       )),
                 ),
                 SizedBox(
-                  height: 12,
+                  height: 16,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 40, right: 40),
@@ -121,7 +118,7 @@ class _SignupPage extends State<SignupPage> {
                       )),
                 ),
                 SizedBox(
-                  height: 12,
+                  height: 16,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 40, right: 40),
@@ -136,7 +133,7 @@ class _SignupPage extends State<SignupPage> {
                       )),
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 40,
                 ),
                 GestureDetector(
                     child: Center(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:stockfare_mobile/auth_pages/login.dart';
+import 'package:stockfare_mobile/main_pages/common_widget/bottom_navigation.dart';
 
-class SuccessSold extends StatelessWidget {
+class SuccessSubscription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,11 +12,11 @@ class SuccessSold extends StatelessWidget {
           children: [
             Image.asset('assets/images/product_added.png'),
             Text(
-              'Products Sold',
+              'Subscription',
               style: TextStyle(fontSize: 25, color: Colors.blue[800]),
             ),
             Text(
-              'Successfully',
+              'Successful',
               style: TextStyle(fontSize: 25, color: Colors.blue[800]),
             ),
             SizedBox(
@@ -32,7 +32,7 @@ class SuccessSold extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20)),
                     child: Center(
                         child: Text(
-                      'Login',
+                      'Continue',
                       style: TextStyle(
                           color: Colors.red, fontWeight: FontWeight.bold),
                     )),
@@ -43,7 +43,7 @@ class SuccessSold extends StatelessWidget {
                       context,
                       PageTransition(
                           type: PageTransitionType.leftToRightWithFade,
-                          child: Login()));
+                          child: BottomNavigationPage()));
                 })
           ],
         ));
