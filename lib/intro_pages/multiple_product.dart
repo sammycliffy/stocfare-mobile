@@ -47,7 +47,7 @@ class _MultiplePageState extends State<MultiplePage> {
                 Navigator.push(
                     context,
                     PageTransition(
-                        type: PageTransitionType.rightToLeftWithFade,
+                        type: PageTransitionType.rightToLeft,
                         child: FourthIntroPage()));
               },
             ),

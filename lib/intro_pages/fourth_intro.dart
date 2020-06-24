@@ -247,7 +247,7 @@ class _FourthIntroPageState extends State<FourthIntroPage> {
                 Navigator.push(
                     context,
                     PageTransition(
-                        type: PageTransitionType.leftToRight,
+                        type: PageTransitionType.rightToLeft,
                         child: SuccessProduct()));
               })
         ],

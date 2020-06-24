@@ -14,143 +14,147 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          Center(
-              child:
-                  Image.asset('assets/images/logo.png', width: 40, height: 40)),
-          SizedBox(
-            height: 40,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 40),
-            child: Text(
-              'Login',
-              style: TextStyle(
-                  fontSize: 30, fontWeight: FontWeight.bold, color: Colors.red),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 40),
-            child: Text('Secure login to your stockfare app',
-                style: TextStyle(
-                  fontSize: 14,
-                )),
-          ),
-          SizedBox(
-            height: 40,
-          ),
-          Form(
+      body: SingleChildScrollView(
+        child: SafeArea(
             child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 40, right: 40),
-                  child: TextFormField(
-                      validator: (val) =>
-                          val.length < 11 ? 'Email Address or Phone' : null,
-                      decoration: InputDecoration(
-                        hintText: 'Email Address or Phone',
-                        filled: true,
-                        border: InputBorder.none,
-                      )),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 40, right: 40),
-                  child: TextFormField(
-                      obscureText: true,
-                      validator: (val) =>
-                          val.length < 11 ? 'Emaill Address or Phone' : null,
-                      decoration: InputDecoration(
-                        hintText: 'Password',
-                        filled: true,
-                        border: InputBorder.none,
-                      )),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(left: 150),
-                    child: InkWell(
-                      child: Text(
-                        'Forgot Password?',
-                        style: TextStyle(fontSize: 14, color: Colors.red),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ForgotPassword()));
-                      },
-                    )),
-                SizedBox(
-                  height: 100,
-                ),
-                GestureDetector(
-                    child: Center(
-                      child: Container(
-                        height: 40,
-                        width: 200,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.red, width: 3),
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Center(
-                            child: Text(
-                          'Login',
-                          style: TextStyle(
-                              color: Colors.red, fontWeight: FontWeight.bold),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            Center(
+                child: Image.asset('assets/images/logo.png',
+                    width: 40, height: 40)),
+            SizedBox(
+              height: 40,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 40),
+              child: Text(
+                'Login',
+                style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 40),
+              child: Text('Secure login to your stockfare app',
+                  style: TextStyle(
+                    fontSize: 14,
+                  )),
+            ),
+            SizedBox(
+              height: 40,
+            ),
+            Form(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40, right: 40),
+                    child: TextFormField(
+                        validator: (val) =>
+                            val.length < 11 ? 'Email Address or Phone' : null,
+                        decoration: InputDecoration(
+                          hintText: 'Email Address or Phone',
+                          filled: true,
+                          border: InputBorder.none,
                         )),
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.leftToRightWithFade,
-                              child: Login()));
-                    }),
-                SizedBox(height: 120),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 120),
-                      child: Text(
-                        'New to Stockfare?',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: GestureDetector(
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40, right: 40),
+                    child: TextFormField(
+                        obscureText: true,
+                        validator: (val) =>
+                            val.length < 11 ? 'Emaill Address or Phone' : null,
+                        decoration: InputDecoration(
+                          hintText: 'Password',
+                          filled: true,
+                          border: InputBorder.none,
+                        )),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(left: 150),
+                      child: InkWell(
                         child: Text(
-                          'Signup',
+                          'Forgot Password?',
                           style: TextStyle(fontSize: 14, color: Colors.red),
                         ),
                         onTap: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SignupPage()));
+                                  builder: (context) => ForgotPassword()));
                         },
+                      )),
+                  SizedBox(
+                    height: 100,
+                  ),
+                  GestureDetector(
+                      child: Center(
+                        child: Container(
+                          height: 40,
+                          width: 200,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.red, width: 3),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Center(
+                              child: Text(
+                            'Login',
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.bold),
+                          )),
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          )
-        ],
-      )),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.leftToRightWithFade,
+                                child: Login()));
+                      }),
+                  SizedBox(height: 120),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 120),
+                        child: Text(
+                          'New to Stockfare?',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: GestureDetector(
+                          child: Text(
+                            'Signup',
+                            style: TextStyle(fontSize: 14, color: Colors.red),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignupPage()));
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
+        )),
+      ),
     );
   }
 }

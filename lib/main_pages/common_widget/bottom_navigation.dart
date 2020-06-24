@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/main_pages/common_widget/main_app_bar.dart';
+import 'package:stockfare_mobile/main_pages/home.dart';
 
 class BottomNavigationPage extends StatefulWidget {
   @override
@@ -10,7 +11,7 @@ class BottomNavigationPage extends StatefulWidget {
 class _BottomNavigationPageState extends State<BottomNavigationPage> {
   int _currentIndex = 0;
   List<Widget> _tabs = [
-    Center(child: Text('Page 1')),
+    HomeScreen(),
     Center(child: Text('Page 2')),
     Center(child: Text('Page 3')),
     Center(child: Text('Page 4'))
@@ -23,7 +24,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
       drawer: DrawerPage(),
       body: _tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        elevation: 20,
+        elevation: 2.0,
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,

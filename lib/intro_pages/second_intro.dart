@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:stockfare_mobile/intro_pages/third_intro.dart';
 
 class SecondIntro extends StatelessWidget {
@@ -48,7 +49,11 @@ class SecondIntro extends StatelessWidget {
                   child: Icon(Icons.add, color: Colors.white, size: 40),
                 ),
                 onTap: () {
-                  Navigator.of(context).push(_createRoute());
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: ThirdIntro()));
                 },
               ),
               SizedBox(
@@ -70,21 +75,4 @@ class SecondIntro extends StatelessWidget {
           ),
         ));
   }
-}
-
-Route _createRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => ThirdIntro(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(4.0, 0.2);
-      var end = Offset.zero;
-      var tween = Tween(begin: begin, end: end);
-      var offsetAnimation = animation.drive(tween);
-
-      return SlideTransition(
-        position: offsetAnimation,
-        child: child,
-      );
-    },
-  );
 }

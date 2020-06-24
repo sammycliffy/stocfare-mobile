@@ -42,7 +42,7 @@ class SuccessSold extends StatelessWidget {
                   Navigator.push(
                       context,
                       PageTransition(
-                          type: PageTransitionType.leftToRightWithFade,
+                          type: PageTransitionType.leftToRight,
                           child: Login()));
                 })
           ],

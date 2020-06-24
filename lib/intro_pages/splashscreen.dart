@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    currentImage = Image.asset('assets/images/logo.png', width: 70, height: 70);
+    currentImage = Image.asset('assets/images/logo.png', width: 50, height: 50);
     Timer(
         Duration(seconds: 4),
         () => Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -37,13 +37,16 @@ class _SplashScreenState extends State<SplashScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 270),
-            child: currentImage,
+          Expanded(
+            child: Center(
+              child: currentImage,
+            ),
           ),
           Column(children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(right: 90, top: 290),
+              padding: const EdgeInsets.only(
+                right: 90,
+              ),
               child: Text('from'),
             ),
             Padding(
@@ -59,6 +62,9 @@ class _SplashScreenState extends State<SplashScreen> {
               style: TextStyle(
                 fontSize: 20,
               ),
+            ),
+            SizedBox(
+              height: 20,
             )
           ]),
         ],

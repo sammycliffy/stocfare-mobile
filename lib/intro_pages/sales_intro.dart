@@ -53,7 +53,7 @@ class SalesIntroPage extends StatelessWidget {
                   Navigator.push(
                       context,
                       PageTransition(
-                          type: PageTransitionType.rightToLeftWithFade,
+                          type: PageTransitionType.leftToRight,
                           child: AllProductPage()));
                 },
               ),
