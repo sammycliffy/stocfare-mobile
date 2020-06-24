@@ -39,7 +39,8 @@ class _ThirdIntroState extends State<ThirdIntro> {
           )),
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 10),
             Row(
@@ -94,8 +95,8 @@ class _ThirdIntroState extends State<ThirdIntro> {
             Form(
                 child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 40, right: 40),
+                Container(
+                  width: 320,
                   child: TextFormField(
                       validator: (val) =>
                           val.length < 11 ? 'Enter a valid Phone no' : null,
@@ -105,9 +106,9 @@ class _ThirdIntroState extends State<ThirdIntro> {
                         border: InputBorder.none,
                       )),
                 ),
-                SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.only(left: 40, right: 40),
+                SizedBox(height: 15),
+                Container(
+                  width: 320,
                   child: TextFormField(
                       validator: (val) =>
                           val.length < 11 ? 'Enter a valid Phone no' : null,
@@ -117,9 +118,9 @@ class _ThirdIntroState extends State<ThirdIntro> {
                         border: InputBorder.none,
                       )),
                 ),
-                SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.only(left: 40, right: 40),
+                SizedBox(height: 15),
+                Container(
+                  width: 320,
                   child: TextFormField(
                       validator: (val) =>
                           val.length < 11 ? 'Enter a valid Phone no' : null,
@@ -129,36 +130,38 @@ class _ThirdIntroState extends State<ThirdIntro> {
                         border: InputBorder.none,
                       )),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 180, top: 25),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
                   child: Text(
                     'Quantity in Stock',
                     style: TextStyle(fontSize: 17),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 50),
-                  child: Row(children: [
-                    Text(
-                      'Total Products available in Stock',
-                      style: TextStyle(fontSize: 12, color: Colors.red),
-                    ),
-                    SizedBox(width: 70),
-                    Container(
-                      width: 60,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(5),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        'Total Products available in Stock',
+                        style: TextStyle(fontSize: 12, color: Colors.red),
                       ),
-                      child: Center(
-                          child: Text(
-                        (_value * 1000).round().toString(),
-                        style: TextStyle(color: Colors.white),
-                      )),
-                    )
-                  ]),
-                ),
+                      Flexible(
+                        child: Container(
+                          width: 60,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(
+                              child: Text(
+                            (_value * 1000).round().toString(),
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        ),
+                      )
+                    ]),
                 Padding(
                   padding: const EdgeInsets.only(left: 25, right: 25),
                   child: SliderTheme(
@@ -186,22 +189,20 @@ class _ThirdIntroState extends State<ThirdIntro> {
                 ),
               ],
             )),
-            Padding(
-              padding: const EdgeInsets.only(right: 180, top: 10),
-              child: Text(
-                'Low Stock Alert',
-                style: TextStyle(fontSize: 17),
-              ),
+            SizedBox(
+              height: 30,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 50),
-              child: Row(children: [
-                Text(
-                  'When to alert on low stock',
-                  style: TextStyle(fontSize: 12, color: Colors.red),
-                ),
-                SizedBox(width: 100),
-                Container(
+            Text(
+              'Low Stock Alert',
+              style: TextStyle(fontSize: 17),
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+              Text(
+                'When to alert on low stock           ',
+                style: TextStyle(fontSize: 12, color: Colors.red),
+              ),
+              Flexible(
+                child: Container(
                   width: 60,
                   height: 30,
                   decoration: BoxDecoration(
@@ -213,9 +214,9 @@ class _ThirdIntroState extends State<ThirdIntro> {
                     (_quantity * 1000).round().toString(),
                     style: TextStyle(color: Colors.white),
                   )),
-                )
-              ]),
-            ),
+                ),
+              )
+            ]),
             Padding(
               padding: const EdgeInsets.only(left: 25, right: 25),
               child: SliderTheme(
@@ -246,7 +247,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                     height: 40,
                     width: 200,
                     decoration: BoxDecoration(
-                        border: Border.all(color: Colors.red),
+                        border: Border.all(color: Colors.red, width: 3),
                         borderRadius: BorderRadius.circular(20)),
                     child: Center(
                         child: Text(

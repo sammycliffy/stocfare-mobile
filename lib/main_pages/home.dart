@@ -235,9 +235,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
 //This is the sales view
 Widget _sales() {
-  return Expanded(
+  return Flexible(
     child: Container(
-      width: 350,
       color: Colors.white,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('Dashboard',
@@ -247,7 +246,6 @@ Widget _sales() {
             )),
         SizedBox(height: 10),
         Container(
-          width: double.infinity,
           height: 25,
           color: Colors.black,
           child: Center(
@@ -260,7 +258,6 @@ Widget _sales() {
         ),
         SizedBox(height: 10),
         Container(
-            width: double.infinity,
             height: 100,
             decoration: BoxDecoration(
                 border:

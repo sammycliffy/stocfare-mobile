@@ -8,20 +8,22 @@ class SuccessProduct extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.white,
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/product_added.png'),
-            Text(
-              'Products Added',
-              style: TextStyle(fontSize: 25, color: Colors.blue[800]),
-            ),
-            Text(
-              'Successfully',
-              style: TextStyle(fontSize: 25, color: Colors.blue[800]),
-            ),
-            SizedBox(
-              height: 150,
-            ),
+            Expanded(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: Image.asset('assets/images/product_added.png')),
+                Text(
+                  'Products Added',
+                  style: TextStyle(fontSize: 25, color: Colors.blue[800]),
+                ),
+                Text(
+                  'Successfully',
+                  style: TextStyle(fontSize: 25, color: Colors.blue[800]),
+                ),
+              ],
+            )),
             GestureDetector(
                 child: Center(
                   child: Container(
@@ -44,7 +46,10 @@ class SuccessProduct extends StatelessWidget {
                       PageTransition(
                           type: PageTransitionType.leftToRight,
                           child: SalesIntroPage()));
-                })
+                }),
+            SizedBox(
+              height: 30,
+            )
           ],
         ));
   }

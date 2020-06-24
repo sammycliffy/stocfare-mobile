@@ -8,20 +8,22 @@ class SuccessSold extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.white,
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/product_added.png'),
-            Text(
-              'Products Sold',
-              style: TextStyle(fontSize: 25, color: Colors.blue[800]),
-            ),
-            Text(
-              'Successfully',
-              style: TextStyle(fontSize: 25, color: Colors.blue[800]),
-            ),
-            SizedBox(
-              height: 150,
-            ),
+            Expanded(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: Image.asset('assets/images/product_added.png')),
+                Text(
+                  'Products Sold',
+                  style: TextStyle(fontSize: 25, color: Colors.blue[800]),
+                ),
+                Text(
+                  'Successfully',
+                  style: TextStyle(fontSize: 25, color: Colors.blue[800]),
+                ),
+              ],
+            )),
             GestureDetector(
                 child: Center(
                   child: Container(
@@ -32,7 +34,7 @@ class SuccessSold extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20)),
                     child: Center(
                         child: Text(
-                      'Login',
+                      'Sell Product',
                       style: TextStyle(
                           color: Colors.red, fontWeight: FontWeight.bold),
                     )),
@@ -44,7 +46,10 @@ class SuccessSold extends StatelessWidget {
                       PageTransition(
                           type: PageTransitionType.leftToRight,
                           child: Login()));
-                })
+                }),
+            SizedBox(
+              height: 30,
+            )
           ],
         ));
   }
