@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/intro_pages/add_product_intro.dart';
 import 'package:stockfare_mobile/intro_pages/multiple_product.dart';
-import '../third_intro.dart';
 
 class AppBarProducts extends StatelessWidget {
   @override
@@ -67,7 +67,7 @@ class AppBarProducts extends StatelessWidget {
 
 Route _createRoute() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => ThirdIntro(),
+    pageBuilder: (context, animation, secondaryAnimation) => AddProductIntro(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;

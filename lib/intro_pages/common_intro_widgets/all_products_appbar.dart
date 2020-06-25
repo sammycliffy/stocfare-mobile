@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/intro_pages/all_products.dart';
 import 'package:stockfare_mobile/intro_pages/checkout.dart';
+import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 
 class AppBarAllProducts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10, left: 12),
       child: Column(children: [
@@ -62,18 +65,27 @@ class AppBarAllProducts extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 280),
-          child: Row(
-            children: [
-              Icon(Icons.shopping_basket, size: 40),
-              SizedBox(width: 5),
-              Text(
-                '24',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Icon(Icons.shopping_basket, size: 40, color: Colors.orangeAccent),
+            SizedBox(width: 5),
+            Text(
+              addProduct.product.toString(),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(width: 30),
+            Text('Price:', style: TextStyle(fontSize: 17)),
+            SizedBox(width: 5),
+            Text(
+              (addProduct.price * addProduct.product).toString(),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              width: 60,
+            )
+          ],
         ),
       ]),
     );

@@ -120,32 +120,33 @@ class _LoginState extends State<Login> {
                                 type: PageTransitionType.leftToRightWithFade,
                                 child: Login()));
                       }),
-                  SizedBox(height: 120),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 120),
-                        child: Text(
-                          'New to Stockfare?',
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
+                      Text(
+                        'New to Stockfare?',
+                        style: TextStyle(
+                          fontSize: 14,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: GestureDetector(
-                          child: Text(
-                            'Signup',
-                            style: TextStyle(fontSize: 14, color: Colors.red),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignupPage()));
-                          },
+                      SizedBox(width: 10),
+                      GestureDetector(
+                        child: Text(
+                          'Signup',
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold),
                         ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignupPage()));
+                        },
                       ),
                     ],
                   )

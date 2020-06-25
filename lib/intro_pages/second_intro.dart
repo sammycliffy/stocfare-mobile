@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:stockfare_mobile/intro_pages/third_intro.dart';
+import 'package:stockfare_mobile/intro_pages/add_product_intro.dart';
 
 class SecondIntro extends StatelessWidget {
   @override
@@ -52,8 +52,8 @@ class SecondIntro extends StatelessWidget {
                   Navigator.push(
                       context,
                       PageTransition(
-                          type: PageTransitionType.rightToLeft,
-                          child: ThirdIntro()));
+                          type: PageTransitionType.leftToRight,
+                          child: AddProductIntro()));
                 },
               ),
               SizedBox(

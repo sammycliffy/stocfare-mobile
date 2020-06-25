@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/intro_pages/success_sold.dart';
-
+import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'common_intro_widgets/all_products_appbar.dart';
 
-class CheckoutPage extends StatelessWidget {
+class CheckoutPage extends StatefulWidget {
+  @override
+  _CheckoutPageState createState() => _CheckoutPageState();
+}
+
+class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
+    AddProductToCart addProductToCart = Provider.of<AddProductToCart>(context);
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -30,8 +37,11 @@ class CheckoutPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 50),
                     child: Text(
-                      'N10,000',
-                      style: TextStyle(fontSize: 16, color: Colors.green),
+                      (addProductToCart.price).toString(),
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green),
                     ),
                   )
                 ],
@@ -48,8 +58,9 @@ class CheckoutPage extends StatelessWidget {
                   SizedBox(
                       width: 150,
                       child: TextFormField(
-                          validator: (val) =>
-                              val.length < 11 ? 'Enter a valid Phone no' : null,
+                          onChanged: (val) {
+                            addProductToCart.setDiscount(int.parse(val));
+                          },
                           decoration: InputDecoration(
                             filled: true,
                             border: InputBorder.none,

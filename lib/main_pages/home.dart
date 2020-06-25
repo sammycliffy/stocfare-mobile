@@ -239,11 +239,13 @@ Widget _sales() {
     child: Container(
       color: Colors.white,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Dashboard',
-            style: TextStyle(
-              color: Colors.red,
-              fontWeight: FontWeight.bold,
-            )),
+        Align(
+          child: Text('Dashboard',
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              )),
+        ),
         SizedBox(height: 10),
         Container(
           height: 25,

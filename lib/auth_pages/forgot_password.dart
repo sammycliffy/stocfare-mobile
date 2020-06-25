@@ -111,29 +111,28 @@ class _ForgotPassword extends State<ForgotPassword> {
                         ),
                       ),
                       onTap: () {}),
-                  SizedBox(height: 120),
+                  SizedBox(height: 15),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 150),
-                        child: Text(
-                          'Back to',
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
+                      Text(
+                        'Back to',
+                        style: TextStyle(
+                          fontSize: 14,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
-                        child: InkWell(
-                          child: Text(
-                            'Login',
-                            style: TextStyle(fontSize: 14, color: Colors.red),
-                          ),
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
+                      SizedBox(width: 5),
+                      InkWell(
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold),
                         ),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
                       ),
                     ],
                   )
