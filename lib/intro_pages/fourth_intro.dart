@@ -220,12 +220,12 @@ class _FourthIntroPageState extends State<FourthIntroPage> {
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 300,
+        maxImages: 2,
         enableCamera: true,
         selectedAssets: images,
         cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
         materialOptions: MaterialOptions(
-          actionBarColor: "#abcdef",
+          actionBarColor: "#c80815",
           actionBarTitle: "Stockfare",
           allViewTitle: "All Photos",
           useDetailsView: false,
@@ -270,7 +270,35 @@ class _FourthIntroPageState extends State<FourthIntroPage> {
           ),
           Expanded(
             child: buildListView(_quantity, _value),
-          )
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          GestureDetector(
+              child: Center(
+                child: Container(
+                  height: 40,
+                  width: 200,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.red, width: 3),
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Center(
+                      child: Text(
+                    'Add all Products',
+                    style: TextStyle(color: Colors.red),
+                  )),
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.leftToRight,
+                        child: SuccessProduct()));
+              }),
+          SizedBox(
+            height: 25,
+          ),
         ],
       ),
     );

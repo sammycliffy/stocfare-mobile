@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:stockfare_mobile/intro_pages/success_product.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:barcode_scan/barcode_scan.dart';
 import 'common_intro_widgets/app_bar.dart';
 
 class AddProductIntro extends StatefulWidget {
@@ -20,12 +20,23 @@ class _AddProductIntroState extends State<AddProductIntro> {
   File _image;
   final picker = ImagePicker();
   final _formkey = GlobalKey<FormState>();
+
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
 
     setState(() {
       _image = File(pickedFile.path);
     });
+  }
+
+  void getBarcode() async {
+    var result = await BarcodeScanner.scan();
+
+    print(result.type); // The result type (barcode, cancelled, failed)
+    print(result.rawContent); // The barcode content
+    print(result.format); // The barcode format (as enum)
+    print(result
+        .formatNote); // If a unknown format was scanned this field contains a note
   }
 
   @override
@@ -88,7 +99,9 @@ class _AddProductIntroState extends State<AddProductIntro> {
                           color: Colors.grey,
                           size: 50,
                         )),
-                    onTap: () {},
+                    onTap: () {
+                      getBarcode();
+                    },
                   ),
                   SizedBox(height: 6),
                   Text('Add Barcode'),
