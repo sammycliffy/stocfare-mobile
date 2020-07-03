@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:stockfare_mobile/auth_pages/business_signup.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
+import 'package:stockfare_mobile/services/auth_services.dart';
 import 'login.dart';
 
-class SignupPage extends StatefulWidget {
+class BusinessSignupPage extends StatefulWidget {
   @override
   _SignupPage createState() => _SignupPage();
 }
 
-class _SignupPage extends State<SignupPage> {
+class _SignupPage extends State<BusinessSignupPage> {
   final _formkey = GlobalKey<FormState>();
-  String firstName;
-  String lastName;
-  String phone;
-  String password;
-  String email;
-
+  String businessName;
+  String businessAddress;
+  String businessDescription;
+  String businessType;
+  String referralCode;
+  AuthServices _auth = AuthServices();
   @override
   Widget build(BuildContext context) {
     SignupNotifier _signupNotifier = Provider.of<SignupNotifier>(context);
@@ -39,7 +39,7 @@ class _SignupPage extends State<SignupPage> {
             Padding(
               padding: const EdgeInsets.only(left: 40),
               child: Text(
-                'Signup',
+                'Business Signup',
                 style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -48,11 +48,10 @@ class _SignupPage extends State<SignupPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 40),
-              child:
-                  Text('Signup to enjoy Stockfare inventory management system',
-                      style: TextStyle(
-                        fontSize: 12,
-                      )),
+              child: Text('We just need a few information about your business',
+                  style: TextStyle(
+                    fontSize: 12,
+                  )),
             ),
             SizedBox(
               height: 22,
@@ -67,9 +66,9 @@ class _SignupPage extends State<SignupPage> {
                       style: TextStyle(color: Colors.black),
                       keyboardType: TextInputType.text,
                       validator: (input) =>
-                          input.isEmpty ? 'Enter your first name' : null,
+                          input.isEmpty ? 'Enter your Business name' : null,
                       onChanged: (val) => setState(() {
-                        firstName = val;
+                        businessName = val;
                       }),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(12),
@@ -85,7 +84,7 @@ class _SignupPage extends State<SignupPage> {
                                 Theme.of(context).focusColor.withOpacity(0.7)),
                         prefixIcon: Icon(Icons.person,
                             color: Theme.of(context).accentColor),
-                        hintText: 'Enter your first name',
+                        hintText: 'Enter Business name',
                         filled: true,
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
@@ -109,9 +108,9 @@ class _SignupPage extends State<SignupPage> {
                       style: TextStyle(color: Colors.black),
                       keyboardType: TextInputType.text,
                       validator: (input) =>
-                          input.isEmpty ? 'Enter your last name' : null,
+                          input.isEmpty ? 'Enter Business Address' : null,
                       onChanged: (val) => setState(() {
-                        lastName = val;
+                        businessAddress = val;
                       }),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(12),
@@ -127,7 +126,7 @@ class _SignupPage extends State<SignupPage> {
                                 Theme.of(context).focusColor.withOpacity(0.7)),
                         prefixIcon: Icon(Icons.person,
                             color: Theme.of(context).accentColor),
-                        hintText: 'Enter your last name',
+                        hintText: 'Enter Business Address',
                         filled: true,
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
@@ -148,12 +147,11 @@ class _SignupPage extends State<SignupPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (input) => !input.contains('@')
-                          ? 'Enter a valid email address'
-                          : null,
+                      keyboardType: TextInputType.text,
+                      validator: (input) =>
+                          input.isEmpty ? 'Enter Business Description' : null,
                       onChanged: (val) => setState(() {
-                        email = val;
+                        businessDescription = val;
                       }),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(12),
@@ -169,7 +167,7 @@ class _SignupPage extends State<SignupPage> {
                                 Theme.of(context).focusColor.withOpacity(0.7)),
                         prefixIcon: Icon(Icons.alternate_email,
                             color: Theme.of(context).accentColor),
-                        hintText: 'Email Address',
+                        hintText: 'Briefly describe your business',
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 color: Theme.of(context)
@@ -190,15 +188,13 @@ class _SignupPage extends State<SignupPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
-                      obscureText: true,
-                      keyboardType: TextInputType.text,
-                      validator: (input) => input.length < 6
-                          ? 'Password must be > 6 Chars'
-                          : null,
-                      onChanged: (val) => setState(() {
-                        password = val;
-                      }),
                       style: TextStyle(color: Colors.black),
+                      keyboardType: TextInputType.text,
+                      validator: (input) =>
+                          input.isEmpty ? 'Enter your business type' : null,
+                      onChanged: (val) => setState(() {
+                        businessType = val;
+                      }),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(12),
                         labelStyle:
@@ -211,9 +207,9 @@ class _SignupPage extends State<SignupPage> {
                         hintStyle: TextStyle(
                             color:
                                 Theme.of(context).focusColor.withOpacity(0.7)),
-                        prefixIcon: Icon(Icons.lock,
+                        prefixIcon: Icon(Icons.phone,
                             color: Theme.of(context).accentColor),
-                        hintText: 'Password',
+                        hintText: 'Enter Businesss type',
                         filled: true,
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
@@ -236,10 +232,8 @@ class _SignupPage extends State<SignupPage> {
                     child: TextFormField(
                       style: TextStyle(color: Colors.black),
                       keyboardType: TextInputType.number,
-                      validator: (input) =>
-                          input.isEmpty ? 'Enter your your phone' : null,
                       onChanged: (val) => setState(() {
-                        phone = val;
+                        referralCode = val;
                       }),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(12),
@@ -253,9 +247,9 @@ class _SignupPage extends State<SignupPage> {
                         hintStyle: TextStyle(
                             color:
                                 Theme.of(context).focusColor.withOpacity(0.7)),
-                        prefixIcon: Icon(Icons.phone,
+                        prefixIcon: Icon(Icons.shopping_basket,
                             color: Theme.of(context).accentColor),
-                        hintText: 'Enter your phone number',
+                        hintText: 'Referral code (optional)',
                         filled: true,
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
@@ -283,21 +277,26 @@ class _SignupPage extends State<SignupPage> {
                               borderRadius: BorderRadius.circular(20)),
                           child: Center(
                               child: Text(
-                            'Continue',
+                            'Signup',
                             style: TextStyle(
                                 color: Colors.red, fontWeight: FontWeight.bold),
                           )),
                         ),
                       ),
                       onTap: () async {
-                        if (_formkey.currentState.validate()) {
-                          _signupNotifier.setFirstPage(
-                              firstName, lastName, phone, password, email);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BusinessSignupPage()));
-                        }
+                        String registrationid = await _auth.getId();
+                        dynamic result = _auth.userRegistration(
+                            _signupNotifier.firstName,
+                            _signupNotifier.lastName,
+                            _signupNotifier.email,
+                            _signupNotifier.phone,
+                            _signupNotifier.password,
+                            registrationid,
+                            businessName,
+                            businessAddress,
+                            businessDescription,
+                            businessType,
+                            referralCode);
                       }),
                   SizedBox(height: 30),
                   Row(

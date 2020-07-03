@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
-import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
+import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'intro_pages/splashscreen.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
-    create: (context) => AddProductToCart(),
+    create: (context) => SignupNotifier(),
     child: MaterialApp(
         home: SplashScreen(),
         theme: ThemeData(
