@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
-import 'package:stockfare_mobile/intro_pages/first_into.dart';
+import 'package:stockfare_mobile/intro_pages/explore_page.dart';
+import 'package:stockfare_mobile/main_pages/common_widget/bottom_navigation.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -70,5 +72,18 @@ class _SplashScreenState extends State<SplashScreen> {
         ],
       ),
     );
+  }
+
+  void check() async {
+    final prefs = await SharedPreferences.getInstance();
+    int launchCount = prefs.getInt('counter') ?? 0;
+    prefs.setInt('counter', launchCount + 1);
+    if (launchCount == 0) {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (BuildContext context) => FirstIntro()));
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) => BottomNavigationPage()));
+    }
   }
 }

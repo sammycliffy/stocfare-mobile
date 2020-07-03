@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/auth_pages/registration_success.dart';
+import 'package:stockfare_mobile/services/auth_services.dart';
 import 'login.dart';
 
 class SignupPage extends StatefulWidget {
@@ -8,6 +9,13 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPage extends State<SignupPage> {
+  final _formkey = GlobalKey<FormState>();
+  String firstName;
+  String lastName;
+  String phone;
+  String password;
+  String email;
+  AuthServices _auth = AuthServices();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,18 +56,47 @@ class _SignupPage extends State<SignupPage> {
               height: 22,
             ),
             Form(
+              key: _formkey,
               child: Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
-                        validator: (val) =>
-                            val.length < 11 ? 'Email Address or Phone' : null,
-                        decoration: InputDecoration(
-                          hintText: 'Business Name',
-                          filled: true,
-                          border: InputBorder.none,
-                        )),
+                      style: TextStyle(color: Colors.black),
+                      keyboardType: TextInputType.text,
+                      validator: (input) =>
+                          input.isEmpty ? 'Enter your first name' : null,
+                      onChanged: (val) => setState(() {
+                        firstName = val;
+                      }),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(12),
+                        labelStyle:
+                            TextStyle(color: Theme.of(context).accentColor),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.person,
+                            color: Theme.of(context).accentColor),
+                        hintText: 'Enter your first name',
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.5))),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 16,
@@ -67,14 +104,41 @@ class _SignupPage extends State<SignupPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
-                        obscureText: true,
-                        validator: (val) =>
-                            val.length < 11 ? 'Emaill Address or Phone' : null,
-                        decoration: InputDecoration(
-                          hintText: 'Business Address',
-                          filled: true,
-                          border: InputBorder.none,
-                        )),
+                      style: TextStyle(color: Colors.black),
+                      keyboardType: TextInputType.text,
+                      validator: (input) =>
+                          input.isEmpty ? 'Enter your last name' : null,
+                      onChanged: (val) => setState(() {
+                        lastName = val;
+                      }),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(12),
+                        labelStyle:
+                            TextStyle(color: Theme.of(context).accentColor),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.person,
+                            color: Theme.of(context).accentColor),
+                        hintText: 'Enter your last name',
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.5))),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 16,
@@ -82,14 +146,41 @@ class _SignupPage extends State<SignupPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
-                        obscureText: true,
-                        validator: (val) =>
-                            val.length < 11 ? 'Emaill Address or Phone' : null,
-                        decoration: InputDecoration(
-                          hintText: 'Email Address',
-                          filled: true,
-                          border: InputBorder.none,
-                        )),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (input) => !input.contains('@')
+                          ? 'Enter a valid email address'
+                          : null,
+                      onChanged: (val) => setState(() {
+                        email = val;
+                      }),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(12),
+                        labelStyle:
+                            TextStyle(color: Theme.of(context).primaryColor),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.alternate_email,
+                            color: Theme.of(context).accentColor),
+                        hintText: 'Email Address',
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.5))),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                   SizedBox(
                     height: 16,
@@ -97,14 +188,43 @@ class _SignupPage extends State<SignupPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
-                        obscureText: true,
-                        validator: (val) =>
-                            val.length < 11 ? 'Emaill Address or Phone' : null,
-                        decoration: InputDecoration(
-                          hintText: 'Password',
-                          filled: true,
-                          border: InputBorder.none,
-                        )),
+                      obscureText: true,
+                      keyboardType: TextInputType.text,
+                      validator: (input) => input.length < 6
+                          ? 'Password must be > 6 Chars'
+                          : null,
+                      onChanged: (val) => setState(() {
+                        password = val;
+                      }),
+                      style: TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(12),
+                        labelStyle:
+                            TextStyle(color: Theme.of(context).accentColor),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.lock,
+                            color: Theme.of(context).accentColor),
+                        hintText: 'Password',
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.5))),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 16,
@@ -112,14 +232,41 @@ class _SignupPage extends State<SignupPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
-                        obscureText: true,
-                        validator: (val) =>
-                            val.length < 11 ? 'Emaill Address or Phone' : null,
-                        decoration: InputDecoration(
-                          hintText: 'Phone',
-                          filled: true,
-                          border: InputBorder.none,
-                        )),
+                      style: TextStyle(color: Colors.black),
+                      keyboardType: TextInputType.number,
+                      validator: (input) =>
+                          input.isEmpty ? 'Enter your your phone' : null,
+                      onChanged: (val) => setState(() {
+                        phone = val;
+                      }),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(12),
+                        labelStyle:
+                            TextStyle(color: Theme.of(context).accentColor),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.phone,
+                            color: Theme.of(context).accentColor),
+                        hintText: 'Enter your phone number',
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.5))),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 16,
@@ -127,14 +274,83 @@ class _SignupPage extends State<SignupPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
-                        obscureText: true,
-                        validator: (val) =>
-                            val.length < 11 ? 'Emaill Address or Phone' : null,
-                        decoration: InputDecoration(
-                          hintText: 'Referral (Optional)',
-                          filled: true,
-                          border: InputBorder.none,
-                        )),
+                      style: TextStyle(color: Colors.black),
+                      keyboardType: TextInputType.text,
+                      validator: (input) =>
+                          input.isEmpty ? 'Enter your Business name' : null,
+                      onChanged: (val) => setState(() {
+                        phone = val;
+                      }),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(12),
+                        labelStyle:
+                            TextStyle(color: Theme.of(context).accentColor),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.shopping_basket,
+                            color: Theme.of(context).accentColor),
+                        hintText: 'Business Name',
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.5))),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40, right: 40),
+                    child: TextFormField(
+                      style: TextStyle(color: Colors.black),
+                      keyboardType: TextInputType.text,
+                      validator: (input) =>
+                          input.isEmpty ? 'Enter your Business Address' : null,
+                      onChanged: (val) => setState(() {
+                        phone = val;
+                      }),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(12),
+                        labelStyle:
+                            TextStyle(color: Theme.of(context).accentColor),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.shopping_basket,
+                            color: Theme.of(context).accentColor),
+                        hintText: 'Business Address',
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.5))),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 40,
@@ -155,38 +371,33 @@ class _SignupPage extends State<SignupPage> {
                           )),
                         ),
                       ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SuccessRegister()));
+                      onTap: () async {
+                        if (_formkey.currentState.validate()) {
+                          String registrationId = await _auth.getId();
+                          dynamic result = _auth.userRegistration(firstName,
+                              lastName, email, phone, password, registrationId);
+                        }
                       }),
                   SizedBox(height: 30),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 120),
-                        child: Text(
-                          'Already registered?',
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
+                      Text(
+                        'Already registered?',
+                        style: TextStyle(
+                          fontSize: 14,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: GestureDetector(
-                          child: Text(
-                            'Login',
-                            style: TextStyle(fontSize: 14, color: Colors.red),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Login()));
-                          },
+                      SizedBox(width: 10),
+                      GestureDetector(
+                        child: Text(
+                          'Login',
+                          style: TextStyle(fontSize: 14, color: Colors.red),
                         ),
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Login()));
+                        },
                       ),
                     ],
                   )

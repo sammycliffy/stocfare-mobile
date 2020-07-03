@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:stockfare_mobile/auth_pages/signup.dart';
 import 'package:stockfare_mobile/intro_pages/second_intro.dart';
 
 class FirstIntro extends StatelessWidget {
@@ -50,16 +51,14 @@ class FirstIntro extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
-                          color: Colors.red),
+                          color: Theme.of(context).primaryColor),
                     ),
                     SizedBox(
                       height: 10,
                     ),
                     Text(
                       'Managing your goods is now very easy. You never have to run out of your best selling  goods. Notifications will be sent to you when your goods have reached a limit or when you have run out of stock so you can quickly restock. ',
-                      style: TextStyle(
-                        fontSize: 13,
-                      ),
+                      style: Theme.of(context).textTheme.bodyText2,
                       textAlign: TextAlign.justify,
                     ),
                     SizedBox(
@@ -67,9 +66,7 @@ class FirstIntro extends StatelessWidget {
                     ),
                     Text(
                       'StockFare is dedicated to improving the way businesses in Africa operate, by combining technology with amazing user experience to creating a well thought out product, that ensures your business says thanks to you. ',
-                      style: TextStyle(
-                        fontSize: 13,
-                      ),
+                      style: Theme.of(context).textTheme.bodyText2,
                       textAlign: TextAlign.justify,
                     ),
                     SizedBox(
@@ -107,7 +104,7 @@ class FirstIntro extends StatelessWidget {
                       context,
                       PageTransition(
                           type: PageTransitionType.rightToLeft,
-                          child: SecondIntro()));
+                          child: SignupPage()));
                 }),
             SizedBox(
               height: 20,

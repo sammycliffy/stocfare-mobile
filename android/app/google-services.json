@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "226714838572",
+    "firebase_url": "https://markettest-cc2e0.firebaseio.com",
+    "project_id": "markettest-cc2e0",
+    "storage_bucket": "markettest-cc2e0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226714838572:android:17dfa4ee0e5ea0fa8d5389",
+        "android_client_info": {
+          "package_name": "com.push_notification.fcm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226714838572-kmab453f5cla1bb5pvpdf9t1sp3cbo8j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.push_notification.fcm",
+            "certificate_hash": "d09b68fa773b5d992dfcbc64332ea4a49e8315e6"
+          }
+        },
+        {
+          "client_id": "226714838572-eatsgii2recflp220l35q9cbl1psqens.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiWwJQj8Oisqbohq4UUpEz13fh_MsK4tg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "226714838572-eatsgii2recflp220l35q9cbl1psqens.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226714838572:android:5ddd3994b935ea2f8d5389",
+        "android_client_info": {
+          "package_name": "com.smartersvision.food_delivery_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226714838572-eatsgii2recflp220l35q9cbl1psqens.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiWwJQj8Oisqbohq4UUpEz13fh_MsK4tg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "226714838572-eatsgii2recflp220l35q9cbl1psqens.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

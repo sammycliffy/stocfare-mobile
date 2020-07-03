@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:stockfare_mobile/intro_pages/add_product_intro.dart';
+import 'package:stockfare_mobile/intro_pages/sales_intro.dart';
 import 'package:stockfare_mobile/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/main_pages/common_widget/main_app_bar.dart';
 import 'package:stockfare_mobile/main_pages/home.dart';
@@ -12,8 +15,8 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
   int _currentIndex = 0;
   List<Widget> _tabs = [
     HomeScreen(),
-    Center(child: Text('Page 2')),
-    Center(child: Text('Page 3')),
+    AddProductIntro(),
+    SalesIntroPage(),
     Center(child: Text('Page 4'))
   ];
   @override
@@ -32,34 +35,51 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
-              color: Colors.red,
+              color: Hexcolor('#c80815'),
             ),
             title: Text(
               'Home',
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(
+                color: Hexcolor('#c80815'),
+              ),
             ),
             backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.card_giftcard, color: Colors.red),
+            icon: Icon(
+              Icons.card_giftcard,
+              color: Hexcolor('#c80815'),
+            ),
             title: Text(
               'Products',
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(
+                color: Hexcolor('#c80815'),
+              ),
             ),
             backgroundColor: Colors.deepOrange,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.monetization_on, color: Colors.red),
+            icon: Icon(
+              Icons.monetization_on,
+              color: Hexcolor('#c80815'),
+            ),
             title: Text(
               'Sales',
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(
+                color: Hexcolor('#c80815'),
+              ),
             ),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.multiline_chart, color: Colors.red),
+            icon: Icon(
+              Icons.multiline_chart,
+              color: Hexcolor('#c80815'),
+            ),
             title: Text(
               'Analytics',
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(
+                color: Hexcolor('#c80815'),
+              ),
             ),
             backgroundColor: Colors.green,
           )

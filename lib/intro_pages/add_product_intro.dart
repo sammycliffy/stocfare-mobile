@@ -14,10 +14,11 @@ class AddProductIntro extends StatefulWidget {
 }
 
 class _AddProductIntroState extends State<AddProductIntro> {
-  double _value = 0;
-  double _quantity = 0;
-  String _error = '';
-  File _image;
+  double _value = 0; // value for quantity availabe
+  double _quantity = 0; // value for low stock alert
+  String _error = ''; // multile image error
+  File _image; // Single image file
+  String _barcode;
   final picker = ImagePicker();
   final _formkey = GlobalKey<FormState>();
 
@@ -31,12 +32,14 @@ class _AddProductIntroState extends State<AddProductIntro> {
 
   void getBarcode() async {
     var result = await BarcodeScanner.scan();
+    setState(() {
+      _barcode = result.rawContent;
+    });
 
-    print(result.type); // The result type (barcode, cancelled, failed)
-    print(result.rawContent); // The barcode content
-    print(result.format); // The barcode format (as enum)
-    print(result
-        .formatNote); // If a unknown format was scanned this field contains a note
+    //print(result.type); The result type (barcode, cancelled, failed)
+    //print(result.rawContent); // The barcode content
+    //print(result.format); // The barcode format (as enum)
+    //print(result.formatNote); // If a unknown format was scanned this field contains a note
   }
 
   @override
@@ -104,7 +107,7 @@ class _AddProductIntroState extends State<AddProductIntro> {
                     },
                   ),
                   SizedBox(height: 6),
-                  Text('Add Barcode'),
+                  _barcode == null ? Text('Add Barcode') : Text(_barcode),
                 ])
               ],
             ),

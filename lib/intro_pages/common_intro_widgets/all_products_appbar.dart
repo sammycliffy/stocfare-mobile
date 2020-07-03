@@ -32,7 +32,7 @@ class AppBarAllProducts extends StatelessWidget {
                   child: Center(
                       child: Text(
                     'All Products',
-                    style: TextStyle(color: Colors.red),
+                    style: TextStyle(color: Theme.of(context).primaryColor),
                   )),
                 ),
                 onTap: () {
@@ -55,7 +55,9 @@ class AppBarAllProducts extends StatelessWidget {
                   child: Center(
                       child: Text(
                     'Checkout',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   )),
                 ),
                 onTap: () {
