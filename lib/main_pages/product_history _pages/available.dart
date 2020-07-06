@@ -1,12 +1,10 @@
-class ProductsAvailable extends StatefulWidget {
-  @override
-  _ProductsAvailableState createState() => _ProductsAvailableState();
-}
-
-class _ProductsAvailableState extends State<ProductsAvailable> {
+class ProductsAvailable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      shrinkWrap: true,
+      primary: true,
+      physics: const AlwaysScrollableScrollPhysics(),
       children: const <Widget>[
         Card(child: ListTile(title: Text('One-line ListTile'))),
         Card(
@@ -32,6 +30,22 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
           child: ListTile(
             title: Text('One-line dense ListTile'),
             dense: true,
+          ),
+        ),
+        Card(
+          child: ListTile(
+            leading: FlutterLogo(size: 56.0),
+            title: Text('Two-line ListTile'),
+            subtitle: Text('Here is a second line'),
+            trailing: Icon(Icons.more_vert),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            leading: FlutterLogo(size: 56.0),
+            title: Text('Two-line ListTile'),
+            subtitle: Text('Here is a second line'),
+            trailing: Icon(Icons.more_vert),
           ),
         ),
         Card(

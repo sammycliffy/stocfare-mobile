@@ -25,6 +25,7 @@ class _AddProductIntroState extends State<AddProductIntro> {
   String _productCategory;
   String _barCode;
   String _productPrice;
+  String _productDescription;
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -143,8 +144,6 @@ class _AddProductIntroState extends State<AddProductIntro> {
                               color: Theme.of(context)
                                   .focusColor
                                   .withOpacity(0.7)),
-                          prefixIcon: Icon(Icons.phone_android,
-                              color: Theme.of(context).accentColor),
                           hintText: 'Enter product Category. E.g. Soft Drinks',
                           filled: true,
                           enabledBorder: OutlineInputBorder(
@@ -183,8 +182,6 @@ class _AddProductIntroState extends State<AddProductIntro> {
                               color: Theme.of(context)
                                   .focusColor
                                   .withOpacity(0.7)),
-                          prefixIcon: Icon(Icons.phone_android,
-                              color: Theme.of(context).accentColor),
                           hintText: 'Enter product Name',
                           filled: true,
                           enabledBorder: OutlineInputBorder(
@@ -227,9 +224,49 @@ class _AddProductIntroState extends State<AddProductIntro> {
                               color: Theme.of(context)
                                   .focusColor
                                   .withOpacity(0.7)),
-                          prefixIcon: Icon(Icons.phone_android,
-                              color: Theme.of(context).accentColor),
                           hintText: 'Enter Product (Unit) Price',
+                          filled: true,
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.5))),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Container(
+                      width: 320,
+                      child: TextFormField(
+                        validator: (val) =>
+                            val.isEmpty ? 'Product Description' : null,
+                        onChanged: (val) => setState(() {
+                          _productDescription = val;
+                        }),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
+                        style: TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(12),
+                          labelStyle:
+                              TextStyle(color: Theme.of(context).accentColor),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.7)),
+                          hintText: 'Product Description',
                           filled: true,
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -311,7 +348,7 @@ class _AddProductIntroState extends State<AddProductIntro> {
                   ],
                 )),
             SizedBox(
-              height: 30,
+              height: 5.0,
             ),
             Container(
               width: 300,

@@ -18,55 +18,7 @@ class _ProductHistoryPageState extends State<ProductHistoryPage> {
   int _currentIndex = 0;
 
   List<Widget> _tabs = [
-    ListView(
-      shrinkWrap: true,
-      children: const <Widget>[
-        Card(child: ListTile(title: Text('One-line ListTile'))),
-        Card(
-          child: ListTile(
-            leading: FlutterLogo(),
-            title: Text('One-line with leading widget'),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('One-line with trailing widget'),
-            trailing: Icon(Icons.more_vert),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            leading: FlutterLogo(),
-            title: Text('One-line with both widgets'),
-            trailing: Icon(Icons.more_vert),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('One-line dense ListTile'),
-            dense: true,
-          ),
-        ),
-        Card(
-          child: ListTile(
-            leading: FlutterLogo(size: 56.0),
-            title: Text('Two-line ListTile'),
-            subtitle: Text('Here is a second line'),
-            trailing: Icon(Icons.more_vert),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            leading: FlutterLogo(size: 72.0),
-            title: Text('Three-line ListTile'),
-            subtitle:
-                Text('A sufficiently long subtitle warrants three lines.'),
-            trailing: Icon(Icons.more_vert),
-            isThreeLine: true,
-          ),
-        ),
-      ],
-    ),
+    availableProducts(),
     Text('two'),
     Text('three'),
   ];
@@ -114,9 +66,28 @@ class _ProductHistoryPageState extends State<ProductHistoryPage> {
           ),
           VerticalDivider(thickness: 2, width: 1, color: Colors.white),
           // This is the main content.
-          Flexible(
+          Container(
+            color: Colors.white,
+            width: 310,
             child: _tabs[_currentIndex],
           )
         ]));
   }
+}
+
+Widget availableProducts() {
+  return GridView.count(
+    // Create a grid with 2 columns. If you change the scrollDirection to
+    // horizontal, this produces 2 rows.
+    crossAxisCount: 2,
+    // Generate 100 widgets that display their index in the List.
+    children: List.generate(100, (index) {
+      return Container(
+        width: 50,
+        height: 50,
+        color: Colors.grey,
+        child: Text('Item $index', style: TextStyle(color: Colors.red)),
+      );
+    }),
+  );
 }

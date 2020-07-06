@@ -31,21 +31,7 @@ class AuthServices {
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
-          body: jsonEncode(<String, dynamic>{
-            "account": {
-              "first_name": firstName,
-              "last_name": lastName,
-              "phone_number": email,
-              "email": phone,
-              "password": password,
-            },
-            "registration_id": registrationId,
-            "name": businessName,
-            "address": businessAddress,
-            "description": businessDescription,
-            "referral": referralCode,
-            "business_type": businessType
-          }));
+          body: jsonEncode(<String, dynamic>{}));
       if (response.statusCode == 200) {
         var responseJson = json.decode(response.body);
         sharedPreferences.setString("token", responseJson['token']['access']);
