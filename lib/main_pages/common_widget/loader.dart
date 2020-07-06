@@ -1,0 +1,35 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+class Loading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: 100),
+            Image.asset('assets/images/logo.png', width: 50, height: 50),
+            Text(
+              'Stockfare',
+              style: TextStyle(
+                  fontSize: 30,
+                  color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 50),
+            SpinKitChasingDots(
+              color: Colors.red[700],
+              size: 50,
+            ),
+            SizedBox(height: 20),
+            Text('Just a moment...',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold))
+          ],
+        ));
+  }
+}

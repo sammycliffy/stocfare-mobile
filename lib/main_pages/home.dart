@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/intro_pages/add_product_intro.dart';
+import 'package:stockfare_mobile/models/user_model.dart';
+import 'package:stockfare_mobile/services/auth_services.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -77,7 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your onPressed code here!
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddProductIntro()));
         },
         child: Icon(Icons.add),
         backgroundColor: Theme.of(context).primaryColor,

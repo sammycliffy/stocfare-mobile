@@ -5,6 +5,7 @@ import 'package:stockfare_mobile/intro_pages/sales_intro.dart';
 import 'package:stockfare_mobile/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/main_pages/common_widget/main_app_bar.dart';
 import 'package:stockfare_mobile/main_pages/home.dart';
+import 'package:stockfare_mobile/main_pages/product_History.dart';
 
 class BottomNavigationPage extends StatefulWidget {
   @override
@@ -15,15 +16,18 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
   int _currentIndex = 0;
   List<Widget> _tabs = [
     HomeScreen(),
-    AddProductIntro(),
+    ProductHistoryPage(),
     SalesIntroPage(),
     Center(child: Text('Page 4'))
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: MainAppBar.appBarFunction(),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(100.0), // here the desired height
+          child: MainAppBar.appBarFunction(context)),
       drawer: DrawerPage(),
       body: _tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(

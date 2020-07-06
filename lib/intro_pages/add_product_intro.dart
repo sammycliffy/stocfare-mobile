@@ -21,6 +21,10 @@ class _AddProductIntroState extends State<AddProductIntro> {
   String _barcode;
   final picker = ImagePicker();
   final _formkey = GlobalKey<FormState>();
+  String _productName;
+  String _productCategory;
+  String _barCode;
+  String _productPrice;
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -119,41 +123,126 @@ class _AddProductIntroState extends State<AddProductIntro> {
                     Container(
                       width: 320,
                       child: TextFormField(
-                          validator: (val) =>
-                              val.isEmpty ? 'Enter Product Name' : null,
-                          decoration: InputDecoration(
-                            hintText: 'Enter product name',
-                            filled: true,
-                            border: InputBorder.none,
-                          )),
+                        validator: (val) => val.isEmpty
+                            ? 'Enter product Category. E.g. Soft Drinks'
+                            : null,
+                        onChanged: (val) => setState(() {
+                          _productCategory = val;
+                        }),
+                        style: TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(12),
+                          labelStyle:
+                              TextStyle(color: Theme.of(context).accentColor),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.7)),
+                          prefixIcon: Icon(Icons.phone_android,
+                              color: Theme.of(context).accentColor),
+                          hintText: 'Enter product Category. E.g. Soft Drinks',
+                          filled: true,
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.5))),
+                        ),
+                      ),
                     ),
                     SizedBox(height: 15),
                     Container(
                       width: 320,
                       child: TextFormField(
-                          validator: (val) =>
-                              val.isEmpty ? 'Enter Product Category' : null,
-                          decoration: InputDecoration(
-                            hintText: 'Enter product Category. e.g Soft drinks',
-                            filled: true,
-                            border: InputBorder.none,
-                          )),
+                        validator: (val) =>
+                            val.isEmpty ? 'Enter Product Name' : null,
+                        onChanged: (val) => setState(() {
+                          _productName = val;
+                        }),
+                        style: TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(12),
+                          labelStyle:
+                              TextStyle(color: Theme.of(context).accentColor),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.7)),
+                          prefixIcon: Icon(Icons.phone_android,
+                              color: Theme.of(context).accentColor),
+                          hintText: 'Enter product Name',
+                          filled: true,
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.5))),
+                        ),
+                      ),
                     ),
                     SizedBox(height: 15),
                     Container(
                       width: 320,
                       child: TextFormField(
-                          validator: (val) =>
-                              val.isEmpty ? 'Enter product price' : null,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            WhitelistingTextInputFormatter.digitsOnly
-                          ],
-                          decoration: InputDecoration(
-                            hintText: 'Product (Unit) Price ',
-                            filled: true,
-                            border: InputBorder.none,
-                          )),
+                        validator: (val) =>
+                            val.isEmpty ? 'Enter product price' : null,
+                        onChanged: (val) => setState(() {
+                          _productPrice = val;
+                        }),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
+                        style: TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(12),
+                          labelStyle:
+                              TextStyle(color: Theme.of(context).accentColor),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.7)),
+                          prefixIcon: Icon(Icons.phone_android,
+                              color: Theme.of(context).accentColor),
+                          hintText: 'Enter Product (Unit) Price',
+                          filled: true,
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.5))),
+                        ),
+                      ),
                     ),
                     SizedBox(
                       height: 20,
@@ -300,9 +389,15 @@ class _AddProductIntroState extends State<AddProductIntro> {
                         _error = 'Your Product quantity cannot be 0';
                       });
                     } else {
-                      PageTransition(
-                          type: PageTransitionType.leftToRight,
-                          child: SuccessProduct());
+                      print(_productName);
+                      print(_productPrice);
+                      print(_productCategory);
+                      print(_quantity * 100);
+                      print(_value * 100);
+
+                      // PageTransition(
+                      //     type: PageTransitionType.leftToRight,
+                      //     child: SuccessProduct());
                     }
                   }
                 }),

@@ -1,8 +1,15 @@
 class User {
-  String firstName;
-  String lastName;
+  String fullname;
   String phone;
   String email;
 
-  User({this.firstName, this.lastName, this.phone, this.email});
+  User({this.fullname, this.phone, this.email});
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      fullname: json['full_name'] ?? '',
+      email: json['email'],
+      phone: json['phone'],
+    );
+  }
 }

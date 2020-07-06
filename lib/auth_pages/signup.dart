@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/auth_pages/business_signup.dart';
+import 'package:stockfare_mobile/auth_pages/phone_verification.dart';
+import 'package:stockfare_mobile/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'login.dart';
 
@@ -13,9 +15,9 @@ class _SignupPage extends State<SignupPage> {
   final _formkey = GlobalKey<FormState>();
   String firstName;
   String lastName;
-  String phone;
+  String phoneNumber;
   String password;
-  String email;
+  String emailAddress;
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +155,7 @@ class _SignupPage extends State<SignupPage> {
                           ? 'Enter a valid email address'
                           : null,
                       onChanged: (val) => setState(() {
-                        email = val;
+                        emailAddress = val;
                       }),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(12),
@@ -237,9 +239,9 @@ class _SignupPage extends State<SignupPage> {
                       style: TextStyle(color: Colors.black),
                       keyboardType: TextInputType.number,
                       validator: (input) =>
-                          input.isEmpty ? 'Enter your your phone' : null,
+                          input.length < 10 ? 'Enter a valid phone' : null,
                       onChanged: (val) => setState(() {
-                        phone = val;
+                        phoneNumber = '+234' + val.substring(1);
                       }),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(12),
@@ -253,7 +255,7 @@ class _SignupPage extends State<SignupPage> {
                         hintStyle: TextStyle(
                             color:
                                 Theme.of(context).focusColor.withOpacity(0.7)),
-                        prefixIcon: Icon(Icons.phone,
+                        prefixIcon: Icon(Icons.phone_android,
                             color: Theme.of(context).accentColor),
                         hintText: 'Enter your phone number',
                         filled: true,
@@ -291,8 +293,8 @@ class _SignupPage extends State<SignupPage> {
                       ),
                       onTap: () async {
                         if (_formkey.currentState.validate()) {
-                          _signupNotifier.setFirstPage(
-                              firstName, lastName, phone, password, email);
+                          _signupNotifier.setFirstPage(firstName, lastName,
+                              phoneNumber, password, emailAddress);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -316,8 +318,11 @@ class _SignupPage extends State<SignupPage> {
                           style: TextStyle(fontSize: 14, color: Colors.red),
                         ),
                         onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Login()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      BottomNavigationPage()));
                         },
                       ),
                     ],
