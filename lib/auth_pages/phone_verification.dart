@@ -126,18 +126,18 @@ class _PhoneVerification extends State<PhoneVerification> {
                                   loading = true;
                                 });
                                 dynamic result = await _auth.verifyPhone(code);
-                                if (result == null) {
-                                  setState(() {
-                                    loading = false;
-                                    _error = 'The code you entered is invalid';
-                                    _displaySnackBar(context);
-                                  });
-                                } else {
+                                if (result) {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               BottomNavigationPage()));
+                                } else {
+                                  setState(() {
+                                    loading = false;
+                                    _error = 'The code you entered is invalid';
+                                    _displaySnackBar(context);
+                                  });
                                 }
                               }
                             }),

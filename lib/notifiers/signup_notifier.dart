@@ -25,6 +25,7 @@ class SignupNotifier with ChangeNotifier {
   String get businessType => _businessType;
   String get referralCode => _referralCode;
 
+  //set values to be transferred to the business signup page
   void setFirstPage(
     String firstName,
     String lastName,
@@ -40,6 +41,7 @@ class SignupNotifier with ChangeNotifier {
     notifyListeners();
   }
 
+  //set profile values so that they can be called from anywhere
   void setProfile(
     String fullName,
     String phone,

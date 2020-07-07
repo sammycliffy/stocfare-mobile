@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/intro_pages/addProducts.dart';
 import 'package:stockfare_mobile/intro_pages/add_product_intro.dart';
 import 'package:stockfare_mobile/models/user_model.dart';
 import 'package:stockfare_mobile/services/auth_services.dart';
@@ -81,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddProductIntro()));
+              MaterialPageRoute(builder: (context) => AddProductPage()));
         },
         child: Icon(Icons.add),
         backgroundColor: Theme.of(context).primaryColor,

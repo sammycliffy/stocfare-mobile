@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
+import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'intro_pages/splashscreen.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(
-    create: (context) => SignupNotifier(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<SignupNotifier>(
+        create: (_) => SignupNotifier(),
+      ),
+      ChangeNotifierProvider<AddProductNotifier>(
+        create: (_) => AddProductNotifier(),
+      )
+    ],
     child: MaterialApp(
         home: SplashScreen(),
         theme: ThemeData(
@@ -19,11 +27,12 @@ void main() {
           focusColor: Colors.black,
           textTheme: TextTheme(
             headline1: TextStyle(
-                fontSize: 72.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.bold,
-                backgroundColor: Colors.black),
+                color: Colors.black,
+                fontFamily: 'Mukta'),
             headline6: TextStyle(
-                fontSize: 36.0,
+                fontSize: 20.0,
                 fontStyle: FontStyle.italic,
                 backgroundColor: Colors.black),
             bodyText2: TextStyle(

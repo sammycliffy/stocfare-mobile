@@ -112,7 +112,12 @@ class _AddProductIntroState extends State<AddProductIntro> {
                     },
                   ),
                   SizedBox(height: 6),
-                  _barcode == null ? Text('Add Barcode') : Text(_barcode),
+                  _barcode == null
+                      ? Text('Add Barcode')
+                      : Text(
+                          _barcode,
+                          style: TextStyle(color: Colors.black),
+                        ),
                 ])
               ],
             ),

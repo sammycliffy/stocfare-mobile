@@ -318,11 +318,8 @@ class _SignupPage extends State<SignupPage> {
                           style: TextStyle(fontSize: 14, color: Colors.red),
                         ),
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      BottomNavigationPage()));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Login()));
                         },
                       ),
                     ],

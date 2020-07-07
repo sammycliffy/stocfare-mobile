@@ -26,43 +26,41 @@ class AuthServices {
     String businessType,
     String referralCode,
   ) async {
-    try {
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-      final String url =
-          'http://stockfare-io.herokuapp.com/api/v2/users/register/';
-      final http.Response response = await http.post(url,
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final String url =
+        'http://stockfare-io.herokuapp.com/api/v2/users/register/';
+    final http.Response response = await http.post(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "account": {
+            "first_name": firstName,
+            "last_name": lastName,
+            "phone_number": email,
+            "email": phone,
+            "password": password,
           },
-          body: jsonEncode(<String, dynamic>{
-            "account": {
-              "first_name": firstName,
-              "last_name": lastName,
-              "phone_number": email,
-              "email": phone,
-              "password": password,
-            },
-            "registration_id": registrationId,
-            "name": businessName,
-            "address": businessAddress,
-            "description": businessDescription,
-            "referral": referralCode,
-            "business_type": businessType
-          }));
-      if (response.statusCode == 200) {
-        var responseJson = json.decode(response.body);
-        sharedPreferences.setString("token", responseJson['token']['access']);
-        print(responseJson);
-        //sharedPreferences.setString("token", responseJson['token']['access']);
-        dynamic user = User.fromJson(json.decode(response.body)['user']);
-        return user;
-      } else {
-        print(response.body);
-        return null;
-      }
-    } catch (e) {
-      print('no internet connection');
+          "registration_id": registrationId,
+          "name": businessName,
+          "address": businessAddress,
+          "description": businessDescription,
+          "referral": referralCode,
+          "business_type": businessType
+        }));
+    if (response.statusCode == 200) {
+      var responseJson = json.decode(response.body);
+      sharedPreferences.setString("token", responseJson['token']['access']);
+      print(responseJson);
+      //sharedPreferences.setString("token", responseJson['token']['access']);
+      dynamic user = User.fromJson(json.decode(response.body)['user']);
+      print(user.branchId);
+      sharedPreferences.setString("branchId", user.branchId);
+      print(user.branch.id);
+      return user;
+    } else {
+      print(response.body);
+      return null;
     }
   }
 
@@ -84,7 +82,9 @@ class AuthServices {
       var responseJson = json.decode(response.body);
       print(responseJson);
       sharedPreferences.setString("token", responseJson['token']['access']);
-      dynamic user = User.fromJson(json.decode(response.body)['user']);
+      dynamic user = User.fromJson(json.decode(response.body));
+      sharedPreferences.setString("branchId", user.branchId);
+      print(user.branchId);
       return user;
     } else if (response.statusCode == 400) {
       print(response.body);
@@ -109,10 +109,11 @@ class AuthServices {
     if (response.statusCode == 200) {
       var responseJson = json.decode(response.body);
       print(responseJson);
+      return true;
     } else {
       print(response.body);
-      print(code);
-      return null;
+      print(response.statusCode);
+      return false;
     }
   }
 
