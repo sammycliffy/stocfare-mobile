@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
+import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'intro_pages/splashscreen.dart';
@@ -10,6 +11,9 @@ void main() {
     providers: [
       ChangeNotifierProvider<SignupNotifier>(
         create: (_) => SignupNotifier(),
+      ),
+      ChangeNotifierProvider<AddProductToCart>(
+        create: (_) => AddProductToCart(),
       ),
       ChangeNotifierProvider<AddProductNotifier>(
         create: (_) => AddProductNotifier(),
@@ -31,10 +35,7 @@ void main() {
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
                 fontFamily: 'Mukta'),
-            headline6: TextStyle(
-                fontSize: 20.0,
-                fontStyle: FontStyle.italic,
-                backgroundColor: Colors.black),
+            headline6: TextStyle(fontSize: 20.0, color: Colors.black),
             bodyText2: TextStyle(
               fontSize: 14.0,
               fontFamily: 'Mukta',

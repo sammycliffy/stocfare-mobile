@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 
 class ProductsAvailable extends StatefulWidget {
   @override
@@ -7,8 +9,10 @@ class ProductsAvailable extends StatefulWidget {
 
 class _ProductsAvailableState extends State<ProductsAvailable> {
   String dropdownValue = 'Unit';
+  int quantity = 0;
   @override
   Widget build(BuildContext context) {
+    AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
     return GridView.count(
       // Create a grid with 2 columns. If you change the scrollDirection to
       // horizontal, this produces 2 rows.
@@ -59,7 +63,11 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
               ),
             ),
             onTap: () {
-              _showMyDialog(context);
+              //if the product number is greater than 3 display the show dialog box
+              addProduct.increment();
+              if (addProduct.product > 3) {
+                _showMyDialog(context);
+              }
             },
           ),
         );
@@ -73,6 +81,7 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
+        AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
         return AlertDialog(
           backgroundColor: Colors.white,
           content: SingleChildScrollView(
@@ -104,6 +113,9 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
                       child: TextFormField(
                         validator: (val) =>
                             val.isEmpty ? 'Enter quantity' : null,
+                        onChanged: (val) => setState(() {
+                          quantity = int.parse(val);
+                        }),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(12),
                           labelStyle:
@@ -154,6 +166,7 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
+                  addProduct.setProductValue(quantity);
                 }),
           ],
         );

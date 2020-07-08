@@ -23,4 +23,9 @@ class AddProductToCart with ChangeNotifier {
     _discount = value;
     notifyListeners();
   }
+
+  void increment() {
+    _product++;
+    notifyListeners();
+  }
 }
