@@ -6,6 +6,7 @@
 // `_selectedIndex` is updated by the `onDestinationSelected` callback.
 
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/main_pages/all_products_list/available.dart';
 
 class ProductHistoryPage extends StatefulWidget {
   ProductHistoryPage({Key key}) : super(key: key);
@@ -18,7 +19,7 @@ class _ProductHistoryPageState extends State<ProductHistoryPage> {
   int _currentIndex = 0;
 
   List<Widget> _tabs = [
-    availableProducts(),
+    ProductsAvailable(),
     Text('two'),
     Text('three'),
   ];
@@ -73,21 +74,4 @@ class _ProductHistoryPageState extends State<ProductHistoryPage> {
           )
         ]));
   }
-}
-
-Widget availableProducts() {
-  return GridView.count(
-    // Create a grid with 2 columns. If you change the scrollDirection to
-    // horizontal, this produces 2 rows.
-    crossAxisCount: 2,
-    // Generate 100 widgets that display their index in the List.
-    children: List.generate(100, (index) {
-      return Container(
-        width: 50,
-        height: 50,
-        color: Colors.grey,
-        child: Text('Item $index', style: TextStyle(color: Colors.red)),
-      );
-    }),
-  );
 }

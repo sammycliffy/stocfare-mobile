@@ -4,7 +4,6 @@ import 'package:device_info/device_info.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/user_model.dart';
-import 'package:connectivity/connectivity.dart';
 
 class AuthServices {
   Future<String> getId() async {
@@ -115,16 +114,5 @@ class AuthServices {
       print(response.statusCode);
       return false;
     }
-  }
-
-  //check for internet
-  Future<bool> check() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile) {
-      return true;
-    } else if (connectivityResult == ConnectivityResult.wifi) {
-      return true;
-    }
-    return false;
   }
 }

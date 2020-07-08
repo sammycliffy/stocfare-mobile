@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:stockfare_mobile/intro_pages/add_product_intro.dart';
 import 'package:stockfare_mobile/intro_pages/sales_intro.dart';
 import 'package:stockfare_mobile/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/main_pages/common_widget/main_app_bar.dart';
 import 'package:stockfare_mobile/main_pages/home.dart';
-import 'package:stockfare_mobile/main_pages/product_History.dart';
+import 'package:stockfare_mobile/main_pages/products.dart';
 
 class BottomNavigationPage extends StatefulWidget {
   @override
@@ -18,7 +17,8 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
     HomeScreen(),
     ProductHistoryPage(),
     SalesIntroPage(),
-    Center(child: Text('Page 4'))
+    Center(child: Text('Page 4')),
+    Center(child: Text('Page 5'))
   ];
 
   @override
@@ -81,6 +81,19 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
             ),
             title: Text(
               'Analytics',
+              style: TextStyle(
+                color: Hexcolor('#c80815'),
+              ),
+            ),
+            backgroundColor: Colors.green,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.shopping_cart,
+              color: Hexcolor('#c80815'),
+            ),
+            title: Text(
+              'Shop',
               style: TextStyle(
                 color: Hexcolor('#c80815'),
               ),

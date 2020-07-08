@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/auth_pages/business_signup.dart';
-import 'package:stockfare_mobile/auth_pages/phone_verification.dart';
-import 'package:stockfare_mobile/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'login.dart';
 
@@ -315,7 +313,10 @@ class _SignupPage extends State<SignupPage> {
                       GestureDetector(
                         child: Text(
                           'Login',
-                          style: TextStyle(fontSize: 14, color: Colors.red),
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold),
                         ),
                         onTap: () {
                           Navigator.push(context,

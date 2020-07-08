@@ -18,13 +18,13 @@ class Loading extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 100),
             SpinKitChasingDots(
               color: Colors.red[700],
               size: 50,
             ),
             SizedBox(height: 20),
-            Text('Just a moment...',
+            Text('Your business just got smarter.',
                 style: TextStyle(
                     fontSize: 20,
                     color: Colors.red,

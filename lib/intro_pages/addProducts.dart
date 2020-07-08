@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/intro_pages/add_multiple_product/upload_excel.dart';
 import 'package:stockfare_mobile/intro_pages/add_single_products/form.dart';
 
 class AddProductPage extends StatelessWidget {
@@ -26,7 +27,7 @@ class AddProductPage extends StatelessWidget {
         body: TabBarView(
           children: [
             FormPage(),
-            Icon(Icons.directions_transit),
+            UploadExcelPage(),
           ],
         ),
       ),

@@ -316,49 +316,40 @@ class _SignupPage extends State<BusinessSignupPage> {
                                   if (_formkey.currentState.validate()) {
                                     String registrationid = await _auth.getId();
                                     //check for internet
-                                    _auth.check().then((intenet) async {
-                                      if (intenet != null && intenet) {
-                                        //send the data to the auth registration session
-                                        dynamic result =
-                                            await _auth.userRegistration(
-                                                _signupNotifier.firstName,
-                                                _signupNotifier.lastName,
-                                                _signupNotifier.email,
-                                                _signupNotifier.password,
-                                                _signupNotifier.phone,
-                                                registrationid,
-                                                businessName,
-                                                businessAddress,
-                                                businessDescription,
-                                                businessType,
-                                                referralCode);
-                                        //check if an account already existed
-                                        if (result == null) {
-                                          setState(() {
-                                            loading = false;
-                                            _error =
-                                                'You already have an account with us';
-                                            _displaySnackBar(context);
-                                          });
-                                        } else {
-                                          _signupNotifier.setProfile(
-                                              result.fullname,
-                                              result.phone,
-                                              result.email);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      PhoneVerification()));
-                                        }
-                                      } else {
-                                        setState(() {
-                                          loading = false;
-                                          _error = 'No internet connection';
-                                          _displaySnackBar(context);
-                                        });
-                                      }
-                                    });
+
+                                    //send the data to the auth registration session
+                                    dynamic result =
+                                        await _auth.userRegistration(
+                                            _signupNotifier.firstName,
+                                            _signupNotifier.lastName,
+                                            _signupNotifier.email,
+                                            _signupNotifier.password,
+                                            _signupNotifier.phone,
+                                            registrationid,
+                                            businessName,
+                                            businessAddress,
+                                            businessDescription,
+                                            businessType,
+                                            referralCode);
+                                    //check if an account already existed
+                                    if (result == null) {
+                                      setState(() {
+                                        loading = false;
+                                        _error =
+                                            'You already have an account with us';
+                                        _displaySnackBar(context);
+                                      });
+                                    } else {
+                                      _signupNotifier.setProfile(
+                                          result.fullname,
+                                          result.phone,
+                                          result.email);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PhoneVerification()));
+                                    }
                                   }
                                 }),
                             SizedBox(height: 30),

@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:provider/provider.dart';
+import 'package:stockfare_mobile/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/main_pages/common_widget/loader.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
@@ -178,6 +179,18 @@ class _BarcodePageState extends State<BarcodePage> {
                               _barcode,
                               _addProduct.productDescription,
                               base64Image);
+
+                          if (result == null) {
+                            setState(() {
+                              loading = false;
+                            });
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        BottomNavigationPage()));
+                          }
                         }),
                     SizedBox(
                       height: 50,

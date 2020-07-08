@@ -34,7 +34,7 @@ class ProductServices {
               "quantity": productQuantity,
               "limit": quantityAlert,
             },
-            "images": image,
+            "image": image,
             "name": productName,
             "barcode": barcode,
             "description": productDescription,
@@ -48,25 +48,5 @@ class ProductServices {
       print(response.body);
       return null;
     }
-  }
-
-  Future<dynamic> productAdd(String text, File file) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String branchId = sharedPreferences.getString('branchId');
-    final String url =
-        'http://stockfare-io.herokuapp.com/api/v2/users/register/$branchId';
-    var request = http.MultipartRequest("POST", Uri.parse(url));
-
-    request.fields["name"] = text;
-    //create multipart using filepath, string or bytes
-    var pic = await http.MultipartFile.fromPath("file_field", file.path);
-    //add multipart to request
-    request.files.add(pic);
-    var response = await request.send();
-
-    //Get the response from the server
-    var responseData = await response.stream.toBytes();
-    var responseString = String.fromCharCodes(responseData);
-    print(responseString);
   }
 }

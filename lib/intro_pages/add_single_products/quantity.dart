@@ -147,6 +147,12 @@ class _QuantityPageState extends State<QuantityPage> {
                         _displaySnackBar(context);
                       });
                     });
+                  } else if (_quantity < _value) {
+                    setState(() {
+                      _error =
+                          'Your Product alert cannot be less than actual quantity';
+                      _displaySnackBar(context);
+                    });
                   } else {
                     _addProduct.setQuantity(
                         (_quantity * 100).round(), (_value * 100).round());

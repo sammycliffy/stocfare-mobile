@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/auth_pages/signup.dart';
 import 'package:stockfare_mobile/main_pages/common_widget/bottom_navigation.dart';
@@ -197,36 +196,41 @@ class _LoginState extends State<Login> {
                                   ),
                                 ),
                                 onTap: () async {
-                                  if (_formKey.currentState.validate()) {
-                                    setState(() {
-                                      loading = true;
-                                    });
-                                    //this gets the phone registrationId
-                                    String _registrationid =
-                                        await _auth.getId();
-                                    dynamic result = await _auth.loginUsernew(
-                                        phoneNumber, password, _registrationid);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigationPage()));
+                                  // if (_formKey.currentState.validate()) {
+                                  //   setState(() {
+                                  //     loading = true;
+                                  //   });
+                                  //   //this gets the phone registrationId
+                                  //   String _registrationid =
+                                  //       await _auth.getId();
+                                  //   dynamic result = await _auth.loginUsernew(
+                                  //       phoneNumber, password, _registrationid);
 
-                                    if (result == null) {
-                                      setState(() {
-                                        loading = false;
-                                        _error =
-                                            'Could not sign in with those credentials';
-                                        _displaySnackBar(context);
-                                      });
-                                    } else {
-                                      //This will set the profile data for the notifier so that it can move between pages
-                                      _signupNotifier.setProfile(
-                                          result.fullname,
-                                          result.phone,
-                                          result.email);
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BottomNavigationPage()));
-                                    }
-                                  }
+                                  //   if (result == null) {
+                                  //     setState(() {
+                                  //       loading = false;
+                                  //       _error =
+                                  //           'Could not sign in with those credentials';
+                                  //       _displaySnackBar(context);
+                                  //     });
+                                  //   } else {
+                                  //     //This will set the profile data for the notifier so that it can move between pages
+                                  //     _signupNotifier.setProfile(
+                                  //         result.fullname,
+                                  //         result.phone,
+                                  //         result.email);
+                                  //     Navigator.push(
+                                  //         context,
+                                  //         MaterialPageRoute(
+                                  //             builder: (context) =>
+                                  //                 BottomNavigationPage()));
+                                  //   }
+                                  // }
                                 }),
                             SizedBox(
                               height: 20,
