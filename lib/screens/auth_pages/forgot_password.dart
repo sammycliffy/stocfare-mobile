@@ -6,6 +6,9 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPassword extends State<ForgotPassword> {
+  final _formKey = GlobalKey<FormState>();
+  String password;
+  String code;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,18 +48,48 @@ class _ForgotPassword extends State<ForgotPassword> {
               height: 30,
             ),
             Form(
+              key: _formKey,
               child: Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
-                        validator: (val) =>
-                            val.length < 11 ? 'Emaill Address or Phone' : null,
-                        decoration: InputDecoration(
-                          hintText: 'Enter digit number',
-                          filled: true,
-                          border: InputBorder.none,
-                        )),
+                      obscureText: true,
+                      keyboardType: TextInputType.text,
+                      validator: (input) => input.isEmpty
+                          ? "Enter 6 digits that was sent to your number"
+                          : null,
+                      onChanged: (val) => setState(() {
+                        password = val;
+                      }),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(12),
+                        labelStyle:
+                            TextStyle(color: Theme.of(context).primaryColor),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.phone_android,
+                            color: Theme.of(context).accentColor),
+                        hintText: 'Enter 6 digits that was sent to your number',
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.5))),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -64,14 +97,41 @@ class _ForgotPassword extends State<ForgotPassword> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
-                        obscureText: true,
-                        validator: (val) =>
-                            val.length < 11 ? 'Enter Digit number' : null,
-                        decoration: InputDecoration(
-                          hintText: 'New Password',
-                          filled: true,
-                          border: InputBorder.none,
-                        )),
+                      obscureText: true,
+                      keyboardType: TextInputType.text,
+                      validator: (input) =>
+                          input.isEmpty ? "Enter new password" : null,
+                      onChanged: (val) => setState(() {
+                        password = val;
+                      }),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(12),
+                        labelStyle:
+                            TextStyle(color: Theme.of(context).primaryColor),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.lock_open,
+                            color: Theme.of(context).accentColor),
+                        hintText: 'Confirm password',
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.5))),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -79,14 +139,41 @@ class _ForgotPassword extends State<ForgotPassword> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
-                        obscureText: true,
-                        validator: (val) =>
-                            val.length < 11 ? 'Emaill Address or Phone' : null,
-                        decoration: InputDecoration(
-                          hintText: 'Confirm Password',
-                          filled: true,
-                          border: InputBorder.none,
-                        )),
+                      obscureText: true,
+                      keyboardType: TextInputType.text,
+                      validator: (input) =>
+                          input.isEmpty ? "Enter your password" : null,
+                      onChanged: (val) => setState(() {
+                        password = val;
+                      }),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(12),
+                        labelStyle:
+                            TextStyle(color: Theme.of(context).primaryColor),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.lock_open,
+                            color: Theme.of(context).accentColor),
+                        hintText: 'Enter password',
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.5))),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                   SizedBox(
                     height: 10,

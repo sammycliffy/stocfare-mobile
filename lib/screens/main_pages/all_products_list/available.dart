@@ -11,7 +11,7 @@ class ProductsAvailable extends StatefulWidget {
 class _ProductsAvailableState extends State<ProductsAvailable> {
   String dropdownValue = 'Unit';
   int quantity = 0;
-  List<Results> productList = [];
+
   @override
   Widget build(BuildContext context) {
     AddProductToCart addProduct = Provider.of<AddProductToCart>(context);

@@ -11,7 +11,6 @@ class ClassicPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: MainAppBar.appBarFunction(context),
         drawer: DrawerPage(),
         body: Column(
           children: [

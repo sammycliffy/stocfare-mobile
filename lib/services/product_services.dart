@@ -65,7 +65,7 @@ class ProductServices {
       },
     );
     if (response.statusCode == 200) {
-      dynamic products = ProductList.fromJson(json.decode(response.body));
+      dynamic products = Welcome.fromJson(json.decode(response.body));
       print('this is product.count' + products.count);
       //display product name
       print(products.results.map((title) {

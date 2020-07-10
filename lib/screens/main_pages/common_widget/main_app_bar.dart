@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 
 class MainAppBar {
-  static appBarFunction(context) {
+  static appBarFunction(context, name) {
     SignupNotifier _signupNotifier = Provider.of<SignupNotifier>(context);
     return AppBar(
       backgroundColor: Colors.white,
@@ -18,7 +18,7 @@ class MainAppBar {
             child: Column(
               children: <Widget>[
                 Text(
-                  'Dashboard',
+                  name.toString(),
                   style: TextStyle(
                       fontSize: 20,
                       color: Theme.of(context).primaryColor,
@@ -106,6 +106,128 @@ class MainAppBar {
                   )),
             ],
           )
+        ],
+      )),
+    );
+  }
+
+  //productlist appbar
+  static productListAppBar(context) {
+    SignupNotifier _signupNotifier = Provider.of<SignupNotifier>(context);
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0.0,
+      iconTheme: IconThemeData(color: Colors.red),
+      flexibleSpace: Container(
+          child: Row(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 40),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  'Product List',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(width: 30),
+                    Text(
+                      'Total Products:',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      '115',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      'Total Category:',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      '5',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 10),
+        ],
+      )),
+    );
+  }
+
+  //Sales list appbar
+  static salesListAppBar(context) {
+    SignupNotifier _signupNotifier = Provider.of<SignupNotifier>(context);
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0.0,
+      iconTheme: IconThemeData(color: Colors.red),
+      flexibleSpace: Container(
+          child: Row(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 40),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  'Sales List',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(width: 15),
+                    Text(
+                      'Total Sales:',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      '150000',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Total Products Sold:',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      '115',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 10),
         ],
       )),
     );

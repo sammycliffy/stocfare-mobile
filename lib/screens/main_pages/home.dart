@@ -6,6 +6,8 @@ import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/available.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/main_app_bar.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,16 +17,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   ProductServices _productServices = ProductServices();
-  Future<ProductList> futureProductList;
-
-  dynamic _productValue;
 
   @override
   void initState() {
     super.initState();
-    _productServices.getAllProducts().then((value) => setState(() {
-          _productValue = value;
-        }));
   }
 
   @override
@@ -32,6 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
     AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(100.0), // here the desired height
+          child: MainAppBar.appBarFunction(context, 'Dashboard')),
+      drawer: DrawerPage(),
       body: Column(
         children: [
           // Container(
@@ -181,8 +181,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 onTap: () {
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => CheckoutPage()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CheckoutPage()));
                 }),
           ],
         );
@@ -190,14 +190,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-// return Container(
-//   width: 100.0,
-//   color: Colors.red,
-//   child: Center(
-//     child: Text(
-//       'james',
-//       style: TextStyle(color: Colors.white),
-//     ),
-//   ),
-// );
