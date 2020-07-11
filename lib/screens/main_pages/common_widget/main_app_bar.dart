@@ -26,12 +26,12 @@ class MainAppBar {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    left: 18,
+                    left: 10,
                     bottom: 10,
                   ),
                   child: Container(
                     height: 40,
-                    width: 250,
+                    width: 220,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
                       color: Colors.grey[200],
@@ -46,18 +46,18 @@ class MainAppBar {
                       ),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.fromLTRB(25, 8, 0, 5),
-                      hintText: 'Search Berry-Buy',
+                      hintText: 'Search Stockfare',
                     )),
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: 5),
           Column(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(right: 15, top: 30, left: 50),
+                padding: const EdgeInsets.only(right: 15, top: 40, left: 50),
                 child: Stack(
                   children: [
                     Icon(Icons.notifications,
@@ -84,7 +84,7 @@ class MainAppBar {
               ),
               Padding(
                   padding: const EdgeInsets.only(
-                    top: 15,
+                    top: 10,
                     right: 12,
                   ),
                   child: InkWell(
@@ -136,31 +136,31 @@ class MainAppBar {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(width: 30),
-                    Text(
-                      'Total Products:',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
+                    Text('Total Products:',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15)),
                     SizedBox(
-                      width: 15,
+                      width: 10,
                     ),
-                    Text(
-                      '115',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
+                    Text('115',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.green)),
                     SizedBox(
                       width: 20,
                     ),
-                    Text(
-                      'Total Category:',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
+                    Text('Total Category:',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15)),
                     SizedBox(
                       width: 15,
                     ),
-                    Text(
-                      '5',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
+                    Text('5',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Theme.of(context).primaryColor)),
                   ],
                 ),
               ],
@@ -197,31 +197,29 @@ class MainAppBar {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(width: 15),
-                    Text(
-                      'Total Sales:',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
+                    Text('Total Sales:',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15)),
                     SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      '150000',
-                      style: Theme.of(context).textTheme.headline6,
+                    Text('150000',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.green)),
+                    SizedBox(
+                      width: 30,
                     ),
+                    Text('Total Products Sold:',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15)),
                     SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      'Total Products Sold:',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      '115',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
+                    Text('115',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15)),
                   ],
                 ),
               ],

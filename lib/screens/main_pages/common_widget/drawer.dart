@@ -1,4 +1,7 @@
 import "package:flutter/material.dart";
+import 'package:stockfare_mobile/screens/drawer_pages/feedback.dart';
+import 'package:stockfare_mobile/screens/drawer_pages/logout.dart';
+import 'package:stockfare_mobile/screens/drawer_pages/settings/settings_home.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/workers.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/subscription/starter.dart';
@@ -16,25 +19,10 @@ class DrawerPage extends StatelessWidget {
               style: TextStyle(fontSize: 25, color: Colors.white),
             ),
             decoration: BoxDecoration(
-                color: Colors.green,
+                color: Theme.of(context).primaryColor,
                 image: DecorationImage(
                     fit: BoxFit.fill,
                     image: AssetImage('assets/images/inventory.png'))),
-          ),
-          ListTile(
-            leading: Icon(Icons.verified_user),
-            title: Text('Dashboard'),
-            onTap: () => {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => BottomNavigationPage()))
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.verified_user),
-            title: Text('Online Store'),
-            onTap: () => {},
           ),
           ListTile(
             leading: Icon(Icons.settings),
@@ -45,7 +33,7 @@ class DrawerPage extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.border_color),
+            leading: Icon(Icons.person_add),
             title: Text('Workers'),
             onTap: () => {
               Navigator.push(context,
@@ -53,27 +41,33 @@ class DrawerPage extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.border_color),
+            leading: Icon(Icons.settings),
             title: Text('Settings'),
             onTap: () => {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddWorkers()))
+                  MaterialPageRoute(builder: (context) => SettingsHomePage()))
             },
           ),
           ListTile(
-            leading: Icon(Icons.border_color),
+            leading: Icon(Icons.help),
             title: Text('Help'),
             onTap: () => {},
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
-            onTap: () => {},
+            onTap: () => {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LogoutPage()))
+            },
           ),
           ListTile(
             leading: Icon(Icons.border_color),
             title: Text('Feed back'),
-            onTap: () => {},
+            onTap: () => {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => FeedBackPage()))
+            },
           ),
         ],
       ),

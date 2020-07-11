@@ -14,31 +14,30 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
+    final double itemWidth = size.width / 2;
     AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
     return GridView.count(
-      // Create a grid with 2 columns. If you change the scrollDirection to
-      // horizontal, this produces 2 rows.
-      crossAxisCount: 2,
-      // Generate 100 widgets that display their index in the List.
+      childAspectRatio: (itemWidth / itemHeight),
+      crossAxisCount: 3,
       children: List.generate(100, (index) {
         return Padding(
-          padding: const EdgeInsets.all(5.0),
+          padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
             child: Container(
-              width: 50,
-              height: 50,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey[200]),
               ),
               child: Column(
                 children: <Widget>[
                   SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
                   Image.asset(
                     'assets/images/laptop.png',
-                    width: 150,
-                    height: 100,
+                    width: 80,
+                    height: 50,
                     fit: BoxFit.cover,
                   ),
                   Text(
@@ -54,13 +53,6 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.white),
                       ))),
-                  Container(
-                      child: Text(
-                    'Sold 12',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ))
                 ],
               ),
             ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:stockfare_mobile/main_pages/all_products_list/checkout.dart';
-import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/available.dart';
@@ -34,35 +33,87 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: DrawerPage(),
       body: Column(
         children: [
-          // Container(
-          //   height: 50,
-          //   child: ListView.builder(
-          //       itemCount: 20,
-          //       // This next line does the trick.
-          //       scrollDirection: Axis.horizontal,
-          //       itemBuilder: (BuildContext context, int index) {
-          //         return FutureBuilder(
-          //             future: futureProductList,
-          //             builder: (context, snapshot) {
-          //               return ListView.builder(
-          //                   itemCount: int.parse(snapshot.data.count),
-          //                   // This next line does the trick.
-          //                   scrollDirection: Axis.horizontal,
-          //                   itemBuilder: (BuildContext context, int index) {
-          //                     return Container(
-          //                       width: 100.0,
-          //                       color: Colors.red,
-          //                       child: Center(
-          //                         child: Text(
-          //                           'james',
-          //                           style: TextStyle(color: Colors.white),
-          //                         ),
-          //                       ),
-          //                     );
-          //                   });
-          //             });
-          //       }),
-          // ),
+          Container(
+            height: 40,
+            child: ListView(
+              // This next line does the trick.
+              scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                Container(
+                  width: 160.0,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      border: Border(
+                          right: BorderSide(width: 1, color: Colors.white))),
+                  child: Center(
+                    child: Text(
+                      'Electricity',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 160.0,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      border: Border(
+                          right: BorderSide(width: 1, color: Colors.white))),
+                  child: Center(
+                    child: Text('Food Stuffs',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                Container(
+                  width: 160.0,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      border: Border(
+                          right: BorderSide(width: 1, color: Colors.white))),
+                  child: Center(
+                    child: Text('Home Appliances',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                Container(
+                  width: 160.0,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      border: Border(
+                          right: BorderSide(width: 1, color: Colors.white))),
+                  child: Center(
+                    child: Text('Cements',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                Container(
+                  width: 160.0,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      border: Border(
+                          right: BorderSide(width: 1, color: Colors.white))),
+                  child: Center(
+                    child: Text('Fashion',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ],
+            ),
+          ),
           GestureDetector(
             child: Padding(
               padding: const EdgeInsets.only(right: 10, top: 5, left: 250),
@@ -93,6 +144,9 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               _checkoutDialog(context);
             },
+          ),
+          SizedBox(
+            height: 15,
           ),
           Expanded(child: ProductsAvailable())
         ],

@@ -23,11 +23,11 @@ void main() {
         home: SplashScreen(),
         theme: ThemeData(
           brightness: Brightness.dark,
-          primaryColor: Colors.red,
+          primaryColor: Hexcolor('#c80815'),
           accentColor: Hexcolor('#FF5E69'),
           fontFamily: 'Mukta',
           dividerColor: Colors.black,
-          hintColor: Hexcolor('#FF5E69'),
+          hintColor: Colors.grey,
           focusColor: Colors.black,
           textTheme: TextTheme(
             headline1: TextStyle(
