@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:stockfare_mobile/screens/subscription/starter.dart';
+import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
 
 class SuccessRegister extends StatelessWidget {
   @override
@@ -10,26 +9,25 @@ class SuccessRegister extends StatelessWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/product_added.png'),
-            Text(
-              'Registration',
-              style: TextStyle(fontSize: 25, color: Colors.blue[800]),
+            Container(
+              height: 100,
+              width: 100,
+              decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(50)),
+              child: Center(child: Icon(Icons.check, size: 80)),
             ),
-            Text(
-              'Successfully',
-              style: TextStyle(fontSize: 25, color: Colors.blue[800]),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Text(
-                'Congratulations!!! Welcome to stockfare. You are now ready to automate your inventory management system',
+            Text('Congratulations!!!',
                 style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor)),
+            Text(
+              'Your business just got smarter.',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             SizedBox(
-              height: 50,
+              height: 60,
             ),
             GestureDetector(
                 child: Center(
@@ -37,22 +35,21 @@ class SuccessRegister extends StatelessWidget {
                     height: 40,
                     width: 200,
                     decoration: BoxDecoration(
-                        border: Border.all(color: Colors.red, width: 3),
+                        color: Theme.of(context).primaryColor,
                         borderRadius: BorderRadius.circular(20)),
                     child: Center(
                         child: Text(
-                      'Continue',
+                      'Add Products',
                       style: TextStyle(
-                          color: Colors.red, fontWeight: FontWeight.bold),
+                          color: Colors.white, fontWeight: FontWeight.bold),
                     )),
                   ),
                 ),
                 onTap: () {
                   Navigator.push(
                       context,
-                      PageTransition(
-                          type: PageTransitionType.leftToRightWithFade,
-                          child: StarterPage()));
+                      MaterialPageRoute(
+                          builder: (context) => AddProductPage()));
                 })
           ],
         ));

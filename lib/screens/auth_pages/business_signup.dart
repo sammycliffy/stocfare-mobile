@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -271,7 +273,7 @@ class _SignupPage extends State<BusinessSignupPage> {
                                       color: Theme.of(context)
                                           .focusColor
                                           .withOpacity(0.7)),
-                                  prefixIcon: Icon(Icons.shopping_basket,
+                                  prefixIcon: Icon(Icons.confirmation_number,
                                       color: Theme.of(context).accentColor),
                                   hintText: 'Referral code (optional)',
                                   filled: true,
@@ -311,45 +313,62 @@ class _SignupPage extends State<BusinessSignupPage> {
                                   ),
                                 ),
                                 onTap: () async {
-                                  setState(() {
-                                    loading = true;
-                                  });
                                   if (_formkey.currentState.validate()) {
-                                    String registrationid = await _auth.getId();
-                                    //check for internet
+                                    setState(() {
+                                      loading = true;
+                                    });
+                                    try {
+                                      final result =
+                                          await InternetAddress.lookup(
+                                              'google.com');
+                                      if (result.isNotEmpty &&
+                                          result[0].rawAddress.isNotEmpty) {
+                                        print('connected');
+                                        String registrationid =
+                                            await _auth.getId();
 
-                                    //send the data to the auth registration session
-                                    dynamic result =
-                                        await _auth.userRegistration(
-                                            _signupNotifier.firstName,
-                                            _signupNotifier.lastName,
-                                            _signupNotifier.email,
-                                            _signupNotifier.password,
-                                            _signupNotifier.phone,
-                                            registrationid,
-                                            businessName,
-                                            businessAddress,
-                                            businessDescription,
-                                            businessType,
-                                            referralCode);
-                                    //check if an account already existed
-                                    if (result == null) {
+                                        //send the data to the auth registration session
+                                        dynamic result =
+                                            await _auth.userRegistration(
+                                                _signupNotifier.firstName,
+                                                _signupNotifier.lastName,
+                                                _signupNotifier.email,
+                                                _signupNotifier.password,
+                                                _signupNotifier.phone,
+                                                registrationid,
+                                                businessName,
+                                                businessAddress,
+                                                businessDescription,
+                                                businessType,
+                                                referralCode ?? '0');
+                                        //check if an account already existed
+                                        if (result == null) {
+                                          setState(() {
+                                            loading = false;
+                                            _error =
+                                                'You already have an account with us';
+                                            _displaySnackBar(context);
+                                          });
+                                        } else {
+                                          _signupNotifier.setProfile(
+                                              result.fullname,
+                                              result.phone,
+                                              result.email);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PhoneVerification()));
+                                        }
+                                      }
+                                    } on SocketException catch (_) {
+                                      print('not connected');
                                       setState(() {
                                         loading = false;
                                         _error =
-                                            'You already have an account with us';
+                                            'Check your internet connection';
                                         _displaySnackBar(context);
                                       });
-                                    } else {
-                                      _signupNotifier.setProfile(
-                                          result.fullname,
-                                          result.phone,
-                                          result.email);
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PhoneVerification()));
                                     }
                                   }
                                 }),

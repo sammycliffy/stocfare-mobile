@@ -13,9 +13,7 @@ class _OnlineStoreState extends State<OnlineStore> {
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: DrawerPage(),
-      appBar: PreferredSize(
-          preferredSize: Size.fromHeight(100.0), // here the desired height
-          child: MainAppBar.appBarFunction(context, 'Online Store')),
+      appBar: AppBar(title: Text('Online Store')),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

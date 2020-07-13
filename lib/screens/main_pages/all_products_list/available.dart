@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
@@ -25,10 +26,8 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[200]),
-              ),
+            child: Card(
+              color: Colors.white,
               child: Column(
                 children: <Widget>[
                   SizedBox(
@@ -46,7 +45,7 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
                   ),
                   Container(
                       width: 80,
-                      decoration: BoxDecoration(color: Colors.green),
+                      decoration: BoxDecoration(color: Colors.grey),
                       child: Center(
                           child: Text(
                         '1900',

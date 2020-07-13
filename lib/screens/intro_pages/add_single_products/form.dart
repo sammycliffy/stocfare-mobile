@@ -198,8 +198,7 @@ class _FormPageState extends State<FormPage> {
                             height: 40,
                             width: 200,
                             decoration: BoxDecoration(
-                                color: Colors.red,
-                                border: Border.all(color: Colors.red, width: 3),
+                                color: Theme.of(context).primaryColor,
                                 borderRadius: BorderRadius.circular(20)),
                             child: Center(
                                 child: Text(

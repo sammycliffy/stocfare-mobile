@@ -48,6 +48,7 @@ class _BarcodePageState extends State<BarcodePage> {
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
     return Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(title: Text('Add Image & Barcode')),
         body: loading
             ? Loading()
             : SingleChildScrollView(
@@ -56,12 +57,6 @@ class _BarcodePageState extends State<BarcodePage> {
                     SizedBox(
                       height: 30,
                     ),
-                    Center(
-                        child: Text(
-                      'Add Image & Barcode',
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    )),
                     SizedBox(
                       height: 40,
                     ),

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
+import 'package:stockfare_mobile/screens/auth_pages/registration_success.dart';
 import 'package:stockfare_mobile/screens/auth_pages/signup.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/loader.dart';
@@ -73,7 +76,7 @@ class _LoginState extends State<Login> {
                               padding:
                                   const EdgeInsets.only(left: 40, right: 40),
                               child: TextFormField(
-                                keyboardType: TextInputType.emailAddress,
+                                keyboardType: TextInputType.number,
                                 validator: (input) => input.length < 10
                                     ? 'Enter a valid phone number'
                                     : null,
@@ -197,41 +200,56 @@ class _LoginState extends State<Login> {
                                   ),
                                 ),
                                 onTap: () async {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              BottomNavigationPage()));
-                                  // if (_formKey.currentState.validate()) {
-                                  //   setState(() {
-                                  //     loading = true;
-                                  //   });
-                                  //   //this gets the phone registrationId
-                                  //   String _registrationid =
-                                  //       await _auth.getId();
-                                  //   dynamic result = await _auth.loginUsernew(
-                                  //       phoneNumber, password, _registrationid);
+                                  if (_formKey.currentState.validate()) {
+                                    setState(() {
+                                      loading = true;
+                                    });
 
-                                  //   if (result == null) {
-                                  //     setState(() {
-                                  //       loading = false;
-                                  //       _error =
-                                  //           'Could not sign in with those credentials';
-                                  //       _displaySnackBar(context);
-                                  //     });
-                                  //   } else {
-                                  //     //This will set the profile data for the notifier so that it can move between pages
-                                  //     _signupNotifier.setProfile(
-                                  //         result.fullname,
-                                  //         result.phone,
-                                  //         result.email);
-                                  //     Navigator.push(
-                                  //         context,
-                                  //         MaterialPageRoute(
-                                  //             builder: (context) =>
-                                  //                 BottomNavigationPage()));
-                                  //   }
-                                  // }
+                                    try {
+                                      final result =
+                                          await InternetAddress.lookup(
+                                              'google.com');
+                                      if (result.isNotEmpty &&
+                                          result[0].rawAddress.isNotEmpty) {
+                                        print('connected');
+                                        String _registrationid =
+                                            await _auth.getId();
+                                        dynamic result =
+                                            await _auth.loginUsernew(
+                                                phoneNumber,
+                                                password,
+                                                _registrationid);
+
+                                        if (result == null) {
+                                          setState(() {
+                                            loading = false;
+                                            _error =
+                                                'Could not sign in with those credentials';
+                                            _displaySnackBar(context);
+                                          });
+                                        } else {
+                                          //This will set the profile data for the notifier so that it can move between pages
+                                          _signupNotifier.setProfile(
+                                              result.fullname,
+                                              result.phone,
+                                              result.email);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BottomNavigationPage()));
+                                        }
+                                      }
+                                    } on SocketException catch (_) {
+                                      print('not connected');
+                                      setState(() {
+                                        loading = false;
+                                        _error =
+                                            'Check your internet connection';
+                                        _displaySnackBar(context);
+                                      });
+                                    }
+                                  }
                                 }),
                             SizedBox(
                               height: 20,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/screens/auth_pages/registration_success.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/loader.dart';
 import 'package:stockfare_mobile/services/auth_services.dart';
@@ -131,7 +132,7 @@ class _PhoneVerification extends State<PhoneVerification> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              BottomNavigationPage()));
+                                              SuccessRegister()));
                                 } else {
                                   setState(() {
                                     loading = false;

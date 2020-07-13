@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stockfare_mobile/models/user_model.dart';
+import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
+import 'package:stockfare_mobile/screens/auth_pages/login.dart';
 import 'dart:async';
 
 import 'package:stockfare_mobile/screens/intro_pages/explore_page.dart';
@@ -21,8 +27,8 @@ class _SplashScreenState extends State<SplashScreen> {
     currentImage = Image.asset('assets/images/logo.png', width: 50, height: 50);
     Timer(
         Duration(seconds: 4),
-        () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => FirstIntro())));
+        () => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) => Login())));
   }
 
   @override
@@ -74,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  void check() async {
+  void checkForFirstInstallation() async {
     final prefs = await SharedPreferences.getInstance();
     int launchCount = prefs.getInt('counter') ?? 0;
     prefs.setInt('counter', launchCount + 1);
@@ -82,6 +88,22 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (BuildContext context) => FirstIntro()));
     } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) => BottomNavigationPage()));
+    }
+  }
+
+  void checkForLogin() async {
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
+    final prefs = await SharedPreferences.getInstance();
+    String body = prefs.getString('body');
+    if (body == null) {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (BuildContext context) => Login()));
+    } else {
+      dynamic user = User.fromJson(json.decode(body));
+      _signupNotifier.setProfile(user.fullname, user.phone, user.email);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (BuildContext context) => BottomNavigationPage()));
     }

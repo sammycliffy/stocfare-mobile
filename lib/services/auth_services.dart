@@ -4,6 +4,7 @@ import 'package:device_info/device_info.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/user_model.dart';
+import 'dart:io';
 
 class AuthServices {
   Future<String> getId() async {
@@ -49,16 +50,16 @@ class AuthServices {
         }));
     if (response.statusCode == 200) {
       var responseJson = json.decode(response.body);
-      sharedPreferences.setString("token", responseJson['token']['access']);
       print(responseJson);
-      //sharedPreferences.setString("token", responseJson['token']['access']);
-      dynamic user = User.fromJson(json.decode(response.body)['user']);
-      print(user.branchId);
+      sharedPreferences.setString("token", responseJson['token']['access']);
+      dynamic user = User.fromJson(json.decode(response.body));
       sharedPreferences.setString("branchId", user.branchId);
-      print(user.branch.id);
+      sharedPreferences.setString("body", response.body);
+      print(user.branchId);
       return user;
     } else {
       print(response.body);
+      print(response.statusCode);
       return null;
     }
   }
@@ -77,17 +78,44 @@ class AuthServices {
         "registration_id": registrationid
       }),
     );
+
     if (response.statusCode == 200) {
       var responseJson = json.decode(response.body);
       print(responseJson);
       sharedPreferences.setString("token", responseJson['token']['access']);
       dynamic user = User.fromJson(json.decode(response.body));
       sharedPreferences.setString("branchId", user.branchId);
+      sharedPreferences.setString("body", response.body);
       print(user.branchId);
       return user;
     } else if (response.statusCode == 400) {
       print(response.body);
       return null;
+    }
+  }
+
+  Future<dynamic> forgotPassword(String phone) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    final String url =
+        'http://stockfare-io.herokuapp.com/api/v1/users/forgot-password/';
+    final http.Response response = await http.post(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, String>{
+          "data": phone,
+        }));
+    if (response.statusCode == 200) {
+      var responseJson = json.decode(response.body);
+      print(responseJson);
+      return true;
+    } else {
+      print(response.body);
+      print(response.statusCode);
+      return false;
     }
   }
 

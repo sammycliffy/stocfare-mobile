@@ -18,16 +18,14 @@ class _QuantityPageState extends State<QuantityPage> {
   Widget build(BuildContext context) {
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
     return Scaffold(
+        appBar: AppBar(
+          title: Text('Add Quantity'),
+        ),
         key: _scaffoldKey,
         backgroundColor: Colors.white,
         body: Column(
           children: <Widget>[
             SizedBox(height: 40),
-            Center(
-                child: Text(
-              'Quantity',
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-            )),
             SizedBox(height: 40),
             Container(
               width: 300,

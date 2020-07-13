@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:stockfare_mobile/main_pages/all_products_list/checkout.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
+import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/available.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
@@ -25,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
+    SignupNotifier signupNotifier = Provider.of<SignupNotifier>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
@@ -114,36 +116,47 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          GestureDetector(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 10, top: 5, left: 250),
-              child: Stack(
-                children: [
-                  Icon(Icons.shopping_cart, size: 30, color: Colors.red),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 20),
-                    child: Container(
-                      width: 40,
-                      height: 30,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.red),
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.red),
-                      child: Center(
-                        child: Text(
-                          addProduct.product.toString(),
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+          Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text('Hello  ${signupNotifier.fullName}',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               ),
-            ),
-            onTap: () {
-              _checkoutDialog(context);
-            },
+              GestureDetector(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10, top: 5, left: 120),
+                  child: Stack(
+                    children: [
+                      Icon(Icons.shopping_cart, size: 30, color: Colors.red),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, left: 20),
+                        child: Container(
+                          width: 40,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.red),
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.red),
+                          child: Center(
+                            child: Text(
+                              addProduct.product.toString(),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  _checkoutDialog(context);
+                },
+              ),
+            ],
           ),
           SizedBox(
             height: 15,

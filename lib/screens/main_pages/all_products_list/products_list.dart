@@ -15,9 +15,10 @@ class _AllProductsListState extends State<AllProductsList> {
     return Scaffold(
         backgroundColor: Colors.white,
         drawer: DrawerPage(),
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(100.0), // here the desired height
-            child: MainAppBar.productListAppBar(context)),
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text('Product List'),
+        ),
         body: Column(
           children: <Widget>[
             Row(
