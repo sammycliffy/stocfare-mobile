@@ -26,7 +26,6 @@ class _QuantityPageState extends State<QuantityPage> {
         body: Column(
           children: <Widget>[
             SizedBox(height: 40),
-            SizedBox(height: 40),
             Container(
               width: 300,
               child: Text(
@@ -56,6 +55,9 @@ class _QuantityPageState extends State<QuantityPage> {
                   },
                 ),
               ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             Flexible(
               child: Container(
@@ -103,6 +105,24 @@ class _QuantityPageState extends State<QuantityPage> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 200),
+              child: InkWell(
+                child: Text(
+                  'What\'s this?',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey),
+                ),
+                onTap: () {
+                  _showMyDialog();
+                },
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
             Flexible(
               child: Container(
                 width: 100,
@@ -127,8 +147,7 @@ class _QuantityPageState extends State<QuantityPage> {
                     height: 40,
                     width: 200,
                     decoration: BoxDecoration(
-                        color: Colors.red,
-                        border: Border.all(color: Colors.red, width: 3),
+                        color: Theme.of(context).primaryColor,
                         borderRadius: BorderRadius.circular(20)),
                     child: Center(
                         child: Text(
@@ -148,7 +167,7 @@ class _QuantityPageState extends State<QuantityPage> {
                   } else if (_quantity < _value) {
                     setState(() {
                       _error =
-                          'Your Product alert cannot be less than actual quantity';
+                          'Your low stock alert should not be more than your product quantity';
                       _displaySnackBar(context);
                     });
                   } else {
@@ -171,5 +190,44 @@ class _QuantityPageState extends State<QuantityPage> {
           style: TextStyle(color: Colors.white, fontSize: 15),
         ));
     _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Text(
+            'Low Stock Alert',
+            style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.bold),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  'We will alert you anytime your product reaches this value.',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Close',
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

@@ -44,7 +44,8 @@ class ProductServices {
       var responseJson = json.decode(response.body);
       sharedPreferences.setString("token", responseJson['token']['access']);
       print(responseJson);
-    } else {
+    } else if (response.statusCode == 400) {
+      print(response.statusCode);
       print(response.body);
       return null;
     }

@@ -22,6 +22,8 @@ class _BarcodePageState extends State<BarcodePage> {
   bool loading = false;
   ProductServices _productServices = ProductServices();
   final picker = ImagePicker();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _error;
 
   void getBarcode() async {
     var result = await BarcodeScanner.scan();
@@ -47,6 +49,7 @@ class _BarcodePageState extends State<BarcodePage> {
   Widget build(BuildContext context) {
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
     return Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.white,
         appBar: AppBar(title: Text('Add Image & Barcode')),
         body: loading
@@ -54,9 +57,6 @@ class _BarcodePageState extends State<BarcodePage> {
             : SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    SizedBox(
-                      height: 30,
-                    ),
                     SizedBox(
                       height: 40,
                     ),
@@ -100,11 +100,12 @@ class _BarcodePageState extends State<BarcodePage> {
                       ),
                       Text(
                         'Add Barcode',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.bold),
                       ),
                     ])),
                     SizedBox(
-                      height: 80,
+                      height: 60,
                     ),
                     Center(
                         child: Column(children: [
@@ -136,11 +137,12 @@ class _BarcodePageState extends State<BarcodePage> {
                       ),
                       Text(
                         'Add Image',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.bold),
                       ),
                     ])),
                     SizedBox(
-                      height: 50,
+                      height: 30,
                     ),
                     GestureDetector(
                         child: Center(
@@ -148,8 +150,7 @@ class _BarcodePageState extends State<BarcodePage> {
                             height: 40,
                             width: 200,
                             decoration: BoxDecoration(
-                                color: Colors.red,
-                                border: Border.all(color: Colors.red, width: 3),
+                                color: Theme.of(context).primaryColor,
                                 borderRadius: BorderRadius.circular(20)),
                             child: Center(
                                 child: Text(
@@ -159,32 +160,62 @@ class _BarcodePageState extends State<BarcodePage> {
                             )),
                           ),
                         ),
-                        onTap: () {
+                        onTap: () async {
                           setState(() {
                             loading = true;
                           });
-                          List<int> imageBytes = _image.readAsBytesSync();
-                          String base64Image = base64.encode(imageBytes);
-                          dynamic result = _productServices.productAddition(
-                              _addProduct.productCategory,
-                              _addProduct.productName,
-                              _addProduct.productPrice,
-                              _addProduct.productQuantity,
-                              _addProduct.quantityAlert,
-                              _barcode,
-                              _addProduct.productDescription,
-                              base64Image);
+                          try {
+                            final result =
+                                await InternetAddress.lookup('google.com');
+                            if (result.isNotEmpty &&
+                                result[0].rawAddress.isNotEmpty) {
+                              print('connected');
 
-                          if (result == null) {
+                              if (_image == null) {
+                                setState(() {
+                                  loading = false;
+                                  _error = 'You must add product image';
+                                  _displaySnackBar(context);
+                                });
+                              } else {
+                                List<int> imageBytes = _image.readAsBytesSync();
+                                String base64Image = base64.encode(imageBytes);
+                                dynamic result = _productServices
+                                    .productAddition(
+                                        _addProduct.productCategory,
+                                        _addProduct.productName,
+                                        _addProduct.productPrice,
+                                        _addProduct.productQuantity,
+                                        _addProduct.quantityAlert,
+                                        _barcode,
+                                        _addProduct.productDescription,
+                                        base64Image)
+                                    .then((value) {
+                                  if (value == null) {
+                                    setState(() {
+                                      loading = false;
+                                      setState(() {
+                                        _error = 'Category name already exists';
+                                        _displaySnackBar(context);
+                                      });
+                                    });
+                                  } else {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                BottomNavigationPage()));
+                                  }
+                                });
+                              }
+                            }
+                          } on SocketException catch (_) {
+                            print('not connected');
                             setState(() {
                               loading = false;
+                              _error = 'Check your internet connection';
+                              _displaySnackBar(context);
                             });
-                          } else {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        BottomNavigationPage()));
                           }
                         }),
                     SizedBox(
@@ -193,5 +224,15 @@ class _BarcodePageState extends State<BarcodePage> {
                   ],
                 ),
               ));
+  }
+
+  _displaySnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Text(
+          _error,
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 }
