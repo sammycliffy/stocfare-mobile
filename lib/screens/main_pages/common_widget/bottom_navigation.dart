@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/categories.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/products_list.dart';
 import 'package:stockfare_mobile/screens/main_pages/analytics.dart';
 import 'package:stockfare_mobile/screens/main_pages/home.dart';
@@ -15,7 +16,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
   int _currentIndex = 0;
   List<Widget> _tabs = [
     HomeScreen(),
-    AllProductsList(),
+    CategoryPage(),
     AllSalesList(),
     AnalyticsPage(),
     OnlineStore()
