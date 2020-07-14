@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -52,6 +53,19 @@ class ProductServices {
       return response.statusCode;
     }
     return response.statusCode;
+  }
+
+  Future<DataSnapshot> allProducts() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String firebaseId = sharedPreferences.getString("firebaseId");
+    final dbRef = FirebaseDatabase.instance.reference();
+
+    dbRef
+        .child('inventories')
+        .orderByKey()
+        .equalTo(firebaseId)
+        .once()
+        .then((DataSnapshot snapshot) => print(snapshot.value));
   }
 
   Future<dynamic> getAllProducts() async {
@@ -119,7 +133,3 @@ class ProductServices {
     // }
   }
 }
-
-// return title.products[0].productImage.map((title) {
-//           return title.imageLink;
-//         });

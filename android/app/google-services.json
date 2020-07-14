@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:196605610944:android:3f4b5d32195c9094b55625",
         "android_client_info": {
-          "package_name": "com.stockfare"
+          "package_name": "com.example.stockfare_mobile"
         }
       },
       "oauth_client": [
