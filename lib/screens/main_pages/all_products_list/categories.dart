@@ -11,7 +11,7 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 3;
     final double itemWidth = size.width / 2;
     return Scaffold(
         drawer: DrawerPage(),
@@ -27,16 +27,17 @@ class _CategoryPageState extends State<CategoryPage> {
                 child: Card(
                   color: Colors.white,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       SizedBox(
-                        height: 25,
+                        height: 5,
                       ),
                       Text(
                         'Electricity',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
-                            color: Colors.blueGrey),
+                            color: Theme.of(context).primaryColor),
                       ),
                       Text(
                         '125 Items',
@@ -45,8 +46,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       ),
                       Container(
                           width: 80,
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor),
+                          decoration: BoxDecoration(color: Colors.black),
                           child: Center(
                               child: Text(
                             'View',

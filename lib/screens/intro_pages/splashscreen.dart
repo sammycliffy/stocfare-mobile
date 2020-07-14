@@ -25,7 +25,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     currentImage = Image.asset('assets/images/logo.png', width: 50, height: 50);
-    Timer(Duration(seconds: 4), () => checkForLogin());
+    Timer(
+        Duration(seconds: 4),
+        () => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) => Login())));
   }
 
   @override

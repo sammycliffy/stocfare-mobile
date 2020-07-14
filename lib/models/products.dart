@@ -1,11 +1,7 @@
-import 'dart:convert';
+import 'package:firebase_database/firebase_database.dart';
 
-Welcome welcomeFromJson(String str) => Welcome.fromJson(json.decode(str));
-
-String welcomeToJson(Welcome data) => json.encode(data.toJson());
-
-class Welcome {
-  Welcome({
+class ProductList {
+  ProductList({
     this.count,
     this.next,
     this.previous,
@@ -17,20 +13,10 @@ class Welcome {
   dynamic previous;
   List<Result> results;
 
-  factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
-        count: json["count"],
-        next: json["next"],
-        previous: json["previous"],
-        results:
-            List<Result>.from(json["results"].map((x) => Result.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "count": count,
-        "next": next,
-        "previous": previous,
-        "results": List<dynamic>.from(results.map((x) => x.toJson())),
-      };
+  ProductList.fromSnapshot(DataSnapshot snapshot)
+      : count = snapshot.value['count'],
+        results = List<Result>.from(
+            snapshot.value['result'].map((x) => Result.fromSnapshot(x)));
 }
 
 class Result {
@@ -48,22 +34,13 @@ class Result {
   String firebaseId;
   List<Product> products;
 
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
-        id: json["id"],
-        name: json["name"],
-        productCount: json["product_count"],
-        firebaseId: json["firebase_id"],
-        products: List<Product>.from(
-            json["products"].map((x) => Product.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "product_count": productCount,
-        "firebase_id": firebaseId,
-        "products": List<dynamic>.from(products.map((x) => x.toJson())),
-      };
+  Result.fromSnapshot(DataSnapshot snapshot)
+      : id = snapshot.value["id"],
+        name = snapshot.value["name"],
+        productCount = snapshot.value["product_count"],
+        firebaseId = snapshot.value["firebase_id"],
+        products = List<Product>.from(
+            snapshot.value["products"].map((x) => Product.fromSnapshot(x)));
 }
 
 class Product {
@@ -103,47 +80,28 @@ class Product {
   String barCode;
   String discount;
 
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
-        id: json["id"],
-        productColour: List<ProductColour>.from(
-            json["product_colour"].map((x) => ProductColour.fromJson(x))),
-        productImage: List<ProductImage>.from(
-            json["product_image"].map((x) => ProductImage.fromJson(x))),
-        productUnit: ProductPackClass.fromJson(json["product_unit"]),
-        productPack: ProductPackClass.fromJson(json["product_pack"]),
-        branchId: json["branch_id"],
-        productCategoryId: json["product_category_id"],
-        image: json["image"],
-        name: json["name"],
-        active: json["active"],
-        description: json["description"],
-        tax: json["tax"],
-        weight: json["weight"],
-        dateCreated: DateTime.parse(json["date_created"]),
-        barCode: json["bar_code"],
-        discount: json["discount"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "product_colour":
-            List<dynamic>.from(productColour.map((x) => x.toJson())),
-        "product_image":
-            List<dynamic>.from(productImage.map((x) => x.toJson())),
-        "product_unit": productUnit.toJson(),
-        "product_pack": productPack.toJson(),
-        "branch_id": branchId,
-        "product_category_id": productCategoryId,
-        "image": image,
-        "name": name,
-        "active": active,
-        "description": description,
-        "tax": tax,
-        "weight": weight,
-        "date_created": dateCreated.toIso8601String(),
-        "bar_code": barCode,
-        "discount": discount,
-      };
+  Product.fromSnapshot(DataSnapshot snapshot)
+      : id = snapshot.value["id"],
+        productColour = List<ProductColour>.from(snapshot
+            .value["product_colour"]
+            .map((x) => ProductColour.fromSnapshot(x))),
+        productImage = List<ProductImage>.from(snapshot.value["product_image"]
+            .map((x) => ProductImage.fromSnapshot(x))),
+        productUnit =
+            ProductPackClass.fromSnapshot(snapshot.value["product_unit"]),
+        productPack =
+            ProductPackClass.fromSnapshot(snapshot.value["product_pack"]),
+        branchId = snapshot.value["branch_id"],
+        productCategoryId = snapshot.value["product_category_id"],
+        image = snapshot.value["image"],
+        name = snapshot.value["name"],
+        active = snapshot.value["active"],
+        description = snapshot.value["description"],
+        tax = snapshot.value["tax"],
+        weight = snapshot.value["weight"],
+        dateCreated = DateTime.parse(snapshot.value["date_created"]),
+        barCode = snapshot.value["bar_code"],
+        discount = snapshot.value["discount"];
 }
 
 class ProductColour {
@@ -161,21 +119,12 @@ class ProductColour {
   int quantity;
   bool active;
 
-  factory ProductColour.fromJson(Map<String, dynamic> json) => ProductColour(
-        id: json["id"],
-        name: json["name"],
-        limit: json["limit"],
-        quantity: json["quantity"],
-        active: json["active"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "limit": limit,
-        "quantity": quantity,
-        "active": active,
-      };
+  ProductColour.fromSnapshot(DataSnapshot snapshot)
+      : id = snapshot.value["id"],
+        name = snapshot.value["name"],
+        limit = snapshot.value["limit"],
+        quantity = snapshot.value["quantity"],
+        active = snapshot.value["active"];
 }
 
 class ProductImage {
@@ -187,15 +136,9 @@ class ProductImage {
   String id;
   String imageLink;
 
-  factory ProductImage.fromJson(Map<String, dynamic> json) => ProductImage(
-        id: json["id"],
-        imageLink: json["image_link"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "image_link": imageLink,
-      };
+  ProductImage.fromSnapshot(DataSnapshot snapshot)
+      : id = snapshot.value["id"],
+        imageLink = snapshot.value["image_link"];
 }
 
 class ProductPackClass {
@@ -213,20 +156,10 @@ class ProductPackClass {
   int quantity;
   int unit;
 
-  factory ProductPackClass.fromJson(Map<String, dynamic> json) =>
-      ProductPackClass(
-        id: json["id"],
-        price: json["price"],
-        limit: json["limit"],
-        quantity: json["quantity"],
-        unit: json["unit"] == null ? null : json["unit"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "price": price,
-        "limit": limit,
-        "quantity": quantity,
-        "unit": unit == null ? null : unit,
-      };
+  ProductPackClass.fromSnapshot(DataSnapshot snapshot)
+      : id = snapshot.value["id"],
+        price = snapshot.value["price"],
+        limit = snapshot.value["limit"],
+        quantity = snapshot.value["quantity"],
+        unit = snapshot.value["unit"] == null ? null : snapshot.value["unit"];
 }

@@ -1,72 +1,42 @@
 {
   "project_info": {
-    "project_number": "226714838572",
-    "firebase_url": "https://markettest-cc2e0.firebaseio.com",
-    "project_id": "markettest-cc2e0",
-    "storage_bucket": "markettest-cc2e0.appspot.com"
+    "project_number": "196605610944",
+    "firebase_url": "https://stockfare-mobile.firebaseio.com",
+    "project_id": "stockfare-mobile",
+    "storage_bucket": "stockfare-mobile.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:226714838572:android:17dfa4ee0e5ea0fa8d5389",
+        "mobilesdk_app_id": "1:196605610944:android:3f4b5d32195c9094b55625",
         "android_client_info": {
-          "package_name": "com.push_notification.fcm"
+          "package_name": "com.stockfare"
         }
       },
       "oauth_client": [
         {
-          "client_id": "226714838572-kmab453f5cla1bb5pvpdf9t1sp3cbo8j.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.push_notification.fcm",
-            "certificate_hash": "d09b68fa773b5d992dfcbc64332ea4a49e8315e6"
-          }
-        },
-        {
-          "client_id": "226714838572-eatsgii2recflp220l35q9cbl1psqens.apps.googleusercontent.com",
+          "client_id": "196605610944-9oehqjnsimgump533dc3j0jvi9eqqt52.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAiWwJQj8Oisqbohq4UUpEz13fh_MsK4tg"
+          "current_key": "AIzaSyDDREdmV0Qy2kUS-q8Q_NkeWealFYqO4zU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "226714838572-eatsgii2recflp220l35q9cbl1psqens.apps.googleusercontent.com",
+              "client_id": "196605610944-9oehqjnsimgump533dc3j0jvi9eqqt52.apps.googleusercontent.com",
               "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:226714838572:android:5ddd3994b935ea2f8d5389",
-        "android_client_info": {
-          "package_name": "com.smartersvision.food_delivery_app"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "226714838572-eatsgii2recflp220l35q9cbl1psqens.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAiWwJQj8Oisqbohq4UUpEz13fh_MsK4tg"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
+            },
             {
-              "client_id": "226714838572-eatsgii2recflp220l35q9cbl1psqens.apps.googleusercontent.com",
-              "client_type": 3
+              "client_id": "196605610944-m4st2ev46ce5vu8tdqa8a0agbmke1qd5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "co.stockfare.ios"
+              }
             }
           ]
         }

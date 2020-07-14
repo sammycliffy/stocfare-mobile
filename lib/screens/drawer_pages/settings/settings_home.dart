@@ -15,20 +15,20 @@ class SettingsHomePage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Container(
-                width: 450,
+                width: 350,
                 height: 50,
                 color: Colors.grey[200],
                 child: Row(
                   children: <Widget>[
                     SizedBox(
-                      width: 40,
+                      width: 20,
                     ),
                     Icon(
                       Icons.person_add,
                       color: Theme.of(context).primaryColor,
                     ),
                     SizedBox(
-                      width: 50,
+                      width: 20,
                     ),
                     Text('UPDATE ACCOUNT DATA', style: TextStyle(fontSize: 20))
                   ],
@@ -44,20 +44,20 @@ class SettingsHomePage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Container(
-                width: 450,
+                width: 350,
                 height: 50,
                 color: Colors.grey[200],
                 child: Row(
                   children: <Widget>[
                     SizedBox(
-                      width: 40,
+                      width: 20,
                     ),
                     Icon(
                       Icons.update,
                       color: Theme.of(context).primaryColor,
                     ),
                     SizedBox(
-                      width: 50,
+                      width: 20,
                     ),
                     Text('UPDATE CURRENT BRANCH',
                         style: TextStyle(fontSize: 20))
@@ -74,20 +74,20 @@ class SettingsHomePage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Container(
-                width: 400,
+                width: 350,
                 height: 50,
                 color: Colors.grey[200],
                 child: Row(
                   children: <Widget>[
                     SizedBox(
-                      width: 40,
+                      width: 20,
                     ),
                     Icon(
                       Icons.lock,
                       color: Theme.of(context).primaryColor,
                     ),
                     SizedBox(
-                      width: 50,
+                      width: 20,
                     ),
                     Text('CHANGE PASSWORD', style: TextStyle(fontSize: 20))
                   ],

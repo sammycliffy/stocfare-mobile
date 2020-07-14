@@ -86,7 +86,8 @@ class AuthServices {
       dynamic user = User.fromJson(json.decode(response.body));
       sharedPreferences.setString("branchId", user.branchId);
       sharedPreferences.setString("body", response.body);
-      print(user.branchId);
+      sharedPreferences.setString("firebaseId", user.firebaseId);
+      print(user.firebaseId);
       return user;
     } else if (response.statusCode == 400) {
       print(response.body);

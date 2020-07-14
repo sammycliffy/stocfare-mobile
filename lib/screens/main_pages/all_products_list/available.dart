@@ -16,7 +16,7 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.8;
     final double itemWidth = size.width / 2;
     AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
     return GridView.count(
@@ -45,7 +45,7 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
                   ),
                   Container(
                       width: 80,
-                      decoration: BoxDecoration(color: Colors.grey),
+                      decoration: BoxDecoration(color: Colors.black),
                       child: Center(
                           child: Text(
                         '1900',
@@ -80,18 +80,7 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
           content: SingleChildScrollView(
               child: Column(
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Text(
-                    'Product Type:',
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(width: 40),
-                  _dropDown(dropdownValue)
-                ],
-              ),
+             
               Row(
                 children: <Widget>[
                   Text(

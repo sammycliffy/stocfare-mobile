@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:barcode_scan/barcode_scan.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
-import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
+import 'package:stockfare_mobile/screens/intro_pages/product_success.dart';
+
 import 'package:stockfare_mobile/screens/main_pages/common_widget/loader.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 
@@ -16,7 +18,7 @@ class BarcodePage extends StatefulWidget {
 }
 
 class _BarcodePageState extends State<BarcodePage> {
-  String _barcode;
+  String _scanBarcode = 'Unknown';
   File _image;
 
   bool loading = false;
@@ -25,23 +27,38 @@ class _BarcodePageState extends State<BarcodePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String _error;
 
-  void getBarcode() async {
-    var result = await BarcodeScanner.scan();
-    setState(() {
-      _barcode = result.rawContent;
-    });
-
-    //print(result.type); The result type (barcode, cancelled, failed)
-    //print(result.rawContent); // The barcode content
-    //print(result.format); // The barcode format (as enum)
-    //print(result.formatNote); // If a unknown format was scanned this field contains a note
-  }
-
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
 
     setState(() {
       _image = File(pickedFile.path);
+    });
+  }
+
+  startBarcodeScanStream() async {
+    FlutterBarcodeScanner.getBarcodeStreamReceiver(
+            "#ff6666", "Cancel", true, ScanMode.BARCODE)
+        .listen((barcode) => print(barcode));
+  }
+
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          "#ff6666", "Cancel", true, ScanMode.BARCODE);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _scanBarcode = barcodeScanRes;
     });
   }
 
@@ -75,7 +92,7 @@ class _BarcodePageState extends State<BarcodePage> {
                               size: 70,
                             )),
                         onTap: () {
-                          getBarcode();
+                          scanBarcodeNormal();
                         },
                       ),
                       SizedBox(
@@ -87,11 +104,11 @@ class _BarcodePageState extends State<BarcodePage> {
                         decoration: BoxDecoration(
                             border: Border.all(width: 2, color: Colors.grey)),
                         child: Center(
-                            child: _barcode == null
+                            child: _scanBarcode == null
                                 ? Text('Barcode will show here',
                                     style: TextStyle(color: Colors.grey))
                                 : Text(
-                                    _barcode,
+                                    _scanBarcode,
                                     style: TextStyle(color: Colors.black),
                                   )),
                       ),
@@ -180,6 +197,8 @@ class _BarcodePageState extends State<BarcodePage> {
                               } else {
                                 List<int> imageBytes = _image.readAsBytesSync();
                                 String base64Image = base64.encode(imageBytes);
+                                print(_addProduct.productCategory);
+                                print(_addProduct.productName);
                                 dynamic result = _productServices
                                     .productAddition(
                                         _addProduct.productCategory,
@@ -187,11 +206,11 @@ class _BarcodePageState extends State<BarcodePage> {
                                         _addProduct.productPrice,
                                         _addProduct.productQuantity,
                                         _addProduct.quantityAlert,
-                                        _barcode,
+                                        _scanBarcode,
                                         _addProduct.productDescription,
                                         base64Image)
                                     .then((value) {
-                                  if (value == null) {
+                                  if (value == 400) {
                                     setState(() {
                                       loading = false;
                                       setState(() {
@@ -204,7 +223,7 @@ class _BarcodePageState extends State<BarcodePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                BottomNavigationPage()));
+                                                ProductSuccess()));
                                   }
                                 });
                               }

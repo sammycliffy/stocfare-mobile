@@ -22,7 +22,7 @@ class _AllSalesListState extends State<AllSalesList> {
             Container(
               width: 100,
               height: 40,
-              color: Theme.of(context).hintColor,
+              color: Colors.black,
               child: Center(
                 child: Text('Today',
                     style: TextStyle(
@@ -56,7 +56,7 @@ class _AllSalesListState extends State<AllSalesList> {
             Container(
               width: 100,
               height: 40,
-              color: Theme.of(context).hintColor,
+              color: Colors.black,
               child: Center(
                 child: Center(
                   child: Text('This week',
@@ -92,7 +92,7 @@ class _AllSalesListState extends State<AllSalesList> {
             Container(
               width: 100,
               height: 40,
-              color: Theme.of(context).hintColor,
+              color: Colors.black,
               child: Center(
                 child: Text('This month',
                     style: TextStyle(
@@ -126,7 +126,7 @@ class _AllSalesListState extends State<AllSalesList> {
             Container(
               width: 100,
               height: 40,
-              color: Theme.of(context).hintColor,
+              color: Colors.black,
               child: Center(
                 child: Text('Quarterly',
                     style: TextStyle(

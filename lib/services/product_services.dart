@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stockfare_mobile/models/products.dart';
 
 class ProductServices {
   Future<dynamic> productAddition(
@@ -18,6 +17,9 @@ class ProductServices {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
+    print(branchId);
+    print(productCategory);
+    print(productName);
     final String url =
         'https://stockfare-io.herokuapp.com/api/v1/inventory/create-category/$branchId/';
     final http.Response response = await http.post(url,
@@ -43,12 +45,13 @@ class ProductServices {
     if (response.statusCode == 200) {
       var responseJson = json.decode(response.body);
       sharedPreferences.setString("token", responseJson['token']['access']);
-      print(responseJson);
+      return response.statusCode;
     } else if (response.statusCode == 400) {
       print(response.statusCode);
       print(response.body);
-      return null;
+      return response.statusCode;
     }
+    return response.statusCode;
   }
 
   Future<dynamic> getAllProducts() async {
@@ -65,55 +68,55 @@ class ProductServices {
         'Authorization': 'Bearer $token',
       },
     );
-    if (response.statusCode == 200) {
-      dynamic products = Welcome.fromJson(json.decode(response.body));
-      print('this is product.count' + products.count);
-      //display product name
-      print(products.results.map((title) {
-        return title.name;
-      }));
+    // if (response.statusCode == 200) {
+    //   dynamic products = ProductList.fromJson(json.decode(response.body));
+    //   print('this is product.count' + products.count);
+    //   //display product name
+    //   print(products.results.map((title) {
+    //     return title.name;
+    //   }));
 
-      //display product name
-      print(products.results.map((title) {
-        return title.products[0].name;
-      }));
+    //   //display product name
+    //   print(products.results.map((title) {
+    //     return title.products[0].name;
+    //   }));
 
-      //product price
-      print(products.results.map((title) {
-        return title.products[0].productUnit.price;
-      }));
+    //   //product price
+    //   print(products.results.map((title) {
+    //     return title.products[0].productUnit.price;
+    //   }));
 
-      //product quantity
-      print(products.results.map((title) {
-        return title.products[0].productUnit.quantity;
-      }));
+    //   //product quantity
+    //   print(products.results.map((title) {
+    //     return title.products[0].productUnit.quantity;
+    //   }));
 
-      //product limit
-      print(products.results.map((title) {
-        return title.products[0].productUnit.limit;
-      }));
+    //   //product limit
+    //   print(products.results.map((title) {
+    //     return title.products[0].productUnit.limit;
+    //   }));
 
-      //display images
-      print(products.results.map((title) {
-        return title.products[0].productImage.map((title) {
-          return title.imageLink;
-        });
-      }));
+    //   //display images
+    //   print(products.results.map((title) {
+    //     return title.products[0].productImage.map((title) {
+    //       return title.imageLink;
+    //     });
+    //   }));
 
-      //packPrice
-      print(products.results.map((title) {
-        return title.products[0].productPack.price;
-      }));
+    //   //packPrice
+    //   print(products.results.map((title) {
+    //     return title.products[0].productPack.price;
+    //   }));
 
-      //packlimit
-      print(products.results.map((title) {
-        return title.products[0].productPack.limit;
-      }));
-      return products;
-    } else {
-      print(response.statusCode);
-      print(response.body);
-    }
+    //   //packlimit
+    //   print(products.results.map((title) {
+    //     return title.products[0].productPack.limit;
+    //   }));
+    //   return products;
+    // } else {
+    //   print(response.statusCode);
+    //   print(response.body);
+    // }
   }
 }
 
