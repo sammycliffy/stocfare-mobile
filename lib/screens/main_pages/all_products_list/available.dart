@@ -45,7 +45,8 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
                   ),
                   Container(
                       width: 80,
-                      decoration: BoxDecoration(color: Colors.black),
+                      decoration:
+                          BoxDecoration(color: Theme.of(context).accentColor),
                       child: Center(
                           child: Text(
                         '1900',
@@ -80,7 +81,6 @@ class _ProductsAvailableState extends State<ProductsAvailable> {
           content: SingleChildScrollView(
               child: Column(
             children: <Widget>[
-             
               Row(
                 children: <Widget>[
                   Text(

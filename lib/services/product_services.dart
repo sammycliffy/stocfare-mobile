@@ -55,17 +55,18 @@ class ProductServices {
     return response.statusCode;
   }
 
-  Future<DataSnapshot> allProducts() async {
+  Future<dynamic> allProducts() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String firebaseId = sharedPreferences.getString("firebaseId");
     final dbRef = FirebaseDatabase.instance.reference();
-
-    dbRef
+    return dbRef
         .child('inventories')
         .orderByKey()
         .equalTo(firebaseId)
         .once()
-        .then((DataSnapshot snapshot) => print(snapshot.value));
+        .then((DataSnapshot snapshot) {
+      print(snapshot.value);
+    });
   }
 
   Future<dynamic> getAllProducts() async {

@@ -8,6 +8,7 @@ import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/available.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/main_app_bar.dart';
+import 'package:stockfare_mobile/services/auth_services.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,17 +17,24 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  ProductServices _productServices = ProductServices();
+  dynamic productList;
 
   @override
   void initState() {
     super.initState();
+    // ProductServices _productServices = ProductServices();
+    // _productServices.allProducts().then((value) {
+    //   setState(() {
+    //     productList = value;
+    //   });
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
     AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
     SignupNotifier signupNotifier = Provider.of<SignupNotifier>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
@@ -119,11 +127,27 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text('Hello  ${signupNotifier.fullName}',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              ),
+                  padding: const EdgeInsets.only(
+                    top: 10,
+                    left: 18,
+                  ),
+                  child: InkWell(
+                    child: Container(
+                      width: 120,
+                      height: 30,
+                      decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Center(
+                        child: Text('Check out',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                            )),
+                      ),
+                    ),
+                    onTap: () {},
+                  )),
               GestureDetector(
                 child: Padding(
                   padding: const EdgeInsets.only(right: 10, top: 5, left: 120),
@@ -165,6 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        focusColor: Theme.of(context).canvasColor,
         onPressed: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => AddProductPage()));

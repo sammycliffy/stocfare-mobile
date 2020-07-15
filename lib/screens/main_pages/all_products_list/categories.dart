@@ -37,7 +37,7 @@ class _CategoryPageState extends State<CategoryPage> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
-                            color: Theme.of(context).primaryColor),
+                            color: Colors.black),
                       ),
                       Text(
                         '125 Items',
@@ -46,7 +46,8 @@ class _CategoryPageState extends State<CategoryPage> {
                       ),
                       Container(
                           width: 80,
-                          decoration: BoxDecoration(color: Colors.black),
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).accentColor),
                           child: Center(
                               child: Text(
                             'View',

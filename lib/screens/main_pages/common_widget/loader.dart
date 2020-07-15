@@ -27,8 +27,8 @@ class Loading extends StatelessWidget {
               SizedBox(height: 20),
               Text('Your business just got smarter.',
                   style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.red,
+                      fontSize: 16,
+                      color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.bold))
             ],
           )),

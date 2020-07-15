@@ -22,10 +22,10 @@ void main() {
     child: MaterialApp(
         home: SplashScreen(),
         theme: ThemeData(
-          canvasColor: Hexcolor('#c80815'),
-          brightness: Brightness.dark,
+          canvasColor: Hexcolor('#FF5E69'),
+          brightness: Brightness.light,
           primaryColor: Hexcolor('#c80815'),
-          accentColor: Hexcolor('#FF5E69'),
+          accentColor: Hexcolor('#FF7781'),
           fontFamily: 'Mukta',
           dividerColor: Colors.black,
           hintColor: Colors.grey,
