@@ -1,0 +1,5 @@
+{
+  "launch": {
+    "terminal.external.linuxExec": "xterm"
+  }
+}

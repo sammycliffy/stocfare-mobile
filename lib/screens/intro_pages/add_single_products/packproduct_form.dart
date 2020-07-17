@@ -6,19 +6,19 @@ import 'package:stockfare_mobile/screens/intro_pages/add_single_products/barcode
 import 'package:stockfare_mobile/screens/intro_pages/add_single_products/packproduct_form.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 
-class FormPage extends StatefulWidget {
+class AddPackPage extends StatefulWidget {
   @override
-  _FormPageState createState() => _FormPageState();
+  _AddPackPageState createState() => _AddPackPageState();
 }
 
-class _FormPageState extends State<FormPage> {
+class _AddPackPageState extends State<AddPackPage> {
   final _formKey = GlobalKey<FormState>();
-  String _productCategory;
-  String _unitProductName;
-  String _productDescription;
-  int _unitProductPrice = 0;
-  int _unitQuantity = 0;
-  double _unitLimit = 0;
+
+  String _packProductName;
+
+  int _packProductPrice = 0;
+  int _packQuantity = 0;
+  double _packLimit = 0;
 
   bool loading = false;
   ProductServices _productServices = ProductServices();
@@ -27,6 +27,9 @@ class _FormPageState extends State<FormPage> {
   Widget build(BuildContext context) {
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
     return Scaffold(
+        appBar: AppBar(
+          title: Text('Add Pack Product'),
+        ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Column(
@@ -37,43 +40,6 @@ class _FormPageState extends State<FormPage> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        validator: (input) =>
-                            input.isEmpty ? "Enter product Category" : null,
-                        onChanged: (val) => setState(() {
-                          _productCategory = val;
-                        }),
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(12),
-                          labelStyle:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .focusColor
-                                  .withOpacity(0.7)),
-                          hintText: 'Enter Product Category E.g. Soft Drinks',
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.5))),
-                        ),
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
                     SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
@@ -82,7 +48,7 @@ class _FormPageState extends State<FormPage> {
                         validator: (input) =>
                             input.isEmpty ? "Enter Product Name " : null,
                         onChanged: (val) => setState(() {
-                          _unitProductName = val;
+                          _packProductName = val;
                         }),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(12),
@@ -123,7 +89,7 @@ class _FormPageState extends State<FormPage> {
                             validator: (input) =>
                                 input.isEmpty ? "Enter Product Price" : null,
                             onChanged: (val) => setState(() {
-                              _unitProductPrice = int.parse(val);
+                              _packProductPrice = int.parse(val);
                             }),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(12),
@@ -138,7 +104,7 @@ class _FormPageState extends State<FormPage> {
                                   color: Theme.of(context)
                                       .focusColor
                                       .withOpacity(0.7)),
-                              hintText: 'Unit price',
+                              hintText: 'Pack price',
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context)
@@ -161,7 +127,7 @@ class _FormPageState extends State<FormPage> {
                             validator: (input) =>
                                 input.isEmpty ? "Enter Quantity " : null,
                             onChanged: (val) => setState(() {
-                              _unitQuantity = int.parse(val);
+                              _packQuantity = int.parse(val);
                             }),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(12),
@@ -196,43 +162,6 @@ class _FormPageState extends State<FormPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        validator: (input) =>
-                            input.isEmpty ? "Enter Product Description" : null,
-                        onChanged: (val) => setState(() {
-                          _productDescription = val;
-                        }),
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(12),
-                          labelStyle:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .focusColor
-                                  .withOpacity(0.7)),
-                          hintText: 'Give a brief description of your product',
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.5))),
-                        ),
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
                     SizedBox(height: 5),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Padding(
@@ -254,7 +183,7 @@ class _FormPageState extends State<FormPage> {
                           ),
                           child: Center(
                               child: Text(
-                            (_unitLimit * 100).round().toString(),
+                            (_packLimit * 100).round().toString(),
                             style: TextStyle(color: Colors.red, fontSize: 15),
                           )),
                         ),
@@ -276,48 +205,15 @@ class _FormPageState extends State<FormPage> {
                               RoundSliderOverlayShape(overlayRadius: 28.0),
                         ),
                         child: Slider(
-                          value: _unitLimit,
+                          value: _packLimit,
                           onChanged: (value) {
                             setState(() {
-                              _unitLimit = value;
+                              _packLimit = value;
                             });
                           },
                         ),
                       ),
                     ),
-                    Padding(
-                        padding: const EdgeInsets.only(
-                          right: 150,
-                        ),
-                        child: InkWell(
-                          child: Container(
-                            width: 150,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Theme.of(context).accentColor),
-                            child: Center(
-                              child: Text('Add pack products',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          ),
-                          onTap: () {
-                            if (_formKey.currentState.validate()) {
-                              _addProduct.setFirstProduct(
-                                  _productCategory,
-                                  _unitProductName,
-                                  _unitLimit,
-                                  _unitProductPrice,
-                                  _productDescription);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => BarcodePage()));
-                            }
-                          },
-                        )),
                     SizedBox(
                       height: 40,
                     ),
@@ -339,13 +235,8 @@ class _FormPageState extends State<FormPage> {
                         ),
                         onTap: () {
                           if (_formKey.currentState.validate()) {
-                            _addProduct.setFirstProduct(
-                                _productCategory,
-                                _unitProductName,
-                                _unitLimit * 100,
-                                _unitProductPrice,
-                                _productDescription);
-
+                            _addProduct.setPackProducts(_packProductName,
+                                _packProductPrice, _packLimit, _packQuantity);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

@@ -10,6 +10,7 @@ import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigat
 import 'package:stockfare_mobile/screens/main_pages/common_widget/loader.dart';
 import 'package:stockfare_mobile/services/auth_services.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
+import 'package:stockfare_mobile/services/sales_services.dart';
 import 'forgot_password.dart';
 
 class Login extends StatefulWidget {
@@ -26,7 +27,7 @@ class _LoginState extends State<Login> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   AuthServices _auth = AuthServices();
   ProductServices _productServices = ProductServices();
-
+  SalesServices _salesServices = SalesServices();
   @override
   Widget build(BuildContext context) {
     SignupNotifier _signupNotifier = Provider.of<SignupNotifier>(context);
@@ -201,6 +202,7 @@ class _LoginState extends State<Login> {
                                   ),
                                 ),
                                 onTap: () async {
+                                  // _salesServices.getallSales();
                                   if (_formKey.currentState.validate()) {
                                     setState(() {
                                       loading = true;

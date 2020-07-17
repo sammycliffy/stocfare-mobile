@@ -3,14 +3,19 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stockfare_mobile/models/products.dart';
 
 class ProductServices {
   Future<dynamic> productAddition(
     String productCategory,
-    String productName,
-    int productPrice,
-    int productQuantity,
-    int quantityAlert,
+    String unitproductName,
+    int unitproductPrice,
+    int unitproductQuantity,
+    double unitLimit,
+    String packproductName,
+    int packProductPrice,
+    int packQuantity,
+    double packLimit,
     String barcode,
     String productDescription,
     String image,
@@ -18,9 +23,7 @@ class ProductServices {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
-    print(branchId);
-    print(productCategory);
-    print(productName);
+
     final String url =
         'https://stockfare-io.herokuapp.com/api/v1/inventory/create-category/$branchId/';
     final http.Response response = await http.post(url,
@@ -33,12 +36,17 @@ class ProductServices {
           "name": productCategory,
           "product": {
             "product_unit": {
-              "price": productPrice,
-              "quantity": productQuantity,
-              "limit": quantityAlert,
+              "price": unitproductPrice,
+              "quantity": unitproductQuantity,
+              "limit": unitLimit,
+            },
+            "product_pack": {
+              "price": packProductPrice,
+              "limit": unitLimit,
+              "quantity": packQuantity,
             },
             "image": image,
-            "name": productName,
+            "name": unitproductName,
             "barcode": barcode,
             "description": productDescription,
           }
@@ -65,11 +73,11 @@ class ProductServices {
         .equalTo(firebaseId)
         .once()
         .then((DataSnapshot snapshot) {
-      print(snapshot.value);
+      dynamic product = ProductList.fromJson(snapshot.value);
     });
   }
 
-  Future<dynamic> getAllProducts() async {
+  Future<ProductList> getAllProducts() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
     print(token);
@@ -83,54 +91,53 @@ class ProductServices {
         'Authorization': 'Bearer $token',
       },
     );
-    // if (response.statusCode == 200) {
-    //   dynamic products = ProductList.fromJson(json.decode(response.body));
-    //   print('this is product.count' + products.count);
-    //   //display product name
-    //   print(products.results.map((title) {
-    //     return title.name;
-    //   }));
+    if (response.statusCode == 200) {
+      return ProductList.fromJson(json.decode(response.body));
 
-    //   //display product name
-    //   print(products.results.map((title) {
-    //     return title.products[0].name;
-    //   }));
+      // //display product name
+      // print(products.results.map((title) {
+      //   return title.name;
+      // }));
 
-    //   //product price
-    //   print(products.results.map((title) {
-    //     return title.products[0].productUnit.price;
-    //   }));
+      // //display product name
+      // print(products.results.map((title) {
+      //   return title.products[0].name;
+      // }));
 
-    //   //product quantity
-    //   print(products.results.map((title) {
-    //     return title.products[0].productUnit.quantity;
-    //   }));
+      // //product price
+      // print(products.results.map((title) {
+      //   return title.products[0].productUnit.price;
+      // }));
 
-    //   //product limit
-    //   print(products.results.map((title) {
-    //     return title.products[0].productUnit.limit;
-    //   }));
+      // //product quantity
+      // print(products.results.map((title) {
+      //   return title.products[0].productUnit.quantity;
+      // }));
 
-    //   //display images
-    //   print(products.results.map((title) {
-    //     return title.products[0].productImage.map((title) {
-    //       return title.imageLink;
-    //     });
-    //   }));
+      // //product limit
+      // print(products.results.map((title) {
+      //   return title.products[0].productUnit.limit;
+      // }));
 
-    //   //packPrice
-    //   print(products.results.map((title) {
-    //     return title.products[0].productPack.price;
-    //   }));
+      // //display images
+      // print(products.results.map((title) {
+      //   return title.products[0].productImage.map((title) {
+      //     return title.imageLink;
+      //   });
+      // }));
 
-    //   //packlimit
-    //   print(products.results.map((title) {
-    //     return title.products[0].productPack.limit;
-    //   }));
-    //   return products;
-    // } else {
-    //   print(response.statusCode);
-    //   print(response.body);
-    // }
+      // //packPrice
+      // print(products.results.map((title) {
+      //   return title.products[0].productPack.price;
+      // }));
+
+      // //packlimit
+      // print(products.results.map((title) {
+      //   return title.products[0].productPack.limit;
+      // }));
+      // return products;
+    } else {
+      throw Exception('Failed to load products');
+    }
   }
 }

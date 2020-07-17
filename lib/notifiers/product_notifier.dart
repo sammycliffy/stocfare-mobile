@@ -1,55 +1,49 @@
 import 'package:flutter/foundation.dart';
 
 class AddProductNotifier with ChangeNotifier {
-  String _productName;
+  String _unitproductName;
   String _productCategory;
   String _productDescription;
-  int _quantityAlert = 0;
-  int _productPrice = 0;
-  int _productQuantity = 0;
+  double _unitLimit = 0;
+  int _unitproductPrice = 0;
+  int _unitproductQuantity = 0;
   int _productBarcode = 0;
+  String _packProductName;
+  int _packProductPrice = 0;
+  double _packLimit = 0;
+  int _packQuantity = 0;
 
-  String get productName => _productName;
+  String get unitproductName => _unitproductName;
+  String get packProductName => _packProductName;
+  double get packLimit => _packLimit;
+  int get packQuantity => _packQuantity;
+  int get packProductPrice => _packProductPrice;
   String get productDescription => _productDescription;
   String get productCategory => _productCategory;
-  int get productPrice => _productPrice;
-  int get productQuantity => _productQuantity;
-  int get quantityAlert => _quantityAlert;
+  int get unitproductPrice => _unitproductPrice;
+  int get unitproductQuantity => _unitproductQuantity;
+  double get unitLimit => _unitLimit;
   int get productBarcode => _productBarcode;
 
-  void setproductName(String value) {
-    _productName = value;
-    notifyListeners();
-  }
-
   void setFirstProduct(String productCategory, String productName,
-      int productPrice, String productDescription) {
+      double unitLimit, int productPrice, String productDescription) {
     _productCategory = productCategory;
-    _productName = productName;
-    _productPrice = productPrice;
+    _unitproductName = productName;
+    _unitproductPrice = productPrice;
     _productDescription = productDescription;
     notifyListeners();
   }
 
-  void setQuantity(int productQuantity, int quantityAlert) {
-    _productQuantity = productQuantity;
-    _quantityAlert = quantityAlert;
-    notifyListeners();
-  }
-
-  void setAllProduct(
-      String productCategory,
-      String productName,
-      int productPrice,
-      String productDescription,
-      int productQuantity,
-      int quantityAlert) {
-    _productCategory = productCategory;
-    _productName = productName;
-    _productPrice = productPrice;
-    _productDescription = productDescription;
-    _productQuantity = productQuantity;
-    _quantityAlert = quantityAlert;
+  void setPackProducts(
+    String packProductName,
+    int packProductPrice,
+    double packLimit,
+    int packQuantity,
+  ) {
+    _packProductName = packProductName;
+    _packProductPrice = packProductPrice;
+    _packLimit = packLimit;
+    _packQuantity = packQuantity;
     notifyListeners();
   }
 }

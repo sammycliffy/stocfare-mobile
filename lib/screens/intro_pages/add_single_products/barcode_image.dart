@@ -197,15 +197,18 @@ class _BarcodePageState extends State<BarcodePage> {
                               } else {
                                 List<int> imageBytes = _image.readAsBytesSync();
                                 String base64Image = base64.encode(imageBytes);
-                                print(_addProduct.productCategory);
-                                print(_addProduct.productName);
+
                                 dynamic result = _productServices
                                     .productAddition(
                                         _addProduct.productCategory,
-                                        _addProduct.productName,
-                                        _addProduct.productPrice,
-                                        _addProduct.productQuantity,
-                                        _addProduct.quantityAlert,
+                                        _addProduct.unitproductName,
+                                        _addProduct.unitproductPrice,
+                                        _addProduct.unitproductQuantity,
+                                        _addProduct.unitLimit,
+                                        _addProduct.packProductName,
+                                        _addProduct.packProductPrice,
+                                        _addProduct.packQuantity,
+                                        _addProduct.packLimit,
                                         _scanBarcode,
                                         _addProduct.productDescription,
                                         base64Image)
