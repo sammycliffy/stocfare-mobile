@@ -288,7 +288,21 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                 ]),
           );
         }
-        return Text('Your Sales Analytics will diplay here');
+        return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.shopping_cart,
+                size: 40,
+                color: Theme.of(context).primaryColor,
+              ),
+              Text('Your product summary will display here',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor)),
+            ]);
       },
     );
   }

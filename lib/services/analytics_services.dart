@@ -8,9 +8,10 @@ class Analytics {
   Future<SalesAnalytics> getAllAnalytics() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
+    String branchId = sharedPreferences.getString('branchId');
     print(token);
     final String url =
-        'https://stockfare-io.herokuapp.com/api/v1/analytics/sale-analysis/8e044e8c-263b-40f7-afb7-601154b59601/';
+        'https://stockfare-io.herokuapp.com/api/v1/analytics/sale-analysis/$branchId/';
     final response = await http.get(
       url,
       headers: <String, String>{
@@ -29,9 +30,10 @@ class Analytics {
   Future<ProductsAnalyticsModel> getAllProducts() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
+    String branchId = sharedPreferences.getString('branchId');
     print(token);
     final String url =
-        'https://stockfare-io.herokuapp.com/api/v1/analytics/product-analysis/8e044e8c-263b-40f7-afb7-601154b59601/';
+        'https://stockfare-io.herokuapp.com/api/v1/analytics/product-analysis/$branchId/';
     final response = await http.get(
       url,
       headers: <String, String>{

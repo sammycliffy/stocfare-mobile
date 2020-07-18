@@ -56,7 +56,21 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                 ]),
           );
         }
-        return Text('Your Sales Analytics will diplay here');
+        return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.monetization_on,
+                size: 40,
+                color: Theme.of(context).primaryColor,
+              ),
+              Text('Your sales summary will display here',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor)),
+            ]);
       },
     );
   }

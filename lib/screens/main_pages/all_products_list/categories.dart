@@ -99,7 +99,25 @@ class _CategoryPageState extends State<CategoryPage> {
                     );
                   });
             }
-            return Loading();
+            return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Icon(
+                      Icons.shopping_basket,
+                      size: 40,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  Center(
+                    child: Text('Your sales summary will display here',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor)),
+                  ),
+                ]);
           },
         ));
   }
