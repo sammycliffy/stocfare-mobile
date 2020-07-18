@@ -1,4 +1,4 @@
-class ProductAnalytics {
+class SalesAnalytics {
   String todaySales;
   int todaySalesCount;
   double todaySalesAmount;
@@ -15,7 +15,7 @@ class ProductAnalytics {
   int yearSalesCount;
   double yearSalesAmount;
 
-  ProductAnalytics(
+  SalesAnalytics(
       {this.todaySales,
       this.monthSales,
       this.quarterSales,
@@ -32,8 +32,8 @@ class ProductAnalytics {
       this.yearSalesAmount,
       this.yearSalesCount});
 
-  factory ProductAnalytics.fromJson(Map<String, dynamic> json) {
-    return ProductAnalytics(
+  factory SalesAnalytics.fromJson(Map<String, dynamic> json) {
+    return SalesAnalytics(
       todaySalesCount: json['today_sales']['total_sales_count'],
       todaySalesAmount: json['today_sales']['total_sales_amount'],
       monthSalesCount: json['month_sales']['total_sales_count'],

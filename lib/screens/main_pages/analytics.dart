@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/models/sales_analytics_model.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
+import 'package:stockfare_mobile/screens/main_pages/product_analytics.dart';
+import 'package:stockfare_mobile/screens/main_pages/sales_analytics.dart';
 
 class AnalyticsPage extends StatefulWidget {
   @override
@@ -33,12 +36,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    Center(
-                      child: Text('jane'),
-                    ),
-                    Center(
-                      child: Text('tobi'),
-                    )
+                    SalesPageAnalytics(),
+                    ProductPageAnalytics(),
                   ],
                 ),
               ),
