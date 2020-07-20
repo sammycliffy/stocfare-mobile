@@ -19,6 +19,7 @@ class SalesServices {
       'Authorization': 'Bearer $token',
     });
     if (response.statusCode == 200) {
+      print(response.body);
       return Welcome.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load album');

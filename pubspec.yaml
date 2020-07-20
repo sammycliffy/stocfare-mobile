@@ -34,11 +34,11 @@ dependencies:
   http: ^0.12.1
   hexcolor: ^1.0.4
   provider: ^4.1.3
-  firebase_core: ^0.4.5
   device_info: ^0.4.2+4
   flutter_spinkit: "^4.1.2"
   firebase_database: ^3.1.6
   intl: ^0.16.1
+  flutter_masked_text: ^0.8.0
 
 dev_dependencies:
   flutter_test:
@@ -69,11 +69,17 @@ flutter:
     - family: Mukta
       fonts:
         - asset: assets/fonts/Mukta-Light.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
+        - asset: assets/fonts/Mukta-Medium.ttf
+        - asset: assets/fonts/Mukta-Regular.ttf
+
+    #       - asset: fonts/Schyler-Italic.ttf
+    #         style: italic
+    - family: FiraSans
+      fonts:
+        - asset: assets/fonts/FiraSans-Light.ttf
+    - family: Sora
+      fonts:
+        - asset: assets/fonts/static/Sora-Regular.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #

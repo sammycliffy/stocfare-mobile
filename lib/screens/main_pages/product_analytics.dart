@@ -20,290 +20,260 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<ProductsAnalyticsModel>(
-      future: _productAnalytics,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return SingleChildScrollView(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        width: 200,
-                        height: 40,
-                        color: Theme.of(context).accentColor,
-                        child: Center(
-                            child: Text(
-                          'Most Product Sold this Week',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        )),
+        future: _productAnalytics,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Card(
+                      child: Container(
+                    width: 500,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 10,
                       ),
-                      SizedBox(width: 100),
-                      Icon(Icons.star, size: 40, color: Colors.orange)
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('Most Sold Product',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20)),
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 20),
+                                    child: Text(
+                                      snapshot.data.mostProductWeekName,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 80,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 20),
+                                child: Text(
+                                  snapshot.data.mostProductSalesWeekCount
+                                          .toString() +
+                                      ' Sold',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 10, right: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Card(
+                        child: Container(
+                          width: 150,
+                          height: 150,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Least Sold This\n Week',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  snapshot.data.leastProductWeekName.toString(),
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  snapshot.data.leastProductSalesWeekCount
+                                      .toString(),
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Card(
+                        child: Container(
+                          width: 150,
+                          height: 150,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Most Sold This \nWeek',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  snapshot.data.mostProductWeekName,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  snapshot.data.mostProductSalesWeekCount
+                                      .toString(),
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blueGrey),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
-                  Container(
-                    margin: EdgeInsets.all(20),
-                    child: Table(
-                      border: TableBorder.all(color: Colors.grey),
-                      children: [
-                        TableRow(children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              ' Product Name',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              snapshot.data.mostProductWeekName.toString(),
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ]),
-                        TableRow(children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              'Product Count',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              snapshot.data.mostProductSalesWeekCount
-                                  .toString(),
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ])
-                      ],
-                    ),
-                  ),
-                  //Second
-                  Row(
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 10, right: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Container(
-                        width: 200,
-                        height: 40,
-                        color: Theme.of(context).primaryColor,
-                        child: Center(
-                            child: Text(
-                          'Least Product Sold this Week',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        )),
+                      Card(
+                        child: Container(
+                          width: 150,
+                          height: 150,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Least Sold This Month',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  snapshot.data.leastProductMonthName,
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Sold ' +
+                                      snapshot.data.leastProductSalesMonthCount
+                                          .toString() +
+                                      ' time (s)',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blueGrey),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                      SizedBox(width: 100),
-                      Icon(Icons.mood_bad, size: 40, color: Colors.orange)
+                      Card(
+                        child: Container(
+                          width: 150,
+                          height: 150,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Most Sold This Month',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  snapshot.data.mostProductMonthName,
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Sold ' +
+                                      snapshot.data.mostProductSalesMonthCount
+                                          .toString() +
+                                      ' time (s)',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blueGrey),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
-                  Container(
-                    margin: EdgeInsets.all(20),
-                    child: Table(
-                      border: TableBorder.all(color: Colors.grey),
-                      children: [
-                        TableRow(children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              ' Product Name',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              snapshot.data.leastProductWeekName.toString(),
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ]),
-                        TableRow(children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              'Product Count',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              snapshot.data.leastProductSalesWeekCount
-                                  .toString(),
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ])
-                      ],
+                ),
+              ],
+            );
+          } else {
+            return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Icon(
+                      Icons.monetization_on,
+                      size: 40,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  SizedBox(
-                    height: 40,
+                  Center(
+                    child: Text('Your Product Analytics',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor)),
                   ),
-                  //Third
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        width: 200,
-                        height: 40,
-                        color: Theme.of(context).accentColor,
-                        child: Center(
-                            child: Text(
-                          'Most sold product this Month',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        )),
-                      ),
-                      SizedBox(width: 100),
-                      Icon(Icons.star, size: 40, color: Colors.orange)
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(20),
-                    child: Table(
-                      border: TableBorder.all(color: Colors.grey),
-                      children: [
-                        TableRow(children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              ' Product Name',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              snapshot.data.mostProductMonthName.toString(),
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ]),
-                        TableRow(children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              'Product Count',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              snapshot.data.mostProductSalesMonthCount
-                                  .toString(),
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ])
-                      ],
-                    ),
-                  ),
-                  //fourth
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        width: 200,
-                        height: 40,
-                        color: Theme.of(context).primaryColor,
-                        child: Center(
-                            child: Text(
-                          'Least Product Sold this Month',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        )),
-                      ),
-                      SizedBox(width: 100),
-                      Icon(Icons.mood_bad, size: 40, color: Colors.orange)
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(20),
-                    child: Table(
-                      border: TableBorder.all(color: Colors.grey),
-                      children: [
-                        TableRow(children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              ' Product Name',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              snapshot.data.leastProductMonthName.toString(),
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ]),
-                        TableRow(children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              'Product Count',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              snapshot.data.leastProductSalesMonthCount
-                                  .toString(),
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ])
-                      ],
-                    ),
-                  ),
-                ]),
-          );
-        }
-        return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.shopping_cart,
-                size: 40,
-                color: Theme.of(context).primaryColor,
-              ),
-              Text('Your product summary will display here',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor)),
-            ]);
-      },
-    );
+                ]);
+          }
+        });
   }
 }

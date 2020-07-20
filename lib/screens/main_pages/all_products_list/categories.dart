@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/models/products.dart';
-import 'package:stockfare_mobile/models/sales_model.dart';
+import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/products_list.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
-import 'package:stockfare_mobile/screens/main_pages/common_widget/loader.dart';
+
 import 'package:stockfare_mobile/services/product_services.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -37,88 +37,108 @@ class _CategoryPageState extends State<CategoryPage> {
     final double itemHeight = (size.height - kToolbarHeight - 24) / 3;
     final double itemWidth = size.width / 2;
     return Scaffold(
-        drawer: DrawerPage(),
-        backgroundColor: Colors.white,
-        appBar: AppBar(title: Text('Category List')),
-        body: FutureBuilder(
-          future: _productList,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return GridView.builder(
-                  itemCount: _categories.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 5.0,
-                    mainAxisSpacing: 5.0,
+      drawer: DrawerPage(),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+          title: Text('Category List'),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
+                onPressed: null),
+            IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+                onPressed: null)
+          ],
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(50.0),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                bottom: 10,
+              ),
+              child: Container(
+                height: 45,
+                width: 300,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Colors.grey[200],
+                ),
+                child: TextField(
+                    decoration: InputDecoration(
+                  prefixIcon: IconButton(
+                    icon: Icon(Icons.search),
+                    color: Colors.black,
+                    iconSize: 20.0,
+                    onPressed: () {},
                   ),
-                  itemBuilder: (context, index) {
-                    return Padding(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.fromLTRB(25, 8, 0, 5),
+                  hintText: 'Search Stockfare',
+                )),
+              ),
+            ),
+          )),
+      body: FutureBuilder(
+        future: _productList,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+                itemCount: _categories.length,
+                itemBuilder: (context, index) {
+                  return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        child: Card(
-                          color: Colors.white,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                _categories[index].toString(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                    color: Colors.black),
-                              ),
-                              Text(
-                                _productCount[index].toString() + ' items',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 13),
-                              ),
-                              Container(
-                                  width: 80,
-                                  decoration: BoxDecoration(
-                                      color: Theme.of(context).accentColor),
-                                  child: Center(
-                                      child: Text(
-                                    'View',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  ))),
-                            ],
-                          ),
+                      child: Card(
+                          child: ListTile(
+                        leading: FlutterLogo(size: 56.0),
+                        title: Text(
+                          _categories[index].toString(),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AllProductsList()));
-                        },
-                      ),
-                    );
-                  });
-            }
-            return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Icon(
-                      Icons.shopping_basket,
-                      size: 40,
-                      color: Theme.of(context).primaryColor,
-                    ),
+                        subtitle: Text(
+                          _productCount[index].toString() + ' items',
+                        ),
+                        trailing: Icon(Icons.more_vert),
+                      )));
+                });
+          }
+          return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Icon(
+                    Icons.shopping_basket,
+                    size: 40,
+                    color: Theme.of(context).primaryColor,
                   ),
-                  Center(
-                    child: Text('Your sales summary will display here',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColor)),
-                  ),
-                ]);
-          },
-        ));
+                ),
+                Center(
+                  child: Text('Your sales summary will display here',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor)),
+                ),
+              ]);
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        focusColor: Theme.of(context).canvasColor,
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddProductPage()));
+        },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+    );
   }
 }
