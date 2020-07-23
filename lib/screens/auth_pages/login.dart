@@ -202,57 +202,57 @@ class _LoginState extends State<Login> {
                                   ),
                                 ),
                                 onTap: () async {
-                                  // _salesServices.getallSales();
-                                  if (_formKey.currentState.validate()) {
-                                    setState(() {
-                                      loading = true;
-                                    });
+                                  _productServices.allProducts();
+                                  // if (_formKey.currentState.validate()) {
+                                  //   setState(() {
+                                  //     loading = true;
+                                  //   });
 
-                                    try {
-                                      final result =
-                                          await InternetAddress.lookup(
-                                              'google.com');
-                                      if (result.isNotEmpty &&
-                                          result[0].rawAddress.isNotEmpty) {
-                                        print('connected');
-                                        String _registrationid =
-                                            await _auth.getId();
-                                        dynamic result =
-                                            await _auth.loginUsernew(
-                                                phoneNumber,
-                                                password,
-                                                _registrationid);
+                                  //   try {
+                                  //     final result =
+                                  //         await InternetAddress.lookup(
+                                  //             'google.com');
+                                  //     if (result.isNotEmpty &&
+                                  //         result[0].rawAddress.isNotEmpty) {
+                                  //       print('connected');
+                                  //       String _registrationid =
+                                  //           await _auth.getId();
+                                  //       dynamic result =
+                                  //           await _auth.loginUsernew(
+                                  //               phoneNumber,
+                                  //               password,
+                                  //               _registrationid);
 
-                                        if (result == null) {
-                                          setState(() {
-                                            loading = false;
-                                            _error =
-                                                'Could not sign in with those credentials';
-                                            _displaySnackBar(context);
-                                          });
-                                        } else {
-                                          //This will set the profile data for the notifier so that it can move between pages
-                                          _signupNotifier.setProfile(
-                                              result.fullname,
-                                              result.phone,
-                                              result.email);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      BottomNavigationPage()));
-                                        }
-                                      }
-                                    } on SocketException catch (_) {
-                                      print('not connected');
-                                      setState(() {
-                                        loading = false;
-                                        _error =
-                                            'Check your internet connection';
-                                        _displaySnackBar(context);
-                                      });
-                                    }
-                                  }
+                                  //       if (result == null) {
+                                  //         setState(() {
+                                  //           loading = false;
+                                  //           _error =
+                                  //               'Could not sign in with those credentials';
+                                  //           _displaySnackBar(context);
+                                  //         });
+                                  //       } else {
+                                  //         //This will set the profile data for the notifier so that it can move between pages
+                                  //         _signupNotifier.setProfile(
+                                  //             result.fullname,
+                                  //             result.phone,
+                                  //             result.email);
+                                  //         Navigator.push(
+                                  //             context,
+                                  //             MaterialPageRoute(
+                                  //                 builder: (context) =>
+                                  //                     BottomNavigationPage()));
+                                  //       }
+                                  //     }
+                                  //   } on SocketException catch (_) {
+                                  //     print('not connected');
+                                  //     setState(() {
+                                  //       loading = false;
+                                  //       _error =
+                                  //           'Check your internet connection';
+                                  //       _displaySnackBar(context);
+                                  //     });
+                                  //   }
+                                  // }
                                 }),
                             SizedBox(
                               height: 20,

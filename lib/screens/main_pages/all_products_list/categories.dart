@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
-import 'package:stockfare_mobile/screens/main_pages/all_products_list/products_list.dart';
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/product_list.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 
 import 'package:stockfare_mobile/services/product_services.dart';
@@ -14,8 +14,13 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   Future<ProductList> _productList;
   ProductServices _productServices = ProductServices();
+  List _categoryId = [];
   List _categories = [];
   List _productCount = [];
+  bool editCategory = false;
+  bool deleteCategory = false;
+  String updatedCategory;
+  bool updated;
 
   @override
   void initState() {
@@ -23,6 +28,7 @@ class _CategoryPageState extends State<CategoryPage> {
     _productList = _productServices.getAllProducts();
     _productList.then((value) {
       print(value.results.map((category) {
+        _categoryId.add(category.id);
         setState(() {
           _categories.add(category.name);
           _productCount.add(category.productCount);
@@ -33,27 +39,41 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 3;
-    final double itemWidth = size.width / 2;
+    print(_categoryId);
     return Scaffold(
       drawer: DrawerPage(),
       backgroundColor: Colors.white,
       appBar: AppBar(
           title: Text('Category List'),
           actions: <Widget>[
-            IconButton(
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                ),
-                onPressed: null),
+            editCategory == false
+                ? IconButton(
+                    icon: Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        editCategory = true;
+                      });
+                    })
+                : IconButton(
+                    icon: Icon(Icons.save),
+                    onPressed: () {
+                      setState(() {
+                        editCategory = false;
+                      });
+                    }),
             IconButton(
                 icon: Icon(
                   Icons.delete,
                   color: Colors.white,
                 ),
-                onPressed: null)
+                onPressed: () {
+                  setState(() {
+                    deleteCategory = true;
+                  });
+                })
           ],
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(50.0),
@@ -90,20 +110,38 @@ class _CategoryPageState extends State<CategoryPage> {
             return ListView.builder(
                 itemCount: _categories.length,
                 itemBuilder: (context, index) {
-                  return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                          child: ListTile(
-                        leading: FlutterLogo(size: 56.0),
-                        title: Text(
-                          _categories[index].toString(),
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(
-                          _productCount[index].toString() + ' items',
-                        ),
-                        trailing: Icon(Icons.more_vert),
-                      )));
+                  return GestureDetector(
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                            child: ListTile(
+                          title: Text(
+                            _categories[index].toString(),
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                            _productCount[index].toString() + ' items',
+                          ),
+                          trailing: editCategory
+                              ? GestureDetector(
+                                  child: Icon(Icons.edit),
+                                  onTap: () {
+                                    _updateDialog(
+                                        context,
+                                        _categories[index].toString(),
+                                        _categoryId[index]);
+                                  },
+                                )
+                              : Icon(Icons.more_vert),
+                        ))),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ProductListPage(customerIndex: index)));
+                    },
+                  );
                 });
           }
           return Column(
@@ -118,7 +156,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   ),
                 ),
                 Center(
-                  child: Text('Your sales summary will display here',
+                  child: Text('Your Products will appear here',
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -139,6 +177,73 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
         backgroundColor: Theme.of(context).primaryColor,
       ),
+    );
+  }
+
+  Future<void> _updateDialog(context, category, id) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          content: SingleChildScrollView(
+              child: Column(
+            children: <Widget>[
+              Text(
+                'UPDATE CATEGORY',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              TextFormField(
+                onChanged: (val) => setState(() {
+                  updatedCategory = val;
+                }),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(5),
+                  hintText: category,
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color:
+                              Theme.of(context).focusColor.withOpacity(0.2))),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+            ],
+          )),
+          actions: <Widget>[
+            GestureDetector(
+                child: Center(
+                  child: Container(
+                    height: 40,
+                    width: 260,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        border: Border.all(color: Colors.black, width: 3),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                        child: Text(
+                      'update',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    )),
+                  ),
+                ),
+                onTap: () {
+                  print(updatedCategory);
+                  print(id);
+                  Navigator.pop(context);
+                  _productServices.updateCategory(id, updatedCategory);
+                }),
+          ],
+        );
+      },
     );
   }
 }

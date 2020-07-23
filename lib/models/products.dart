@@ -1,7 +1,7 @@
 class ProductList {
   int count;
-  Null next;
-  Null previous;
+  String next;
+  String previous;
   List<Results> results;
 
   ProductList({this.count, this.next, this.previous, this.results});

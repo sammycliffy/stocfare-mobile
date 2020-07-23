@@ -29,7 +29,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                   padding: const EdgeInsets.only(left: 20, right: 20),
                   child: Card(
                       child: Container(
-                    width: 500,
+                    width: 400,
                     child: Padding(
                       padding: const EdgeInsets.only(
                         left: 10,
@@ -56,7 +56,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                 ],
                               ),
                               SizedBox(
-                                width: 80,
+                                width: 50,
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,7 +134,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                 Text(
                                   'Sales This Week',
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 17,
                                   ),
                                 ),
                                 Text(
@@ -176,7 +176,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                 Text(
                                   'Sales This Month',
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 17,
                                   ),
                                 ),
                                 Text(
@@ -210,7 +210,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                 Text(
                                   'Sales This Quarter',
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                   ),
                                 ),
                                 Text(

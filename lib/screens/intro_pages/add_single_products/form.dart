@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/intro_pages/add_single_products/barcode_image.dart';
@@ -13,6 +14,8 @@ class FormPage extends StatefulWidget {
 
 class _FormPageState extends State<FormPage> {
   final _formKey = GlobalKey<FormState>();
+  var controller = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',');
   String _productCategory;
   String _unitProductName;
   String _productDescription;
@@ -117,9 +120,10 @@ class _FormPageState extends State<FormPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(
-                          width: 160,
+                          width: 150,
                           child: TextFormField(
-                            keyboardType: TextInputType.text,
+                            controller: controller,
+                            keyboardType: TextInputType.number,
                             validator: (input) =>
                                 input.isEmpty ? "Enter Product Price" : null,
                             onChanged: (val) => setState(() {
@@ -153,9 +157,9 @@ class _FormPageState extends State<FormPage> {
                             style: TextStyle(color: Colors.black),
                           ),
                         ),
-                        SizedBox(width: 15),
+                        SizedBox(width: 10),
                         SizedBox(
-                          width: 160,
+                          width: 150,
                           child: TextFormField(
                             keyboardType: TextInputType.text,
                             validator: (input) =>
@@ -314,7 +318,7 @@ class _FormPageState extends State<FormPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => BarcodePage()));
+                                      builder: (context) => AddPackPage()));
                             }
                           },
                         )),

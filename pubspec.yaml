@@ -39,6 +39,7 @@ dependencies:
   firebase_database: ^3.1.6
   intl: ^0.16.1
   flutter_masked_text: ^0.8.0
+  printing: ^3.5.0
 
 dev_dependencies:
   flutter_test:

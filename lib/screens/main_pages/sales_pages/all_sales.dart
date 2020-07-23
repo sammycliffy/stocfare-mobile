@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/models/sales_model.dart';
-import 'package:stockfare_mobile/screens/main_pages/all_products_list/products_list.dart';
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/receipt.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 
 import 'package:stockfare_mobile/services/sales_services.dart';
@@ -109,7 +109,8 @@ class _AllSalesListState extends State<AllSalesList> {
                           return GestureDetector(
                             child: Card(
                               child: ListTile(
-                                leading: FlutterLogo(size: 72.0),
+                                leading: Icon(Icons.card_giftcard,
+                                    color: Theme.of(context).primaryColor),
                                 title: Text(
                                   names[index],
                                   style: TextStyle(
@@ -132,14 +133,14 @@ class _AllSalesListState extends State<AllSalesList> {
                                         ),
                                         SizedBox(height: 4),
                                         Text(
-                                          ' Customer :  ${customer[index].toString()}',
+                                          'Customer :  ${customer[index].toString()}',
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontFamily: 'FireSans'),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 5, top: 6),
+                                          padding:
+                                              const EdgeInsets.only(top: 6),
                                           child: Text(
                                             DateFormat('yyyy-MM-dd - kk:mm')
                                                 .format(dateCreated[index])
@@ -152,12 +153,6 @@ class _AllSalesListState extends State<AllSalesList> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(width: 20),
-                                    Column(
-                                      children: <Widget>[
-                                        SizedBox(width: 20),
-                                      ],
-                                    )
                                   ],
                                 ),
                                 trailing: Icon(Icons.more_vert),

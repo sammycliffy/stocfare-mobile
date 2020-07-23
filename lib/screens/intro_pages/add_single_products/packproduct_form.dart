@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/intro_pages/add_single_products/barcode_image.dart';
-import 'package:stockfare_mobile/screens/intro_pages/add_single_products/packproduct_form.dart';
+
 import 'package:stockfare_mobile/services/product_services.dart';
 
 class AddPackPage extends StatefulWidget {
@@ -13,7 +14,8 @@ class AddPackPage extends StatefulWidget {
 
 class _AddPackPageState extends State<AddPackPage> {
   final _formKey = GlobalKey<FormState>();
-
+  var controller = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',');
   String _packProductName;
 
   int _packProductPrice = 0;
@@ -235,8 +237,12 @@ class _AddPackPageState extends State<AddPackPage> {
                         ),
                         onTap: () {
                           if (_formKey.currentState.validate()) {
-                            _addProduct.setPackProducts(_packProductName,
-                                _packProductPrice, _packLimit, _packQuantity);
+                            _addProduct.setPackProducts(
+                                _packProductName,
+                                _packProductPrice ?? 0,
+                                _packLimit ?? 0,
+                                _packQuantity ?? 0);
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

@@ -1,19 +1,17 @@
 import 'dart:async';
 
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:stockfare_mobile/main_pages/all_products_list/checkout.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
-import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
+
 import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/available.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/main_app_bar.dart';
-import 'package:stockfare_mobile/services/auth_services.dart';
+
 import 'package:stockfare_mobile/services/product_services.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,22 +20,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  ProductServices _productServices = ProductServices();
   dynamic data;
   @override
   void initState() {
     super.initState();
-    _productServices.allProducts().then((value) {
-      setState(() {
-        data = value;
-      });
-    });
+  }
+
+  printBranchID() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String branchId = sharedPreferences.getString('branchId');
+    print(branchId);
   }
 
   @override
   Widget build(BuildContext context) {
     AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
-    SignupNotifier signupNotifier = Provider.of<SignupNotifier>(context);
+    printBranchID();
     print(data);
     return Scaffold(
       backgroundColor: Colors.white,

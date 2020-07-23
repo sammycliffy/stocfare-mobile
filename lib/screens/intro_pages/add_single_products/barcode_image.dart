@@ -222,6 +222,9 @@ class _BarcodePageState extends State<BarcodePage> {
                                       });
                                     });
                                   } else {
+                                    print(_addProduct.packLimit);
+                                    print(_addProduct.packQuantity);
+                                    print(_addProduct.packLimit);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(

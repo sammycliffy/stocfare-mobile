@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
+import 'package:stockfare_mobile/screens/main_pages/activities.dart';
 
 class MainAppBar {
   static appBarFunction(context, name) {
@@ -56,31 +57,39 @@ class MainAppBar {
           SizedBox(width: 5),
           Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 15, top: 40, left: 50),
-                child: Stack(
-                  children: [
-                    Icon(Icons.notifications,
-                        size: 30, color: Hexcolor('#5bbbeb')),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, left: 20),
-                      child: Container(
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.white),
-                        child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Text(
-                            '12',
-                            style: TextStyle(color: Hexcolor('#5bbbeb')),
+              GestureDetector(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 15, top: 40, left: 50),
+                  child: Stack(
+                    children: [
+                      Icon(Icons.notifications,
+                          size: 30, color: Hexcolor('#5bbbeb')),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, left: 20),
+                        child: Container(
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.white),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Text(
+                              '12',
+                              style: TextStyle(color: Hexcolor('#5bbbeb')),
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ActivitiesPage()));
+                },
               ),
               Padding(
                   padding: const EdgeInsets.only(

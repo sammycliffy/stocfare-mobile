@@ -56,8 +56,6 @@ class ProductServices {
       sharedPreferences.setString("token", responseJson['token']['access']);
       return response.statusCode;
     } else if (response.statusCode == 400) {
-      print(response.statusCode);
-      print(response.body);
       return response.statusCode;
     }
     return response.statusCode;
@@ -66,23 +64,63 @@ class ProductServices {
   Future<dynamic> allProducts() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String firebaseId = sharedPreferences.getString("firebaseId");
-    final dbRef = FirebaseDatabase.instance.reference();
-    return dbRef
+    List product = [];
+    final dbRef = FirebaseDatabase.instance;
+    dbRef.setPersistenceEnabled(true);
+    dbRef.setPersistenceCacheSizeBytes(10000000);
+    final databaseInstance = dbRef.reference();
+    databaseInstance.keepSynced(true);
+    List allProducts = [];
+    return databaseInstance
         .child('inventories')
         .orderByKey()
         .equalTo(firebaseId)
         .once()
         .then((DataSnapshot snapshot) {
-      dynamic product = ProductList.fromJson(snapshot.value);
+      String jsonEcode = json.encode(snapshot.value['$firebaseId']);
+
+      List splited = jsonEcode.split('-M');
+      allProducts.add(splited);
+
+      // dynamic customer =
+      //     FirebaseCustomer.fromJson(json.decode(jsonEcode), firebaseId);
+      // print(customer.firebaseId.mCNY7MIP7pazpzpT4bW.productCount);
     });
+  }
+
+  Future<dynamic> updateCategory(String categoryId, String name) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    print(name);
+    print(categoryId);
+
+    String url =
+        'https://stockfare-io.herokuapp.com/api/v1/inventory/update-category/$categoryId/';
+
+    final response = await http.patch(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "name": name,
+        }));
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print(response.body);
+    }
   }
 
   Future<ProductList> getAllProducts() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String branchId = sharedPreferences.getString('branchId');
+    print(branchId);
     String token = sharedPreferences.getString('token');
     print(token);
     final String url =
-        'http://stockfare-io.herokuapp.com/api/v1/inventory/category/8e044e8c-263b-40f7-afb7-601154b59601/';
+        'http://stockfare-io.herokuapp.com/api/v1/inventory/category/$branchId/';
     final response = await http.get(
       url,
       headers: <String, String>{
