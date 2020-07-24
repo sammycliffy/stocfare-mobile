@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
-import 'package:stockfare_mobile/screens/main_pages/activities.dart';
+import 'package:stockfare_mobile/screens/main_pages/activities_pages.dart';
 
 class MainAppBar {
   static appBarFunction(context, name) {

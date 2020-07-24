@@ -113,6 +113,31 @@ class ProductServices {
     }
   }
 
+  Future<dynamic> deleteCategory(List categoryId) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+
+    print(categoryId);
+
+    String url =
+        'https://stockfare-io.herokuapp.com/api/v1/inventory/update-category/$categoryId/';
+
+    final response = await http.patch(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "name": categoryId,
+        }));
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print(response.body);
+    }
+  }
+
   Future<ProductList> getAllProducts() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');

@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/products.dart';
+import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
 
 import 'package:stockfare_mobile/services/product_services.dart';
 
 class ProductListPage extends StatefulWidget {
-  final int customerIndex;
-  ProductListPage({Key key, @required this.customerIndex}) : super(key: key);
+  // final int customerIndex;
+  // ProductListPage({Key key, @required this.customerIndex}) : super(key: key);
   @override
   _ProductListPageState createState() => _ProductListPageState();
 }
 
 class _ProductListPageState extends State<ProductListPage> {
   Future<ProductList> _productList;
+  AddProductNotifier _addProductNotifier;
   ProductServices _productServices = ProductServices();
   List _categories = [];
   List _productCount = [];
@@ -25,9 +28,14 @@ class _ProductListPageState extends State<ProductListPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _addProductNotifier =
+          Provider.of<AddProductNotifier>(context, listen: false);
+    });
     _productList = _productServices.getAllProducts();
     _productList.then((value) {
-      print(value.results[widget.customerIndex].products.map((name) {
+      print(
+          value.results[_addProductNotifier.productIndex].products.map((name) {
         _productName.add(name.name);
         _productPrice.add(name.productUnit.price);
         _productImage.add(name.productImage[0].imageLink);
@@ -48,13 +56,20 @@ class _ProductListPageState extends State<ProductListPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(_productName);
+    AddProductNotifier _addProductNotifier =
+        Provider.of<AddProductNotifier>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          title: Text(_categories[widget.customerIndex] == 0
-              ? 'Category'
-              : _categories[widget.customerIndex]),
+          title: FutureBuilder(
+              future: _productList,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                      _categories[_addProductNotifier.productIndex].toString());
+                }
+                return Text('Category Name');
+              }),
           actions: <Widget>[
             IconButton(
                 icon: Icon(

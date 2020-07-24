@@ -13,6 +13,9 @@ class AddProductNotifier with ChangeNotifier {
   double _packLimit = 0;
   int _packQuantity = 0;
 
+  //this is used to transfer the product index to the next page
+  int _productIndex = 0;
+
   String get unitproductName => _unitproductName;
   String get packProductName => _packProductName;
   double get packLimit => _packLimit;
@@ -24,6 +27,8 @@ class AddProductNotifier with ChangeNotifier {
   int get unitproductQuantity => _unitproductQuantity;
   double get unitLimit => _unitLimit;
   int get productBarcode => _productBarcode;
+
+  int get productIndex => _productIndex;
 
   void setFirstProduct(String productCategory, String productName,
       double unitLimit, int productPrice, String productDescription) {
@@ -45,5 +50,9 @@ class AddProductNotifier with ChangeNotifier {
     _packLimit = packLimit;
     _packQuantity = packQuantity;
     notifyListeners();
+  }
+
+  void setProductIndex(int productIndex) {
+    _productIndex = productIndex;
   }
 }
