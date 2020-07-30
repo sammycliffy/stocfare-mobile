@@ -2,26 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
-import 'package:stockfare_mobile/screens/intro_pages/add_single_products/barcode_image.dart';
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_products_category/barcode_image_to_category.dart';
 
 import 'package:stockfare_mobile/services/product_services.dart';
 
-class AddPackPage extends StatefulWidget {
+class AddPackPageCategory extends StatefulWidget {
   @override
-  _AddPackPageState createState() => _AddPackPageState();
+  _AddPackPageCategoryState createState() => _AddPackPageCategoryState();
 }
 
-class _AddPackPageState extends State<AddPackPage> {
+class _AddPackPageCategoryState extends State<AddPackPageCategory> {
   final _formKey = GlobalKey<FormState>();
   String _packProductName;
-
   int _packProductPrice = 0;
   int _packQuantity = 0;
   double _packLimit = 0;
-
   bool loading = false;
   ProductServices _productServices = ProductServices();
-
   @override
   Widget build(BuildContext context) {
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
@@ -203,7 +200,8 @@ class _AddPackPageState extends State<AddPackPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => BarcodePage()));
+                                    builder: (context) =>
+                                        BarcodePageProduct()));
                           }
                         }),
                     SizedBox(

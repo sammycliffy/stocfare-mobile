@@ -11,12 +11,12 @@ import 'package:stockfare_mobile/screens/intro_pages/product_success.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/loader.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 
-class BarcodePage extends StatefulWidget {
+class BarcodePageProduct extends StatefulWidget {
   @override
-  _BarcodePageState createState() => _BarcodePageState();
+  _BarcodePageProductState createState() => _BarcodePageProductState();
 }
 
-class _BarcodePageState extends State<BarcodePage> {
+class _BarcodePageProductState extends State<BarcodePageProduct> {
   String _scanBarcode = 'Unknown';
   File _image;
 
@@ -180,6 +180,7 @@ class _BarcodePageState extends State<BarcodePage> {
                           setState(() {
                             loading = true;
                           });
+
                           try {
                             final result =
                                 await InternetAddress.lookup('google.com');
@@ -198,8 +199,7 @@ class _BarcodePageState extends State<BarcodePage> {
                                 String base64Image = base64.encode(imageBytes);
 
                                 dynamic result = _productServices
-                                    .productAddition(
-                                        _addProduct.productCategory,
+                                    .addProductToCategory(
                                         _addProduct.unitproductName,
                                         _addProduct.unitproductPrice,
                                         _addProduct.unitproductQuantity,
@@ -212,25 +212,18 @@ class _BarcodePageState extends State<BarcodePage> {
                                         base64Image,
                                         _addProduct.productDiscount,
                                         _addProduct.productWeight,
-                                        _addProduct.data)
+                                        _addProduct.data,
+                                        _addProduct.categoryId)
                                     .then((value) {
                                   if (value == 400) {
                                     setState(() {
                                       loading = false;
                                       setState(() {
-                                        _error = 'Category name already exists';
+                                        _error = 'Product Already exist';
                                         _displaySnackBar(context);
                                       });
                                     });
                                   } else {
-                                    print(_addProduct.unitproductPrice
-                                            .toString() +
-                                        'This is unit price');
-                                    print(_addProduct.unitproductQuantity
-                                            .toString() +
-                                        'This is unit quantity');
-                                    print(_addProduct.unitLimit.toString() +
-                                        'This is unit Limit');
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(

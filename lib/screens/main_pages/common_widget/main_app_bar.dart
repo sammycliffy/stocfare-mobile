@@ -32,7 +32,7 @@ class MainAppBar {
                   ),
                   child: Container(
                     height: 40,
-                    width: 220,
+                    width: 270,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
                       color: Colors.grey[200],
@@ -54,7 +54,6 @@ class MainAppBar {
               ],
             ),
           ),
-          SizedBox(width: 5),
           Column(
             children: <Widget>[
               GestureDetector(
@@ -62,8 +61,7 @@ class MainAppBar {
                   padding: const EdgeInsets.only(right: 15, top: 40, left: 50),
                   child: Stack(
                     children: [
-                      Icon(Icons.notifications,
-                          size: 30, color: Hexcolor('#5bbbeb')),
+                      Icon(Icons.notifications, size: 30, color: Colors.black),
                       Padding(
                         padding: const EdgeInsets.only(top: 10, left: 20),
                         child: Container(
@@ -76,7 +74,8 @@ class MainAppBar {
                             padding: const EdgeInsets.all(2.0),
                             child: Text(
                               '12',
-                              style: TextStyle(color: Hexcolor('#5bbbeb')),
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
                             ),
                           ),
                         ),
@@ -98,13 +97,13 @@ class MainAppBar {
                   ),
                   child: InkWell(
                     child: Container(
-                      width: 120,
+                      width: 50,
                       height: 30,
                       decoration: BoxDecoration(
                           color: Theme.of(context).primaryColor,
                           borderRadius: BorderRadius.circular(20)),
                       child: Center(
-                        child: Text('Scan barcode',
+                        child: Text('Scan ',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.white,

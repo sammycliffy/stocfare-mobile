@@ -22,7 +22,8 @@ void main() {
     child: MaterialApp(
         home: SplashScreen(),
         theme: ThemeData(
-          canvasColor: Hexcolor('#FF5E69'),
+          primarySwatch: Colors.deepOrange,
+          canvasColor: Colors.white,
           brightness: Brightness.light,
           primaryColor: Hexcolor('#c80815'),
           accentColor: Hexcolor('#FF7781'),

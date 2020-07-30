@@ -4,16 +4,16 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/color_models.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
-import 'package:stockfare_mobile/screens/intro_pages/add_single_products/barcode_image.dart';
-import 'package:stockfare_mobile/screens/intro_pages/add_single_products/packproduct_form.dart';
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_products_category/barcode_image_to_category.dart';
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_products_category/packproduct_category_form.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 
-class FormPage extends StatefulWidget {
+class AddFormPage extends StatefulWidget {
   @override
-  _FormPageState createState() => _FormPageState();
+  _AddFormPageState createState() => _AddFormPageState();
 }
 
-class _FormPageState extends State<FormPage> {
+class _AddFormPageState extends State<AddFormPage> {
   final _formKey = GlobalKey<FormState>();
   final List<String> color = <String>[];
   final List<ColorDataModel> _data = [];
@@ -49,48 +49,11 @@ class _FormPageState extends State<FormPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        validator: (input) =>
-                            input.isEmpty ? "Enter product Category" : null,
-                        onChanged: (val) => setState(() {
-                          _productCategory = val;
-                        }),
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(12),
-                          labelStyle:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .focusColor
-                                  .withOpacity(0.7)),
-                          hintText: 'Enter Product Category E.g. Soft Drinks',
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.5))),
-                        ),
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
                     SizedBox(height: 30),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
@@ -354,7 +317,8 @@ class _FormPageState extends State<FormPage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => AddPackPage()));
+                                          builder: (context) =>
+                                              AddPackPageCategory()));
                                 }
                               }
                             }),
@@ -707,7 +671,8 @@ class _FormPageState extends State<FormPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => BarcodePage()));
+                                      builder: (context) =>
+                                          BarcodePageProduct()));
                             }
                           }
                         }),

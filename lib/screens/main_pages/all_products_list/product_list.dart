@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
-import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
-
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_products_category/add_product_home.dart';
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/edit_product.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 
 class ProductListPage extends StatefulWidget {
@@ -17,13 +17,19 @@ class _ProductListPageState extends State<ProductListPage> {
   Future<ProductList> _productList;
   AddProductNotifier _addProductNotifier;
   ProductServices _productServices = ProductServices();
+  String _categoryId;
   List _categories = [];
   List _productCount = [];
   List _productName = [];
   List _productPrice = [];
   List _productImage = [];
   List _productQuantity = [];
+  List _productId = [];
   List _productPack = [];
+  bool editProduct = false;
+  bool deleteProduct = false;
+  List<bool> checkBox = [];
+  List deleteItem = [];
 
   @override
   void initState() {
@@ -34,9 +40,12 @@ class _ProductListPageState extends State<ProductListPage> {
     });
     _productList = _productServices.getAllProducts();
     _productList.then((value) {
+      _categoryId = value.results[_addProductNotifier.categoryIndex].id;
       print(
-          value.results[_addProductNotifier.productIndex].products.map((name) {
+          value.results[_addProductNotifier.categoryIndex].products.map((name) {
         _productName.add(name.name);
+        checkBox.add(false);
+        _productId.add(name.id);
         _productPrice.add(name.productUnit.price);
         _productImage.add(name.productImage[0].imageLink);
         _productQuantity.add(name.productUnit.quantity);
@@ -56,8 +65,6 @@ class _ProductListPageState extends State<ProductListPage> {
 
   @override
   Widget build(BuildContext context) {
-    AddProductNotifier _addProductNotifier =
-        Provider.of<AddProductNotifier>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -65,24 +72,79 @@ class _ProductListPageState extends State<ProductListPage> {
               future: _productList,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return Text(
-                      _categories[_addProductNotifier.productIndex].toString());
+                  _addProductNotifier.setCategoryId(_categoryId);
+                  return Text(_categories[_addProductNotifier.categoryIndex]
+                      .toString());
                 }
                 return Text('Category Name');
               }),
           actions: <Widget>[
-            IconButton(
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                ),
-                onPressed: null),
-            IconButton(
-                icon: Icon(
-                  Icons.delete,
-                  color: Colors.white,
-                ),
-                onPressed: null)
+            deleteProduct
+                ? Row(
+                    children: <Widget>[
+                      GestureDetector(
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            deleteProduct = false;
+                          });
+                        },
+                      ),
+                      SizedBox(width: 20),
+                      Text(
+                        'Delete',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  )
+                : editProduct
+                    ? IconButton(
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            editProduct = false;
+                            deleteProduct = false;
+                          });
+                        })
+                    : IconButton(
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            editProduct = true;
+                            deleteProduct = false;
+                          });
+                        }),
+            deleteProduct
+                ? IconButton(
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        deleteProduct = false;
+                      });
+                    })
+                : IconButton(
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        deleteProduct = true;
+                        editProduct = false;
+                      });
+                    })
           ],
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(50.0),
@@ -145,8 +207,51 @@ class _ProductListPageState extends State<ProductListPage> {
                                   )
                                 ],
                               ),
-                              trailing:
-                                  Text(_productPrice[index].toString()))));
+                              trailing: Container(
+                                  child: (() {
+                                if (editProduct) {
+                                  return GestureDetector(
+                                    child: Icon(Icons.edit),
+                                    onTap: () {
+                                      _addProductNotifier
+                                          .setProductIndex(index);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EditProductPage()));
+                                    },
+                                  );
+                                } else if (deleteProduct) {
+                                  return GestureDetector(
+                                    child: Container(
+                                      width: 100,
+                                      height: 100,
+                                      child: CheckboxListTile(
+                                        activeColor:
+                                            Theme.of(context).primaryColor,
+                                        value: checkBox[index],
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            checkBox[index] = newValue;
+                                            deleteItem
+                                                    .contains(_productId[index])
+                                                ? deleteItem
+                                                    .remove(_productId[index])
+                                                : deleteItem
+                                                    .add(_productId[index]);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      print(_productId[index]);
+                                    },
+                                  );
+                                }
+
+                                return Text(_productPrice[index].toString());
+                              }())))));
                 });
           }
           return Column(
@@ -174,7 +279,7 @@ class _ProductListPageState extends State<ProductListPage> {
         focusColor: Theme.of(context).canvasColor,
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddProductPage()));
+              MaterialPageRoute(builder: (context) => AddProductHomePage()));
         },
         child: Icon(
           Icons.add,
@@ -185,3 +290,5 @@ class _ProductListPageState extends State<ProductListPage> {
     );
   }
 }
+
+// Text(_productPrice[index].toString())

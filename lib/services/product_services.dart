@@ -3,26 +3,30 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stockfare_mobile/models/color_models.dart';
 import 'package:stockfare_mobile/models/products.dart';
 
 class ProductServices {
+  //Add products and category
   Future<dynamic> productAddition(
-    String productCategory,
-    String unitproductName,
-    int unitproductPrice,
-    int unitproductQuantity,
-    double unitLimit,
-    String packproductName,
-    int packProductPrice,
-    int packQuantity,
-    double packLimit,
-    String barcode,
-    String productDescription,
-    String image,
-  ) async {
+      String productCategory,
+      String unitproductName,
+      int unitproductPrice,
+      int unitproductQuantity,
+      int unitLimit,
+      int packProductPrice,
+      int packQuantity,
+      double packLimit,
+      String barcode,
+      String productDescription,
+      String image,
+      int productDiscount,
+      int productWeight,
+      List<ColorDataModel> data) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
+    ColorsData colorsData = ColorsData(colorDataModel: data);
 
     final String url =
         'https://stockfare-io.herokuapp.com/api/v1/inventory/create-category/$branchId/';
@@ -35,6 +39,8 @@ class ProductServices {
         body: jsonEncode(<String, dynamic>{
           "name": productCategory,
           "product": {
+            "product_colour":
+                colorsData.colorDataModel.map((i) => i.toJson()).toList(),
             "product_unit": {
               "price": unitproductPrice,
               "quantity": unitproductQuantity,
@@ -49,6 +55,8 @@ class ProductServices {
             "name": unitproductName,
             "barcode": barcode,
             "description": productDescription,
+            "weight": productWeight,
+            "discount": productDiscount,
           }
         }));
     if (response.statusCode == 200) {
@@ -56,15 +64,74 @@ class ProductServices {
       sharedPreferences.setString("token", responseJson['token']['access']);
       return response.statusCode;
     } else if (response.statusCode == 400) {
+      print(response.body);
       return response.statusCode;
     }
     return response.statusCode;
   }
 
+  //Add products alone
+  Future<dynamic> addProductToCategory(
+    String unitproductName,
+    int unitproductPrice,
+    int unitproductQuantity,
+    int unitLimit,
+    int packProductPrice,
+    int packQuantity,
+    double packLimit,
+    String barcode,
+    String productDescription,
+    String image,
+    int productDiscount,
+    int productWeight,
+    List<ColorDataModel> data,
+    String categoryId,
+  ) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    ColorsData colorsData = ColorsData(colorDataModel: data);
+    print('THIS IS UNIT PRODUCT' + categoryId);
+    final String url =
+        'https://stockfare-io.herokuapp.com/api/v1/inventory/create-product/$categoryId/';
+    final http.Response response = await http.post(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "product_colour":
+              colorsData.colorDataModel.map((i) => i.toJson()).toList(),
+          "product_unit": {
+            "price": unitproductPrice,
+            "quantity": unitproductQuantity,
+            "limit": unitLimit
+          },
+          "product_pack": {
+            "price": packProductPrice,
+            "limit": packLimit,
+            "quantity": packQuantity,
+          },
+          "name": unitproductName,
+          "image": image,
+          "description": productDescription,
+          "weight": productWeight,
+          "bar_code": barcode,
+          "discount": productDiscount
+        }));
+    if (response.statusCode == 200) {
+      return response.statusCode;
+    } else if (response.statusCode == 400) {
+      print(response.body);
+      return response.statusCode;
+    }
+    return response.statusCode;
+  }
+
+  //get products from firebase
   Future<dynamic> allProducts() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String firebaseId = sharedPreferences.getString("firebaseId");
-    List product = [];
     final dbRef = FirebaseDatabase.instance;
     dbRef.setPersistenceEnabled(true);
     dbRef.setPersistenceCacheSizeBytes(10000000);
@@ -88,6 +155,7 @@ class ProductServices {
     });
   }
 
+  //update category
   Future<dynamic> updateCategory(String categoryId, String name) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
@@ -113,29 +181,25 @@ class ProductServices {
     }
   }
 
-  Future<dynamic> deleteCategory(List categoryId) async {
+  Future<dynamic> deleteCategory(List<String> deleteItem) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
-
-    print(categoryId);
-
+    print(deleteItem);
     String url =
-        'https://stockfare-io.herokuapp.com/api/v1/inventory/update-category/$categoryId/';
+        'https://stockfare-io.herokuapp.com/api/v1/inventory/delete-category/';
+    final request = http.Request("DELETE", Uri.parse(url));
+    request.headers.addAll(<String, String>{
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
+    request.body = jsonEncode(<String, dynamic>{'items': deleteItem});
+    final response = await request.send();
+    if (response.statusCode != 200)
+      // return Future.error("error: status code ${response.statusCode}");
+      print(response.reasonPhrase);
 
-    final response = await http.patch(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(<String, dynamic>{
-          "name": categoryId,
-        }));
-    if (response.statusCode == 200) {
-      print(response.body);
-    } else {
-      print(response.body);
-    }
+    return await response.stream.bytesToString();
   }
 
   Future<ProductList> getAllProducts() async {
