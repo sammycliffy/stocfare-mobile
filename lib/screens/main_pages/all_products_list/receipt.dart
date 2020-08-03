@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/sales_model.dart';
+import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/services/sales_services.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -14,6 +16,7 @@ class AllProductsList extends StatefulWidget {
 
 class _AllProductsListState extends State<AllProductsList> {
   SalesServices _salesServices = SalesServices();
+
   Future<Welcome> salesList;
   List names = [];
   List dateCreated = [];
@@ -79,6 +82,7 @@ class _AllProductsListState extends State<AllProductsList> {
 
   @override
   Widget build(BuildContext context) {
+    SignupNotifier _signupNotifier = Provider.of<SignupNotifier>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -133,7 +137,7 @@ class _AllProductsListState extends State<AllProductsList> {
                       height: 20,
                     ),
                     Text(
-                      'Sammy Cliffy',
+                      _signupNotifier.fullName ?? '',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
@@ -392,10 +396,7 @@ class _AllProductsListState extends State<AllProductsList> {
                 ),
               );
             }
-            return Center(
-                child: CircularProgressIndicator(
-              strokeWidth: 25,
-            ));
+            return Center(child: CircularProgressIndicator());
           }),
     );
   }

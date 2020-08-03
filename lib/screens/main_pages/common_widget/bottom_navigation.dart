@@ -15,7 +15,7 @@ class BottomNavigationPage extends StatefulWidget {
 class _BottomNavigationPageState extends State<BottomNavigationPage> {
   int _currentIndex = 0;
   List<Widget> _tabs = [
-    HomeScreen(),
+    PageSelectBloc(),
     CategoryPage(),
     AllSalesList(),
     AnalyticsPage(),

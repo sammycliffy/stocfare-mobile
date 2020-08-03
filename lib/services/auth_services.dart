@@ -54,6 +54,7 @@ class AuthServices {
       dynamic user = User.fromJson(json.decode(response.body));
       sharedPreferences.setString("branchId", user.branchId);
       sharedPreferences.setString("body", response.body);
+      sharedPreferences.setString('user_id', user.user_id);
       print(user.branchId);
       return user;
     } else {
@@ -85,8 +86,8 @@ class AuthServices {
       dynamic user = User.fromJson(json.decode(response.body));
       sharedPreferences.setString("branchId", user.branchId);
       sharedPreferences.setString("body", response.body);
-
       sharedPreferences.setString("firebaseId", user.firebaseId);
+      sharedPreferences.setString('user_id', user.userId.toString());
       print(user.firebaseId);
       return user;
     } else if (response.statusCode == 400) {
@@ -120,19 +121,20 @@ class AuthServices {
     }
   }
 
-  Future<dynamic> updatePassword(String phone) async {
+  Future<dynamic> updatePassword(String oldPassword, String newPassword) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
     final String url =
-        'http://stockfare-io.herokuapp.com/api/v1/users/forgot-password/';
-    final http.Response response = await http.post(url,
+        'http://stockfare-io.herokuapp.com/api/v1/users/change-password/';
+    final http.Response response = await http.put(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(<String, String>{
-          "data": phone,
+          "old_password": oldPassword,
+          "new_password": newPassword
         }));
     if (response.statusCode == 200) {
       var responseJson = json.decode(response.body);
@@ -147,6 +149,7 @@ class AuthServices {
 
   Future<dynamic> verifyPhone(String code) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
     String token = sharedPreferences.getString('token');
     final String url =
         'http://stockfare-io.herokuapp.com/api/v1/users/verify-phone-number/';
@@ -159,6 +162,38 @@ class AuthServices {
         body: jsonEncode(<String, String>{
           "code": code,
         }));
+    if (response.statusCode == 200) {
+      var responseJson = json.decode(response.body);
+      print(responseJson);
+      return true;
+    } else {
+      print(response.body);
+      print(response.statusCode);
+      return false;
+    }
+  }
+
+  Future<dynamic> updateDetails(String firstName, String lastName,
+      String emailAddress, String phoneNumber) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String userId = sharedPreferences.getString('user_id');
+    String token = sharedPreferences.getString('token');
+    print(phoneNumber);
+    final String url =
+        'http://stockfare-io.herokuapp.com/api/v1/users/update-detail/$userId/';
+    final http.Response response = await http.put(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, String>{
+          "first_name": firstName,
+          "last_name": lastName,
+          "email": emailAddress,
+          "phone_number": phoneNumber
+        }));
+
     if (response.statusCode == 200) {
       var responseJson = json.decode(response.body);
       print(responseJson);

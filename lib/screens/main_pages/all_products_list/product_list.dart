@@ -29,7 +29,7 @@ class _ProductListPageState extends State<ProductListPage> {
   bool editProduct = false;
   bool deleteProduct = false;
   List<bool> checkBox = [];
-  List deleteItem = [];
+  List<String> deleteItem = [];
 
   @override
   void initState() {
@@ -94,9 +94,14 @@ class _ProductListPageState extends State<ProductListPage> {
                         },
                       ),
                       SizedBox(width: 20),
-                      Text(
-                        'Delete',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      GestureDetector(
+                        child: Text(
+                          'Delete',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        onTap: () {
+                          _productServices.deleteProducts(deleteItem);
+                        },
                       )
                     ],
                   )
@@ -238,8 +243,9 @@ class _ProductListPageState extends State<ProductListPage> {
                                                     .contains(_productId[index])
                                                 ? deleteItem
                                                     .remove(_productId[index])
-                                                : deleteItem
-                                                    .add(_productId[index]);
+                                                : deleteItem.add(
+                                                    _productId[index]
+                                                        .toString());
                                           });
                                         },
                                       ),

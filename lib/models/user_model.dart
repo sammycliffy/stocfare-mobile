@@ -4,8 +4,15 @@ class User {
   String fullname;
   String phone;
   String email;
+  int userId;
 
-  User({this.branchId, this.fullname, this.phone, this.email, this.firebaseId});
+  User(
+      {this.branchId,
+      this.fullname,
+      this.phone,
+      this.email,
+      this.firebaseId,
+      this.userId});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -14,6 +21,7 @@ class User {
       fullname: json['user']['full_name'] ?? '',
       email: json['user']['email'] ?? '',
       phone: json['user']['phone'],
+      userId: json['user']['user_id'],
     );
   }
 }

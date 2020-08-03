@@ -233,10 +233,7 @@ class _LoginState extends State<Login> {
                                           });
                                         } else {
                                           //This will set the profile data for the notifier so that it can move between pages
-
-                                          DatabaseSchema().createDatabase();
-                                          DatabaseSchema().createDatabase();
-
+                                          // DatabaseSchema().insertDatabase();
                                           _signupNotifier.setProfile(
                                               result.fullname,
                                               result.phone,

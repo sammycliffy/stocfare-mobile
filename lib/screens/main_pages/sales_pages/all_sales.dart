@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/models/sales_model.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/receipt.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
-
+import 'package:jiffy/jiffy.dart';
 import 'package:stockfare_mobile/services/sales_services.dart';
-import 'package:intl/intl.dart';
 
 class AllSalesList extends StatefulWidget {
   @override
@@ -142,9 +141,8 @@ class _AllSalesListState extends State<AllSalesList> {
                                           padding:
                                               const EdgeInsets.only(top: 6),
                                           child: Text(
-                                            DateFormat('yyyy-MM-dd - kk:mm')
-                                                .format(dateCreated[index])
-                                                .toString(),
+                                            Jiffy(dateCreated[index])
+                                                .format("yyyy-MM-dd HH:mm:ss"),
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 10,

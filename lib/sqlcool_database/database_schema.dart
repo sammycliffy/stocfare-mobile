@@ -1,63 +1,107 @@
 import 'package:sqlcool/sqlcool.dart';
+import 'package:stockfare_mobile/models/db_model.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 
 class DatabaseSchema {
-  void createDatabase() async {
-    Db db = Db();
+  Db db = Db();
 
-    DbTable category = DbTable('category')
-      ..varchar('name', unique: true)
-      ..integer('category_id');
+  static DbTable category = DbTable("category")
+    ..varchar('category_id', unique: true)
+    ..varchar("name", unique: true);
+  static DbTable product = DbTable("product")
+    ..varchar('name', unique: true)
+    ..varchar('description', nullable: true)
+    ..varchar('product_unit_price', nullable: true)
+    ..varchar('product_unit_quantity', nullable: true)
+    ..varchar('product_unit_limit', nullable: true)
+    ..varchar('product_pack_price', nullable: true)
+    ..varchar('product_pack_quantity', nullable: true)
+    ..varchar('product_pack_limit', nullable: true)
+    ..varchar('image_link', nullable: true)
+    ..integer('weight', nullable: true)
+    ..varchar('date_created', nullable: true)
+    ..varchar('bar_code', nullable: true)
+    ..integer('discount', nullable: true)
+    ..foreignKey("category", onDelete: OnDelete.cascade);
+  String dbpath = "db.sqlite";
+  List<DbTable> schema = [
+    category,
+    product,
+  ];
 
-    DbTable product = DbTable('product')
-      ..varchar('name')
-      ..varchar('description')
-      ..integer('weight')
-      ..timestamp('date_created')
-      ..varchar('bar_code')
-      ..integer('discount');
+  initDatabase() async {
+    String dbpath = "db.sqlite"; // relative to the documents directory
+    db.init(path: dbpath, schema: schema, verbose: true).catchError((e) {
+      throw ("Error initializing the database: $e");
+    });
+    return db;
+  }
 
-    DbTable productUnit = DbTable('product_unit')
-      ..integer('price')
-      ..integer('quantity')
-      ..integer('limit');
-
-    DbTable productPack = DbTable('product_pack')
-      ..integer('price')
-      ..integer('quantity')
-      ..integer('limit');
-
-    List<DbTable> schema = [category, product];
+  void insertDatabase() async {
     String dbpath = "db.sqlite"; // relative to the documents directory
     try {
       await db.init(path: dbpath, schema: schema);
     } catch (e) {
       rethrow;
     }
-  }
-
-  // //display product name
-  // print(products.results.map((title) {
-  //   return title.products[0].name;
-  // }));
-
-  void insertDatabase() async {
-    Db db = Db();
-
     try {
       ProductServices _productServices = ProductServices();
       _productServices.getAllProducts().then((value) {
-        value.results.map((category) async {
-          final Map<String, String> row = {'name': category.name};
-          final Map<String, String> productRow = {
-            'name': category.products[0].name
+        int index = -1;
+        List categoryList = [];
+        print(value.results.map((category) async {
+          categoryList.add({'name': category.name, 'id': category.id});
+
+          final Map<String, String> row = {
+            'category_id': category.id,
+            'name': category.name
           };
           int id = await db.insert(table: "category", row: row);
-          int name = await db.insert(table: "product", row: productRow);
-        });
+          // print(category.name + index++).toString());
+          index = index + 1;
+          print(value.results[index].products.map((name) async {
+            final Map<String, String> rows = {
+              'category': categoryList[index].toString(),
+              'name': name.name,
+              'description': name.description,
+              'weight': name.weight,
+              'bar_code': name.barCode,
+              'discount': name.discount,
+              'date_created': name.dateCreated,
+              'product_unit_price': name.productUnit.price.toString(),
+              'product_unit_quantity': name.productUnit.quantity.toString(),
+              'product_unit_limit': name.productUnit.limit.toString(),
+              'product_pack_price': name.productPack.price.toString(),
+              'product_pack_quantity': name.productPack.quantity.toString(),
+              'product_pack_limit': name.productPack.limit.toString(),
+              'image_link': name.productImage[0].imageLink
+            };
+            int id = await db.insert(table: "product", row: rows);
+            return row;
+          }));
+        }));
       });
     } catch (e) {
-      rethrow;
+      print(e.toString());
     }
+  }
+
+  Future<DataModel> retrieveDatabase() async {
+    String dbpath = "db.sqlite"; // relative to the documents directory
+    db.init(path: dbpath, schema: schema, verbose: true).catchError((e) {
+      throw ("Error initializing the database: $e");
+    });
+    return db.onReady.then((_) async {
+      try {
+        List<Map<String, dynamic>> rows = await db.select(
+          table: "product",
+          limit: 20,
+          orderBy: "name",
+        );
+        return DataModel.fromJson(rows);
+      } catch (e) {
+        rethrow;
+      }
+    });
   }
 }

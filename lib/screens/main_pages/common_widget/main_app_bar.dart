@@ -58,7 +58,7 @@ class MainAppBar {
             children: <Widget>[
               GestureDetector(
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 15, top: 40, left: 50),
+                  padding: const EdgeInsets.only(top: 40, left: 20),
                   child: Stack(
                     children: [
                       Icon(Icons.notifications, size: 30, color: Colors.black),
@@ -90,28 +90,26 @@ class MainAppBar {
                           builder: (context) => ActivitiesPage()));
                 },
               ),
-              Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10,
-                    right: 12,
-                  ),
-                  child: InkWell(
-                    child: Container(
-                      width: 50,
-                      height: 30,
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Center(
-                        child: Text('Scan ',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
-                            )),
-                      ),
-                    ),
-                    onTap: () {},
-                  )),
+              // Padding(
+              //     padding: const EdgeInsets.only(
+              //       top: 10,
+              //       left: 15,
+              //     ),
+              //     child: InkWell(
+              //       child: Container(
+              //         width: 50,
+              //         height: 30,
+              //         decoration: BoxDecoration(
+              //             color: Theme.of(context).primaryColor,
+              //             borderRadius: BorderRadius.circular(10)),
+              //         child: Center(
+              //             child: Icon(
+              //           Icons.assessment,
+              //           color: Colors.white,
+              //         )),
+              //       ),
+              //       onTap: () {},
+              //     )),
             ],
           )
         ],

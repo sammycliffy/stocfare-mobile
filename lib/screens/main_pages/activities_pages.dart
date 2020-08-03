@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/models/activities_model.dart';
 import 'package:stockfare_mobile/services/activities_services.dart';
+import 'package:jiffy/jiffy.dart';
 
 class ActivitiesPage extends StatefulWidget {
   @override
@@ -34,7 +35,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
                   children: snapshot.data.activities.map((details) {
                 return Card(
                   child: ListTile(
-                    leading: Icon(Icons.access_alarm),
+                    leading: Icon(Icons.arrow_forward),
                     title: Text(
                       details.description,
                       style: TextStyle(
@@ -45,13 +46,14 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
                     subtitle: Row(
                       children: <Widget>[
                         Text(
-                          details.dateCreated,
+                          Jiffy(details.dateCreated)
+                              .format("yyyy-MM-dd HH:mm:ss"),
                           style: TextStyle(
                             fontFamily: 'FireSans',
                             fontSize: 12,
                           ),
                         ),
-                        SizedBox(width: 20),
+                        SizedBox(width: 10),
                         Text(
                           details.activityBy,
                           style:
@@ -63,7 +65,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
                 );
               }).toList());
             } else {
-              return Text('No data');
+              return Center(child: CircularProgressIndicator());
             }
           },
         ));

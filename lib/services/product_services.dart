@@ -61,6 +61,7 @@ class ProductServices {
         }));
     if (response.statusCode == 200) {
       var responseJson = json.decode(response.body);
+      ProductList.fromJson(json.decode(response.body));
       sharedPreferences.setString("token", responseJson['token']['access']);
       return response.statusCode;
     } else if (response.statusCode == 400) {
@@ -199,6 +200,24 @@ class ProductServices {
       // return Future.error("error: status code ${response.statusCode}");
       print(response.reasonPhrase);
 
+    return await response.stream.bytesToString();
+  }
+
+  Future<dynamic> deleteProducts(List<String> deleteItem) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    String url =
+        'https://stockfare-io.herokuapp.com/api/v1/inventory/category/product/delete/';
+    final request = http.Request("DELETE", Uri.parse(url));
+    request.headers.addAll(<String, String>{
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
+    request.body = jsonEncode(<String, dynamic>{'items': deleteItem});
+    final response = await request.send();
+    if (response.statusCode != 200)
+      return Future.error("error: status code ${response.statusCode}");
     return await response.stream.bytesToString();
   }
 

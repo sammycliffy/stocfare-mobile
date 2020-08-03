@@ -25,6 +25,7 @@ class _CategoryPageState extends State<CategoryPage> {
   List<String> deleteItem = [];
   List<bool> checkBox = [];
   bool search = false;
+
   @override
   void initState() {
     super.initState();
