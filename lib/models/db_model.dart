@@ -15,6 +15,7 @@ class DataModel {
 }
 
 class DatabaseDataModel {
+  final String productId;
   final String productName;
   final String productDescription;
   final String productUnitPrice;
@@ -31,7 +32,8 @@ class DatabaseDataModel {
   final String category;
 
   DatabaseDataModel(
-      {this.productName,
+      {this.productId,
+      this.productName,
       this.productDescription,
       this.productUnitPrice,
       this.productQuantity,
@@ -48,6 +50,7 @@ class DatabaseDataModel {
 
   factory DatabaseDataModel.fromJson(Map<String, dynamic> json) {
     return DatabaseDataModel(
+      productId: json['productId'],
       productName: json['name'],
       productDescription: json['description'],
       productUnitLimit: json['product_unit_limit'],

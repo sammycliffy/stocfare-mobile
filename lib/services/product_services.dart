@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:async';
+import 'dart:io';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/color_models.dart';
 import 'package:stockfare_mobile/models/products.dart';
+import 'package:stockfare_mobile/sqlcool_database/database_schema.dart';
 
 class ProductServices {
   //Add products and category
@@ -63,6 +65,8 @@ class ProductServices {
       var responseJson = json.decode(response.body);
       ProductList.fromJson(json.decode(response.body));
       sharedPreferences.setString("token", responseJson['token']['access']);
+      DatabaseSchema().deleteTable();
+      DatabaseSchema().insertDatabase();
       return response.statusCode;
     } else if (response.statusCode == 400) {
       print(response.body);
@@ -121,6 +125,8 @@ class ProductServices {
           "discount": productDiscount
         }));
     if (response.statusCode == 200) {
+      DatabaseSchema().deleteTable();
+      DatabaseSchema().insertDatabase();
       return response.statusCode;
     } else if (response.statusCode == 400) {
       print(response.body);
@@ -176,7 +182,9 @@ class ProductServices {
           "name": name,
         }));
     if (response.statusCode == 200) {
-      print(response.body);
+      DatabaseSchema().deleteTable();
+      DatabaseSchema().insertDatabase();
+      return response.statusCode;
     } else {
       print(response.body);
     }
@@ -199,8 +207,10 @@ class ProductServices {
     if (response.statusCode != 200)
       // return Future.error("error: status code ${response.statusCode}");
       print(response.reasonPhrase);
-
-    return await response.stream.bytesToString();
+    DatabaseSchema().deleteTable();
+    DatabaseSchema().insertDatabase();
+    // return await response.stream.bytesToString();
+    return response.statusCode;
   }
 
   Future<dynamic> deleteProducts(List<String> deleteItem) async {
@@ -218,8 +228,24 @@ class ProductServices {
     final response = await request.send();
     if (response.statusCode != 200)
       return Future.error("error: status code ${response.statusCode}");
-    return await response.stream.bytesToString();
+    // return await response.stream.bytesToString();
+    DatabaseSchema().deleteTable();
+    DatabaseSchema().insertDatabase();
+    return response.statusCode;
   }
+
+  // Future<dynamic> uploadBulkProducts() async {
+  //   var postUri = Uri.parse("<APIUrl>");
+  //   var request = new http.MultipartRequest("POST", postUri);
+  //   request.fields['user'] = 'blah';
+  //   request.files.add(new http.MultipartFile.fromBytes('file', await
+  //    File.fromUri("<path/to/file").readAsBytes(),
+  //   contentType: MediaType('image', 'jpeg')));
+
+  //   request.send().then((response) {
+  //     if (response.statusCode == 200) print("Uploaded!");
+  //   });
+  // }
 
   Future<ProductList> getAllProducts() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

@@ -4,6 +4,7 @@ import 'package:device_info/device_info.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/user_model.dart';
+import 'package:stockfare_mobile/sqlcool_database/database_schema.dart';
 
 class AuthServices {
   Future<String> getId() async {
@@ -55,6 +56,7 @@ class AuthServices {
       sharedPreferences.setString("branchId", user.branchId);
       sharedPreferences.setString("body", response.body);
       sharedPreferences.setString('user_id', user.user_id);
+      DatabaseSchema().insertDatabase();
       print(user.branchId);
       return user;
     } else {
@@ -80,6 +82,7 @@ class AuthServices {
     );
 
     if (response.statusCode == 200) {
+      DatabaseSchema().insertDatabase();
       var responseJson = json.decode(response.body);
       print(responseJson);
       sharedPreferences.setString("token", responseJson['token']['access']);

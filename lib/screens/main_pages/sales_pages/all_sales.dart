@@ -6,6 +6,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:stockfare_mobile/services/sales_services.dart';
 
 class AllSalesList extends StatefulWidget {
+  const AllSalesList({Key key}) : super(key: key);
   @override
   _AllSalesListState createState() => _AllSalesListState();
 }

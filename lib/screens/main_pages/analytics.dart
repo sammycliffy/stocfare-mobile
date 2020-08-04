@@ -4,6 +4,7 @@ import 'package:stockfare_mobile/screens/main_pages/product_analytics.dart';
 import 'package:stockfare_mobile/screens/main_pages/sales_analytics.dart';
 
 class AnalyticsPage extends StatefulWidget {
+  const AnalyticsPage({Key key}) : super(key: key);
   @override
   _AnalyticsPageState createState() => _AnalyticsPageState();
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/categories.dart';
-import 'package:stockfare_mobile/screens/main_pages/all_products_list/receipt.dart';
+
 import 'package:stockfare_mobile/screens/main_pages/analytics.dart';
 import 'package:stockfare_mobile/screens/main_pages/home.dart';
 import 'package:stockfare_mobile/screens/main_pages/online_store.dart';
@@ -13,20 +13,35 @@ class BottomNavigationPage extends StatefulWidget {
 }
 
 class _BottomNavigationPageState extends State<BottomNavigationPage> {
+  final PageStorageBucket bucket = PageStorageBucket();
+
   int _currentIndex = 0;
-  List<Widget> _tabs = [
-    PageSelectBloc(),
-    CategoryPage(),
-    AllSalesList(),
-    AnalyticsPage(),
-    OnlineStore()
+  final List<Widget> _tabs = [
+    HomePage(
+      key: PageStorageKey('Page1'),
+    ),
+    CategoryPage(
+      key: PageStorageKey('Page2'),
+    ),
+    AllSalesList(
+      key: PageStorageKey('Page3'),
+    ),
+    AnalyticsPage(
+      key: PageStorageKey('Page4'),
+    ),
+    OnlineStore(
+      key: PageStorageKey('Page5'),
+    )
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _tabs[_currentIndex],
+      body: PageStorage(
+        child: _tabs[_currentIndex],
+        bucket: bucket,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         elevation: 2.0,
         currentIndex: _currentIndex,

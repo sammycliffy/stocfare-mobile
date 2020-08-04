@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sqlcool/sqlcool.dart';
 import 'package:stockfare_mobile/models/db_model.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/main_app_bar.dart';
 import 'package:stockfare_mobile/sqlcool_database/database_schema.dart';
 
-class _PageSelectBlocState extends State<PageSelectBloc> {
+class _HomePageState extends State<HomePage> {
   DatabaseSchema databaseSchema = DatabaseSchema();
   Future<DataModel> _productList;
   List _categories = [];
@@ -15,8 +14,9 @@ class _PageSelectBlocState extends State<PageSelectBloc> {
   List _productPrice = [];
   List _productImage = [];
   List _productQuantity = [];
+  List _packQuantity = [];
   List _productId = [];
-  List _productPack = [];
+  List _productPackPrice = [];
 
   @override
   void initState() {
@@ -25,14 +25,18 @@ class _PageSelectBlocState extends State<PageSelectBloc> {
     _productList.then((value) => print(value.databaseModel.map((e) {
           _categories.add(e.category);
           _productName.add(e.productName);
+          _productQuantity.add(e.productQuantity);
+          _packQuantity.add(e.productPackQuantity);
+          _productPrice.add(e.productUnitPrice);
+          _productPackPrice.add(e.productPackPrice);
+          _productImage.add(e.imageLink);
         })));
   }
 
   @override
   Widget build(BuildContext context) {
-    final orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.2;
     final double itemWidth = size.width / 2;
     AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
     return Scaffold(
@@ -64,7 +68,9 @@ class _PageSelectBlocState extends State<PageSelectBloc> {
                               )),
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        databaseSchema.deleteTable();
+                      },
                     )),
                 GestureDetector(
                   child: Padding(
@@ -110,8 +116,8 @@ class _PageSelectBlocState extends State<PageSelectBloc> {
                       child: GridView.builder(
                         itemCount: _categories.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount:
-                                (orientation == Orientation.portrait) ? 2 : 3),
+                            childAspectRatio: (itemWidth / itemHeight),
+                            crossAxisCount: 3),
                         itemBuilder: (BuildContext context, int index) {
                           return new Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -123,8 +129,8 @@ class _PageSelectBlocState extends State<PageSelectBloc> {
                                     SizedBox(
                                       height: 15,
                                     ),
-                                    Image.asset(
-                                      'assets/images/laptop.png',
+                                    Image.network(
+                                      _productImage[index],
                                       width: 80,
                                       height: 50,
                                       fit: BoxFit.cover,
@@ -135,18 +141,30 @@ class _PageSelectBlocState extends State<PageSelectBloc> {
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16),
                                     ),
-                                    Container(
-                                        width: 80,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Theme.of(context).accentColor),
-                                        child: Center(
-                                            child: Text(
-                                          '1900',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
-                                        ))),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(
+                                          '${_productQuantity[index]} Units | ${_productQuantity[index]} pack ',
+                                          style: TextStyle(fontSize: 12),
+                                        )
+                                      ],
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(
+                                          '${_productPrice[index]}/Units',
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        Text(
+                                          '${_productPackPrice[index]}/Pack',
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),
@@ -164,10 +182,8 @@ class _PageSelectBlocState extends State<PageSelectBloc> {
   }
 }
 
-class PageSelectBloc extends StatefulWidget {
+class HomePage extends StatefulWidget {
+  const HomePage({Key key}) : super(key: key);
   @override
-  _PageSelectBlocState createState() => _PageSelectBlocState();
+  _HomePageState createState() => _HomePageState();
 }
-
-//  childAspectRatio: (itemWidth / itemHeight),
-//                         crossAxisCount: 3,

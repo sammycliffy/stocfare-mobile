@@ -4,6 +4,7 @@ import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_products_category/add_product_home.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/edit_product.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 
 class ProductListPage extends StatefulWidget {
@@ -100,7 +101,17 @@ class _ProductListPageState extends State<ProductListPage> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         onTap: () {
-                          _productServices.deleteProducts(deleteItem);
+                          DialogBoxes().loading(context);
+                          _productServices
+                              .deleteProducts(deleteItem)
+                              .then((value) {
+                            if (value == 200) {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => super.widget));
+                            }
+                          });
                         },
                       )
                     ],
@@ -183,6 +194,25 @@ class _ProductListPageState extends State<ProductListPage> {
         future: _productList,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            if (_productName.length == 0) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Center(
+                    child: Text('No Data',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                  ),
+                  Center(
+                    child: Text(
+                        'You don\'t have any products yet! \nClick on the button below to add.',
+                        style: TextStyle(
+                          fontSize: 16,
+                        )),
+                  )
+                ],
+              );
+            }
             return ListView.builder(
                 itemCount: _productName.length,
                 itemBuilder: (context, index) {
@@ -264,20 +294,7 @@ class _ProductListPageState extends State<ProductListPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Center(
-                  child: Icon(
-                    Icons.shopping_basket,
-                    size: 40,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-                Center(
-                  child: Text('Your sales summary will display here',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor)),
-                ),
+                Center(child: CircularProgressIndicator()),
               ]);
         },
       ),

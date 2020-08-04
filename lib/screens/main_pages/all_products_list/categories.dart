@@ -4,17 +4,21 @@ import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/product_list.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 
 import 'package:stockfare_mobile/services/product_services.dart';
 
 class CategoryPage extends StatefulWidget {
+  const CategoryPage({Key key}) : super(key: key);
   @override
   _CategoryPageState createState() => _CategoryPageState();
 }
 
 class _CategoryPageState extends State<CategoryPage> {
   Future<ProductList> _productList;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final PageStorageBucket _bucket = new PageStorageBucket();
   ProductServices _productServices = ProductServices();
   List _categoryId = [];
   List _categories = [];
@@ -25,7 +29,7 @@ class _CategoryPageState extends State<CategoryPage> {
   List<String> deleteItem = [];
   List<bool> checkBox = [];
   bool search = false;
-
+  bool loading = false;
   @override
   void initState() {
     super.initState();
@@ -47,6 +51,7 @@ class _CategoryPageState extends State<CategoryPage> {
     AddProductNotifier _addProductNotifier =
         Provider.of<AddProductNotifier>(context);
     return Scaffold(
+      key: _scaffoldKey,
       drawer: DrawerPage(),
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -188,7 +193,6 @@ class _CategoryPageState extends State<CategoryPage> {
                                             child: Icon(Icons.edit),
                                             onTap: () {
                                               _updateDialog(
-                                                  context,
                                                   _categories[index].toString(),
                                                   _categoryId[index]);
                                             },
@@ -234,25 +238,9 @@ class _CategoryPageState extends State<CategoryPage> {
                         );
                       });
                 }
-                return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Icon(
-                          Icons.shopping_basket,
-                          size: 40,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                      Center(
-                        child: Text('Your Products will appear here',
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor)),
-                      ),
-                    ]);
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
               },
             ),
       floatingActionButton: FloatingActionButton(
@@ -270,9 +258,9 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
-  Future<void> _updateDialog(context, category, id) async {
+  Future<void> _updateDialog(category, id) async {
     return showDialog<void>(
-      context: context,
+      context: _scaffoldKey.currentContext,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
@@ -325,10 +313,24 @@ class _CategoryPageState extends State<CategoryPage> {
                   ),
                 ),
                 onTap: () {
-                  print(updatedCategory);
-                  print(id);
                   Navigator.pop(context);
-                  _productServices.updateCategory(id, updatedCategory);
+                  DialogBoxes().loading(context);
+
+                  _productServices
+                      .updateCategory(id, updatedCategory)
+                      .then((value) {
+                    if (value == 200) {
+                      Navigator.pop(_scaffoldKey.currentContext);
+
+                      Navigator.pushReplacement(
+                          _scaffoldKey.currentContext,
+                          MaterialPageRoute(
+                            builder: (context) => CategoryPage(
+                              key: PageStorageKey('Page2'),
+                            ),
+                          ));
+                    }
+                  });
                 }),
           ],
         );
@@ -390,7 +392,21 @@ class _CategoryPageState extends State<CategoryPage> {
                       ),
                     ),
                     onTap: () {
-                      _productServices.deleteCategory(deleteItem);
+                      Navigator.pop(context);
+                      DialogBoxes().loading(context);
+                      _productServices.deleteCategory(deleteItem).then((value) {
+                        if (value == 200) {
+                          Navigator.pop(_scaffoldKey.currentContext);
+
+                          Navigator.pushReplacement(
+                              _scaffoldKey.currentContext,
+                              MaterialPageRoute(
+                                builder: (context) => CategoryPage(
+                                  key: PageStorageKey('Page2'),
+                                ),
+                              ));
+                        }
+                      });
                     }),
               ],
             )

@@ -9,6 +9,7 @@ class DatabaseSchema {
     ..varchar('category_id', unique: true)
     ..varchar("name", unique: true);
   static DbTable product = DbTable("product")
+    ..integer('productId', unique: true, nullable: true)
     ..varchar('name', unique: true)
     ..varchar('description', nullable: true)
     ..varchar('product_unit_price', nullable: true)
@@ -37,7 +38,7 @@ class DatabaseSchema {
     return db;
   }
 
-  void insertDatabase() async {
+  Future<Map<String, String>> insertDatabase() async {
     String dbpath = "db.sqlite"; // relative to the documents directory
     try {
       await db.init(path: dbpath, schema: schema);
@@ -52,17 +53,19 @@ class DatabaseSchema {
         print(value.results.map((category) async {
           categoryList.add({'name': category.name, 'id': category.id});
 
-          final Map<String, String> row = {
-            'category_id': category.id,
-            'name': category.name
-          };
-          int id = await db.insert(table: "category", row: row);
+          // final Map<String, String> row = {
+          //   'category_id': category.id,
+          //   'name': category.name
+          // };
+          // int id = await db.insert(table: "category", row: row);
           // print(category.name + index++).toString());
           index = index + 1;
+
           print(value.results[index].products.map((name) async {
             final Map<String, String> rows = {
               'category': categoryList[index].toString(),
               'name': name.name,
+              'productId': name.id,
               'description': name.description,
               'weight': name.weight,
               'bar_code': name.barCode,
@@ -77,7 +80,7 @@ class DatabaseSchema {
               'image_link': name.productImage[0].imageLink
             };
             int id = await db.insert(table: "product", row: rows);
-            return row;
+            return rows;
           }));
         }));
       });
@@ -95,13 +98,27 @@ class DatabaseSchema {
       try {
         List<Map<String, dynamic>> rows = await db.select(
           table: "product",
-          limit: 20,
           orderBy: "name",
         );
         return DataModel.fromJson(rows);
       } catch (e) {
         rethrow;
       }
+    });
+  }
+
+  void deleteTable() async {
+    String q1 = "DELETE FROM product";
+    String q2 = "DROP TABLE category";
+    List<String> queries = [q1, q2];
+    String dbpath = "db.sqlite"; // relative to the documents directory
+    db.init(path: dbpath, schema: schema, verbose: true).catchError((e) {
+      throw ("Error initializing the database: $e");
+    });
+    return db.onReady.then((value) async {
+      db.query(q1).catchError((e) {
+        throw ("Error initializing the database: $e");
+      });
     });
   }
 }
