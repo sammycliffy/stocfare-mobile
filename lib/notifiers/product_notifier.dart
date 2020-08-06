@@ -14,7 +14,7 @@ class AddProductNotifier with ChangeNotifier {
   List<ColorDataModel> _data;
 
   int _packProductPrice = 0;
-  double _packLimit = 0;
+  int _packLimit = 0;
   int _packQuantity = 0;
 
   //this is used to transfer the product index to the next page
@@ -26,7 +26,7 @@ class AddProductNotifier with ChangeNotifier {
 
   String get unitproductName => _unitproductName;
 
-  double get packLimit => _packLimit;
+  int get packLimit => _packLimit;
   int get packQuantity => _packQuantity;
   int get packProductPrice => _packProductPrice;
   String get productDescription => _productDescription;
@@ -67,7 +67,7 @@ class AddProductNotifier with ChangeNotifier {
 
   void setPackProducts(
     int packProductPrice,
-    double packLimit,
+    int packLimit,
     int packQuantity,
   ) {
     _packProductPrice = packProductPrice;

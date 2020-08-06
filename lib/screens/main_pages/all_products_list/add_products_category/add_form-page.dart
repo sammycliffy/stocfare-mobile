@@ -665,7 +665,7 @@ class _AddFormPageState extends State<AddFormPage> {
                                 _productDescription,
                                 _productDiscount,
                                 _productWeight,
-                                _data,
+                                _data, //list of product color, quantity and limit
                               );
 
                               Navigator.push(
@@ -697,6 +697,7 @@ class _AddFormPageState extends State<AddFormPage> {
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
+// This will display the details of product limit
   Future<void> _productLimit(context) async {
     return showDialog<void>(
       context: context,

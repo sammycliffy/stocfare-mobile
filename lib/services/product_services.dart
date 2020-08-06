@@ -18,7 +18,7 @@ class ProductServices {
       int unitLimit,
       int packProductPrice,
       int packQuantity,
-      double packLimit,
+      int packLimit,
       String barcode,
       String productDescription,
       String image,
@@ -83,7 +83,7 @@ class ProductServices {
     int unitLimit,
     int packProductPrice,
     int packQuantity,
-    double packLimit,
+    int packLimit,
     String barcode,
     String productDescription,
     String image,
@@ -310,6 +310,17 @@ class ProductServices {
       // return products;
     } else {
       throw Exception('Failed to load products');
+    }
+  }
+
+  Future<bool> check() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      }
+    } on SocketException catch (_) {
+      return false;
     }
   }
 }

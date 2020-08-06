@@ -194,8 +194,10 @@ class _AddPackPageCategoryState extends State<AddPackPageCategory> {
                         ),
                         onTap: () {
                           if (_formKey.currentState.validate()) {
-                            _addProduct.setPackProducts(_packProductPrice ?? 0,
-                                _packLimit ?? 0, _packQuantity ?? 0);
+                            _addProduct.setPackProducts(
+                                _packProductPrice ?? 0,
+                                (_packLimit * 100).round() ?? 0,
+                                _packQuantity ?? 0);
 
                             Navigator.push(
                                 context,

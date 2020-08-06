@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/db_model.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/cart.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/main_app_bar.dart';
 import 'package:stockfare_mobile/sqlcool_database/database_schema.dart';
@@ -17,7 +19,11 @@ class _HomePageState extends State<HomePage> {
   List _packQuantity = [];
   List _productId = [];
   List _productPackPrice = [];
-
+  List _objects = [];
+  bool newvalue = false;
+  List items = [];
+  List<Map<String, dynamic>> type = [];
+  List daniel = [];
   @override
   void initState() {
     super.initState();
@@ -30,6 +36,7 @@ class _HomePageState extends State<HomePage> {
           _productPrice.add(e.productUnitPrice);
           _productPackPrice.add(e.productPackPrice);
           _productImage.add(e.imageLink);
+          _productId.add(e.productId);
         })));
   }
 
@@ -38,7 +45,7 @@ class _HomePageState extends State<HomePage> {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.2;
     final double itemWidth = size.width / 2;
-    AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
+    AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     return Scaffold(
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(100.0), // here the desired height
@@ -69,7 +76,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       onTap: () {
-                        databaseSchema.deleteTable();
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => AddCart()));
                       },
                     )),
                 GestureDetector(
@@ -90,8 +98,7 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.black),
                             child: Center(
                               child: Text(
-                                // addProduct.product.toString(),
-                                '0',
+                                _addProduct.items.length.toString(),
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
@@ -103,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   onTap: () {
-                    // _checkoutDialog(context);
+                    // _addProduct.increment();
                   },
                 ),
               ],
@@ -146,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                                           MainAxisAlignment.center,
                                       children: <Widget>[
                                         Text(
-                                          '${_productQuantity[index]} Units | ${_productQuantity[index]} pack ',
+                                          '${_productQuantity[index]} Units | ${_packQuantity[index]} pack ',
                                           style: TextStyle(fontSize: 12),
                                         )
                                       ],
@@ -168,7 +175,74 @@ class _HomePageState extends State<HomePage> {
                                   ],
                                 ),
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                if (_productPackPrice[index] == '0') {
+                                  int count = 0;
+                                  setState(() {
+                                    items.add(_productId[index]);
+                                    var map = Map();
+
+                                    items.forEach((element) {
+                                      if (!map.containsKey(element)) {
+                                        map[element] = 1;
+                                      } else {
+                                        map[element] += 1;
+                                      }
+                                    });
+                                    dynamic id = map[_productId[index]];
+                                    if (type.length == 0) {
+                                      type.add({
+                                        '\'totalQuantity\'': id,
+                                        '\'type\'': '\'unit\'',
+                                        '\'id\'': '\'${_productId[index]}\'',
+                                      });
+                                    } else {
+                                      for (var map in type) {
+                                        if (map.containsKey('\'id\'')) {
+                                          if (map['\'id\''] ==
+                                              '\'${_productId[index]}\'') {
+                                            map['\'totalQuantity\''] = id;
+                                            print('it has');
+                                          } else {
+                                            type.add({
+                                              '\'totalQuantity\'': id,
+                                              '\'type\'': '\'unit\'',
+                                              '\'id\'':
+                                                  '\'${_productId[index]}\'',
+                                            });
+                                            break;
+                                          }
+                                        } else {
+                                          type.add({
+                                            '\'totalQuantity\'': id,
+                                            '\'type\'': '\'unit\'',
+                                            '\'id\'':
+                                                '\'${_productId[index]}\'',
+                                          });
+                                        }
+                                      }
+                                    }
+                                    // dynamic id = map[_productId[index]];
+                                    // type.add({
+                                    //   '\'totalQuantity\'': id,
+                                    //   '\'type\'': '\'unit\'',
+                                    //   '\'id\'': '\'${_productId[index]}\'',
+                                    // });
+                                  });
+                                  print(type);
+
+                                  _addProduct.addItems(items, type);
+                                } else {
+                                  _addProduct.addToCart(
+                                      _productName[index],
+                                      int.parse(_productPrice[index]),
+                                      int.parse(
+                                        _productPackPrice[index],
+                                      ),
+                                      items);
+                                  DialogBoxes().packProduct(context);
+                                }
+                              },
                             ),
                           );
                         },

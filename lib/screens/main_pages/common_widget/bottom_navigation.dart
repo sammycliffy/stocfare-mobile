@@ -29,9 +29,6 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
     AnalyticsPage(
       key: PageStorageKey('Page4'),
     ),
-    OnlineStore(
-      key: PageStorageKey('Page5'),
-    )
   ];
 
   @override
@@ -99,19 +96,6 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
             ),
             backgroundColor: Colors.green,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.shopping_cart,
-              color: Hexcolor('#c80815'),
-            ),
-            title: Text(
-              'Shop',
-              style: TextStyle(
-                color: Hexcolor('#c80815'),
-              ),
-            ),
-            backgroundColor: Colors.green,
-          )
         ],
         onTap: (index) {
           setState(() {

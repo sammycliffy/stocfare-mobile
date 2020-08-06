@@ -271,7 +271,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         controlAffinity: ListTileControlAffinity
                             .leading, //  <-- leading Checkbox
                       ),
-                      newvalue ? _soldOnCredit(context) : SizedBox(),
+                      newvalue
+                          ? _soldOnCredit(context)
+                          : SizedBox(), // check of sold on credit is clicked
                       SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.only(right: 20.0),
