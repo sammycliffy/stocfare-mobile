@@ -100,6 +100,7 @@ class DatabaseSchema {
           table: "product",
           orderBy: "name",
         );
+        // print(rows);
         return DataModel.fromJson(rows);
       } catch (e) {
         rethrow;

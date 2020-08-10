@@ -214,11 +214,11 @@ class _BarcodePageState extends State<BarcodePage> {
                                         _addProduct.productWeight,
                                         _addProduct.data)
                                     .then((value) {
-                                  if (value == 400) {
+                                  if (value != 201) {
                                     setState(() {
                                       loading = false;
                                       setState(() {
-                                        _error = 'Category name already exists';
+                                        _error = value.toString();
                                         _displaySnackBar(context);
                                       });
                                     });

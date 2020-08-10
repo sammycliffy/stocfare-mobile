@@ -72,7 +72,6 @@ class DialogBoxes {
         AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
         int _productQuantity = 0;
         List items = _addProduct.items;
-        List type = _addProduct.type;
         String _character = 'pack';
         bool _pack = true;
         return AlertDialog(
@@ -111,7 +110,8 @@ class DialogBoxes {
                                       color: Colors.black),
                                   child: Center(
                                     child: Text(
-                                      items.length.toString(),
+                                      (_addProduct.product + _productQuantity)
+                                          .toString(),
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),
@@ -219,14 +219,80 @@ class DialogBoxes {
                         onTap: () {
                           for (var i = 0; i < _productQuantity; i++) {
                             setState(() {
-                              items.add(_addProduct.productName);
-                              if (_character == 'pack') {
-                                type.add('pack');
+                              if (items.length == 0) {
+                                if (_character == 'pack') {
+                                  items.add({
+                                    '\'totalQuantity\'': _productQuantity,
+                                    '\'type\'': '\'pack\'',
+                                    '\'id\'': '\'${_addProduct.productId}\'',
+                                    '\'price\'': _addProduct.productPackPrice *
+                                        _productQuantity,
+                                    '\'name\'':
+                                        '\'${_addProduct.productName}\'',
+                                  });
+                                } else {
+                                  items.add({
+                                    '\'totalQuantity\'': _productQuantity,
+                                    '\'type\'': '\'unit\'',
+                                    '\'id\'': '\'${_addProduct.productId}\'',
+                                    '\'price\'': _addProduct.productUnitPrice *
+                                        _productQuantity,
+                                    '\'name\'':
+                                        '\'${_addProduct.productName}\'',
+                                  });
+                                }
                               } else {
-                                type.add('unit');
+                                for (var map in items) {
+                                  if (map.containsKey('\'id\'')) {
+                                    if (map['\'id\''] ==
+                                        '\'${_addProduct.productId}\'') {
+                                      map['\'totalQuantity\''] =
+                                          _productQuantity;
+                                      map['\'type\''] = _character;
+                                      if (_character == 'pack') {
+                                        map['\'price\''] =
+                                            _addProduct.productPackPrice *
+                                                _productQuantity;
+                                      } else {
+                                        map['\'price\''] =
+                                            _addProduct.productUnitPrice *
+                                                _productQuantity;
+                                      }
+                                    } else {
+                                      if (_character == 'pack') {
+                                        items.add({
+                                          '\'totalQuantity\'': _productQuantity,
+                                          '\'type\'': '\'pack\'',
+                                          '\'id\'':
+                                              '\'${_addProduct.productId}\'',
+                                          '\'price\'':
+                                              _addProduct.productPackPrice *
+                                                  _productQuantity,
+                                          '\'name\'':
+                                              '\'${_addProduct.productName}\'',
+                                        });
+                                      } else {
+                                        items.add({
+                                          '\'totalQuantity\'': _productQuantity,
+                                          '\'type\'': '\'unit\'',
+                                          '\'id\'':
+                                              '\'${_addProduct.productId}\'',
+                                          '\'price\'':
+                                              _addProduct.productUnitPrice *
+                                                  _productQuantity,
+                                          '\'name\'':
+                                              '\'${_addProduct.productName}\'',
+                                        });
+                                      }
+                                      break;
+                                    }
+                                  }
+                                }
                               }
                             });
-                            _addProduct.addItems(items, type);
+                            print(items);
+                            _addProduct.addItems(items, _addProduct.countItem);
+                            _addProduct.addQuantity(_productQuantity);
                           }
                           Navigator.pop(context);
                         },
@@ -247,7 +313,7 @@ class DialogBoxes {
                         ),
                         onTap: () {
                           print(items);
-                          print(type);
+                          // print(type);
                         },
                       )
                     ],

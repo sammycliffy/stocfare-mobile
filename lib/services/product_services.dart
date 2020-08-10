@@ -61,18 +61,17 @@ class ProductServices {
             "discount": productDiscount,
           }
         }));
-    if (response.statusCode == 200) {
-      var responseJson = json.decode(response.body);
-      ProductList.fromJson(json.decode(response.body));
-      sharedPreferences.setString("token", responseJson['token']['access']);
+    if (response.statusCode == 200 || response.statusCode == 201) {
       DatabaseSchema().deleteTable();
       DatabaseSchema().insertDatabase();
+
+      print(response.statusCode);
       return response.statusCode;
-    } else if (response.statusCode == 400) {
+    } else {
+      print(response.statusCode);
       print(response.body);
-      return response.statusCode;
+      return response.body;
     }
-    return response.statusCode;
   }
 
   //Add products alone
@@ -124,15 +123,13 @@ class ProductServices {
           "bar_code": barcode,
           "discount": productDiscount
         }));
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       DatabaseSchema().deleteTable();
       DatabaseSchema().insertDatabase();
       return response.statusCode;
-    } else if (response.statusCode == 400) {
-      print(response.body);
-      return response.statusCode;
+    } else {
+      return response.body;
     }
-    return response.statusCode;
   }
 
   //get products from firebase
@@ -210,6 +207,32 @@ class ProductServices {
     DatabaseSchema().deleteTable();
     DatabaseSchema().insertDatabase();
     // return await response.stream.bytesToString();
+    return response.statusCode;
+  }
+
+  Future<dynamic> productFileUpload(String categoryId, File file) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String firebaseId = sharedPreferences.getString("firebaseId");
+    print(file);
+    String token = sharedPreferences.getString('token');
+    print(firebaseId);
+    print(categoryId.toString() + 'this is category');
+    String url =
+        'http://stockfare-io.herokuapp.com/api/v2/inventory/upload_file/$categoryId/$firebaseId/';
+    print(url);
+    var request = http.MultipartRequest("POST", Uri.parse(url));
+    request.headers.addAll(<String, String>{
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
+    var data = await http.MultipartFile.fromPath("files", file.path);
+    request.files.add(data);
+    var response = await request.send();
+    var responseData = await response.stream.toBytes();
+    var responseString = String.fromCharCodes(responseData);
+    var responseCode = response.statusCode;
+    print(responseString);
     return response.statusCode;
   }
 
@@ -309,7 +332,7 @@ class ProductServices {
       // }));
       // return products;
     } else {
-      throw Exception('Failed to load products');
+      print('error');
     }
   }
 

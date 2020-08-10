@@ -49,6 +49,8 @@ class AuthServices {
           "business_type": businessType
         }));
     if (response.statusCode == 200) {
+      DatabaseSchema().deleteTable();
+      DatabaseSchema().insertDatabase();
       var responseJson = json.decode(response.body);
       print(responseJson);
       sharedPreferences.setString("token", responseJson['token']['access']);
@@ -56,7 +58,7 @@ class AuthServices {
       sharedPreferences.setString("branchId", user.branchId);
       sharedPreferences.setString("body", response.body);
       sharedPreferences.setString('user_id', user.user_id);
-      DatabaseSchema().insertDatabase();
+
       print(user.branchId);
       return user;
     } else {
@@ -82,6 +84,7 @@ class AuthServices {
     );
 
     if (response.statusCode == 200) {
+      DatabaseSchema().deleteTable();
       DatabaseSchema().insertDatabase();
       var responseJson = json.decode(response.body);
       print(responseJson);
@@ -142,11 +145,11 @@ class AuthServices {
     if (response.statusCode == 200) {
       var responseJson = json.decode(response.body);
       print(responseJson);
-      return true;
+      return response.statusCode;
     } else {
       print(response.body);
       print(response.statusCode);
-      return false;
+      return response.body;
     }
   }
 
@@ -200,11 +203,9 @@ class AuthServices {
     if (response.statusCode == 200) {
       var responseJson = json.decode(response.body);
       print(responseJson);
-      return true;
+      return response.statusCode;
     } else {
-      print(response.body);
-      print(response.statusCode);
-      return false;
+      return response.body;
     }
   }
 }

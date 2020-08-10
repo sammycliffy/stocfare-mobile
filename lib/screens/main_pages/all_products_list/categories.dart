@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
-import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
+
+import 'package:stockfare_mobile/screens/intro_pages/add_single_products/form.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/product_list.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
@@ -172,6 +173,10 @@ class _CategoryPageState extends State<CategoryPage> {
                   return ListView.builder(
                       itemCount: _categories.length,
                       itemBuilder: (context, index) {
+                        if (_categories.length == 0) {
+                          return Text(
+                              'You do not have any product yet. Click the button below to add');
+                        }
                         return GestureDetector(
                           child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -246,8 +251,8 @@ class _CategoryPageState extends State<CategoryPage> {
       floatingActionButton: FloatingActionButton(
         focusColor: Theme.of(context).canvasColor,
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddProductPage()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => FormPage()));
         },
         child: Icon(
           Icons.add,

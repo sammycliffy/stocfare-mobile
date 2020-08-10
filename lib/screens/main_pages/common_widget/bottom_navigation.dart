@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/categories.dart';
-
 import 'package:stockfare_mobile/screens/main_pages/analytics.dart';
 import 'package:stockfare_mobile/screens/main_pages/home.dart';
-import 'package:stockfare_mobile/screens/main_pages/online_store.dart';
 import 'package:stockfare_mobile/screens/main_pages/sales_pages/all_sales.dart';
 
 class BottomNavigationPage extends StatefulWidget {

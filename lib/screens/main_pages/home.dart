@@ -8,6 +8,12 @@ import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/main_app_bar.dart';
 import 'package:stockfare_mobile/sqlcool_database/database_schema.dart';
 
+class HomePage extends StatefulWidget {
+  const HomePage({Key key}) : super(key: key);
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
 class _HomePageState extends State<HomePage> {
   DatabaseSchema databaseSchema = DatabaseSchema();
   Future<DataModel> _productList;
@@ -21,23 +27,29 @@ class _HomePageState extends State<HomePage> {
   List _productPackPrice = [];
   List _objects = [];
   bool newvalue = false;
-  List items = [];
-  List<Map<String, dynamic>> type = [];
-  List daniel = [];
+  List<Map<String, dynamic>> items = [];
+  List countItem = [];
+  List _prices = [];
+
   @override
   void initState() {
     super.initState();
+
     _productList = databaseSchema.retrieveDatabase();
-    _productList.then((value) => print(value.databaseModel.map((e) {
-          _categories.add(e.category);
-          _productName.add(e.productName);
-          _productQuantity.add(e.productQuantity);
-          _packQuantity.add(e.productPackQuantity);
-          _productPrice.add(e.productUnitPrice);
-          _productPackPrice.add(e.productPackPrice);
-          _productImage.add(e.imageLink);
-          _productId.add(e.productId);
-        })));
+    databaseSchema
+        .retrieveDatabase()
+        .then((value) => print(value.databaseModel.map((e) {
+              setState(() {
+                _categories.add(e.category);
+                _productName.add(e.productName);
+                _productQuantity.add(e.productQuantity);
+                _packQuantity.add(e.productPackQuantity);
+                _productPrice.add(e.productUnitPrice);
+                _productPackPrice.add(e.productPackPrice);
+                _productImage.add(e.imageLink);
+                _productId.add(e.productId);
+              });
+            })));
   }
 
   @override
@@ -98,7 +110,8 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.black),
                             child: Center(
                               child: Text(
-                                _addProduct.items.length.toString(),
+                                (_addProduct.product + _addProduct.quantity)
+                                    .toString(),
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
@@ -110,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   onTap: () {
-                    // _addProduct.increment();
+                    _addProduct.increment();
                   },
                 ),
               ],
@@ -119,9 +132,23 @@ class _HomePageState extends State<HomePage> {
                 future: _productList,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
+                    if (_productName.length == 0) {
+                      return Center(
+                          child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 200,
+                          ),
+                          Text(
+                            'You do not have any products yet. \n Go to the products page to add.',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ));
+                    }
                     return Expanded(
                       child: GridView.builder(
-                        itemCount: _categories.length,
+                        itemCount: _productName.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             childAspectRatio: (itemWidth / itemHeight),
                             crossAxisCount: 3),
@@ -146,7 +173,9 @@ class _HomePageState extends State<HomePage> {
                                       _productName[index],
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 16),
+                                          fontSize: 16,
+                                          color:
+                                              Theme.of(context).primaryColor),
                                     ),
                                     Row(
                                       mainAxisAlignment:
@@ -177,63 +206,23 @@ class _HomePageState extends State<HomePage> {
                               ),
                               onTap: () {
                                 if (_productPackPrice[index] == '0') {
-                                  int count = 0;
                                   setState(() {
-                                    items.add(_productId[index]);
-                                    var map = Map();
-
-                                    items.forEach((element) {
-                                      if (!map.containsKey(element)) {
-                                        map[element] = 1;
-                                      } else {
-                                        map[element] += 1;
-                                      }
-                                    });
-                                    dynamic id = map[_productId[index]];
-                                    if (type.length == 0) {
-                                      type.add({
-                                        '\'totalQuantity\'': id,
-                                        '\'type\'': '\'unit\'',
-                                        '\'id\'': '\'${_productId[index]}\'',
-                                      });
-                                    } else {
-                                      for (var map in type) {
-                                        if (map.containsKey('\'id\'')) {
-                                          if (map['\'id\''] ==
-                                              '\'${_productId[index]}\'') {
-                                            map['\'totalQuantity\''] = id;
-                                            print('it has');
-                                          } else {
-                                            type.add({
-                                              '\'totalQuantity\'': id,
-                                              '\'type\'': '\'unit\'',
-                                              '\'id\'':
-                                                  '\'${_productId[index]}\'',
-                                            });
-                                            break;
-                                          }
-                                        } else {
-                                          type.add({
-                                            '\'totalQuantity\'': id,
-                                            '\'type\'': '\'unit\'',
-                                            '\'id\'':
-                                                '\'${_productId[index]}\'',
-                                          });
-                                        }
-                                      }
-                                    }
-                                    // dynamic id = map[_productId[index]];
-                                    // type.add({
-                                    //   '\'totalQuantity\'': id,
-                                    //   '\'type\'': '\'unit\'',
-                                    //   '\'id\'': '\'${_productId[index]}\'',
-                                    // });
+                                    _addProduct.increment();
+                                    countItem.add(_productId[index]);
+                                    _prices.add(_productPrice[index]);
                                   });
-                                  print(type);
-
-                                  _addProduct.addItems(items, type);
+                                  _check(
+                                      _productId[index],
+                                      _productPrice[index],
+                                      _productName[index]);
+                                  print(countItem);
+                                  print(items);
+                                  print(_prices);
+                                  _addProduct.addItems(items, countItem);
                                 } else {
+                                  //send pack to the dialog page
                                   _addProduct.addToCart(
+                                      _productId[index],
                                       _productName[index],
                                       int.parse(_productPrice[index]),
                                       int.parse(
@@ -254,10 +243,55 @@ class _HomePageState extends State<HomePage> {
           ],
         ));
   }
-}
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
-  @override
-  _HomePageState createState() => _HomePageState();
+  _check(_productIndex, _productPrice, _productName) {
+    print(_productIndex + 'this is the index');
+    var map = Map();
+    countItem.forEach((element) {
+      if (!map.containsKey(element)) {
+        map[element] = 1;
+      } else {
+        map[element] += 1;
+      }
+    });
+
+    dynamic count = map[_productIndex];
+    //first check if items list is empty
+    if (items.length == 0) {
+      items.add({
+        '\'totalQuantity\'': count,
+        '\'type\'': '\'unit\'',
+        '\'id\'': '\'$_productIndex\'',
+        '\'price\'': int.parse(_productPrice),
+        '\'name\'': '\'$_productName\'',
+      });
+    } else {
+      //check if the item list contains an already existing value then update
+      for (var map in items) {
+        print(countItem.indexOf(_productIndex));
+
+        if (map['\'id\''] == '\'$_productIndex\'') {
+          var toRemove = countItem.indexOf(_productIndex);
+          items.removeAt(toRemove);
+          items.add({
+            '\'totalQuantity\'': count,
+            '\'type\'': '\'unit\'',
+            '\'id\'': '\'$_productIndex\'',
+            '\'price\'': count * int.parse(_productPrice),
+            '\'name\'': '\'$_productName\'',
+          });
+        } else {
+          items.add({
+            '\'totalQuantity\'': count,
+            '\'type\'': '\'unit\'',
+            '\'id\'': '\'$_productIndex\'',
+            '\'price\'': int.parse(_productPrice),
+            '\'name\'': '\'$_productName\'',
+          });
+        }
+
+        break;
+      }
+    }
+  }
 }

@@ -7,6 +7,14 @@ class CurrentBranch extends StatefulWidget {
 
 class _CurrentBranchState extends State<CurrentBranch> {
   String password;
+  bool isInstructionView;
+  @override
+  void initState() {
+    super.initState();
+    isInstructionView = Global.shared.isInstructionView;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,6 +90,29 @@ class _CurrentBranchState extends State<CurrentBranch> {
               ),
             ),
             SizedBox(height: 20),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Container(
+                child: Switch(
+                  value: isInstructionView,
+                  onChanged: (bool isOn) {
+                    print(isOn);
+                    setState(() {
+                      isInstructionView = isOn;
+                      Global.shared.isInstructionView = isOn;
+                      isOn = !isOn;
+                      print(isInstructionView);
+                    });
+                  },
+                  activeColor: Colors.blue,
+                  inactiveTrackColor: Colors.grey,
+                  inactiveThumbColor: Colors.grey,
+                ),
+              ),
+              Text(
+                'Do you want to be notified on sales?',
+                style: TextStyle(fontSize: 17),
+              )
+            ]),
             SizedBox(
               height: 20,
             ),
@@ -106,4 +137,9 @@ class _CurrentBranchState extends State<CurrentBranch> {
           ],
         )));
   }
+}
+
+class Global {
+  static final shared = Global();
+  bool isInstructionView = false;
 }

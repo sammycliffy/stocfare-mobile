@@ -167,7 +167,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     ),
                     onTap: () async {
                       if (_formKey.currentState.validate()) {
+                        DialogBoxes().loading(context);
+
                         if (newPassword1 != newPassword2) {
+                          Navigator.pop(context);
                           setState(() {
                             _error = 'Password does not match';
                             _displaySnackBar(context);
@@ -176,14 +179,16 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           _authServices
                               .updatePassword(oldPassword, newPassword1)
                               .then((value) {
-                            if (value == false) {
+                            if (value == 200) {
+                              Navigator.pop(context);
+                              setState(() {
+                                DialogBoxes().success(context);
+                              });
+                            } else {
+                              Navigator.pop(context);
                               setState(() {
                                 _error = 'The old password is not correct';
                                 _displaySnackBar(context);
-                              });
-                            } else {
-                              setState(() {
-                                DialogBoxes().success(context);
                               });
                             }
                           });

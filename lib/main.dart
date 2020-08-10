@@ -42,7 +42,7 @@ void main() {
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                   fontFamily: 'Mukta'),
-              headline6: TextStyle(fontSize: 20.0, color: Colors.black),
+              headline6: TextStyle(fontSize: 18.0, color: Colors.black),
               bodyText2: TextStyle(
                 fontSize: 14.0,
                 fontFamily: 'Mukta',

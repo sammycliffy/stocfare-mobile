@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
-import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_products_category/add_product_home.dart';
+import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/edit_product.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
@@ -302,7 +302,7 @@ class _ProductListPageState extends State<ProductListPage> {
         focusColor: Theme.of(context).canvasColor,
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddProductHomePage()));
+              MaterialPageRoute(builder: (context) => AddProductPage()));
         },
         child: Icon(
           Icons.add,

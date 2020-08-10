@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/settings/change_password.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/settings/update_account.dart';
-import 'package:stockfare_mobile/screens/drawer_pages/settings/update_current_brach.dart';
+import 'package:stockfare_mobile/screens/drawer_pages/settings/update_current_branch.dart';
 
 class SettingsHomePage extends StatelessWidget {
   @override

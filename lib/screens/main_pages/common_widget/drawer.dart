@@ -4,7 +4,7 @@ import 'package:stockfare_mobile/screens/drawer_pages/logout.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/settings/settings_home.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/workers.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
-import 'package:stockfare_mobile/screens/subscription/starter.dart';
+import 'package:stockfare_mobile/screens/subscription/sub_home.dart';
 
 class DrawerPage extends StatelessWidget {
   @override
@@ -14,22 +14,22 @@ class DrawerPage extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text(
-              '',
-              style: TextStyle(fontSize: 25, color: Colors.white),
+            child: Center(
+              child: Text(
+                'Stockfare',
+                style: TextStyle(fontSize: 25, color: Colors.white),
+              ),
             ),
             decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage('assets/images/inventory.png'))),
+              color: Theme.of(context).primaryColor,
+            ),
           ),
           ListTile(
             leading: Icon(Icons.settings),
             title: Text('Manage Subscription'),
             onTap: () => {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => StarterPage()))
+                  MaterialPageRoute(builder: (context) => SubscriptionPage()))
             },
           ),
           ListTile(

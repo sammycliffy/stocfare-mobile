@@ -29,7 +29,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget build(BuildContext context) {
     AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
     return Scaffold(
-        backgroundColor: Colors.grey[300],
         appBar: AppBar(title: Text('Check out')),
         body: Padding(
           padding: const EdgeInsets.only(left: 50, top: 20),
@@ -43,7 +42,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     SizedBox(
                       width: 80,
                     ),
-                    Text(addProduct.product.toString(),
+                    Text(addProduct.items.length.toString(),
                         style: Theme.of(context).textTheme.headline6)
                   ],
                 ),
@@ -55,7 +54,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     SizedBox(
                       width: 110,
                     ),
-                    Text('150000', style: Theme.of(context).textTheme.headline6)
+                    Text(addProduct.prices.toString(),
+                        style: Theme.of(context).textTheme.headline6)
                   ],
                 ),
                 Row(
@@ -69,7 +69,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       value: dropdownValue,
                       iconSize: 24,
                       elevation: 16,
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.black),
                       underline: Container(
                         height: 4,
                         color: Theme.of(context).primaryColor,
@@ -93,22 +93,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ],
                 ),
                 SizedBox(height: 10),
-                Row(
-                  children: <Widget>[
-                    Text('Discount',
-                        style: Theme.of(context).textTheme.headline6),
-                    SizedBox(
-                      width: 120,
-                    ),
-                    SizedBox(
-                        width: 80,
-                        height: 30,
+                Padding(
+                  padding: const EdgeInsets.only(right: 50),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        width: 120,
                         child: TextFormField(
-                          validator: (val) =>
-                              val.isEmpty ? 'Enter quantity' : null,
-                          onChanged: (val) => setState(() {
-                            quantity = int.parse(val);
-                          }),
+                          // inputFormatters: [controller],
+                          // controller: textEditingController,
+                          keyboardType: TextInputType.number,
+                          validator: (input) =>
+                              input.isEmpty ? "Enter Product Price" : null,
+                          onChanged: (val) => setState(() {}),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(12),
                             labelStyle: TextStyle(
@@ -122,6 +120,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 color: Theme.of(context)
                                     .focusColor
                                     .withOpacity(0.7)),
+                            hintText: 'Tax',
                             enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Theme.of(context)
@@ -134,8 +133,46 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         .withOpacity(0.5))),
                           ),
                           style: TextStyle(color: Colors.black),
-                        )),
-                  ],
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      SizedBox(
+                        width: 120,
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (input) =>
+                              input.isEmpty ? "Enter Quantity " : null,
+                          onChanged: (val) => setState(() {}),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(12),
+                            labelStyle: TextStyle(
+                                color: Theme.of(context).primaryColor),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.2))),
+                            hintStyle: TextStyle(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.7)),
+                            hintText: 'Change',
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.2))),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.5))),
+                          ),
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 20),
                 Form(
@@ -274,6 +311,53 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       newvalue
                           ? _soldOnCredit(context)
                           : SizedBox(), // check of sold on credit is clicked
+                      SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20),
+                        child: Container(
+                          color: Colors.grey[100],
+                          width: 300,
+                          height: 120,
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text('Tax', style: TextStyle(fontSize: 18)),
+                                  SizedBox(
+                                    width: 145,
+                                  ),
+                                  Text('0', style: TextStyle(fontSize: 18))
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text('You Owe',
+                                      style: TextStyle(fontSize: 18)),
+                                  SizedBox(
+                                    width: 110,
+                                  ),
+                                  Text('0', style: TextStyle(fontSize: 18))
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text('Total', style: TextStyle(fontSize: 23)),
+                                  SizedBox(
+                                    width: 140,
+                                  ),
+                                  Text('0', style: TextStyle(fontSize: 23))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.only(right: 20.0),
@@ -326,8 +410,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     color: Theme.of(context).focusColor.withOpacity(0.2))),
             hintStyle:
                 TextStyle(color: Theme.of(context).focusColor.withOpacity(0.7)),
-            prefixIcon: Icon(Icons.monetization_on,
-                color: Theme.of(context).accentColor),
             hintText: 'Initial Deposit',
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -347,7 +429,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         style: Theme.of(context).textTheme.headline6,
       ),
       Padding(
-        padding: const EdgeInsets.only(left: 5, right: 40),
+        padding: const EdgeInsets.only(left: 50, right: 50),
         child: RaisedButton(
           onPressed: () => _selectDate(context),
           child: Text('Select Promised date'),

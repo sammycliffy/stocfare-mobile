@@ -43,6 +43,7 @@ class _FormPageState extends State<FormPage> {
   Widget build(BuildContext context) {
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
     return Scaffold(
+        appBar: AppBar(title: Text('Add Products')),
         key: _scaffoldKey,
         backgroundColor: Colors.white,
         body: SingleChildScrollView(

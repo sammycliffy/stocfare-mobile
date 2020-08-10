@@ -215,11 +215,11 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                                         _addProduct.data,
                                         _addProduct.categoryId)
                                     .then((value) {
-                                  if (value == 400) {
+                                  if (value != 201) {
                                     setState(() {
                                       loading = false;
                                       setState(() {
-                                        _error = 'Product Already exist';
+                                        _error = value.toString();
                                         _displaySnackBar(context);
                                       });
                                     });

@@ -173,20 +173,7 @@ class _AllSalesListState extends State<AllSalesList> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Center(
-                          child: Icon(
-                            Icons.monetization_on,
-                            size: 40,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        Center(
-                          child: Text('All your Sales will display here',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).primaryColor)),
-                        ),
+                        Center(child: CircularProgressIndicator()),
                       ]);
                 }));
   }

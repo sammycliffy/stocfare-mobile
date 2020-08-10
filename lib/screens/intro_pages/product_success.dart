@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
+import 'package:stockfare_mobile/sqlcool_database/database_schema.dart';
 
 class ProductSuccess extends StatelessWidget {
   @override
