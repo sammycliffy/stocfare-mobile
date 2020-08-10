@@ -30,24 +30,9 @@ class _AllProductsListState extends State<AllProductsList> {
   List tax = [];
   List soldOnCredit = [];
   List amountPaid = [];
+  List totalAmount = [];
   final List<String> entries = <String>['A', 'B', 'C'];
   final List<int> colorCodes = <int>[600, 500, 100];
-
-  void _printDocument() {
-    Printing.layoutPdf(onLayout: (pageFormat) {
-      final doc = pw.Document();
-
-      doc.addPage(
-        pw.Page(
-          build: (pw.Context context) => pw.Center(
-            child: pw.Text('This is the receipt'),
-          ),
-        ),
-      );
-
-      return doc.save();
-    });
-  }
 
   void _shareDocument() async {
     final doc = pw.Document();
@@ -69,6 +54,8 @@ class _AllProductsListState extends State<AllProductsList> {
         amountPaid.add(data.amountPaid);
         tax.add(data.tax);
         quantitySold.add(data.productDetail[0].quantityBought);
+        totalAmount.add(data.productDetail[0].totalCost);
+
         dateCreated.add(data.dateCreated);
         return (data.productData.map((name) {
           setState(() {
@@ -114,14 +101,16 @@ class _AllProductsListState extends State<AllProductsList> {
                 children: <Widget>[
                   IconButton(
                       icon: Icon(Icons.print),
-                      onPressed: _printDocument,
+                      onPressed: () {
+                        _printDocument(_signupNotifier);
+                      },
                       color: Colors.white),
                   Text('Print'),
                 ],
               ),
             ),
             onTap: () {
-              _printDocument();
+              _printDocument(_signupNotifier);
             },
           )
         ],
@@ -299,6 +288,29 @@ class _AllProductsListState extends State<AllProductsList> {
                         )
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30, top: 10),
+                          child: Text(
+                            'Amount Paid',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 30, top: 10),
+                          child: Text(
+                            amountPaid[widget.customerIndex].toString(),
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                     SizedBox(
                       height: 10,
                     ),
@@ -381,7 +393,8 @@ class _AllProductsListState extends State<AllProductsList> {
                                   padding:
                                       const EdgeInsets.only(right: 30, top: 5),
                                   child: Text(
-                                    amountPaid[widget.customerIndex].toString(),
+                                    totalAmount[widget.customerIndex]
+                                        .toString(),
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontFamily: 'Sora',
@@ -399,5 +412,259 @@ class _AllProductsListState extends State<AllProductsList> {
             return Center(child: CircularProgressIndicator());
           }),
     );
+  }
+
+  void _printDocument(_signupNotifier) {
+    Printing.layoutPdf(onLayout: (pageFormat) {
+      final doc = pw.Document();
+
+      doc.addPage(pw.Page(
+          build: (pw.Context context) => pw.Column(children: [
+                pw.Text(
+                  _signupNotifier.fullName ?? '',
+                  style: pw.TextStyle(
+                      fontSize: 20, fontWeight: pw.FontWeight.bold),
+                ),
+                pw.Text(
+                  'REF:  ${referenceCode[widget.customerIndex]}',
+                  style: pw.TextStyle(
+                      fontWeight: pw.FontWeight.bold, fontSize: 18),
+                ),
+                pw.Text(
+                  DateFormat('yyyy-MM-dd @ kk:mm')
+                      .format(dateCreated[widget.customerIndex])
+                      .toString(),
+                  style: pw.TextStyle(
+                      fontWeight: pw.FontWeight.bold, fontSize: 14),
+                ),
+                pw.SizedBox(
+                  height: 20,
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(left: 30, top: 10),
+                      child: pw.Text(
+                        'ITEMS',
+                        style: pw.TextStyle(
+                            fontSize: 16, fontWeight: pw.FontWeight.bold),
+                      ),
+                    ),
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(right: 30, top: 10),
+                      child: pw.Text(
+                        'PRICE',
+                        style: pw.TextStyle(
+                            fontSize: 16, fontWeight: pw.FontWeight.bold),
+                      ),
+                    )
+                  ],
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(left: 30, top: 10),
+                      child: pw.Text(
+                        names[widget.customerIndex].toString() +
+                            ' ' +
+                            quantitySold[widget.customerIndex].toString(),
+                        style: pw.TextStyle(
+                            fontSize: 16, fontWeight: pw.FontWeight.bold),
+                      ),
+                    ),
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(right: 30, top: 10),
+                      child: pw.Text(
+                        price[widget.customerIndex].toString(),
+                        style: pw.TextStyle(
+                            fontSize: 16, fontWeight: pw.FontWeight.bold),
+                      ),
+                    )
+                  ],
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(left: 30, top: 10),
+                      child: pw.Text(
+                        'Customer',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(right: 30, top: 10),
+                      child: pw.Text(
+                        customer[widget.customerIndex].toString(),
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(left: 30, top: 10),
+                      child: pw.Text(
+                        'Change',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(right: 30, top: 10),
+                      child: pw.Text(
+                        customerChange[widget.customerIndex].toString(),
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(left: 30, top: 10),
+                      child: pw.Text(
+                        'Seller',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(right: 30, top: 10),
+                      child: pw.Text(
+                        registeredBy[widget.customerIndex].toString(),
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(left: 30, top: 10),
+                      child: pw.Text(
+                        'Sold on Credit',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(right: 30, top: 10),
+                      child: pw.Text(
+                        soldOnCredit[widget.customerIndex].toString(),
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                pw.SizedBox(
+                  height: 10,
+                ),
+                pw.Container(
+                  height: 120,
+                  width: 350,
+                  child: pw.Column(
+                    children: [
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.only(left: 30, top: 10),
+                            child: pw.Text(
+                              'VAT',
+                              style: pw.TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.only(right: 30, top: 10),
+                            child: pw.Text(
+                              tax[widget.customerIndex].toString(),
+                              style: pw.TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.only(left: 30, top: 10),
+                            child: pw.Text(
+                              'YOU OWE',
+                              style: pw.TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.only(right: 30, top: 5),
+                            child: pw.Text(
+                              customerChange[widget.customerIndex].toString(),
+                              style: pw.TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.only(left: 30, top: 10),
+                            child: pw.Text(
+                              'TOTAL',
+                              style: pw.TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.only(right: 30, top: 5),
+                            child: pw.Text(
+                              totalAmount[widget.customerIndex].toString(),
+                              style: pw.TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ])));
+
+      return doc.save();
+    });
   }
 }

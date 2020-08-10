@@ -51,7 +51,7 @@ class _AllSalesListState extends State<AllSalesList> {
         backgroundColor: Colors.white,
         drawer: DrawerPage(),
         appBar: AppBar(
-          title: Text('Sales List'),
+          title: Text('Sales History'),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(50.0),
             child: Padding(

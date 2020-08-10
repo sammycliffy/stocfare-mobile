@@ -233,6 +233,10 @@ class ProductServices {
     var responseString = String.fromCharCodes(responseData);
     var responseCode = response.statusCode;
     print(responseString);
+    if (response.statusCode != 200 || response.statusCode != 201) {
+      return responseString;
+    }
+    print(response.statusCode);
     return response.statusCode;
   }
 
