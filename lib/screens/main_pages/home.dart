@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  DatabaseSchema databaseSchema = DatabaseSchema();
   Future<DataModel> _productList;
   List _categories = [];
   List _productName = [];
@@ -35,21 +34,21 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    _productList = databaseSchema.retrieveDatabase();
-    databaseSchema
-        .retrieveDatabase()
-        .then((value) => print(value.databaseModel.map((e) {
-              setState(() {
-                _categories.add(e.category);
-                _productName.add(e.productName);
-                _productQuantity.add(e.productQuantity);
-                _packQuantity.add(e.productPackQuantity);
-                _productPrice.add(e.productUnitPrice);
-                _productPackPrice.add(e.productPackPrice);
-                _productImage.add(e.imageLink);
-                _productId.add(e.productId);
-              });
-            })));
+    // _productList = databaseSchema.retrieveDatabase();
+    // databaseSchema
+    //     .retrieveDatabase()
+    //     .then((value) => print(value.databaseModel.map((e) {
+    //           setState(() {
+    //             _categories.add(e.category);
+    //             _productName.add(e.productName);
+    //             _productQuantity.add(e.productQuantity);
+    //             _packQuantity.add(e.productPackQuantity);
+    //             _productPrice.add(e.productUnitPrice);
+    //             _productPackPrice.add(e.productPackPrice);
+    //             _productImage.add(e.imageLink);
+    //             _productId.add(e.productId);
+    //           });
+    //         })));
   }
 
   @override

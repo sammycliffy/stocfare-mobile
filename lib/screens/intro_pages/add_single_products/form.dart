@@ -274,7 +274,7 @@ class _FormPageState extends State<FormPage> {
                           ),
                           child: Center(
                               child: Text(
-                            (_unitLimit * 100).round().toString(),
+                            (_unitLimit * 500).round().toString(),
                             style: TextStyle(color: Colors.red, fontSize: 15),
                           )),
                         ),

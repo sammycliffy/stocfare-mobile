@@ -5,12 +5,9 @@ import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/intro_pages/splashscreen.dart';
-import 'package:stockfare_mobile/sqlcool_database/database_schema.dart';
 
-DatabaseSchema databaseSchema = DatabaseSchema();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  databaseSchema.initDatabase();
   runApp(
     MultiProvider(
       providers: [

@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/color_models.dart';
 import 'package:stockfare_mobile/models/products.dart';
-import 'package:stockfare_mobile/sqlcool_database/database_schema.dart';
 
 class ProductServices {
   //Add products and category
@@ -62,9 +61,6 @@ class ProductServices {
           }
         }));
     if (response.statusCode == 200 || response.statusCode == 201) {
-      DatabaseSchema().deleteTable();
-      DatabaseSchema().insertDatabase();
-
       print(response.statusCode);
       return response.statusCode;
     } else {
@@ -124,8 +120,6 @@ class ProductServices {
           "discount": productDiscount
         }));
     if (response.statusCode == 200 || response.statusCode == 201) {
-      DatabaseSchema().deleteTable();
-      DatabaseSchema().insertDatabase();
       return response.statusCode;
     } else {
       return response.body;
@@ -148,11 +142,14 @@ class ProductServices {
         .equalTo(firebaseId)
         .once()
         .then((DataSnapshot snapshot) {
-      String jsonEcode = json.encode(snapshot.value['$firebaseId']);
-
-      List splited = jsonEcode.split('-M');
-      allProducts.add(splited);
-
+      Map<dynamic, dynamic> values = snapshot.value['$firebaseId'];
+      print(values.toString());
+      values.forEach((k, v) {
+        print(v["name"]);
+        print(v['products'].map((value) {
+          print(value['name']);
+        }));
+      });
       // dynamic customer =
       //     FirebaseCustomer.fromJson(json.decode(jsonEcode), firebaseId);
       // print(customer.firebaseId.mCNY7MIP7pazpzpT4bW.productCount);
@@ -179,8 +176,6 @@ class ProductServices {
           "name": name,
         }));
     if (response.statusCode == 200) {
-      DatabaseSchema().deleteTable();
-      DatabaseSchema().insertDatabase();
       return response.statusCode;
     } else {
       print(response.body);
@@ -204,8 +199,7 @@ class ProductServices {
     if (response.statusCode != 200)
       // return Future.error("error: status code ${response.statusCode}");
       print(response.reasonPhrase);
-    DatabaseSchema().deleteTable();
-    DatabaseSchema().insertDatabase();
+
     // return await response.stream.bytesToString();
     return response.statusCode;
   }
@@ -256,8 +250,7 @@ class ProductServices {
     if (response.statusCode != 200)
       return Future.error("error: status code ${response.statusCode}");
     // return await response.stream.bytesToString();
-    DatabaseSchema().deleteTable();
-    DatabaseSchema().insertDatabase();
+
     return response.statusCode;
   }
 

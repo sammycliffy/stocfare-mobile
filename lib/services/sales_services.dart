@@ -26,6 +26,27 @@ class SalesServices {
     }
   }
 
+  Future<Welcome> sortedDates(int sortedDate) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String branchId = sharedPreferences.getString('branchId');
+    String token = sharedPreferences.getString('token');
+    print(sortedDate);
+    final String url =
+        'https://stockfare-io.herokuapp.com/api/v1/sales/sales/8e044e8c-263b-40f7-afb7-601154b59601/?date=$sortedDate';
+    final http.Response response =
+        await http.get(url, headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    if (response.statusCode == 200) {
+      print(response.body);
+      return Welcome.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+
   Future<Welcome> addSales(
       List<String> products,
       String customerName,

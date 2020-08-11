@@ -1,43 +1,32 @@
-class FirebaseCustomer {
-  FirebaseId firebaseId;
+class FirebaseProducts {
+  ProductId productId;
 
-  FirebaseCustomer({this.firebaseId});
+  FirebaseProducts({this.productId});
 
-  FirebaseCustomer.fromJson(Map<String, dynamic> json, id) {
-    firebaseId =
-        json['$id'] != null ? new FirebaseId.fromJson(json['$id']) : null;
-  }
-}
-
-class FirebaseId {
-  MCNY7MIP7pazpzpT4bW mCNY7MIP7pazpzpT4bW;
-
-  FirebaseId({this.mCNY7MIP7pazpzpT4bW});
-
-  FirebaseId.fromJson(Map<String, dynamic> json) {
-    mCNY7MIP7pazpzpT4bW = json['-MCNY7MIP7pazpzpT4bW'] != null
-        ? new MCNY7MIP7pazpzpT4bW.fromJson(json['-MCNY7MIP7pazpzpT4bW'])
+  FirebaseProducts.fromJson(Map<String, dynamic> json) {
+    productId = json['productId'] != null
+        ? new ProductId.fromJson(json['productId'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.mCNY7MIP7pazpzpT4bW != null) {
-      data['-MCNY7MIP7pazpzpT4bW'] = this.mCNY7MIP7pazpzpT4bW.toJson();
+    if (this.productId != null) {
+      data['productId'] = this.productId.toJson();
     }
     return data;
   }
 }
 
-class MCNY7MIP7pazpzpT4bW {
+class ProductId {
   int productCount;
   String name;
   String id;
   List<Products> products;
 
-  MCNY7MIP7pazpzpT4bW({this.productCount, this.name, this.id, this.products});
+  ProductId({this.productCount, this.name, this.id, this.products});
 
-  MCNY7MIP7pazpzpT4bW.fromJson(Map<String, dynamic> json) {
+  ProductId.fromJson(Map<String, dynamic> json) {
     productCount = json['product_count'];
     name = json['name'];
     id = json['id'];
@@ -67,6 +56,8 @@ class Products {
   String name;
   bool active;
   String description;
+  String discount;
+  String weight;
   String id;
   ProductUnit productUnit;
   ProductPack productPack;
@@ -77,6 +68,8 @@ class Products {
       this.name,
       this.active,
       this.description,
+      this.discount,
+      this.weight,
       this.id,
       this.productUnit,
       this.productPack});
@@ -92,6 +85,8 @@ class Products {
     name = json['name'];
     active = json['active'];
     description = json['description'];
+    discount = json['discount'];
+    weight = json['weight'];
     id = json['id'];
     productUnit = json['product_unit'] != null
         ? new ProductUnit.fromJson(json['product_unit'])
@@ -110,6 +105,8 @@ class Products {
     data['name'] = this.name;
     data['active'] = this.active;
     data['description'] = this.description;
+    data['discount'] = this.discount;
+    data['weight'] = this.weight;
     data['id'] = this.id;
     if (this.productUnit != null) {
       data['product_unit'] = this.productUnit.toJson();
