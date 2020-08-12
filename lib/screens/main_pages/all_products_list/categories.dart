@@ -330,13 +330,22 @@ class _CategoryPageState extends State<CategoryPage> {
                     if (value == 200) {
                       Navigator.pop(_scaffoldKey.currentContext);
 
-                      Navigator.pushReplacement(
-                          _scaffoldKey.currentContext,
-                          MaterialPageRoute(
-                            builder: (context) => CategoryPage(
-                              key: PageStorageKey('Page2'),
-                            ),
-                          ));
+                      setState(() {
+                        _categoryId.clear();
+                        _categories.clear();
+
+                        _productList = _productServices.getAllProducts();
+                        _productList.then((value) {
+                          print(value.results.map((category) {
+                            _categoryId.add(category.id);
+                            checkBox.add(false);
+                            setState(() {
+                              _categories.add(category.name);
+                              _productCount.add(category.productCount);
+                            });
+                          }));
+                        });
+                      });
                     }
                   });
                 }),
@@ -406,13 +415,22 @@ class _CategoryPageState extends State<CategoryPage> {
                         if (value == 200) {
                           Navigator.pop(_scaffoldKey.currentContext);
 
-                          Navigator.pushReplacement(
-                              _scaffoldKey.currentContext,
-                              MaterialPageRoute(
-                                builder: (context) => CategoryPage(
-                                  key: PageStorageKey('Page2'),
-                                ),
-                              ));
+                          setState(() {
+                            _categoryId.clear();
+                            _categories.clear();
+
+                            _productList = _productServices.getAllProducts();
+                            _productList.then((value) {
+                              print(value.results.map((category) {
+                                _categoryId.add(category.id);
+                                checkBox.add(false);
+                                setState(() {
+                                  _categories.add(category.name);
+                                  _productCount.add(category.productCount);
+                                });
+                              }));
+                            });
+                          });
                         }
                       });
                     }),

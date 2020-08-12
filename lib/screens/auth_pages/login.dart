@@ -11,7 +11,6 @@ import 'package:stockfare_mobile/screens/main_pages/common_widget/loader.dart';
 import 'package:stockfare_mobile/services/auth_services.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 import 'package:stockfare_mobile/services/sales_services.dart';
-import 'package:stockfare_mobile/sqlcool_database/database_schema.dart';
 import 'forgot_password.dart';
 
 class Login extends StatefulWidget {
