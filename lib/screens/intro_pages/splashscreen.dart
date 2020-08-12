@@ -24,10 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     currentImage = Image.asset('assets/images/logo.png', width: 50, height: 50);
-    Timer(
-        Duration(seconds: 4),
-        () => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => Login())));
+    Timer(Duration(seconds: 4), () => checkForLogin());
   }
 
   @override
@@ -102,7 +99,8 @@ class _SplashScreenState extends State<SplashScreen> {
           MaterialPageRoute(builder: (BuildContext context) => Login()));
     } else {
       dynamic user = User.fromJson(json.decode(body));
-      _signupNotifier.setProfile(user.fullname, user.phone, user.email);
+      _signupNotifier.setProfile(
+          user.fullname, user.phone, user.email, user.firebaseId);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (BuildContext context) => BottomNavigationPage()));
     }

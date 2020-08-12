@@ -1,15 +1,13 @@
-// To parse this JSON data, do
-//
-//     final welcome = welcomeFromJson(jsonString);
-
 import 'dart:convert';
 
-Welcome welcomeFromJson(String str) => Welcome.fromJson(json.decode(str));
+SalesAnalyticsModel salesAnalyticsModelFromJson(String str) =>
+    SalesAnalyticsModel.fromJson(json.decode(str));
 
-String welcomeToJson(Welcome data) => json.encode(data.toJson());
+String salesAnalyticsModelToJson(SalesAnalyticsModel data) =>
+    json.encode(data.toJson());
 
-class Welcome {
-  Welcome({
+class SalesAnalyticsModel {
+  SalesAnalyticsModel({
     this.count,
     this.next,
     this.previous,
@@ -21,7 +19,8 @@ class Welcome {
   dynamic previous;
   List<Result> results;
 
-  factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
+  factory SalesAnalyticsModel.fromJson(Map<String, dynamic> json) =>
+      SalesAnalyticsModel(
         count: json["count"],
         next: json["next"],
         previous: json["previous"],
@@ -57,7 +56,7 @@ class Result {
 
   String id;
   Customer customer;
-  List<ProductData> productData;
+  List<ProductDatum> productData;
   String saleRegisteredBy;
   List<ProductDetail> productDetail;
   String pdfFileLink;
@@ -75,8 +74,8 @@ class Result {
         customer: json["customer"] == null
             ? null
             : Customer.fromJson(json["customer"]),
-        productData: List<ProductData>.from(
-            json["product_data"].map((x) => ProductData.fromJson(x))),
+        productData: List<ProductDatum>.from(
+            json["product_data"].map((x) => ProductDatum.fromJson(x))),
         saleRegisteredBy: json["sale_registered_by"],
         productDetail: List<ProductDetail>.from(
             json["product_detail"].map((x) => ProductDetail.fromJson(x))),
@@ -111,48 +110,49 @@ class Result {
 }
 
 class Customer {
+  Customer({
+    this.id,
+    this.name,
+    this.address,
+    this.mobile,
+    this.email,
+    this.dateCreated,
+    this.updatedAt,
+  });
+
   String id;
   String name;
-  Null address;
+  dynamic address;
   String mobile;
   String email;
-  String dateCreated;
-  String updatedAt;
+  DateTime dateCreated;
+  DateTime updatedAt;
 
-  Customer(
-      {this.id,
-      this.name,
-      this.address,
-      this.mobile,
-      this.email,
-      this.dateCreated,
-      this.updatedAt});
+  factory Customer.fromJson(Map<String, dynamic> json) => Customer(
+        id: json["id"],
+        name: json["name"],
+        address: json["address"],
+        mobile: json["mobile"],
+        email: json["email"],
+        dateCreated: DateTime.parse(json["date_created"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+      );
 
-  Customer.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    address = json['address'];
-    mobile = json['mobile'];
-    email = json['email'];
-    dateCreated = json['date_created'];
-    updatedAt = json['updated_at'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['address'] = this.address;
-    data['mobile'] = this.mobile;
-    data['email'] = this.email;
-    data['date_created'] = this.dateCreated;
-    data['updated_at'] = this.updatedAt;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "address": address,
+        "mobile": mobile,
+        "email": email,
+        "date_created": dateCreated.toIso8601String(),
+        "updated_at": updatedAt == null ? null : updatedAt.toIso8601String(),
+      };
 }
 
-class ProductData {
-  ProductData({
+class ProductDatum {
+  ProductDatum({
     this.id,
     this.productColour,
     this.productUnit,
@@ -182,7 +182,7 @@ class ProductData {
   String barCode;
   String discount;
 
-  factory ProductData.fromJson(Map<String, dynamic> json) => ProductData(
+  factory ProductDatum.fromJson(Map<String, dynamic> json) => ProductDatum(
         id: json["id"],
         productColour: List<ProductColour>.from(
             json["product_colour"].map((x) => ProductColour.fromJson(x))),

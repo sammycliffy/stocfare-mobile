@@ -127,9 +127,10 @@ class ProductServices {
   }
 
   //get products from firebase
-  Future<dynamic> allProducts() async {
+  Future<String> getFirebaseId() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String firebaseId = sharedPreferences.getString("firebaseId");
+
     final dbRef = FirebaseDatabase.instance;
     dbRef.setPersistenceEnabled(true);
     dbRef.setPersistenceCacheSizeBytes(10000000);
@@ -150,9 +151,6 @@ class ProductServices {
           print(value['name']);
         }));
       });
-      // dynamic customer =
-      //     FirebaseCustomer.fromJson(json.decode(jsonEcode), firebaseId);
-      // print(customer.firebaseId.mCNY7MIP7pazpzpT4bW.productCount);
     });
   }
 
@@ -253,19 +251,6 @@ class ProductServices {
 
     return response.statusCode;
   }
-
-  // Future<dynamic> uploadBulkProducts() async {
-  //   var postUri = Uri.parse("<APIUrl>");
-  //   var request = new http.MultipartRequest("POST", postUri);
-  //   request.fields['user'] = 'blah';
-  //   request.files.add(new http.MultipartFile.fromBytes('file', await
-  //    File.fromUri("<path/to/file").readAsBytes(),
-  //   contentType: MediaType('image', 'jpeg')));
-
-  //   request.send().then((response) {
-  //     if (response.statusCode == 200) print("Uploaded!");
-  //   });
-  // }
 
   Future<ProductList> getAllProducts() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

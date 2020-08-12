@@ -10,16 +10,15 @@ class _AddWorkersState extends State<AddWorkers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.red,
           title: Text(
-            'Add Workers',
-            style: TextStyle(fontSize: 15),
-          )),
+        'Add Workers',
+        style: TextStyle(fontSize: 15),
+      )),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(30.0),
+              padding: const EdgeInsets.only(left: 40, right: 40),
               child: Form(
                   child: Column(
                 children: [

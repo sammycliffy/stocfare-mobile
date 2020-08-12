@@ -2,8 +2,7 @@ import "package:flutter/material.dart";
 import 'package:stockfare_mobile/screens/drawer_pages/feedback.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/logout.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/settings/settings_home.dart';
-import 'package:stockfare_mobile/screens/drawer_pages/workers.dart';
-import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
+import 'package:stockfare_mobile/screens/drawer_pages/workers/list_of_workers.dart';
 import 'package:stockfare_mobile/screens/subscription/sub_home.dart';
 
 class DrawerPage extends StatelessWidget {
@@ -37,7 +36,7 @@ class DrawerPage extends StatelessWidget {
             title: Text('Workers'),
             onTap: () => {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddWorkers()))
+                  MaterialPageRoute(builder: (context) => WorkersListPage()))
             },
           ),
           ListTile(

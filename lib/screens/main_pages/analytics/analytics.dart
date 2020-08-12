@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
-import 'package:stockfare_mobile/screens/main_pages/product_analytics.dart';
-import 'package:stockfare_mobile/screens/main_pages/sales_analytics.dart';
+import 'package:stockfare_mobile/screens/main_pages/analytics/product_analytics.dart';
+import 'package:stockfare_mobile/screens/main_pages/analytics/sales_analytics.dart';
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({Key key}) : super(key: key);

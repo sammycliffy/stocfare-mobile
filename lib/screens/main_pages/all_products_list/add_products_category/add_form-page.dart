@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/color_models.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_products_category/barcode_image_to_category.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_products_category/packproduct_category_form.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class AddFormPage extends StatefulWidget {
   @override
@@ -29,15 +29,13 @@ class _AddFormPageState extends State<AddFormPage> {
   String _colorName;
   int _colorQuantity;
   int _colorLimit;
-
+  var controller = new MoneyMaskedTextController();
   bool loading = false;
   String _error;
   bool addExtraDetails = false;
   ProductServices _productServices = ProductServices();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   var textEditingController = TextEditingController();
-  var controller = MaskTextInputFormatter(
-      mask: "#,###,###,###.##", filter: {"#": RegExp(r'[0-9]')});
 
   @override
   Widget build(BuildContext context) {
@@ -99,8 +97,7 @@ class _AddFormPageState extends State<AddFormPage> {
                         SizedBox(
                           width: 150,
                           child: TextFormField(
-                            // inputFormatters: [controller],
-                            // controller: textEditingController,
+                            controller: controller,
                             keyboardType: TextInputType.number,
                             validator: (input) =>
                                 input.isEmpty ? "Enter Product Price" : null,
@@ -309,7 +306,7 @@ class _AddFormPageState extends State<AddFormPage> {
                                       _unitProductName,
                                       (_unitLimit * 100).round(),
                                       _unitQuantity,
-                                      _unitProductPrice,
+                                      int.parse(controller.text),
                                       _productDescription,
                                       _productDiscount,
                                       _productWeight,
@@ -661,7 +658,7 @@ class _AddFormPageState extends State<AddFormPage> {
                                 _unitProductName,
                                 (_unitLimit * 100).round(),
                                 _unitQuantity,
-                                _unitProductPrice,
+                                int.parse(controller.text),
                                 _productDescription,
                                 _productDiscount,
                                 _productWeight,

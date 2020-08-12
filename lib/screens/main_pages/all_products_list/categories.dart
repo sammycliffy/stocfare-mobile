@@ -179,8 +179,11 @@ class _CategoryPageState extends State<CategoryPage> {
                         }
                         return GestureDetector(
                           child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(5.0),
                               child: Card(
+                                  semanticContainer: true,
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  elevation: 3,
                                   child: ListTile(
                                       title: Text(
                                         _categories[index].toString(),

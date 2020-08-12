@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/color_models.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
@@ -36,8 +35,6 @@ class _FormPageState extends State<FormPage> {
   ProductServices _productServices = ProductServices();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   var textEditingController = TextEditingController();
-  var controller = MaskTextInputFormatter(
-      mask: "#,###,###,###.##", filter: {"#": RegExp(r'[0-9]')});
 
   @override
   Widget build(BuildContext context) {

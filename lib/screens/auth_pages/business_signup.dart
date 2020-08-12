@@ -353,7 +353,8 @@ class _SignupPage extends State<BusinessSignupPage> {
                                           _signupNotifier.setProfile(
                                               result.fullname,
                                               result.phone,
-                                              result.email);
+                                              result.email,
+                                              result.firebaseId);
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(

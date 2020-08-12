@@ -1,12 +1,12 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:stockfare_mobile/models/db_model.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
+import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/cart.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/main_app_bar.dart';
-import 'package:stockfare_mobile/sqlcool_database/database_schema.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -15,7 +15,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<DataModel> _productList;
+  SignupNotifier _signupNotifier;
+  dynamic dataInstance;
+
   List _categories = [];
   List _productName = [];
   List _productPrice = [];
@@ -31,32 +33,25 @@ class _HomePageState extends State<HomePage> {
   List _prices = [];
 
   @override
-  void initState() {
-    super.initState();
-
-    // _productList = databaseSchema.retrieveDatabase();
-    // databaseSchema
-    //     .retrieveDatabase()
-    //     .then((value) => print(value.databaseModel.map((e) {
-    //           setState(() {
-    //             _categories.add(e.category);
-    //             _productName.add(e.productName);
-    //             _productQuantity.add(e.productQuantity);
-    //             _packQuantity.add(e.productPackQuantity);
-    //             _productPrice.add(e.productUnitPrice);
-    //             _productPackPrice.add(e.productPackPrice);
-    //             _productImage.add(e.imageLink);
-    //             _productId.add(e.productId);
-    //           });
-    //         })));
-  }
-
-  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.2;
     final double itemWidth = size.width / 2;
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
+
+    final dbRef = FirebaseDatabase.instance; //firebase database reference
+    dbRef.setPersistenceEnabled(true);
+    dbRef.setPersistenceCacheSizeBytes(10000000);
+    final databaseInstance = dbRef.reference();
+    databaseInstance.keepSynced(true);
+    final firebaseDb = databaseInstance
+        .reference()
+        .child('inventories')
+        .orderByKey()
+        .equalTo(_signupNotifier.firebaseId);
+
     return Scaffold(
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(100.0), // here the desired height
@@ -127,27 +122,37 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            FutureBuilder(
-                future: _productList,
-                builder: (context, snapshot) {
+            StreamBuilder(
+                stream: firebaseDb.onValue,
+                builder: (context, AsyncSnapshot<Event> snapshot) {
                   if (snapshot.hasData) {
-                    if (_productName.length == 0) {
-                      return Center(
-                          child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: 200,
-                          ),
-                          Text(
-                            'You do not have any products yet. \n Go to the products page to add.',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ],
-                      ));
-                    }
+                    _categories.clear();
+                    _productName.clear();
+                    DataSnapshot dataValues = snapshot.data.snapshot;
+                    Map<dynamic, dynamic> values =
+                        dataValues.value['${_signupNotifier.firebaseId}'];
+                    values.forEach((key, values) {
+                      print(values['products']?.map((value) {
+                            _categories.add(value['name']);
+                            _productId.add(value['id']);
+                            print(value['product_image'].map((value) {
+                              _productImage.add(value['image_link']);
+                            }));
+
+                            _productQuantity
+                                .add(value['product_unit']['quantity']);
+                            _packQuantity
+                                .add(value['product_pack']['quantity']);
+                            _productPrice.add(value['product_unit']['price']);
+                            _productPackPrice
+                                .add(value['product_pack']['price']);
+                          }) ??
+                          '[]');
+                    });
+
                     return Expanded(
                       child: GridView.builder(
-                        itemCount: _productName.length,
+                        itemCount: _categories.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             childAspectRatio: (itemWidth / itemHeight),
                             crossAxisCount: 3),
@@ -169,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                                       fit: BoxFit.cover,
                                     ),
                                     Text(
-                                      _productName[index],
+                                      _categories[index],
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
@@ -186,38 +191,43 @@ class _HomePageState extends State<HomePage> {
                                         )
                                       ],
                                     ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          '${_productPrice[index]}/Units',
-                                          style: TextStyle(fontSize: 12),
-                                        ),
-                                        Text(
-                                          '${_productPackPrice[index]}/Pack',
-                                          style: TextStyle(fontSize: 12),
-                                        ),
-                                      ],
+                                    Container(
+                                      color: Colors.grey[100],
+                                      width: double.infinity,
+                                      height: 44,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(
+                                            '${_productPrice[index]}/Units',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          Text(
+                                            '${_productPackPrice[index]}/Pack',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
                               onTap: () {
-                                if (_productPackPrice[index] == '0') {
+                                if (_productPackPrice[index] == 0) {
                                   setState(() {
                                     _addProduct.increment();
                                     countItem.add(_productId[index]);
                                     _prices.add(_productPrice[index]);
                                   });
-                                  _check(
-                                      _productId[index],
-                                      _productPrice[index],
-                                      _productName[index]);
-                                  print(countItem);
-                                  print(items);
-                                  print(_prices);
-                                  _addProduct.addItems(items, countItem);
+                                  // _check(
+                                  //     _productId[index],
+                                  //     _productPrice[index],
+                                  //     _productName[index]);
+                                  // print(countItem);
+                                  // print(items);
+                                  // print(_prices);
+                                  // _addProduct.addItems(items, countItem);
                                 } else {
                                   //send pack to the dialog page
                                   _addProduct.addToCart(
@@ -237,7 +247,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                     );
                   }
-                  return Text('No Data');
+                  return Text(
+                      'You don\'t have any product yet. \n Go to the product page to add');
                 })
           ],
         ));
