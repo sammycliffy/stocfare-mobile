@@ -23,7 +23,7 @@ class WorkersServices {
     if (response.statusCode == 200) {
       return WorkersList.fromJson(json.decode(response.body));
     } else {
-      print(response.body);
+      throw ('this is wwong');
     }
   }
 
