@@ -55,6 +55,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  List<String> _editedRoles = [];
   List<String> roles = [];
   @override
   Widget build(BuildContext context) {
@@ -87,9 +88,6 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
                                   child: TextFormField(
                                     style: TextStyle(color: Colors.black),
                                     keyboardType: TextInputType.text,
-                                    validator: (input) => input.isEmpty
-                                        ? 'Enter FirstName'
-                                        : null,
                                     onChanged: (val) => setState(() {
                                       firstName = val;
                                     }),
@@ -131,9 +129,6 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
                                   child: TextFormField(
                                     style: TextStyle(color: Colors.black),
                                     keyboardType: TextInputType.number,
-                                    validator: (input) => input.length < 10
-                                        ? 'Enter a valid phone'
-                                        : null,
                                     onChanged: (val) => setState(() {
                                       phoneNumber = '+234' + val.substring(1);
                                     }),
@@ -176,9 +171,6 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
                                       left: 10, right: 10),
                                   child: TextFormField(
                                     keyboardType: TextInputType.emailAddress,
-                                    validator: (input) => !input.contains('@')
-                                        ? 'Enter a valid email address'
-                                        : null,
                                     onChanged: (val) => setState(() {
                                       emailAddress = val;
                                     }),
@@ -634,8 +626,11 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
                             if (_formKey.currentState.validate()) {
                               DialogBoxes().loading(context);
                               _workersServices
-                                  .addWorkers(firstName, lastName, phoneNumber,
-                                      emailAddress, password, roles)
+                                  .editWorkers(
+                                      snapshot.data.results[widget.workerIndex]
+                                          .userId,
+                                      password,
+                                      roles)
                                   .then((value) {
                                 if (value != 201) {
                                   Navigator.pop(context);
@@ -669,19 +664,21 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
   }
 
   void _checkRoles(String items) {
-    var role = items;
-    switch (role) {
+    var _editedRole = items;
+    switch (_editedRole) {
       case "CREATE_WORKER":
         {
           setState(() {
             _createWorker = true;
+            roles.add('CREATE_WORKER');
           });
         }
         break;
-      case "EDIT WORKER":
+      case "EDIT_WORKER":
         {
           setState(() {
             _editWorker = true;
+            roles.add('EDIT_WORKER');
           });
         }
         break;
@@ -690,6 +687,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
         {
           setState(() {
             _viewAnalytics = true;
+            roles.add('VIEW_ANALYTICS');
           });
         }
         break;
@@ -698,6 +696,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
         {
           setState(() {
             _viewActivities = true;
+            roles.add('VIEW_ACTIVITIES');
           });
         }
         break;
@@ -706,6 +705,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
         {
           setState(() {
             _deactivateProduct = true;
+            roles.add('DEACTIVATE_PRODUCT');
           });
         }
         break;
@@ -714,6 +714,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
         {
           setState(() {
             _listProduct = true;
+            roles.add('LIST_PRODUCT');
           });
         }
         break;
@@ -722,6 +723,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
         {
           setState(() {
             _editProduct = true;
+            roles.add('EDIT_PRODUCT');
           });
         }
         break;
@@ -730,6 +732,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
         {
           setState(() {
             _addProduct = true;
+            roles.add('ADD_PRODUCT');
           });
         }
         break;
@@ -738,6 +741,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
         {
           setState(() {
             _editCategory = true;
+            roles.add('EDIT_CATEGORY');
           });
         }
         break;
@@ -746,6 +750,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
         {
           setState(() {
             _createCategory = true;
+            roles.add('CREATE_CATEGORY');
           });
         }
         break;
@@ -753,6 +758,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
         {
           setState(() {
             _createCategory = true;
+            roles.add('EDIT_SALE');
           });
         }
         break;
@@ -761,6 +767,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
         {
           setState(() {
             _createCategory = true;
+            roles.add('LIST_SALE');
           });
         }
         break;
@@ -769,6 +776,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
         {
           setState(() {
             _createSales = true;
+            roles.add('CREATE_SALE');
           });
         }
         break;
@@ -777,6 +785,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
         {
           setState(() {
             _deleteWorker = true;
+            roles.add('DELETE_WORKER');
           });
         }
         break;
@@ -785,6 +794,7 @@ class _EditWorkersPageState extends State<EditWorkersPage> {
         {
           setState(() {
             _listCategory = true;
+            roles.add('LIST_CATEGORY');
           });
         }
         break;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
+import 'package:stockfare_mobile/services/sales_services.dart';
 
 class CheckoutPage extends StatefulWidget {
   @override
@@ -8,10 +9,20 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
-  String dropdownValue = 'Cash';
+  SalesServices _salesServices = SalesServices();
+
+  String paymentMethod = 'Cash';
   int quantity = 0;
   bool newvalue = false;
   DateTime selectedDate = DateTime.now();
+  int tax = 0;
+  int customerChange = 0;
+  String customerName;
+  String customerMobile;
+  String customerEmail;
+  bool soldOnCredit;
+  String customerAddress;
+  int initialDeposit;
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -66,7 +77,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       width: 50,
                     ),
                     DropdownButton<String>(
-                      value: dropdownValue,
+                      value: paymentMethod,
                       iconSize: 24,
                       elevation: 16,
                       style: TextStyle(color: Colors.black),
@@ -76,7 +87,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                       onChanged: (String newValue) {
                         setState(() {
-                          dropdownValue = newValue;
+                          paymentMethod = newValue;
                         });
                       },
                       items: <String>[
@@ -101,12 +112,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       SizedBox(
                         width: 120,
                         child: TextFormField(
-                          // inputFormatters: [controller],
-                          // controller: textEditingController,
                           keyboardType: TextInputType.number,
-                          validator: (input) =>
-                              input.isEmpty ? "Enter Product Price" : null,
-                          onChanged: (val) => setState(() {}),
+                          onChanged: (val) => setState(() {
+                            tax = int.parse(val);
+                          }),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(12),
                             labelStyle: TextStyle(
@@ -140,9 +149,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         width: 120,
                         child: TextFormField(
                           keyboardType: TextInputType.number,
-                          validator: (input) =>
-                              input.isEmpty ? "Enter Quantity " : null,
-                          onChanged: (val) => setState(() {}),
+                          onChanged: (val) => setState(() {
+                            customerChange = int.parse(val);
+                          }),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(12),
                             labelStyle: TextStyle(
@@ -182,9 +191,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         padding: const EdgeInsets.only(left: 5, right: 40),
                         child: TextFormField(
                           keyboardType: TextInputType.text,
-                          validator: (input) =>
-                              input.isEmpty ? "Customer name" : null,
-                          onChanged: (val) => setState(() {}),
+                          onChanged: (val) => setState(() {
+                            customerName = val;
+                          }),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(12),
                             labelStyle: TextStyle(
@@ -222,9 +231,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         padding: const EdgeInsets.only(left: 5, right: 40),
                         child: TextFormField(
                           keyboardType: TextInputType.text,
-                          validator: (input) =>
-                              input.isEmpty ? "Customer phone" : null,
-                          onChanged: (val) => setState(() {}),
+                          onChanged: (val) => setState(() {
+                            customerMobile = val;
+                          }),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(12),
                             labelStyle: TextStyle(
@@ -241,6 +250,46 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             prefixIcon: Icon(Icons.phone_android,
                                 color: Theme.of(context).accentColor),
                             hintText: 'Customer phone',
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.2))),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.5))),
+                          ),
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5, right: 40),
+                        child: TextFormField(
+                          keyboardType: TextInputType.text,
+                          onChanged: (val) => setState(() {
+                            customerAddress = val;
+                          }),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(12),
+                            labelStyle: TextStyle(
+                                color: Theme.of(context).primaryColor),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.2))),
+                            hintStyle: TextStyle(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.7)),
+                            prefixIcon: Icon(Icons.phone_android,
+                                color: Theme.of(context).accentColor),
+                            hintText: 'Customer address',
                             enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Theme.of(context)
@@ -295,6 +344,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           style: TextStyle(color: Colors.black),
                         ),
                       ),
+                      SizedBox(height: 20),
                       CheckboxListTile(
                         activeColor: Theme.of(context).primaryColor,
                         title: Text('Sold on Credit',
@@ -311,7 +361,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       newvalue
                           ? _soldOnCredit(context)
                           : SizedBox(), // check of sold on credit is clicked
-                      SizedBox(height: 30),
+                      SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.only(right: 20),
                         child: Container(
@@ -380,7 +430,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 )),
                               ),
                             ),
-                            onTap: () {}),
+                            onTap: () {
+                              _salesServices.addSales(
+                                  addProduct.items,
+                                  customerName,
+                                  customerAddress,
+                                  customerMobile,
+                                  customerEmail,
+                                  addProduct.prices,
+                                  customerChange,
+                                  paymentMethod,
+                                  newvalue,
+                                  initialDeposit,
+                                  tax);
+                            }),
                       ),
                       SizedBox(
                         height: 50,

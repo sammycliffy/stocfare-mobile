@@ -64,4 +64,53 @@ class WorkersServices {
       return result['account'];
     }
   }
+
+  Future<dynamic> deleteWorker(String id) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    String branchId = sharedPreferences.getString('branchId');
+
+    String url =
+        'https://stockfare-io.herokuapp.com/api/v1/agents/delete-worker/$branchId/$id';
+    final request = http.Request("DELETE", Uri.parse(url));
+    request.headers.addAll(<String, String>{
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
+    request.body = jsonEncode(<String, dynamic>{'items': id});
+    final response = await request.send();
+    if (response.statusCode != 200)
+      // return Future.error("error: status code ${response.statusCode}");
+      print(response.reasonPhrase);
+
+    // return await response.stream.bytesToString();
+    return response.statusCode;
+  }
+
+  Future<dynamic> editWorkers(String id, String password, List roles) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    String branchId = sharedPreferences.getString('branchId');
+    print(id);
+    print(password);
+    print(roles);
+
+    final String url =
+        'https://stockfare-io.herokuapp.com/api/v1/agents/edit-worker/$branchId/$id/';
+    final http.Response response = await http.put(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body:
+            jsonEncode(<String, dynamic>{"role": roles, "password": password}));
+    if (response.statusCode == 201) {
+      return response.statusCode;
+    } else {
+      print(response.body);
+      return response.body;
+    }
+  }
 }

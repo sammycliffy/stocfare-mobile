@@ -13,6 +13,8 @@ class AddProductToCart with ChangeNotifier {
   List _items = [];
   List _countItem;
   String _productId;
+  int _index;
+  List _listOfQuantity = [];
 
   int get product => _product;
   int get price => _price;
@@ -25,7 +27,8 @@ class AddProductToCart with ChangeNotifier {
   int get quantity => _quantity;
   List get countItem => _countItem;
   int get prices => _prices;
-
+  int get index => _index;
+  List get listOfQuantity => _listOfQuantity;
   String get productId => _productId;
 
   void setProductValue(int value) {
@@ -79,6 +82,16 @@ class AddProductToCart with ChangeNotifier {
 
   void addPrice(int price) {
     _prices = price;
+    notifyListeners();
+  }
+
+  void setIndex(int index) {
+    _index = index;
+    notifyListeners();
+  }
+
+  void setListOfQuantity(List quantity) {
+    _listOfQuantity = quantity;
     notifyListeners();
   }
 }

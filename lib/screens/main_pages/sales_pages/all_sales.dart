@@ -24,7 +24,7 @@ class _AllSalesListState extends State<AllSalesList> {
   List quantitySold = [];
   List customer = [];
   dynamic selectedDate = DateTime.now();
-  bool loading = false;
+  bool filter = false;
 
   @override
   void initState() {
@@ -54,26 +54,37 @@ class _AllSalesListState extends State<AllSalesList> {
         initialDate: selectedDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate)
-      sortedList = _salesServices
-          .sortedDates((picked.toUtc().millisecondsSinceEpoch / 1000).round());
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        filter = true;
+        names.clear();
+        dateCreated.clear();
+        price.clear();
+        registeredBy.clear();
+        amountSold.clear();
 
-    print(sortedList.then((value) {
-      count = value.count;
-      print(value.results.map((data) {
-        registeredBy.add(data.saleRegisteredBy);
-        amountSold.add(data.amount);
-        customer.add(data.customer.name);
-        quantitySold.add(data.productDetail[0].quantityBought);
-        dateCreated.add(data.dateCreated);
-        return (data.productData.map((name) {
-          setState(() {
-            names.add(name.name);
-            price.add(name.productUnit.price);
-          });
+        customer.clear();
+
+        sortedList = _salesServices.sortedDates(
+            (picked.toUtc().millisecondsSinceEpoch / 1000).round());
+        print(sortedList.then((value) {
+          count = value.count;
+          print(value.results.map((data) {
+            registeredBy.add(data.saleRegisteredBy);
+            amountSold.add(data.amount);
+            customer.add(data.customer.name);
+            quantitySold.add(data.productDetail[0].quantityBought);
+            dateCreated.add(data.dateCreated);
+            return (data.productData.map((name) {
+              setState(() {
+                names.add(name.name);
+                price.add(name.productUnit.price);
+              });
+            }));
+          }));
         }));
-      }));
-    }));
+      });
+    }
   }
 
   @override
@@ -150,84 +161,214 @@ class _AllSalesListState extends State<AllSalesList> {
               },
             ),
             Expanded(
-              child: FutureBuilder<Welcome>(
-                  future: salesList,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                          padding: const EdgeInsets.all(8),
-                          itemCount: names.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return GestureDetector(
-                              child: Card(
-                                child: ListTile(
-                                  leading: Icon(Icons.card_giftcard,
-                                      color: Theme.of(context).primaryColor),
-                                  title: Text(
-                                    names[index],
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
+              child: filter
+                  ? FutureBuilder<Welcome>(
+                      future: sortedList,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          if (snapshot.data.count == 0) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    'No sales',
+                                    style: TextStyle(fontSize: 20),
                                   ),
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                ),
+                                MaterialButton(
+                                    child: Text(
+                                      'Go back',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    color: Colors.black,
+                                    onPressed: () {
+                                      setState(() {
+                                        filter = false;
+                                        print(salesList.then((value) {
+                                          count = value.count;
+                                          print(value.results.map((data) {
+                                            registeredBy
+                                                .add(data.saleRegisteredBy);
+                                            amountSold.add(data.amount);
+                                            customer.add(data.customer.name);
+                                            quantitySold.add(data
+                                                .productDetail[0]
+                                                .quantityBought);
+                                            dateCreated.add(data.dateCreated);
+                                            return (data.productData
+                                                .map((name) {
+                                              setState(() {
+                                                names.add(name.name);
+                                                price.add(
+                                                    name.productUnit.price);
+                                              });
+                                            }));
+                                          }));
+                                        }));
+                                      });
+                                    })
+                              ],
+                            );
+                          }
+                          return ListView.builder(
+                              padding: const EdgeInsets.all(8),
+                              itemCount: names.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return GestureDetector(
+                                  child: Card(
+                                    child: ListTile(
+                                      leading: Icon(Icons.card_giftcard,
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                      title: Text(
+                                        names[index],
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
+                                      ),
+                                      subtitle: Row(
                                         children: <Widget>[
-                                          Text(
-                                            'Sold By : ${registeredBy[index].toString()}',
-                                            style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'Sora'),
-                                          ),
-                                          SizedBox(height: 4),
-                                          Text(
-                                            'Customer :  ${customer[index].toString()}',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontFamily: 'FireSans'),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 6),
-                                            child: Text(
-                                              Jiffy(dateCreated[index]).format(
-                                                  "yyyy-MM-dd HH:mm:ss"),
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 10,
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                'Sold By : ${registeredBy[index].toString()}',
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontFamily: 'Sora'),
                                               ),
-                                            ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                'Customer :  ${customer[index].toString()}',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: 'FireSans'),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 6),
+                                                child: Text(
+                                                  Jiffy(dateCreated[index])
+                                                      .format(
+                                                          "yyyy-MM-dd HH:mm:ss"),
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                    ],
+                                      trailing: Icon(Icons.more_vert),
+                                      isThreeLine: true,
+                                    ),
                                   ),
-                                  trailing: Icon(Icons.more_vert),
-                                  isThreeLine: true,
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AllProductsList(
-                                            customerIndex: index)));
-                              },
-                            );
-                          });
-                    }
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AllProductsList(
+                                                    customerIndex: index)));
+                                  },
+                                );
+                              });
+                        }
 
-                    return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Center(child: CircularProgressIndicator()),
-                        ]);
-                  }),
+                        return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(child: CircularProgressIndicator()),
+                            ]);
+                      })
+                  : FutureBuilder<Welcome>(
+                      future: salesList,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                              padding: const EdgeInsets.all(8),
+                              itemCount: names.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return GestureDetector(
+                                  child: Card(
+                                    child: ListTile(
+                                      leading: Icon(Icons.card_giftcard,
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                      title: Text(
+                                        names[index],
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
+                                      ),
+                                      subtitle: Row(
+                                        children: <Widget>[
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                'Sold By : ${registeredBy[index].toString()}',
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontFamily: 'Sora'),
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                'Customer :  ${customer[index].toString()}',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: 'FireSans'),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 6),
+                                                child: Text(
+                                                  Jiffy(dateCreated[index])
+                                                      .format(
+                                                          "yyyy-MM-dd HH:mm:ss"),
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      trailing: Icon(Icons.more_vert),
+                                      isThreeLine: true,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AllProductsList(
+                                                    customerIndex: index)));
+                                  },
+                                );
+                              });
+                        }
+
+                        return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(child: CircularProgressIndicator()),
+                            ]);
+                      }),
             )
           ],
         ));

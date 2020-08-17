@@ -29,13 +29,12 @@ class _HomePageState extends State<HomePage> {
   List _objects = [];
   bool newvalue = false;
   List<Map<String, dynamic>> items = [];
-  List countItem = [];
   List _prices = [];
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.2;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     SignupNotifier _signupNotifier =
@@ -54,7 +53,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
         appBar: PreferredSize(
-            preferredSize: Size.fromHeight(100.0), // here the desired height
+            preferredSize: Size.fromHeight(120.0), // here the desired height
             child: MainAppBar.appBarFunction(context, 'Dashboard')),
         drawer: DrawerPage(),
         body: Column(
@@ -69,7 +68,7 @@ class _HomePageState extends State<HomePage> {
                     child: InkWell(
                       child: Container(
                         width: 120,
-                        height: 30,
+                        height: 35,
                         decoration: BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.circular(20)),
@@ -89,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                 GestureDetector(
                   child: Padding(
                     padding:
-                        const EdgeInsets.only(right: 10, top: 5, left: 120),
+                        const EdgeInsets.only(right: 10, top: 5, left: 170),
                     child: Stack(
                       children: [
                         Icon(Icons.shopping_cart,
@@ -104,8 +103,11 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.black),
                             child: Center(
                               child: Text(
-                                (_addProduct.product + _addProduct.quantity)
-                                    .toString(),
+                                _addProduct.listOfQuantity.isEmpty
+                                    ? '0'
+                                    : _addProduct.listOfQuantity
+                                        .reduce((a, b) => a + b)
+                                        .toString(),
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
@@ -121,6 +123,9 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ],
+            ),
+            SizedBox(
+              height: 20,
             ),
             StreamBuilder(
                 stream: firebaseDb.onValue,
@@ -158,84 +163,123 @@ class _HomePageState extends State<HomePage> {
                             crossAxisCount: 3),
                         itemBuilder: (BuildContext context, int index) {
                           return new Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(2.0),
                             child: GestureDetector(
                               child: Card(
-                                color: Colors.white,
+                                color: Colors.grey[100],
                                 child: Column(
                                   children: <Widget>[
-                                    SizedBox(
-                                      height: 15,
-                                    ),
                                     Image.network(
                                       _productImage[index],
-                                      width: 80,
-                                      height: 50,
-                                      fit: BoxFit.cover,
+                                      width: 150,
+                                      height: 60,
+                                      fit: BoxFit.fitWidth,
                                     ),
-                                    Text(
-                                      _categories[index],
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color:
-                                              Theme.of(context).primaryColor),
+                                    Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  width: 2,
+                                                  color: Colors.grey[200]))),
+                                      child: Center(
+                                        child: Text(
+                                          _categories[index],
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        ),
+                                      ),
                                     ),
-                                    Row(
+                                    Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  width: 2,
+                                                  color: Colors.grey[200]))),
+                                      child: Center(
+                                        child: Text(
+                                          '${_productQuantity[index]} Units ',
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  width: 2,
+                                                  color: Colors.grey[200]))),
+                                      child: Center(
+                                        child: Text(
+                                            '${_packQuantity[index]} pack',
+                                            style: TextStyle(fontSize: 12)),
+                                      ),
+                                    ),
+                                    Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: <Widget>[
-                                        Text(
-                                          '${_productQuantity[index]} Units | ${_packQuantity[index]} pack ',
-                                          style: TextStyle(fontSize: 12),
-                                        )
+                                        Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width: 2,
+                                                      color:
+                                                          Colors.grey[200]))),
+                                          child: Center(
+                                            child: Text(
+                                              '${_productPrice[index]}/Units',
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width: 2,
+                                                      color:
+                                                          Colors.grey[200]))),
+                                          child: Center(
+                                            child: Text(
+                                              '${_productPackPrice[index]}/Pack',
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                          ),
+                                        ),
                                       ],
-                                    ),
-                                    Container(
-                                      color: Colors.grey[100],
-                                      width: double.infinity,
-                                      height: 44,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            '${_productPrice[index]}/Units',
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          Text(
-                                            '${_productPackPrice[index]}/Pack',
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
                                     ),
                                   ],
                                 ),
                               ),
                               onTap: () {
                                 if (_productPackPrice[index] == 0) {
-                                  setState(() {
-                                    _addProduct.increment();
-                                    countItem.add(_productId[index]);
-                                    _prices.add(_productPrice[index]);
-                                  });
-                                  // _check(
-                                  //     _productId[index],
-                                  //     _productPrice[index],
-                                  //     _productName[index]);
-                                  // print(countItem);
-                                  // print(items);
-                                  // print(_prices);
-                                  // _addProduct.addItems(items, countItem);
-                                } else {
-                                  //send pack to the dialog page
                                   _addProduct.addToCart(
                                       _productId[index],
-                                      _productName[index],
-                                      int.parse(_productPrice[index]),
+                                      _categories[index].toString(),
                                       int.parse(
-                                        _productPackPrice[index],
+                                          _productPrice[index].toString()),
+                                      int.parse(
+                                        _productPackPrice[index].toString(),
+                                      ),
+                                      items);
+                                  DialogBoxes().unitProduct(context);
+                                } else {
+                                  // send pack to the dialog page
+                                  _addProduct.addToCart(
+                                      _productId[index],
+                                      _categories[index].toString(),
+                                      int.parse(
+                                          _productPrice[index].toString()),
+                                      int.parse(
+                                        _productPackPrice[index].toString(),
                                       ),
                                       items);
                                   DialogBoxes().packProduct(context);
@@ -252,56 +296,5 @@ class _HomePageState extends State<HomePage> {
                 })
           ],
         ));
-  }
-
-  _check(_productIndex, _productPrice, _productName) {
-    print(_productIndex + 'this is the index');
-    var map = Map();
-    countItem.forEach((element) {
-      if (!map.containsKey(element)) {
-        map[element] = 1;
-      } else {
-        map[element] += 1;
-      }
-    });
-
-    dynamic count = map[_productIndex];
-    //first check if items list is empty
-    if (items.length == 0) {
-      items.add({
-        '\'totalQuantity\'': count,
-        '\'type\'': '\'unit\'',
-        '\'id\'': '\'$_productIndex\'',
-        '\'price\'': int.parse(_productPrice),
-        '\'name\'': '\'$_productName\'',
-      });
-    } else {
-      //check if the item list contains an already existing value then update
-      for (var map in items) {
-        print(countItem.indexOf(_productIndex));
-
-        if (map['\'id\''] == '\'$_productIndex\'') {
-          var toRemove = countItem.indexOf(_productIndex);
-          items.removeAt(toRemove);
-          items.add({
-            '\'totalQuantity\'': count,
-            '\'type\'': '\'unit\'',
-            '\'id\'': '\'$_productIndex\'',
-            '\'price\'': count * int.parse(_productPrice),
-            '\'name\'': '\'$_productName\'',
-          });
-        } else {
-          items.add({
-            '\'totalQuantity\'': count,
-            '\'type\'': '\'unit\'',
-            '\'id\'': '\'$_productIndex\'',
-            '\'price\'': int.parse(_productPrice),
-            '\'name\'': '\'$_productName\'',
-          });
-        }
-
-        break;
-      }
-    }
   }
 }

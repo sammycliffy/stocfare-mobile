@@ -40,140 +40,120 @@ class _AddCartState extends State<AddCart> {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.2;
     final double itemWidth = size.width / 2;
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-          appBar: AppBar(
-              automaticallyImplyLeading: false,
-              title: Text('Cart'),
-              actions: [
-                GestureDetector(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 100),
-                    child: Row(
-                      children: <Widget>[Icon(Icons.add), Text('Add Product')],
+    return Scaffold(
+        appBar: AppBar(
+          // automaticallyImplyLeading: false,
+          title: Text('Cart'),
+        ),
+        body: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text(
+                      '${_items.length} Products',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BottomNavigationPage()));
-                    _clear();
-                  },
-                )
-              ]),
-          body: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        '${_items.length} Products',
+                    Text(
+                        _prices.isEmpty
+                            ? '0'
+                            : _prices
+                                .reduce((a, b) => a + b)
+                                .toString(), //add the prices in the _prices list
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                          _prices.isEmpty
-                              ? '0'
-                              : _prices
-                                  .reduce((a, b) => a + b)
-                                  .toString(), //add the prices in the _prices list
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColor))
-                    ],
-                  ),
-                  RaisedButton(
-                      onPressed: () {
-                        setState(() {
-                          _clear();
-                        });
-                      },
-                      child: Text('Empty'))
-                ],
-              ),
-              Expanded(
-                child: GridView.builder(
-                    itemCount: _items.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: (itemWidth / itemHeight),
-                        crossAxisCount: 3),
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          child: Card(
-                            color: Colors.grey[100],
-                            child: Column(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Text(
-                                  _names[index].toString().substring(
-                                      1, _names[index].toString().length - 1),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                Text(
-                                  _quantity[index].toString() +
-                                      ' ' +
-                                      _type[index].toString().substring(1,
-                                          _type[index].toString().length - 1),
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 18),
-                                ),
-                                Text(
-                                  _prices[index].toString(),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                IconButton(
-                                    icon: Icon(Icons.delete,
-                                        color: Theme.of(context).primaryColor),
-                                    onPressed: () {
-                                      setState(() {
-                                        _clearIndex(index);
-                                      });
-                                    })
-                              ],
-                            ),
-                          ),
-                          onTap: () {},
-                        ),
-                      );
-                    }),
-              ),
-              RaisedButton(
-                color: Colors.black,
-                onPressed: () {
-                  _addProduct.addPrice(_prices.reduce((a, b) => a + b));
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CheckoutPage()));
-                },
-                child: Text(
-                  'Check out',
-                  style: TextStyle(color: Colors.white),
+                            fontSize: 16,
+                            color: Theme.of(context).primaryColor))
+                  ],
                 ),
+                RaisedButton(
+                    onPressed: () {
+                      setState(() {
+                        _clear();
+                      });
+                    },
+                    child: Text('Empty'))
+              ],
+            ),
+            Expanded(
+              child: GridView.builder(
+                  itemCount: _items.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: (itemWidth / itemHeight),
+                      crossAxisCount: 3),
+                  itemBuilder: (BuildContext context, int index) {
+                    return new Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        child: Card(
+                          color: Colors.grey[100],
+                          child: Column(
+                            children: <Widget>[
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Text(
+                                _names[index].toString().substring(
+                                    1, _names[index].toString().length - 1),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Text(
+                                _quantity[index].toString() +
+                                    ' ' +
+                                    _type[index].toString().substring(
+                                        1, _type[index].toString().length - 1),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 18),
+                              ),
+                              Text(
+                                _prices[index].toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600, fontSize: 16),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              IconButton(
+                                  icon: Icon(Icons.delete,
+                                      color: Theme.of(context).primaryColor),
+                                  onPressed: () {
+                                    setState(() {
+                                      _clearIndex(index);
+                                    });
+                                  })
+                            ],
+                          ),
+                        ),
+                        onTap: () {},
+                      ),
+                    );
+                  }),
+            ),
+            RaisedButton(
+              color: Colors.black,
+              onPressed: () {
+                _addProduct.addPrice(_prices.reduce((a, b) => a + b));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CheckoutPage()));
+              },
+              child: Text(
+                'Check out',
+                style: TextStyle(color: Colors.white),
               ),
-              SizedBox(
-                height: 30,
-              )
-            ],
-          )),
-    );
+            ),
+            SizedBox(
+              height: 30,
+            )
+          ],
+        ));
   }
 
   _clear() {
@@ -190,8 +170,8 @@ class _AddCartState extends State<AddCart> {
   }
 
   _clearIndex(int index) {
-    _addProduct.countItem.clear();
     _addProduct.items.removeAt(index);
+    _addProduct.listOfQuantity.clear();
     _names.removeAt(index);
     _prices.removeAt(index);
     _quantity.removeAt(index);

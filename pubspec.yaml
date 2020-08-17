@@ -44,7 +44,7 @@ dependencies:
   firebase_messaging: ^6.0.16
   flutter_local_notifications: ^1.4.4+2
   path_provider: ^1.6.11
-
+  flutter_paystack: ^1.0.3+1
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -48,21 +48,22 @@ class SalesServices {
   }
 
   Future<Welcome> addSales(
-      List<String> products,
+      List products,
       String customerName,
       String customerAddress,
       String customerMobile,
       String customerEmail,
-      double productAmount,
-      double customerChange,
+      int productAmount,
+      int customerChange,
       String paymentMethod,
       bool soldOnCredit,
-      double amountPaid) async {
+      int amountPaid,
+      int tax) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
     final String url =
-        'http://stockfare-io.herokuapp.com/api/v1/sales/create-sale/8e044e8c-263b-40f7-afb7-601154b59601/';
+        'http://stockfare-io.herokuapp.com/api/v1/sales/create-sale/$branchId/';
     final http.Response response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -70,20 +71,20 @@ class SalesServices {
           'Authorization': 'Bearer $token',
         },
         body: json.encode(<String, dynamic>{
-          "products": [],
+          "products": products,
           "customer": {
-            "name": "",
-            "address": "",
-            "mobile": "",
-            "email": "",
+            "name": customerName,
+            "address": customerAddress,
+            "mobile": customerMobile,
+            "email": customerEmail,
             "updated_at": null
           },
-          "amount": null,
-          "change": null,
-          "payment_method": "",
-          "sold_on_credit": false,
-          "tax": null,
-          "amount_paid": null,
+          "amount": productAmount,
+          "change": customerChange,
+          "payment_method": paymentMethod,
+          "sold_on_credit": soldOnCredit,
+          "tax": tax,
+          "amount_paid": amountPaid,
           "ref_code": ""
         }));
     if (response.statusCode == 200) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/activities_pages.dart';
@@ -25,14 +24,17 @@ class MainAppBar {
                       color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.bold),
                 ),
+                SizedBox(
+                  height: 10,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(
                     left: 10,
                     bottom: 10,
                   ),
                   child: Container(
-                    height: 40,
-                    width: 270,
+                    height: 50,
+                    width: 320,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
                       color: Colors.grey[200],
@@ -46,7 +48,7 @@ class MainAppBar {
                         onPressed: () {},
                       ),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.fromLTRB(25, 8, 0, 5),
+                      contentPadding: EdgeInsets.fromLTRB(25, 10, 0, 5),
                       hintText: 'Search Stockfare',
                     )),
                   ),
@@ -58,28 +60,10 @@ class MainAppBar {
             children: <Widget>[
               GestureDetector(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 40, left: 20),
+                  padding: const EdgeInsets.only(top: 40, left: 10),
                   child: Stack(
                     children: [
                       Icon(Icons.notifications, size: 30, color: Colors.black),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10, left: 20),
-                        child: Container(
-                          width: 20,
-                          height: 20,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.white),
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Text(
-                              '12',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                          ),
-                        ),
-                      )
                     ],
                   ),
                 ),
