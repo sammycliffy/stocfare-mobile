@@ -55,6 +55,8 @@ class AuthServices {
       sharedPreferences.setString("branchId", user.branchId);
       sharedPreferences.setString("body", response.body);
       sharedPreferences.setString('user_id', user.user_id);
+      sharedPreferences.setString('subscription_plan',
+          responseJson['business'][0]['branch'][0]['subscription_plan']);
 
       print(user.branchId);
       return user;
@@ -89,7 +91,9 @@ class AuthServices {
       sharedPreferences.setString("body", response.body);
       sharedPreferences.setString("firebaseId", user.firebaseId);
       sharedPreferences.setString('user_id', user.userId.toString());
-      print(user.firebaseId);
+      sharedPreferences.setString('subscription_plan',
+          responseJson['business'][0]['branch'][0]['subscription_plan']);
+
       return user;
     } else if (response.statusCode == 400) {
       print(response.body);

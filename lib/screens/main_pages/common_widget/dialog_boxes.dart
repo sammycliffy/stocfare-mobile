@@ -93,6 +93,8 @@ class DialogBoxes {
 
   promoCode(context) {
     String _promoCode;
+    String _result = '';
+    bool _error = false;
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -106,6 +108,12 @@ class DialogBoxes {
                   Text(
                     'APPLY A PROMO CODE',
                     style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                  Text(
+                    _result,
+                    style: TextStyle(
+                        color: _error ? Colors.red : Colors.green,
+                        fontSize: 16),
                   ),
                   SizedBox(
                     height: 15,
@@ -144,7 +152,18 @@ class DialogBoxes {
                   ),
                   RaisedButton(
                       onPressed: () {
-                        _paymentServices.promoCode(_promoCode);
+                        _paymentServices.promoCode(_promoCode).then((value) {
+                          if (value == true) {
+                            setState(() {
+                              _result = 'Success!';
+                            });
+                          } else {
+                            setState(() {
+                              _error = true;
+                              _result = 'Invalid Promo code';
+                            });
+                          }
+                        });
                       },
                       color: Colors.black,
                       child: Text(

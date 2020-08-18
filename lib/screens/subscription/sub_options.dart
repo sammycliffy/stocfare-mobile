@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
+import 'package:stockfare_mobile/services/payment_services.dart';
 
 class SubOptions extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class SubOptions extends StatefulWidget {
 
 class _SubOptionsState extends State<SubOptions> {
   var publicKey = 'pk_test_06b100bc626ea6bae0400111f8c7cbe604c93688';
+  PaymentServices _paymentServices = PaymentServices();
   @override
   void initState() {
     super.initState();
@@ -318,7 +320,13 @@ class _SubOptionsState extends State<SubOptions> {
       charge: charge,
     );
     if (response.status == true) {
-      return response.reference;
+      DialogBoxes().loading(context);
+      _paymentServices.sendPaymentToServer().then((value) {
+        if (value == true) {
+          Navigator.pop(context);
+          DialogBoxes().success(context);
+        }
+      });
     } else {
       return false;
     }
