@@ -137,169 +137,184 @@ class _HomePageState extends State<HomePage> {
                   stream: firebaseDb.onValue,
                   builder: (context, AsyncSnapshot<Event> snapshot) {
                     if (snapshot.hasData) {
-                      _categories.clear();
-                      _productName.clear();
-                      DataSnapshot dataValues = snapshot.data.snapshot;
-                      Map<dynamic, dynamic> values =
-                          dataValues.value['${_signupNotifier.firebaseId}'];
-                      values.forEach((key, values) {
-                        print(values['products']?.map((value) {
-                              _categories.add(value['name']);
-                              _productId.add(value['id']);
-                              print(value['product_image'].map((value) {
-                                _productImage.add(value['image_link']);
-                              }));
+                      if (snapshot.data.snapshot.value != null) {
+                        _categories.clear();
+                        _productName.clear();
+                        DataSnapshot dataValues = snapshot.data.snapshot;
+                        if (dataValues.value == Null) {
+                          return Center(
+                            child: Text('No Data Found'),
+                          );
+                        }
 
-                              _productQuantity
-                                  .add(value['product_unit']['quantity']);
-                              _packQuantity
-                                  .add(value['product_pack']['quantity']);
-                              _productPrice.add(value['product_unit']['price']);
-                              _productPackPrice
-                                  .add(value['product_pack']['price']);
-                            }) ??
-                            '[]');
-                      });
+                        Map<dynamic, dynamic> values =
+                            dataValues.value['${_signupNotifier.firebaseId}'];
+                        values.forEach((key, values) {
+                          print(values['products']?.map((value) {
+                                _categories.add(value['name']);
+                                _productId.add(value['id']);
+                                print(value['product_image'].map((value) {
+                                  _productImage.add(value['image_link']);
+                                }));
 
-                      return Expanded(
-                        child: GridView.builder(
-                          itemCount: _categories.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: (itemWidth / itemHeight),
-                                  crossAxisCount: 3),
-                          itemBuilder: (BuildContext context, int index) {
-                            return new Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: GestureDetector(
-                                child: Card(
-                                  color: Colors.grey[100],
-                                  child: Column(
-                                    children: <Widget>[
-                                      Image.network(
-                                        _productImage[index],
-                                        width: 150,
-                                        height: 60,
-                                        fit: BoxFit.fitWidth,
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                                bottom: BorderSide(
-                                                    width: 2,
-                                                    color: Colors.grey[200]))),
-                                        child: Center(
-                                          child: Text(
-                                            _categories[index],
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                          ),
+                                _productQuantity
+                                    .add(value['product_unit']['quantity']);
+                                _packQuantity
+                                    .add(value['product_pack']['quantity']);
+                                _productPrice
+                                    .add(value['product_unit']['price']);
+                                _productPackPrice
+                                    .add(value['product_pack']['price']);
+                              }) ??
+                              '[]');
+                        });
+
+                        return Expanded(
+                          child: GridView.builder(
+                            itemCount: _categories.length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    childAspectRatio: (itemWidth / itemHeight),
+                                    crossAxisCount: 3),
+                            itemBuilder: (BuildContext context, int index) {
+                              return new Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: GestureDetector(
+                                  child: Card(
+                                    color: Colors.grey[100],
+                                    child: Column(
+                                      children: <Widget>[
+                                        Image.network(
+                                          _productImage[index],
+                                          width: 150,
+                                          height: 60,
+                                          fit: BoxFit.fitWidth,
                                         ),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                                bottom: BorderSide(
-                                                    width: 2,
-                                                    color: Colors.grey[200]))),
-                                        child: Center(
-                                          child: Text(
-                                            '${_productQuantity[index]} Units ',
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                                bottom: BorderSide(
-                                                    width: 2,
-                                                    color: Colors.grey[200]))),
-                                        child: Center(
-                                          child: Text(
-                                              '${_packQuantity[index]} pack',
-                                              style: TextStyle(fontSize: 12)),
-                                        ),
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                                border: Border(
-                                                    bottom: BorderSide(
-                                                        width: 2,
-                                                        color:
-                                                            Colors.grey[200]))),
-                                            child: Center(
-                                              child: Text(
-                                                '${_productPrice[index]}/Units',
-                                                style: TextStyle(fontSize: 12),
-                                              ),
+                                        Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width: 2,
+                                                      color:
+                                                          Colors.grey[200]))),
+                                          child: Center(
+                                            child: Text(
+                                              _categories[index],
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
                                             ),
                                           ),
-                                          Container(
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                                border: Border(
-                                                    bottom: BorderSide(
-                                                        width: 2,
-                                                        color:
-                                                            Colors.grey[200]))),
-                                            child: Center(
-                                              child: Text(
-                                                '${_productPackPrice[index]}/Pack',
-                                                style: TextStyle(fontSize: 12),
-                                              ),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width: 2,
+                                                      color:
+                                                          Colors.grey[200]))),
+                                          child: Center(
+                                            child: Text(
+                                              '${_productQuantity[index]} Units ',
+                                              style: TextStyle(fontSize: 12),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ],
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width: 2,
+                                                      color:
+                                                          Colors.grey[200]))),
+                                          child: Center(
+                                            child: Text(
+                                                '${_packQuantity[index]} pack',
+                                                style: TextStyle(fontSize: 12)),
+                                          ),
+                                        ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Container(
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                  border: Border(
+                                                      bottom: BorderSide(
+                                                          width: 2,
+                                                          color: Colors
+                                                              .grey[200]))),
+                                              child: Center(
+                                                child: Text(
+                                                  '${_productPrice[index]}/Units',
+                                                  style:
+                                                      TextStyle(fontSize: 12),
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                  border: Border(
+                                                      bottom: BorderSide(
+                                                          width: 2,
+                                                          color: Colors
+                                                              .grey[200]))),
+                                              child: Center(
+                                                child: Text(
+                                                  '${_productPackPrice[index]}/Pack',
+                                                  style:
+                                                      TextStyle(fontSize: 12),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
+                                  onTap: () {
+                                    if (_productPackPrice[index] == 0) {
+                                      _addProduct.addToCart(
+                                          _productId[index],
+                                          _categories[index].toString(),
+                                          int.parse(
+                                              _productPrice[index].toString()),
+                                          int.parse(
+                                            _productPackPrice[index].toString(),
+                                          ),
+                                          items);
+                                      DialogBoxes().unitProduct(context);
+                                    } else {
+                                      // send pack to the dialog page
+                                      _addProduct.addToCart(
+                                          _productId[index],
+                                          _categories[index].toString(),
+                                          int.parse(
+                                              _productPrice[index].toString()),
+                                          int.parse(
+                                            _productPackPrice[index].toString(),
+                                          ),
+                                          items);
+                                      DialogBoxes().packProduct(context);
+                                    }
+                                  },
                                 ),
-                                onTap: () {
-                                  if (_productPackPrice[index] == 0) {
-                                    _addProduct.addToCart(
-                                        _productId[index],
-                                        _categories[index].toString(),
-                                        int.parse(
-                                            _productPrice[index].toString()),
-                                        int.parse(
-                                          _productPackPrice[index].toString(),
-                                        ),
-                                        items);
-                                    DialogBoxes().unitProduct(context);
-                                  } else {
-                                    // send pack to the dialog page
-                                    _addProduct.addToCart(
-                                        _productId[index],
-                                        _categories[index].toString(),
-                                        int.parse(
-                                            _productPrice[index].toString()),
-                                        int.parse(
-                                          _productPackPrice[index].toString(),
-                                        ),
-                                        items);
-                                    DialogBoxes().packProduct(context);
-                                  }
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      );
+                              );
+                            },
+                          ),
+                        );
+                      }
+                      return Center(child: Text('No data'));
+                    } else {
+                      return Center(child: CircularProgressIndicator());
                     }
-                    return Text(
-                        'You don\'t have any product yet. \n Go to the product page to add');
                   })
             ],
           )),
