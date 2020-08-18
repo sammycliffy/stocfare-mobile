@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:stockfare_mobile/models/workers_models.dart';
@@ -65,28 +64,43 @@ class WorkersServices {
     }
   }
 
-  Future<dynamic> deleteWorker(String id) async {
+  Future<http.Response> deleteWorker(String id) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
     String branchId = sharedPreferences.getString('branchId');
+    final http.Response response = await http.delete(
+      'https://stockfare-io.herokuapp.com/api/v1/agents/delete-worker/$branchId/$id',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token',
+      },
+    );
 
-    String url =
-        'https://stockfare-io.herokuapp.com/api/v1/agents/delete-worker/$branchId/$id';
-    final request = http.Request("DELETE", Uri.parse(url));
-    request.headers.addAll(<String, String>{
-      "Accept": "application/json",
-      'Authorization': 'Bearer $token',
-      'Content-Type': 'application/json; charset=UTF-8',
-    });
-    request.body = jsonEncode(<String, dynamic>{'items': id});
-    final response = await request.send();
-    if (response.statusCode != 200)
-      // return Future.error("error: status code ${response.statusCode}");
-      print(response.reasonPhrase);
-
-    // return await response.stream.bytesToString();
-    return response.statusCode;
+    return response;
   }
+
+  // Future<dynamic> deleteWorker(String id) async {
+  //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  //   String token = sharedPreferences.getString('token');
+  //   String branchId = sharedPreferences.getString('branchId');
+  //   print(id);
+  //   String url =
+  //       'https://stockfare-io.herokuapp.com/api/v1/agents/delete-worker/$branchId/$id';
+  //   final request = http.Request("DELETE", Uri.parse(url));
+  //   request.headers.addAll(<String, String>{
+  //     "Accept": "application/json",
+  //     'Authorization': 'Bearer $token',
+  //     'Content-Type': 'application/json; charset=UTF-8',
+  //   });
+  //   request.body = jsonEncode(<String, dynamic>{'items': id});
+  //   final response = await request.send();
+  //   if (response.statusCode != 200)
+  //     // return Future.error("error: status code ${response.statusCode}");
+  //     print(response.reasonPhrase);
+
+  //   return await response.stream.bytesToString();
+  // }
 
   Future<dynamic> editWorkers(String id, String password, List roles) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

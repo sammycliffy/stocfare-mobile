@@ -97,9 +97,10 @@ class AuthServices {
     }
   }
 
-  Future<dynamic> forgotPassword(String phone) async {
+  Future<dynamic> forgotPassword(String data) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
+
     final String url =
         'http://stockfare-io.herokuapp.com/api/v1/users/forgot-password/';
     final http.Response response = await http.post(url,
@@ -109,10 +110,13 @@ class AuthServices {
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(<String, String>{
-          "data": phone,
+          "data": data,
         }));
     if (response.statusCode == 200) {
       var responseJson = json.decode(response.body);
+      sharedPreferences.setString('queryToken', responseJson['token']);
+      sharedPreferences.setString('email', responseJson['email']);
+
       print(responseJson);
       return true;
     } else {
@@ -145,6 +149,34 @@ class AuthServices {
       print(response.body);
       print(response.statusCode);
       return response.body;
+    }
+  }
+
+  Future<dynamic> verifyPasswordCode(String code, String password) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    String queryToken = sharedPreferences.getString('queryToken');
+    String queryEmail = sharedPreferences.getString('email');
+    print(code);
+    var queryParameters = {
+      'token': queryToken,
+      'email': queryEmail,
+    };
+    var uri = Uri.https('stockfare-io.herokuapp.com',
+        '/api/v1/users/verify-code/', queryParameters);
+    final http.Response response = await http.post(uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, String>{"code": code, "password": password}));
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print(response.body);
+      print(response.statusCode);
+      return json.decode(response.body)['message'];
     }
   }
 

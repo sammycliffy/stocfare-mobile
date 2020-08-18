@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/screens/auth_pages/new_password.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
+import 'package:stockfare_mobile/services/auth_services.dart';
 
 class ForgotPassword extends StatefulWidget {
   @override
-  _ForgotPassword createState() => _ForgotPassword();
+  _ForgotPasswordState createState() => _ForgotPasswordState();
 }
 
-class _ForgotPassword extends State<ForgotPassword> {
-  final _formKey = GlobalKey<FormState>();
-  String password;
-  String code;
+class _ForgotPasswordState extends State<ForgotPassword> {
+  String data;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _error;
+  AuthServices _authServices = AuthServices();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: SafeArea(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        key: _scaffoldKey,
+        body: SafeArea(
+          child: Column(children: [
             SizedBox(
               height: 20,
             ),
@@ -27,8 +28,7 @@ class _ForgotPassword extends State<ForgotPassword> {
             SizedBox(
               height: 30,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 40),
+            Center(
               child: Text(
                 'Forgot Password',
                 style: TextStyle(
@@ -37,198 +37,93 @@ class _ForgotPassword extends State<ForgotPassword> {
                     color: Colors.red),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 40),
-              child: Text('Enter the 6 digit that was sent to your phone',
-                  style: TextStyle(
-                    fontSize: 14,
-                  )),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40, right: 40),
-                    child: TextFormField(
-                      obscureText: true,
-                      keyboardType: TextInputType.text,
-                      validator: (input) => input.isEmpty
-                          ? "Enter 6 digits that was sent to your number"
-                          : null,
-                      onChanged: (val) => setState(() {
-                        password = val;
-                      }),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(12),
-                        labelStyle:
-                            TextStyle(color: Theme.of(context).primaryColor),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .focusColor
-                                    .withOpacity(0.2))),
-                        hintStyle: TextStyle(
-                            color:
-                                Theme.of(context).focusColor.withOpacity(0.7)),
-                        prefixIcon: Icon(Icons.phone_android,
-                            color: Theme.of(context).accentColor),
-                        hintText: 'Enter 6 digits that was sent to your number',
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .focusColor
-                                    .withOpacity(0.2))),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .focusColor
-                                    .withOpacity(0.5))),
-                      ),
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40, right: 40),
-                    child: TextFormField(
-                      obscureText: true,
-                      keyboardType: TextInputType.text,
-                      validator: (input) =>
-                          input.isEmpty ? "Enter new password" : null,
-                      onChanged: (val) => setState(() {
-                        password = val;
-                      }),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(12),
-                        labelStyle:
-                            TextStyle(color: Theme.of(context).primaryColor),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .focusColor
-                                    .withOpacity(0.2))),
-                        hintStyle: TextStyle(
-                            color:
-                                Theme.of(context).focusColor.withOpacity(0.7)),
-                        prefixIcon: Icon(Icons.lock_open,
-                            color: Theme.of(context).accentColor),
-                        hintText: 'Confirm password',
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .focusColor
-                                    .withOpacity(0.2))),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .focusColor
-                                    .withOpacity(0.5))),
-                      ),
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40, right: 40),
-                    child: TextFormField(
-                      obscureText: true,
-                      keyboardType: TextInputType.text,
-                      validator: (input) =>
-                          input.isEmpty ? "Enter your password" : null,
-                      onChanged: (val) => setState(() {
-                        password = val;
-                      }),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(12),
-                        labelStyle:
-                            TextStyle(color: Theme.of(context).primaryColor),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .focusColor
-                                    .withOpacity(0.2))),
-                        hintStyle: TextStyle(
-                            color:
-                                Theme.of(context).focusColor.withOpacity(0.7)),
-                        prefixIcon: Icon(Icons.lock_open,
-                            color: Theme.of(context).accentColor),
-                        hintText: 'Enter password',
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .focusColor
-                                    .withOpacity(0.2))),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .focusColor
-                                    .withOpacity(0.5))),
-                      ),
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                    height: 60,
-                  ),
-                  GestureDetector(
-                      child: Center(
-                        child: Container(
-                          height: 40,
-                          width: 200,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.red, width: 3),
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Center(
-                              child: Text(
-                            'Update',
-                            style: TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.bold),
-                          )),
-                        ),
-                      ),
-                      onTap: () {}),
-                  SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Back to',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      InkWell(
-                        child: Text(
-                          'Login',
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  )
-                ],
+            Center(
+                child: Text(
+              'Let\'s help you recover your account',
+              style: TextStyle(
+                fontSize: 17,
               ),
-            )
-          ],
-        )),
-      ),
-    );
+            )),
+            SizedBox(
+              height: 50,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 40, right: 40),
+              child: TextFormField(
+                keyboardType: TextInputType.text,
+                validator: (input) =>
+                    input.isEmpty ? "Enter your password" : null,
+                onChanged: (val) => setState(() {
+                  data = val;
+                }),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(12),
+                  labelStyle: TextStyle(color: Theme.of(context).primaryColor),
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color:
+                              Theme.of(context).focusColor.withOpacity(0.2))),
+                  hintStyle: TextStyle(
+                      color: Theme.of(context).focusColor.withOpacity(0.7)),
+                  hintText: 'Phone Number or Email',
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color:
+                              Theme.of(context).focusColor.withOpacity(0.2))),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color:
+                              Theme.of(context).focusColor.withOpacity(0.5))),
+                ),
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            SizedBox(height: 30),
+            GestureDetector(
+                child: Center(
+                  child: Container(
+                    height: 40,
+                    width: 200,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Center(
+                        child: Text(
+                      'Send Code',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    )),
+                  ),
+                ),
+                onTap: () {
+                  DialogBoxes().loading(context);
+                  _authServices.forgotPassword(data).then((value) {
+                    if (value == false) {
+                      Navigator.pop(context);
+                      setState(() {
+                        _error =
+                            'Phone number or Email does not belong to any account';
+                        _displaySnackBar(context);
+                      });
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NewPassword()));
+                    }
+                  });
+                }),
+          ]),
+        ));
+  }
+
+  _displaySnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Text(
+          _error,
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 }

@@ -1,17 +1,14 @@
 import 'dart:io';
-
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
-import 'package:stockfare_mobile/screens/auth_pages/registration_success.dart';
+import 'package:stockfare_mobile/screens/auth_pages/forgot_password.dart';
 import 'package:stockfare_mobile/screens/auth_pages/signup.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/loader.dart';
 import 'package:stockfare_mobile/services/auth_services.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 import 'package:stockfare_mobile/services/sales_services.dart';
-import 'forgot_password.dart';
 
 class Login extends StatefulWidget {
   @override

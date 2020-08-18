@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:stockfare_mobile/screens/drawer_pages/feedback.dart';
+import 'package:stockfare_mobile/screens/drawer_pages/help.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/logout.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/settings/settings_home.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/workers/list_of_workers.dart';
@@ -50,7 +51,10 @@ class DrawerPage extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.help),
             title: Text('Help'),
-            onTap: () => {},
+            onTap: () => {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => HelpPage()))
+            },
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),

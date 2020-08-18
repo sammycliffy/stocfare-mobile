@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
+
+import 'package:stockfare_mobile/screens/subscription/sub_options.dart';
 
 class SubscriptionPage extends StatefulWidget {
   @override
@@ -7,25 +8,11 @@ class SubscriptionPage extends StatefulWidget {
 }
 
 class _SubscriptionPageState extends State<SubscriptionPage> {
-  var publicKey = 'pk_test_06b100bc626ea6bae0400111f8c7cbe604c93688';
-
-  @override
-  void initState() {
-    super.initState();
-    PaystackPlugin.initialize(publicKey: publicKey);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text('Subscription'),
-          actions: <Widget>[
-            RaisedButton(
-              onPressed: () {},
-              child: Text('Use promo code'),
-            )
-          ],
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -86,42 +73,49 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                 SizedBox(
                   width: 10,
                 ),
-                Card(
-                    color: Colors.black,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          width: 150,
-                          height: 70,
-                          child: Center(
-                            child: Text(
-                              'PREMIUM PLAN',
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
+                GestureDetector(
+                  child: Card(
+                      color: Colors.black,
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            width: 150,
+                            height: 70,
+                            child: Center(
+                              child: Text(
+                                'PREMIUM PLAN',
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.white),
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          color: Colors.white,
-                          width: 150,
-                          height: 70,
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                'Price',
-                                style:
-                                    TextStyle(fontSize: 16, color: Colors.grey),
-                              ),
-                              Text(
-                                'NGN 2,500',
-                                style: TextStyle(
-                                    fontSize: 20, color: Colors.black),
-                              )
-                            ],
+                          Container(
+                            color: Colors.white,
+                            width: 150,
+                            height: 70,
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  'Price',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.grey),
+                                ),
+                                Text(
+                                  'NGN 2,500',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ))
+                        ],
+                      )),
+                  onTap: () {
+                    // chargeCard(_email);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SubOptions()));
+                  },
+                )
               ],
             )
           ],

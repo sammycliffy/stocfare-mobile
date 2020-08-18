@@ -45,6 +45,7 @@ dependencies:
   flutter_local_notifications: ^1.4.4+2
   path_provider: ^1.6.11
   flutter_paystack: ^1.0.3+1
+  intro_slider: ^2.3.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

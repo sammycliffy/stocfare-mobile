@@ -15,6 +15,7 @@ class _WorkersListPageState extends State<WorkersListPage> {
   List<String> _workersName = [];
   List<String> _branchName = [];
   List<String> _phoneNumber = [];
+  List<String> _id = [];
   @override
   void initState() {
     super.initState();
@@ -38,60 +39,77 @@ class _WorkersListPageState extends State<WorkersListPage> {
                 );
               }
               print(snapshot.data.results.map((value) {
+                _workersName.clear();
+                _branchName.clear();
+                _phoneNumber.clear();
+                _id.clear();
                 _workersName.add(value.fullName);
                 _branchName.add(value.branchName);
                 _phoneNumber.add(value.phoneNumber);
+                _id.add(value.id);
               }));
               return ListView.builder(
                   itemCount: _workersName.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
-                      child: Card(
-                          child: ListTile(
-                        leading: Icon(Icons.person),
-                        title: Text(
-                          _workersName[index],
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Row(
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Text('Branch Name'),
-                                Container(
-                                    width: 100,
-                                    color: Colors.grey[300],
-                                    child: Center(
-                                        child: Text(
-                                      _branchName[index],
-                                    ))),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Text('Phone Number'),
-                                Text(_phoneNumber[index])
-                              ],
-                            )
-                          ],
-                        ),
-                        trailing: Container(
-                          width: 20,
-                          height: 25,
-                          child: Center(
-                            child: Icon(
-                              Icons.arrow_right,
-                              color: Colors.white,
-                            ),
+                        child: Card(
+                            child: ListTile(
+                      leading: Icon(Icons.person),
+                      title: Text(
+                        _workersName[index],
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Row(
+                        children: <Widget>[
+                          Column(
+                            children: <Widget>[
+                              Text(
+                                'Branch Name',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                              Text(
+                                _branchName[index],
+                              )
+                            ],
                           ),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.grey[200]),
-                        ),
-                      )),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Column(
+                            children: <Widget>[
+                              Text(
+                                'Phone Number',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                              Text(_phoneNumber[index])
+                            ],
+                          )
+                        ],
+                      ),
+                      trailing: IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            _workersServices
+                                .deleteWorker(_id[index])
+                                .then((value) {
+                              setState(() {
+                                _workersName.clear();
+                                _branchName.clear();
+                                _phoneNumber.clear();
+                                _id.clear();
+                                print(snapshot.data.results.map((value) {
+                                  _workersName.add(value.fullName);
+                                  _branchName.add(value.branchName);
+                                  _phoneNumber.add(value.phoneNumber);
+                                  _id.add(value.id);
+                                }));
+                              });
+                            });
+                          }),
                       onTap: () {
                         Navigator.push(
                             context,
@@ -100,7 +118,7 @@ class _WorkersListPageState extends State<WorkersListPage> {
                                       workerIndex: index,
                                     )));
                       },
-                    );
+                    )));
                   });
             }
             return Center(child: CircularProgressIndicator());
