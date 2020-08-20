@@ -64,9 +64,13 @@ class _AddWorkersState extends State<AddWorkers> {
                           keyboardType: TextInputType.text,
                           validator: (input) =>
                               input.isEmpty ? 'Enter FirstName' : null,
-                          onChanged: (val) => setState(() {
-                            firstName = val;
-                          }),
+                          onChanged: (val) {
+                            val.split(" ");
+                            setState(() {
+                              firstName = val[0];
+                              lastName = val[1];
+                            });
+                          },
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(12),
                             labelStyle:
@@ -82,48 +86,7 @@ class _AddWorkersState extends State<AddWorkers> {
                                     .withOpacity(0.7)),
                             prefixIcon: Icon(Icons.person,
                                 color: Theme.of(context).accentColor),
-                            hintText: 'Enter your FirstName',
-                            filled: true,
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context)
-                                        .focusColor
-                                        .withOpacity(0.2))),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context)
-                                        .focusColor
-                                        .withOpacity(0.5))),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextFormField(
-                          style: TextStyle(color: Colors.black),
-                          keyboardType: TextInputType.text,
-                          validator: (input) =>
-                              input.isEmpty ? 'Enter LastName' : null,
-                          onChanged: (val) => setState(() {
-                            lastName = val;
-                          }),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(12),
-                            labelStyle:
-                                TextStyle(color: Theme.of(context).accentColor),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context)
-                                        .focusColor
-                                        .withOpacity(0.2))),
-                            hintStyle: TextStyle(
-                                color: Theme.of(context)
-                                    .focusColor
-                                    .withOpacity(0.7)),
-                            prefixIcon: Icon(Icons.person,
-                                color: Theme.of(context).accentColor),
-                            hintText: 'Enter your LastName',
+                            hintText: 'Enter your Full Name',
                             filled: true,
                             enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(

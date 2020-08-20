@@ -10,11 +10,15 @@ class AddProductToCart with ChangeNotifier {
   int _productPackPrice = 0;
   int _productQuantity = 0;
   int _quantity = 0;
+  int _packQuantity = 0;
   List _items = [];
   List _countItem;
   String _productId;
   int _index;
   List _listOfQuantity = [];
+  int _packValue = 0;
+  int _value = 0;
+  bool _clear = false;
 
   int get product => _product;
   int get price => _price;
@@ -30,7 +34,10 @@ class AddProductToCart with ChangeNotifier {
   int get index => _index;
   List get listOfQuantity => _listOfQuantity;
   String get productId => _productId;
-
+  int get packQuantity => _packQuantity;
+  int get value => _value;
+  int get packValue => _packValue;
+  bool get clear => _clear;
   void setProductValue(int value) {
     _product = value;
     notifyListeners();
@@ -38,6 +45,11 @@ class AddProductToCart with ChangeNotifier {
 
   void setPrice(int value) {
     _price = value;
+    notifyListeners();
+  }
+
+  void addPackQuantity(int val) {
+    _packQuantity = val;
     notifyListeners();
   }
 
@@ -51,47 +63,23 @@ class AddProductToCart with ChangeNotifier {
     notifyListeners();
   }
 
-  void addToCart(String productId, String productName, int productUnitPrice,
-      int productPackPrice, List items) {
-    _productId = productId;
-    _productName = productName;
-    _productUnitPrice = productUnitPrice;
-    _productPackPrice = productPackPrice;
+  void addItem(List items) {
     _items = items;
     notifyListeners();
   }
 
-  void addItems(
-    List items,
-    List countItem,
-  ) {
-    _items = items;
-    _countItem = countItem;
+  void addShoppingCartUnit(int value) {
+    _value = value;
     notifyListeners();
   }
 
-  void addQuantity(int quantity) {
-    _quantity = quantity;
+  void addShoppingCartPack(int value) {
+    _packValue = value;
     notifyListeners();
   }
 
-  void addProduct(int product) {
-    _product = product;
-    notifyListeners();
-  }
-
-  void addPrice(int price) {
-    _prices = price;
-    notifyListeners();
-  }
-
-  void setIndex(int index) {
-    _index = index;
-    notifyListeners();
-  }
-
-  void setListOfQuantity(List quantity) {
-    _listOfQuantity = quantity;
+  void setCartClear(bool clear) {
+    _clear = clear;
     notifyListeners();
   }
 }

@@ -15,19 +15,23 @@ class _AddCartState extends State<AddCart> {
   static List _names = [];
   static List _quantity = [];
   static List _type = [];
-  static List _price = [];
+
   @override
   void initState() {
+    _prices.clear();
+    _names.clear();
+    _type.clear();
+    _quantity.clear();
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _addProduct = Provider.of<AddProductToCart>(context, listen: false);
+      print(_addProduct.items);
       print(_addProduct.items.map((value) {
         setState(() {
           _prices.add(value['\'price\'']);
           _names.add(value['\'name\'']);
           _quantity.add(value['\'totalQuantity\'']);
           _type.add(value['\'type\'']);
-          _price.add(value['\'price\'']);
         });
       }));
     });
@@ -37,6 +41,7 @@ class _AddCartState extends State<AddCart> {
   Widget build(BuildContext context) {
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     List _items = _addProduct.items;
+    print(_prices);
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.2;
     final double itemWidth = size.width / 2;
@@ -56,7 +61,7 @@ class _AddCartState extends State<AddCart> {
                 Column(
                   children: <Widget>[
                     Text(
-                      '${_items.length} Products',
+                      '${_addProduct.items.length} Products',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
@@ -74,7 +79,8 @@ class _AddCartState extends State<AddCart> {
                 RaisedButton(
                     onPressed: () {
                       setState(() {
-                        _clear();
+                        _addProduct.items.clear();
+                        _prices.clear();
                       });
                     },
                     child: Text('Empty'))
@@ -82,7 +88,7 @@ class _AddCartState extends State<AddCart> {
             ),
             Expanded(
               child: GridView.builder(
-                  itemCount: _items.length,
+                  itemCount: _addProduct.items.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       childAspectRatio: (itemWidth / itemHeight),
                       crossAxisCount: 3),
@@ -125,8 +131,12 @@ class _AddCartState extends State<AddCart> {
                                   icon: Icon(Icons.delete,
                                       color: Theme.of(context).primaryColor),
                                   onPressed: () {
+                                    _addProduct.items.removeAt(index);
                                     setState(() {
-                                      _clearIndex(index);
+                                      _names.removeAt(index);
+                                      _prices.removeAt(index);
+                                      _quantity.removeAt(index);
+                                      _type.removeAt(index);
                                     });
                                   })
                             ],
@@ -137,16 +147,20 @@ class _AddCartState extends State<AddCart> {
                     );
                   }),
             ),
-            RaisedButton(
-              color: Colors.black,
-              onPressed: () {
-                _addProduct.addPrice(_prices.reduce((a, b) => a + b));
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CheckoutPage()));
-              },
-              child: Text(
-                'Check out',
-                style: TextStyle(color: Colors.white),
+            ButtonTheme(
+              minWidth: 200.0,
+              height: 50.0,
+              child: RaisedButton(
+                color: Colors.black,
+                onPressed: () {
+                  _addProduct.setPrice(_prices.reduce((a, b) => a + b));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CheckoutPage()));
+                },
+                child: Text(
+                  'Check out',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
             SizedBox(
@@ -154,28 +168,5 @@ class _AddCartState extends State<AddCart> {
             )
           ],
         ));
-  }
-
-  _clear() {
-    _addProduct.addProduct(0);
-    _addProduct.items.clear();
-    _addProduct.countItem.clear();
-    _addProduct.addQuantity(0);
-    _names.clear();
-    _prices.clear();
-    _names.clear();
-    _quantity.clear();
-    _type.clear();
-    _price.clear();
-  }
-
-  _clearIndex(int index) {
-    _addProduct.items.removeAt(index);
-    _addProduct.listOfQuantity.clear();
-    _names.removeAt(index);
-    _prices.removeAt(index);
-    _quantity.removeAt(index);
-    _type.removeAt(index);
-    _price.removeAt(index);
   }
 }

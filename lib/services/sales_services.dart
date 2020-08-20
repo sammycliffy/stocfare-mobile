@@ -47,7 +47,7 @@ class SalesServices {
     }
   }
 
-  Future<Welcome> addSales(
+  Future<bool> addSales(
       List products,
       String customerName,
       String customerAddress,
@@ -58,10 +58,12 @@ class SalesServices {
       String paymentMethod,
       bool soldOnCredit,
       int amountPaid,
-      int tax) async {
+      int tax,
+      dynamic date) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
+    print(products);
     final String url =
         'http://stockfare-io.herokuapp.com/api/v1/sales/create-sale/$branchId/';
     final http.Response response = await http.post(url,
@@ -85,12 +87,14 @@ class SalesServices {
           "sold_on_credit": soldOnCredit,
           "tax": tax,
           "amount_paid": amountPaid,
-          "ref_code": ""
+          "ref_code": null
         }));
     if (response.statusCode == 200) {
       print(response.body);
+      return true;
     } else {
       print(response.body);
+      return false;
     }
   }
 }

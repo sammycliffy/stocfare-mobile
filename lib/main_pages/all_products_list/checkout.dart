@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/services/sales_services.dart';
 
 class CheckoutPage extends StatefulWidget {
@@ -22,7 +23,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   String customerEmail;
   bool soldOnCredit;
   String customerAddress;
-  int initialDeposit;
+  int initialDeposit = 0;
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -42,7 +43,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return Scaffold(
         appBar: AppBar(title: Text('Check out')),
         body: Padding(
-          padding: const EdgeInsets.only(left: 50, top: 20),
+          padding: const EdgeInsets.only(left: 40, top: 20),
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
@@ -65,7 +66,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     SizedBox(
                       width: 110,
                     ),
-                    Text(addProduct.prices.toString(),
+                    Text(addProduct.price.toString(),
                         style: Theme.of(context).textTheme.headline6)
                   ],
                 ),
@@ -103,7 +104,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     )
                   ],
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.only(right: 50),
                   child: Row(
@@ -183,7 +184,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 30),
+                Row(
+                  children: [
+                    Text('Customer\'s Details',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[600])),
+                    SizedBox(width: 20),
+                    Text('(Optional)',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[600])),
+                  ],
+                ),
+                SizedBox(height: 10),
                 Form(
                   child: Column(
                     children: <Widget>[
@@ -362,52 +379,61 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           ? _soldOnCredit(context)
                           : SizedBox(), // check of sold on credit is clicked
                       SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 20),
-                        child: Container(
-                          color: Colors.grey[100],
-                          width: 300,
-                          height: 120,
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Text('Tax', style: TextStyle(fontSize: 18)),
-                                  SizedBox(
-                                    width: 145,
-                                  ),
-                                  Text('0', style: TextStyle(fontSize: 18))
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Text('You Owe',
-                                      style: TextStyle(fontSize: 18)),
-                                  SizedBox(
-                                    width: 110,
-                                  ),
-                                  Text('0', style: TextStyle(fontSize: 18))
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Text('Total', style: TextStyle(fontSize: 23)),
-                                  SizedBox(
-                                    width: 140,
-                                  ),
-                                  Text('0', style: TextStyle(fontSize: 23))
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(right: 210),
+                      //   child: Text('Sales Summary',
+                      //       style: TextStyle(
+                      //           fontSize: 18,
+                      //           fontWeight: FontWeight.bold,
+                      //           color: Colors.grey[600])),
+                      // ),
+                      SizedBox(height: 10),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(right: 20),
+                      //   child: Container(
+                      //     color: Colors.grey[100],
+                      //     width: 300,
+                      //     height: 120,
+                      //     child: Column(
+                      //       children: <Widget>[
+                      //         Row(
+                      //           mainAxisAlignment:
+                      //               MainAxisAlignment.spaceEvenly,
+                      //           children: <Widget>[
+                      //             Text('Tax', style: TextStyle(fontSize: 18)),
+                      //             SizedBox(
+                      //               width: 145,
+                      //             ),
+                      //             Text('0', style: TextStyle(fontSize: 18))
+                      //           ],
+                      //         ),
+                      //         Row(
+                      //           mainAxisAlignment:
+                      //               MainAxisAlignment.spaceEvenly,
+                      //           children: <Widget>[
+                      //             Text('You Owe',
+                      //                 style: TextStyle(fontSize: 18)),
+                      //             SizedBox(
+                      //               width: 110,
+                      //             ),
+                      //             Text('0', style: TextStyle(fontSize: 18))
+                      //           ],
+                      //         ),
+                      //         Row(
+                      //           mainAxisAlignment:
+                      //               MainAxisAlignment.spaceEvenly,
+                      //           children: <Widget>[
+                      //             Text('Total', style: TextStyle(fontSize: 23)),
+                      //             SizedBox(
+                      //               width: 140,
+                      //             ),
+                      //             Text('0', style: TextStyle(fontSize: 23))
+                      //           ],
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.only(right: 20.0),
@@ -431,18 +457,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               ),
                             ),
                             onTap: () {
-                              _salesServices.addSales(
-                                  addProduct.items,
-                                  customerName,
-                                  customerAddress,
-                                  customerMobile,
-                                  customerEmail,
-                                  addProduct.prices,
-                                  customerChange,
-                                  paymentMethod,
-                                  newvalue,
-                                  initialDeposit,
-                                  tax);
+                              DialogBoxes().loading(context);
+                              _salesServices
+                                  .addSales(
+                                      addProduct.items,
+                                      customerName,
+                                      customerAddress,
+                                      customerMobile,
+                                      customerEmail,
+                                      addProduct.prices,
+                                      customerChange,
+                                      paymentMethod,
+                                      newvalue,
+                                      initialDeposit,
+                                      tax,
+                                      selectedDate.toLocal())
+                                  .then((value) {
+                                if (value == true) {
+                                  Navigator.pop(context);
+                                  DialogBoxes().success(context);
+                                }
+                              });
                             }),
                       ),
                       SizedBox(
@@ -487,15 +522,22 @@ class _CheckoutPageState extends State<CheckoutPage> {
       SizedBox(
         height: 10,
       ),
-      Text(
-        "${selectedDate.toLocal()}".split(' ')[0],
-        style: Theme.of(context).textTheme.headline6,
+      Padding(
+        padding: const EdgeInsets.only(left: 20),
+        child: Text(
+          "${selectedDate.toLocal()}".split(' ')[0],
+          style: Theme.of(context).textTheme.headline6,
+        ),
       ),
       Padding(
-        padding: const EdgeInsets.only(left: 50, right: 50),
+        padding: const EdgeInsets.only(left: 100, right: 100),
         child: RaisedButton(
+          color: Theme.of(context).primaryColor,
           onPressed: () => _selectDate(context),
-          child: Text('Select Promised date'),
+          child: Text(
+            'Select Promised date',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       )
     ]);

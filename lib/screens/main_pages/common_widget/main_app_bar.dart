@@ -60,7 +60,9 @@ class MainAppBar {
             children: <Widget>[
               GestureDetector(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 40, left: 10),
+                  padding: const EdgeInsets.only(
+                    top: 40,
+                  ),
                   child: Stack(
                     children: [
                       Icon(Icons.notifications, size: 30, color: Colors.black),
