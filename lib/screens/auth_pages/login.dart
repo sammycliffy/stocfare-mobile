@@ -213,13 +213,12 @@ class _LoginState extends State<Login> {
                                       if (result.isNotEmpty &&
                                           result[0].rawAddress.isNotEmpty) {
                                         print('connected');
-                                        String _registrationid =
-                                            await _auth.getId();
+
                                         dynamic result =
                                             await _auth.loginUsernew(
-                                                phoneNumber,
-                                                password,
-                                                _registrationid);
+                                          phoneNumber,
+                                          password,
+                                        );
 
                                         if (result == null) {
                                           setState(() {

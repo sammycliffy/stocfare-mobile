@@ -324,8 +324,6 @@ class _SignupPage extends State<BusinessSignupPage> {
                                       if (result.isNotEmpty &&
                                           result[0].rawAddress.isNotEmpty) {
                                         print('connected');
-                                        String registrationid =
-                                            await _auth.getId();
 
                                         //send the data to the auth registration session
                                         dynamic result =
@@ -335,7 +333,6 @@ class _SignupPage extends State<BusinessSignupPage> {
                                                 _signupNotifier.email,
                                                 _signupNotifier.password,
                                                 _signupNotifier.phone,
-                                                registrationid,
                                                 businessName,
                                                 businessAddress,
                                                 businessDescription,

@@ -63,8 +63,13 @@ class ProductServices {
     if (response.statusCode == 200 || response.statusCode == 201) {
       print(response.statusCode);
       return response.statusCode;
+    } else if (json.decode(response.body)['detail'] ==
+        "Given token not valid for any token type") {
+      String _response = json.decode(response.body)['detail'];
+      print(_response);
+      print('invalid token');
+      return false;
     } else {
-      print(response.statusCode);
       print(response.body);
       return response.body;
     }

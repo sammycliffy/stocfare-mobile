@@ -45,6 +45,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
+        
     }
 
     buildTypes {
@@ -56,13 +57,15 @@ android {
     }
 
           packagingOptions {
-          pickFirst 'META-INF/atomicfu.kotlin_module'
-          pickFirst 'META-INF/proguard/coroutines.pro'
-          exclude 'META-INF/LICENSE.txt'
-          exclude 'META-INF/NOTICE.txt'
-          exclude 'META-INF/LICENSE'
-          exclude 'META-INF/NOTICE'
-      }
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/license.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/notice.txt'
+    exclude 'META-INF/ASL2.0'
+}
 
 
 }
@@ -73,6 +76,9 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+   
+   
 }
 
 

@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
@@ -8,7 +9,8 @@ import 'package:stockfare_mobile/screens/intro_pages/add_single_products/form.da
 import 'package:stockfare_mobile/screens/main_pages/activities_pages.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/cart.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
-import 'package:stockfare_mobile/screens/main_pages/common_widget/main_app_bar.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:basic_utils/basic_utils.dart';
 
 enum SingingCharacter { pack, unit }
 
@@ -18,7 +20,14 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
+Future<dynamic> myBackgroundHandler(Map<String, dynamic> message) {
+  return _HomePageState()._showNotification(message);
+}
+
 class _HomePageState extends State<HomePage> {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   SignupNotifier _signupNotifier;
   dynamic dataInstance;
 
@@ -37,6 +46,64 @@ class _HomePageState extends State<HomePage> {
   bool _search = false;
   int _shoppingCartPackQuantity = 0;
   int _shoppingCartUnitQuantity = 0;
+  bool _addFloatingACtionButton = false;
+  getTokenz() async {
+    String token = await _firebaseMessaging.getToken();
+    print(token);
+  }
+
+  Future selectNotification(String paload) async {
+    await flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  Future _showNotification(Map<String, dynamic> message) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'channelId', 'channelName', 'channelDescription',
+        importance: Importance.Max, priority: Priority.High);
+
+    var platformChannelSpecifics =
+        new NotificationDetails(androidPlatformChannelSpecifics, null);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      message['notification']['title'],
+      message['notification']['body'],
+      platformChannelSpecifics,
+      payload: 'Default_Sound',
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettings =
+        InitializationSettings(initializationSettingsAndroid, null);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: selectNotification);
+
+    _firebaseMessaging.configure(
+        onBackgroundMessage: myBackgroundHandler,
+        onMessage: (Map<String, dynamic> message) async {
+          print('onMessage: $message');
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(message['notification']['title']),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text(message['notification']['body']),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -63,6 +130,20 @@ class _HomePageState extends State<HomePage> {
       onWillPop: () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => Login())),
       child: Scaffold(
+          floatingActionButton: _addFloatingACtionButton
+              ? FloatingActionButton(
+                  focusColor: Theme.of(context).canvasColor,
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => FormPage()));
+                  },
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: Theme.of(context).primaryColor,
+                )
+              : SizedBox(),
           appBar: PreferredSize(
               preferredSize: Size.fromHeight(120.0), // here the desired height
               child: AppBar(
@@ -103,7 +184,6 @@ class _HomePageState extends State<HomePage> {
                                     if (val.length > 0) {
                                       setState(() {
                                         searchFilter(val);
-                                        _search = true;
                                       });
                                     } else if (val.length <= 0) {
                                       setState(() {
@@ -247,7 +327,138 @@ class _HomePageState extends State<HomePage> {
                 height: 20,
               ),
               _search
-                  ? Center(child: Text('Search is true'))
+                  ? Expanded(
+                      child: GridView.builder(
+                        itemCount: _categories.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: (itemWidth / itemHeight),
+                            crossAxisCount: 3),
+                        itemBuilder: (BuildContext context, int index) {
+                          return new Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: GestureDetector(
+                              child: Card(
+                                color: Colors.grey[100],
+                                child: Column(
+                                  children: <Widget>[
+                                    Image.network(
+                                      _productImage[index],
+                                      width: 150,
+                                      height: 65,
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                    Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  width: 2,
+                                                  color: Colors.grey[200]))),
+                                      child: Center(
+                                        child: Text(
+                                          _categories[index],
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        ),
+                                      ),
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width: 2,
+                                                      color:
+                                                          Colors.grey[200]))),
+                                          child: Center(
+                                            child: Text(
+                                              '${_productPrice[index]}/Units',
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width: 2,
+                                                      color:
+                                                          Colors.grey[200]))),
+                                          child: Center(
+                                            child: Text(
+                                              '${_productPackPrice[index]}/Pack',
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () {
+                                if (_productPackPrice[index] == 0) {
+                                  var map = Map();
+                                  _quantityToSell.forEach((element) {
+                                    if (!map.containsKey(element)) {
+                                      map[element] = 1;
+                                    } else {
+                                      map[element] += 1;
+                                    }
+                                  }); // count the list of items
+                                  print(map);
+                                  print(map[_productId[index]]);
+                                  if (_quantityToSell.length == 0 ||
+                                      map[_productId[index]] == null) {
+                                    setState(() {
+                                      _quantityToSell.add(_productId[index]);
+                                    });
+
+                                    sellUnitProduct(
+                                        _productId[index],
+                                        _categories[index],
+                                        _productPrice[index]);
+                                  } else if (map[_productId[index]] >
+                                      _productQuantity[index] - 1) {
+                                    print(
+                                        'Quantity should be less than your amount');
+                                  } else {
+                                    setState(() {
+                                      _quantityToSell.add(_productId[index]);
+                                    });
+
+                                    sellUnitProduct(
+                                        _productId[index],
+                                        _categories[index],
+                                        _productPrice[index]);
+                                  }
+                                  print(_productQuantity[index]);
+                                  print(map[_productId[index]]);
+                                } else {
+                                  // send pack to the dialog page
+
+                                  _sellPackProduct(
+                                      _packQuantity[index],
+                                      _productQuantity[index],
+                                      _productId[index],
+                                      _categories[index],
+                                      _productPackPrice[index],
+                                      _productPrice[index]);
+                                }
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    )
                   : StreamBuilder(
                       stream: firebaseDb.onValue,
                       builder: (context, AsyncSnapshot<Event> snapshot) {
@@ -256,11 +467,6 @@ class _HomePageState extends State<HomePage> {
                             _categories.clear();
                             _productName.clear();
                             DataSnapshot dataValues = snapshot.data.snapshot;
-                            if (dataValues.value == Null) {
-                              return Center(
-                                child: Text('No Data Found'),
-                              );
-                            }
 
                             Map<dynamic, dynamic> values = dataValues
                                 .value['${_signupNotifier.firebaseId}'];
@@ -465,7 +671,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void clear() {
+  void _clear() {
     _categories.clear();
     _productName.clear();
     _productPrice.clear();
@@ -477,12 +683,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   void searchFilter(value) {
-    if (_categories.contains(value)) {
-      setState(() {
-        clear();
-      });
+    String capitalized = StringUtils.capitalize(value);
+    if (_categories.contains(capitalized)) {
       print('Contains value');
-      print(_categories.indexOf(value));
+      int _index = _categories.indexOf(capitalized);
+      setState(() {
+        _categories.removeWhere((element) => element != capitalized);
+        _productImage.removeRange(0, _index);
+        _productPrice.removeRange(0, _index);
+        _packQuantity.removeRange(0, _index);
+        _productQuantity.removeRange(0, _index);
+
+        _search = true;
+        print(_categories);
+      });
     } else {
       print('does not contain value');
     }

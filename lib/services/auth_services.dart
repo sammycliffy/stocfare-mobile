@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:async';
-import 'package:device_info/device_info.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/user_model.dart';
 
 class AuthServices {
-  Future<String> getId() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
-    return androidDeviceInfo.androidId; // unique ID on Android
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  Future<String> getTokenz() async {
+    String token = await _firebaseMessaging.getToken();
+    return token;
   }
 
   Future<dynamic> userRegistration(
@@ -18,7 +18,6 @@ class AuthServices {
     String phone,
     String password,
     String email,
-    String registrationId,
     String businessName,
     String businessAddress,
     String businessDescription,
@@ -40,7 +39,7 @@ class AuthServices {
             "email": phone,
             "password": password,
           },
-          "registration_id": registrationId,
+          "registration_id": getTokenz(),
           "name": businessName,
           "address": businessAddress,
           "description": businessDescription,
@@ -68,8 +67,12 @@ class AuthServices {
   }
 
   Future<dynamic> loginUsernew(
-      String username, String password, String registrationid) async {
+    String username,
+    String password,
+  ) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    dynamic _registrationId = getTokenz();
+
     final http.Response response = await http.post(
       'http://stockfare-io.herokuapp.com/api/v1/users/login/',
       headers: <String, String>{
@@ -78,7 +81,7 @@ class AuthServices {
       body: jsonEncode(<String, String>{
         "username": username,
         "password": password,
-        "registration_id": registrationid
+        "registration_id": '89898'
       }),
     );
 

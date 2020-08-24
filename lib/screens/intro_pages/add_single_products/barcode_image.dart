@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
+import 'package:stockfare_mobile/screens/auth_pages/login.dart';
 import 'package:stockfare_mobile/screens/intro_pages/product_success.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/loader.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
@@ -214,7 +215,18 @@ class _BarcodePageState extends State<BarcodePage> {
                                         _addProduct.productWeight,
                                         _addProduct.data)
                                     .then((value) {
-                                  if (value != 201) {
+                                  if (value == 201) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProductSuccess()));
+                                  } else if (value == false) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Login()));
+                                  } else {
                                     setState(() {
                                       loading = false;
                                       setState(() {
@@ -222,20 +234,6 @@ class _BarcodePageState extends State<BarcodePage> {
                                         _displaySnackBar(context);
                                       });
                                     });
-                                  } else {
-                                    print(_addProduct.unitproductPrice
-                                            .toString() +
-                                        'This is unit price');
-                                    print(_addProduct.unitproductQuantity
-                                            .toString() +
-                                        'This is unit quantity');
-                                    print(_addProduct.unitLimit.toString() +
-                                        'This is unit Limit');
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ProductSuccess()));
                                   }
                                 });
                               }
