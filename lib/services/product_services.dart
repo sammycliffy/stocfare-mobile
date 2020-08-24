@@ -237,6 +237,30 @@ class ProductServices {
     return response.statusCode;
   }
 
+  Future<dynamic> updateBranch(
+      String branchName, String branchAddress, bool notificationStatus) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String branchId = sharedPreferences.getString('branchId');
+    String token = sharedPreferences.getString('token');
+    String url =
+        'https://stockfare-io.herokuapp.com/api/v1/branch/update/$branchId/';
+
+    final response = await http.put(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "notification_status": notificationStatus,
+          "name": branchName,
+          "address": branchAddress,
+          "firebase_inventory_id": "string",
+          "firebase_notification_id": "string",
+          "business_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }));
+  }
+
   Future<dynamic> deleteProducts(List<String> deleteItem) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');

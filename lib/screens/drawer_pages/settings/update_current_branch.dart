@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/services/product_services.dart';
 
 class CurrentBranch extends StatefulWidget {
   @override
@@ -6,7 +7,9 @@ class CurrentBranch extends StatefulWidget {
 }
 
 class _CurrentBranchState extends State<CurrentBranch> {
-  String password;
+  ProductServices _productServices = ProductServices();
+  String branchName;
+  String branchAddress;
   bool isInstructionView;
   @override
   void initState() {
@@ -31,7 +34,7 @@ class _CurrentBranchState extends State<CurrentBranch> {
               child: TextFormField(
                 keyboardType: TextInputType.text,
                 onChanged: (val) => setState(() {
-                  password = val;
+                  branchName = val;
                 }),
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(12),
@@ -63,7 +66,7 @@ class _CurrentBranchState extends State<CurrentBranch> {
               child: TextFormField(
                 keyboardType: TextInputType.text,
                 onChanged: (val) => setState(() {
-                  password = val;
+                  branchAddress = val;
                 }),
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(12),
@@ -133,7 +136,14 @@ class _CurrentBranchState extends State<CurrentBranch> {
                     )),
                   ),
                 ),
-                onTap: () async {}),
+                onTap: () async {
+                  _productServices
+                      .updateBranch(
+                          branchName, branchAddress, isInstructionView)
+                      .then((value) {
+                    print(value);
+                  });
+                }),
           ],
         )));
   }

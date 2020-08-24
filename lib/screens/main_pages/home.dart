@@ -157,12 +157,36 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.only(top: 40),
                       child: Column(
                         children: <Widget>[
-                          Text(
-                            'Dashboard',
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Theme.of(context).primaryColor,
-                                fontWeight: FontWeight.bold),
+                          Row(
+                            children: [
+                              SizedBox(width: 100),
+                              Text(
+                                'Dashboard',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: 110),
+                              GestureDetector(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(),
+                                  child: Stack(
+                                    children: [
+                                      Icon(Icons.notifications,
+                                          size: 30, color: Colors.black),
+                                    ],
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ActivitiesPage()));
+                                },
+                              ),
+                            ],
                           ),
                           SizedBox(
                             height: 10,
@@ -208,49 +232,21 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    Column(
-                      children: <Widget>[
-                        GestureDetector(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              top: 40,
-                            ),
-                            child: Stack(
-                              children: [
-                                Icon(Icons.notifications,
-                                    size: 30, color: Colors.black),
-                              ],
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ActivitiesPage()));
-                          },
+                    Padding(
+                        padding: const EdgeInsets.only(
+                          top: 60,
+                          left: 5,
                         ),
-                        // Padding(
-                        //     padding: const EdgeInsets.only(
-                        //       top: 10,
-                        //       left: 15,
-                        //     ),
-                        //     child: InkWell(
-                        //       child: Container(
-                        //         width: 50,
-                        //         height: 30,
-                        //         decoration: BoxDecoration(
-                        //             color: Theme.of(context).primaryColor,
-                        //             borderRadius: BorderRadius.circular(10)),
-                        //         child: Center(
-                        //             child: Icon(
-                        //           Icons.assessment,
-                        //           color: Colors.white,
-                        //         )),
-                        //       ),
-                        //       onTap: () {},
-                        //     )),
-                      ],
-                    )
+                        child: InkWell(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                                child: Icon(Icons.assessment,
+                                    color: Colors.green, size: 40)),
+                          ),
+                          onTap: () {},
+                        )),
                   ],
                 )),
               )),
@@ -669,17 +665,6 @@ class _HomePageState extends State<HomePage> {
             ],
           )),
     );
-  }
-
-  void _clear() {
-    _categories.clear();
-    _productName.clear();
-    _productPrice.clear();
-    _productImage.clear();
-    _productQuantity.clear();
-    _packQuantity.clear();
-    _productId.clear();
-    _productPackPrice.clear();
   }
 
   void searchFilter(value) {

@@ -5,10 +5,17 @@ import 'package:stockfare_mobile/screens/drawer_pages/logout.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/settings/settings_home.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/workers/list_of_workers.dart';
 import 'package:stockfare_mobile/screens/subscription/sub_home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    deleteSharedValue() async {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      sharedPreferences.remove('token');
+    }
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -59,9 +66,13 @@ class DrawerPage extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
-            onTap: () => {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LogoutPage()))
+            onTap: () {
+              deleteSharedValue();
+              Navigator.pop(context, true);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LogoutPage()),
+              );
             },
           ),
           ListTile(

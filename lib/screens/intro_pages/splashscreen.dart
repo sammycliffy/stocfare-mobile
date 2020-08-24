@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/user_model.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
+import 'package:stockfare_mobile/screens/drawer_pages/logout.dart';
 import 'dart:async';
 
 import 'package:stockfare_mobile/screens/intro_pages/explore_page.dart';
@@ -93,11 +94,12 @@ class _SplashScreenState extends State<SplashScreen> {
     SignupNotifier _signupNotifier =
         Provider.of<SignupNotifier>(context, listen: false);
     final prefs = await SharedPreferences.getInstance();
-    String body = prefs.getString('body');
-    if (body == null) {
+    String token = prefs.getString('token');
+    if (token == null) {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => Login()));
+          MaterialPageRoute(builder: (BuildContext context) => LogoutPage()));
     } else {
+      String body = prefs.getString('body');
       dynamic user = User.fromJson(json.decode(body));
       _signupNotifier.setProfile(
           user.fullname, user.phone, user.email, user.firebaseId);
