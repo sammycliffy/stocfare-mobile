@@ -28,10 +28,10 @@ class _AddCartState extends State<AddCart> {
       print(_addProduct.items);
       print(_addProduct.items.map((value) {
         setState(() {
-          _prices.add(value['\'price\'']);
-          _names.add(value['\'name\'']);
-          _quantity.add(value['\'totalQuantity\'']);
-          _type.add(value['\'type\'']);
+          _prices.add(value['totalCost']);
+          _names.add(value['name']);
+          _quantity.add(value['totalQuantity']);
+          _type.add(value['type']);
         });
       }));
     });
@@ -104,8 +104,7 @@ class _AddCartState extends State<AddCart> {
                                 height: 15,
                               ),
                               Text(
-                                _names[index].toString().substring(
-                                    1, _names[index].toString().length - 1),
+                                _names[index].toString(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
@@ -114,8 +113,7 @@ class _AddCartState extends State<AddCart> {
                               Text(
                                 _quantity[index].toString() +
                                     ' ' +
-                                    _type[index].toString().substring(
-                                        1, _type[index].toString().length - 1),
+                                    _type[index].toString(),
                                 style:
                                     TextStyle(color: Colors.grey, fontSize: 18),
                               ),

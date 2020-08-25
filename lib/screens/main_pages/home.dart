@@ -700,7 +700,7 @@ class _HomePageState extends State<HomePage> {
     bool _itemFound = false;
     int _index;
     for (var i = 0; i < _items.length; i++) {
-      if (_items.length >= 1 && _items[i]['\'id\''] == '\'$_productId\'') {
+      if (_items.length >= 1 && _items[i]['id'] == _productId) {
         _itemFound = true;
         _index = i;
         break;
@@ -709,15 +709,16 @@ class _HomePageState extends State<HomePage> {
       }
     }
     if (_itemFound == true) {
-      _items[_index]['\'totalQuantity\''] = (map[_productId]);
-      _items[_index]['\'price\''] = (map[_productId]) * _productUnitPrice;
+      _items[_index]['totalQuantity'] = (map[_productId]);
+      _items[_index]['totalCost'] = (map[_productId]) * _productUnitPrice;
     } else {
       _items.add({
-        '\'totalQuantity\'': map[_productId],
-        '\'type\'': '\'unit\'',
-        '\'id\'': '\'$_productId\'',
-        '\'price\'': _productUnitPrice * (map[_productId]),
-        '\'name\'': '\'$_productName\'',
+        'totalQuantity': map[_productId],
+        'type': 'unit',
+        'id': _productId,
+        'totalCost': _productUnitPrice * (map[_productId]),
+        'name': '$_productName',
+        "colours": []
       });
     }
   }
@@ -913,7 +914,7 @@ class _HomePageState extends State<HomePage> {
                           int _index1;
                           for (var i = 0; i < _items.length; i++) {
                             if (_items.length >= 1 &&
-                                _items[i]['\'id\''] == '\'$_productId\'' &&
+                                _items[i]['id'] == _productId &&
                                 _character == 'pack') {
                               _packFound = true;
                               _index = i;
@@ -923,16 +924,15 @@ class _HomePageState extends State<HomePage> {
                             }
 
                             if (_items.length >= 1 &&
-                                _items[i]['\'id\''] == '\'$_productId\'' &&
+                                _items[i]['id'] == _productId &&
                                 _character == 'unit') {
                               _unitFound = true;
                               _index1 = i;
                             }
                           }
                           if (_packFound == true) {
-                            _items[_index]['\'totalQuantity\''] =
-                                _productQuantity;
-                            _items[_index]['\'price\''] =
+                            _items[_index]['totalQuantity'] = _productQuantity;
+                            _items[_index]['totalCost'] =
                                 _productQuantity * _packPrice;
 
                             _shoppingCartPackQuantity = _productQuantity;
@@ -940,11 +940,12 @@ class _HomePageState extends State<HomePage> {
                                 .addShoppingCartPack(_shoppingCartPackQuantity);
                           } else if (_pack == true) {
                             _items.add({
-                              '\'totalQuantity\'': _productQuantity,
-                              '\'type\'': '\'pack\'',
-                              '\'id\'': '\'$_productId\'',
-                              '\'price\'': _productQuantity * _packPrice,
-                              '\'name\'': '\'$_productName\'',
+                              'totalQuantity': _productQuantity,
+                              'type': 'pack',
+                              'id': _productId,
+                              'totalCost': _productQuantity * _packPrice,
+                              'name': '$_productName',
+                              "colours": []
                             });
 
                             _shoppingCartPackQuantity = _productQuantity;
@@ -953,11 +954,12 @@ class _HomePageState extends State<HomePage> {
                                 .addShoppingCartPack(_shoppingCartPackQuantity);
                           } else {
                             _items.add({
-                              '\'totalQuantity\'': _productQuantity,
-                              '\'type\'': '\'unit\'',
-                              '\'id\'': '\'$_productId\'',
-                              '\'price\'': _productQuantity * _packPrice,
-                              '\'name\'': '\'$_productName\'',
+                              'totalQuantity': _productQuantity,
+                              'type': 'unit',
+                              'id': _productId,
+                              'totalCost': _productQuantity * _packPrice,
+                              'name': '$_productName',
+                              "colours": []
                             });
 
                             _shoppingCartUnitQuantity = _productQuantity;
@@ -965,9 +967,8 @@ class _HomePageState extends State<HomePage> {
                                 .addShoppingCartUnit(_shoppingCartUnitQuantity);
                           }
                           if (_unitFound == true) {
-                            _items[_index1]['\'totalQuantity\''] =
-                                _productQuantity;
-                            _items[_index1]['\'price\''] =
+                            _items[_index1]['totalQuantity'] = _productQuantity;
+                            _items[_index1]['totalCost'] =
                                 _productQuantity * _productPrice;
                           }
                           Navigator.pop(context);

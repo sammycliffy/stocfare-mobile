@@ -35,7 +35,7 @@ class _AllSalesListState extends State<AllSalesList> {
       print(value.results.map((data) {
         registeredBy.add(data.saleRegisteredBy);
         amountSold.add(data.amount);
-        customer.add(data.customer.name);
+        customer.add(data.customer?.name ?? '');
         quantitySold.add(data.productDetail[0].quantityBought);
         dateCreated.add(data.dateCreated);
         return (data.productData.map((name) {

@@ -11,7 +11,7 @@ class SalesServices {
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
     final String url =
-        'https://stockfare-io.herokuapp.com/api/v1/sales/sales/8e044e8c-263b-40f7-afb7-601154b59601';
+        'https://stockfare-io.herokuapp.com/api/v1/sales/sales/$branchId/';
     final http.Response response =
         await http.get(url, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -32,7 +32,7 @@ class SalesServices {
     String token = sharedPreferences.getString('token');
     print(sortedDate);
     final String url =
-        'https://stockfare-io.herokuapp.com/api/v1/sales/sales/8e044e8c-263b-40f7-afb7-601154b59601/?date=$sortedDate';
+        'https://stockfare-io.herokuapp.com/api/v1/sales/sales/$branchId/?date=$sortedDate';
     final http.Response response =
         await http.get(url, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -86,6 +86,7 @@ class SalesServices {
           "payment_method": paymentMethod,
           "sold_on_credit": soldOnCredit,
           "tax": tax,
+          "colours": [],
           "amount_paid": amountPaid,
           "ref_code": null
         }));
