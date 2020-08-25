@@ -7,6 +7,7 @@ import 'package:stockfare_mobile/models/user_model.dart';
 
 class AuthServices {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  String tokenz;
   Future<String> getTokenz() async {
     String token = await _firebaseMessaging.getToken();
     return token;
@@ -24,6 +25,7 @@ class AuthServices {
     String businessType,
     String referralCode,
   ) async {
+    getTokenz().then((value) => tokenz = value);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final String url =
         'http://stockfare-io.herokuapp.com/api/v2/users/register/';
@@ -39,7 +41,7 @@ class AuthServices {
             "email": phone,
             "password": password,
           },
-          "registration_id": getTokenz(),
+          "registration_id": tokenz,
           "name": businessName,
           "address": businessAddress,
           "description": businessDescription,
@@ -72,7 +74,7 @@ class AuthServices {
   ) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     dynamic _registrationId = getTokenz();
-
+    getTokenz().then((value) => tokenz = value);
     final http.Response response = await http.post(
       'http://stockfare-io.herokuapp.com/api/v1/users/login/',
       headers: <String, String>{
@@ -81,7 +83,7 @@ class AuthServices {
       body: jsonEncode(<String, String>{
         "username": username,
         "password": password,
-        "registration_id": '89898'
+        "registration_id": tokenz
       }),
     );
 

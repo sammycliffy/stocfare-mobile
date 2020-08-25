@@ -8,7 +8,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
-import 'package:stockfare_mobile/screens/intro_pages/product_success.dart';
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/product_success.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/loader.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 

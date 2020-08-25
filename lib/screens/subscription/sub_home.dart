@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:stockfare_mobile/screens/subscription/sub_options.dart';
 
@@ -8,6 +9,22 @@ class SubscriptionPage extends StatefulWidget {
 }
 
 class _SubscriptionPageState extends State<SubscriptionPage> {
+  String subscriptionPlan;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      checkSubscription().then((value) => subscriptionPlan = value);
+    });
+  }
+
+  Future<String> checkSubscription() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String subscriptionPlan = sharedPreferences.getString('subscription_plan');
+    return subscriptionPlan;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

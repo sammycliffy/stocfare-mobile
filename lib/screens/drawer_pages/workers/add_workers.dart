@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/screens/drawer_pages/workers/list_of_workers.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/services/workers_services.dart';
 
@@ -9,8 +10,8 @@ class AddWorkers extends StatefulWidget {
 
 class _AddWorkersState extends State<AddWorkers> {
   WorkersServices _workersServices = WorkersServices();
-  String firstName;
-  String lastName;
+  String _firstName;
+  String _lastName;
   String phoneNumber;
   String password;
   String emailAddress;
@@ -65,10 +66,8 @@ class _AddWorkersState extends State<AddWorkers> {
                           validator: (input) =>
                               input.isEmpty ? 'Enter FirstName' : null,
                           onChanged: (val) {
-                            val.split(" ");
                             setState(() {
-                              firstName = val[0];
-                              lastName = val[1];
+                              _firstName = val;
                             });
                           },
                           decoration: InputDecoration(
@@ -598,20 +597,38 @@ class _AddWorkersState extends State<AddWorkers> {
                 ),
                 onTap: () async {
                   if (_formKey.currentState.validate()) {
+                    List _splitted = _firstName.split(' ');
                     DialogBoxes().loading(context);
+                    String firstName;
+                    String lastName;
+                    if (_splitted.length > 1) {
+                      firstName = _splitted[0];
+                      lastName = _splitted[1];
+                    } else {
+                      firstName = _splitted[0];
+                      lastName = 'Stockfare';
+                    }
+
                     _workersServices
                         .addWorkers(firstName, lastName, phoneNumber,
                             emailAddress, password, roles)
                         .then((value) {
-                      if (value != 201) {
+                      print(value);
+                      if (value == false) {
                         Navigator.pop(context);
                         setState(() {
-                          _error = value.toString();
+                          _error =
+                              'Phone number or Email already belongs to a user';
                           _displaySnackBar(context);
                         });
+                      } else {
+                        Navigator.pop(context);
+                        DialogBoxes().success(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WorkersListPage()));
                       }
-                      Navigator.pop(context);
-                      DialogBoxes().success(context);
                     });
                   }
                 }),

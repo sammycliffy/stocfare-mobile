@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intro_slider/dot_animation_enum.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
+import 'package:stockfare_mobile/screens/intro_pages/splashscreen.dart';
 
 class IntroScreen extends StatefulWidget {
   IntroScreen({Key key}) : super(key: key);
@@ -34,7 +35,7 @@ class IntroScreenState extends State<IntroScreen> {
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
             fontFamily: 'Raleway'),
-        pathImage: "images/photo_school.png",
+        pathImage: 'assets/images/logo.png',
       ),
     );
     slides.add(
@@ -52,7 +53,7 @@ class IntroScreenState extends State<IntroScreen> {
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
             fontFamily: 'Raleway'),
-        pathImage: "images/photo_museum.png",
+        pathImage: 'assets/images/logo.png',
       ),
     );
     slides.add(
@@ -70,14 +71,16 @@ class IntroScreenState extends State<IntroScreen> {
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
             fontFamily: 'Raleway'),
-        pathImage: "images/photo_coffee_shop.png",
+        pathImage: 'assets/images/logo.png',
       ),
     );
   }
 
   void onDonePress() {
     // Back to the first tab
-    this.goToTab(0);
+    // this.goToTab(0);
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SplashScreen()));
   }
 
   void onTabChangeCompleted(index) {

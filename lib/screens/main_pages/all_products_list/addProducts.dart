@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:stockfare_mobile/screens/intro_pages/add_multiple_product/upload_excel.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_products_category/add_form-page.dart';
+
+import 'add_multiple_product/upload_excel.dart';
 
 class AddProductPage extends StatelessWidget {
   @override

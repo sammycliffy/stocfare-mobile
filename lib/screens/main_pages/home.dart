@@ -5,12 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
-import 'package:stockfare_mobile/screens/intro_pages/add_single_products/form.dart';
 import 'package:stockfare_mobile/screens/main_pages/activities_pages.dart';
-import 'package:stockfare_mobile/screens/main_pages/all_products_list/cart.dart';
+import 'package:stockfare_mobile/screens/main_pages/sales_pages/cart.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:basic_utils/basic_utils.dart';
+import 'all_products_list/add_single_products/form.dart';
 
 enum SingingCharacter { pack, unit }
 

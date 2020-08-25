@@ -185,13 +185,16 @@ class _AllSalesListState extends State<AllSalesList> {
                                     onPressed: () {
                                       setState(() {
                                         filter = false;
+                                        salesList =
+                                            _salesServices.getallSales();
                                         print(salesList.then((value) {
                                           count = value.count;
                                           print(value.results.map((data) {
                                             registeredBy
                                                 .add(data.saleRegisteredBy);
                                             amountSold.add(data.amount);
-                                            customer.add(data.customer.name);
+                                            customer
+                                                .add(data.customer?.name ?? '');
                                             quantitySold.add(data
                                                 .productDetail[0]
                                                 .quantityBought);

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
-import 'package:stockfare_mobile/screens/intro_pages/add_single_products/barcode_image.dart';
 
 import 'package:stockfare_mobile/services/product_services.dart';
+
+import 'barcode_image.dart';
 
 class AddPackPage extends StatefulWidget {
   @override

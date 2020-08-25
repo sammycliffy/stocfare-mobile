@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:stockfare_mobile/main_pages/all_products_list/checkout.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
-import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
+import 'package:stockfare_mobile/screens/main_pages/sales_pages/checkout.dart';
 
 class AddCart extends StatefulWidget {
   @override

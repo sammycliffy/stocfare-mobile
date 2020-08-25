@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stockfare_mobile/screens/intro_pages/addProducts.dart';
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/addProducts.dart';
 
 class SuccessRegister extends StatelessWidget {
   @override

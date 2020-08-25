@@ -131,33 +131,33 @@ class ProductServices {
     }
   }
 
-  //get products from firebase
-  Future<String> getFirebaseId() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String firebaseId = sharedPreferences.getString("firebaseId");
+  // //get products from firebase
+  // Future<String> getFirebaseId() async {
+  //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  //   String firebaseId = sharedPreferences.getString("firebaseId");
 
-    final dbRef = FirebaseDatabase.instance;
-    dbRef.setPersistenceEnabled(true);
-    dbRef.setPersistenceCacheSizeBytes(10000000);
-    final databaseInstance = dbRef.reference();
-    databaseInstance.keepSynced(true);
-    List allProducts = [];
-    return databaseInstance
-        .child('inventories')
-        .orderByKey()
-        .equalTo(firebaseId)
-        .once()
-        .then((DataSnapshot snapshot) {
-      Map<dynamic, dynamic> values = snapshot.value['$firebaseId'];
-      print(values.toString());
-      values.forEach((k, v) {
-        print(v["name"]);
-        print(v['products'].map((value) {
-          print(value['name']);
-        }));
-      });
-    });
-  }
+  //   final dbRef = FirebaseDatabase.instance;
+  //   dbRef.setPersistenceEnabled(true);
+  //   dbRef.setPersistenceCacheSizeBytes(10000000);
+  //   final databaseInstance = dbRef.reference();
+  //   databaseInstance.keepSynced(true);
+  //   List allProducts = [];
+  //   return databaseInstance
+  //       .child('inventories')
+  //       .orderByKey()
+  //       .equalTo(firebaseId)
+  //       .once()
+  //       .then((DataSnapshot snapshot) {
+  //     Map<dynamic, dynamic> values = snapshot.value['$firebaseId'];
+  //     print(values.toString());
+  //     values.forEach((k, v) {
+  //       print(v["name"]);
+  //       print(v['products'].map((value) {
+  //         print(value['name']);
+  //       }));
+  //     });
+  //   });
+  // }
 
   //update category
   Future<dynamic> updateCategory(String categoryId, String name) async {
