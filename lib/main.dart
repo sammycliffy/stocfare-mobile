@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
+import 'package:stockfare_mobile/screens/intro_pages/splashscreen.dart';
 
 import 'screens/intro_pages/intro_slide.dart';
 
@@ -22,7 +23,7 @@ void main() {
         )
       ],
       child: MaterialApp(
-          home: IntroScreen(),
+          home: SplashScreen(),
           theme: ThemeData(
             primarySwatch: Colors.deepOrange,
             canvasColor: Colors.white,

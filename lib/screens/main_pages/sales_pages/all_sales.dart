@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/models/sales_model.dart';
-import 'package:stockfare_mobile/screens/main_pages/all_products_list/receipt.dart';
+import 'package:stockfare_mobile/screens/main_pages/sales_pages/receipt.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:stockfare_mobile/services/sales_services.dart';
@@ -15,14 +16,11 @@ class _AllSalesListState extends State<AllSalesList> {
   SalesServices _salesServices = SalesServices();
   Future<Welcome> salesList;
   Future<Welcome> sortedList;
-  int count;
+
   List names = [];
-  List dateCreated = [];
-  List price = [];
-  List registeredBy = [];
-  List amountSold = [];
-  List quantitySold = [];
-  List customer = [];
+  List totalCost = [];
+  List quantityBought = [];
+
   dynamic selectedDate = DateTime.now();
   bool filter = false;
 
@@ -31,19 +29,14 @@ class _AllSalesListState extends State<AllSalesList> {
     super.initState();
     salesList = _salesServices.getallSales();
     print(salesList.then((value) {
-      count = value.count;
       print(value.results.map((data) {
-        registeredBy.add(data.saleRegisteredBy);
-        amountSold.add(data.amount);
-        customer.add(data.customer?.name ?? '');
-        quantitySold.add(data.productDetail[0].quantityBought);
-        dateCreated.add(data.dateCreated);
-        return (data.productData.map((name) {
-          setState(() {
-            names.add(name.name);
-            price.add(name.productUnit.price);
-          });
-        }));
+        setState(() {
+          print(data.productDetail.map((value) {
+            names.add(value.name);
+            totalCost.add(value.totalCost);
+            quantityBought.add(value.quantityBought);
+          }));
+        });
       }));
     }));
   }
@@ -58,29 +51,21 @@ class _AllSalesListState extends State<AllSalesList> {
       setState(() {
         filter = true;
         names.clear();
-        dateCreated.clear();
-        price.clear();
-        registeredBy.clear();
-        amountSold.clear();
-
-        customer.clear();
 
         sortedList = _salesServices.sortedDates(
             (picked.toUtc().millisecondsSinceEpoch / 1000).round());
         print(sortedList.then((value) {
-          count = value.count;
           print(value.results.map((data) {
-            registeredBy.add(data.saleRegisteredBy);
-            amountSold.add(data.amount);
-            customer.add(data.customer.name);
-            quantitySold.add(data.productDetail[0].quantityBought);
-            dateCreated.add(data.dateCreated);
-            return (data.productData.map((name) {
-              setState(() {
-                names.add(name.name);
-                price.add(name.productUnit.price);
-              });
-            }));
+            setState(() {
+              names.clear();
+              totalCost.clear();
+              quantityBought.clear();
+              print(data.productDetail.map((value) {
+                names.add(value.name);
+                totalCost.add(value.totalCost);
+                quantityBought.add(value.quantityBought);
+              }));
+            });
           }));
         }));
       });
@@ -89,8 +74,6 @@ class _AllSalesListState extends State<AllSalesList> {
 
   @override
   Widget build(BuildContext context) {
-    print('this is ist ' +
-        (selectedDate.toUtc().millisecondsSinceEpoch / 1000).toString());
     return Scaffold(
         backgroundColor: Colors.white,
         drawer: DrawerPage(),
@@ -133,33 +116,61 @@ class _AllSalesListState extends State<AllSalesList> {
         ),
         body: Column(
           children: [
-            GestureDetector(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Center(
-                  child: Container(
-                      width: 220,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          border: Border.all(color: Colors.white)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text('Sort for sales using date'),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Icon(Icons.date_range,
-                              color: Theme.of(context).primaryColor)
-                        ],
-                      )),
-                ),
-              ),
-              onTap: () {
-                _selectDate(context);
-              },
-            ),
+            filter
+                ? MaterialButton(
+                    child: Text(
+                      'Go back',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    color: Colors.black,
+                    onPressed: () {
+                      setState(() {
+                        filter = false;
+                        names.clear();
+                        totalCost.clear();
+                        quantityBought.clear();
+                        salesList = _salesServices.getallSales();
+                        print(salesList.then((value) {
+                          print(value.results.map((data) {
+                            setState(() {
+                              print(data.productDetail.map((value) {
+                                names.add(value.name);
+                                totalCost.add(value.totalCost);
+                                quantityBought.add(value.quantityBought);
+                              }));
+                            });
+                          }));
+                        }));
+                      });
+                    })
+                : GestureDetector(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Center(
+                        child: Container(
+                            width: 220,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                border: Border.all(color: Colors.white)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text('Sort for sales using date'),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Icon(Icons.date_range,
+                                    color: Theme.of(context).primaryColor)
+                              ],
+                            )),
+                      ),
+                    ),
+                    onTap: () {
+                      _selectDate(context);
+                    },
+                  ),
+            //this is the expanded for sorted sales by date
             Expanded(
               child: filter
                   ? FutureBuilder<Welcome>(
@@ -176,41 +187,6 @@ class _AllSalesListState extends State<AllSalesList> {
                                     style: TextStyle(fontSize: 20),
                                   ),
                                 ),
-                                MaterialButton(
-                                    child: Text(
-                                      'Go back',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    color: Colors.black,
-                                    onPressed: () {
-                                      setState(() {
-                                        filter = false;
-                                        salesList =
-                                            _salesServices.getallSales();
-                                        print(salesList.then((value) {
-                                          count = value.count;
-                                          print(value.results.map((data) {
-                                            registeredBy
-                                                .add(data.saleRegisteredBy);
-                                            amountSold.add(data.amount);
-                                            customer
-                                                .add(data.customer?.name ?? '');
-                                            quantitySold.add(data
-                                                .productDetail[0]
-                                                .quantityBought);
-                                            dateCreated.add(data.dateCreated);
-                                            return (data.productData
-                                                .map((name) {
-                                              setState(() {
-                                                names.add(name.name);
-                                                price.add(
-                                                    name.productUnit.price);
-                                              });
-                                            }));
-                                          }));
-                                        }));
-                                      });
-                                    })
                               ],
                             );
                           }
@@ -236,32 +212,23 @@ class _AllSalesListState extends State<AllSalesList> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              Text(
-                                                'Sold By : ${registeredBy[index].toString()}',
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontFamily: 'Sora'),
-                                              ),
                                               SizedBox(height: 4),
                                               Text(
-                                                'Customer :  ${customer[index].toString()}',
+                                                'Price :  ${totalCost[index].toString()}',
                                                 style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontFamily: 'FireSans'),
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     top: 6),
                                                 child: Text(
-                                                  Jiffy(dateCreated[index])
-                                                      .format(
-                                                          "yyyy-MM-dd HH:mm:ss"),
+                                                  'Quantity Bought :  ${quantityBought[index].toString()}',
                                                   style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 10,
-                                                  ),
+                                                      color: Colors.black,
+                                                      fontFamily: 'FireSans'),
                                                 ),
                                               ),
                                             ],
@@ -302,9 +269,8 @@ class _AllSalesListState extends State<AllSalesList> {
                                 return GestureDetector(
                                   child: Card(
                                     child: ListTile(
-                                      leading: Icon(Icons.card_giftcard,
-                                          color:
-                                              Theme.of(context).primaryColor),
+                                      leading: Icon(Icons.monetization_on,
+                                          color: Colors.grey),
                                       title: Text(
                                         names[index],
                                         style: TextStyle(
@@ -318,31 +284,21 @@ class _AllSalesListState extends State<AllSalesList> {
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
                                               Text(
-                                                'Sold By : ${registeredBy[index].toString()}',
+                                                'Price :  ${totalCost[index].toString()}',
                                                 style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontFamily: 'Sora'),
-                                              ),
-                                              SizedBox(height: 4),
-                                              Text(
-                                                'Customer :  ${customer[index].toString()}',
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontFamily: 'FireSans'),
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    top: 6),
+                                                    top: 1),
                                                 child: Text(
-                                                  Jiffy(dateCreated[index])
-                                                      .format(
-                                                          "yyyy-MM-dd HH:mm:ss"),
+                                                  'Quantity Bought :  ${quantityBought[index].toString()}',
                                                   style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 10,
-                                                  ),
+                                                      color: Colors.black,
+                                                      fontFamily: 'FireSans'),
                                                 ),
                                               ),
                                             ],

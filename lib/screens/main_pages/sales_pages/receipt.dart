@@ -48,8 +48,8 @@ class _AllProductsListState extends State<AllProductsList> {
         registeredBy.add(data.saleRegisteredBy);
         amountSold.add(data.amount);
         referenceCode.add(data.refCode);
-        customerChange.add(data.change);
-        customer.add(data.customer.name);
+        // customerChange.add(data.change);
+        // customer.add(data.customer?.name ?? '');
         soldOnCredit.add(data.soldOnCredit);
         amountPaid.add(data.amountPaid);
         tax.add(data.tax);
@@ -211,7 +211,7 @@ class _AllProductsListState extends State<AllProductsList> {
                         Padding(
                           padding: const EdgeInsets.only(right: 30, top: 10),
                           child: Text(
-                            customer[widget.customerIndex].toString(),
+                            customer?.elementAt(widget.customerIndex) ?? "None",
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -231,15 +231,15 @@ class _AllProductsListState extends State<AllProductsList> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 30, top: 10),
-                          child: Text(
-                            customerChange[widget.customerIndex].toString(),
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        )
+                        // Padding(
+                        //   padding: const EdgeInsets.only(right: 30, top: 10),
+                        //   child: Text(
+                        //     customerChange[widget.customerIndex].toString(),
+                        //     style: TextStyle(
+                        //       fontSize: 16,
+                        //     ),
+                        //   ),
+                        // )
                       ],
                     ),
                     Row(
@@ -361,18 +361,18 @@ class _AllProductsListState extends State<AllProductsList> {
                                         color: Theme.of(context).primaryColor),
                                   ),
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(right: 30, top: 5),
-                                  child: Text(
-                                    customerChange[widget.customerIndex]
-                                        .toString(),
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'Sora',
-                                        color: Theme.of(context).primaryColor),
-                                  ),
-                                )
+                                // Padding(
+                                //   padding:
+                                //       const EdgeInsets.only(right: 30, top: 5),
+                                //   child: Text(
+                                //     customerChange[widget.customerIndex]
+                                //         .toString(),
+                                //     style: TextStyle(
+                                //         fontSize: 16,
+                                //         fontFamily: 'Sora',
+                                //         color: Theme.of(context).primaryColor),
+                                //   ),
+                                // )
                               ],
                             ),
                             Row(
