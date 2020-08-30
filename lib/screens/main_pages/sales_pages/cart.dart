@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/sales_pages/checkout.dart';
 
 class AddCart extends StatefulWidget {
@@ -40,7 +41,6 @@ class _AddCartState extends State<AddCart> {
   Widget build(BuildContext context) {
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     List _items = _addProduct.items;
-    print(_prices);
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.2;
     final double itemWidth = size.width / 2;
@@ -80,6 +80,7 @@ class _AddCartState extends State<AddCart> {
                       setState(() {
                         _addProduct.items.clear();
                         _prices.clear();
+                        // _addProduct.quantityToSell.clear();
                       });
                     },
                     child: Text('Empty'))

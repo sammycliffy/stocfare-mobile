@@ -19,6 +19,7 @@ class AddProductToCart with ChangeNotifier {
   int _packValue = 0;
   int _value = 0;
   bool _clear = false;
+  List _quantityToSell;
 
   int get product => _product;
   int get price => _price;
@@ -38,8 +39,14 @@ class AddProductToCart with ChangeNotifier {
   int get value => _value;
   int get packValue => _packValue;
   bool get clear => _clear;
+  List get quantityToSell => _quantityToSell;
   void setProductValue(int value) {
     _product = value;
+    notifyListeners();
+  }
+
+  void setQuantityToSell(List quantity) {
+    _quantityToSell = quantity;
     notifyListeners();
   }
 

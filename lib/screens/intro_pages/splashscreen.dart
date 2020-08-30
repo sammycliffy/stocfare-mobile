@@ -97,7 +97,7 @@ class _SplashScreenState extends State<SplashScreen> {
     String token = prefs.getString('token');
     if (token == null) {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => Login()));
+          MaterialPageRoute(builder: (BuildContext context) => LogoutPage()));
     } else {
       String body = prefs.getString('body');
       dynamic user = User.fromJson(json.decode(body));

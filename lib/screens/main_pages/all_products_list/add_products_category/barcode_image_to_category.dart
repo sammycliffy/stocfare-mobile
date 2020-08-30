@@ -34,12 +34,6 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
     });
   }
 
-  startBarcodeScanStream() async {
-    FlutterBarcodeScanner.getBarcodeStreamReceiver(
-            "#ff6666", "Cancel", true, ScanMode.BARCODE)
-        .listen((barcode) => print(barcode));
-  }
-
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.

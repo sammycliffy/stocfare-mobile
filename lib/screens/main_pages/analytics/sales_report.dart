@@ -14,26 +14,34 @@ class AnalyticsDetailsPage extends StatefulWidget {
 }
 
 class _AnalyticsDetailsPageState extends State<AnalyticsDetailsPage> {
-  List names = [];
   List dateCreated = [];
   List price = [];
   List registeredBy = [];
   List amountSold = [];
   List quantitySold = [];
   List customers = [];
+
+  List names = [];
+  List totalCost = [];
+  List quantityBought = [];
+
   @override
   void initState() {
     super.initState();
-
+    names.clear();
+    quantityBought.clear();
+    totalCost.clear();
     print(widget.analyticsData.results.map((data) {
       registeredBy.add(data.saleRegisteredBy);
       amountSold.add(data.amount);
       // customers.add(data.customer.name ?? '');
       quantitySold.add(data.productDetail[0].quantityBought);
+      names.add(data.productDetail[0].name);
+      totalCost.add(data.productDetail[0].totalCost);
+      quantityBought.add(data.productDetail[0].quantityBought);
       dateCreated.add(data.dateCreated);
       return (data.productData.map((name) {
         setState(() {
-          names.add(name.name);
           price.add(name.productUnit.price);
         });
       }));
@@ -42,6 +50,9 @@ class _AnalyticsDetailsPageState extends State<AnalyticsDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(totalCost);
+    print(quantityBought);
+    print(names);
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.pageTitle),
@@ -72,18 +83,19 @@ class _AnalyticsDetailsPageState extends State<AnalyticsDetailsPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  'Sold By : ${registeredBy[index].toString()}',
+                                  'Total Cost : ${totalCost[index].toString()}',
                                   style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                       fontWeight: FontWeight.w400,
                                       fontFamily: 'Sora'),
                                 ),
                                 SizedBox(height: 4),
-                                // Text(
-                                //   'Customer :  ${customer[index].toString()}',
-                                //   style: TextStyle(
-                                //       color: Colors.black, fontFamily: 'FireSans'),
-                                // ),
+                                Text(
+                                  'Quantity Bought :  ${quantityBought[index].toString()}',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'FireSans'),
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 6),
                                   child: Text(

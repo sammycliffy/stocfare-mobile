@@ -1,45 +1,17 @@
 // To parse this JSON data, do
 //
-//     final getSalesModel = getSalesModelFromJson(jsonString);
+//     final createSalesModel = createSalesModelFromJson(jsonString);
 
 import 'dart:convert';
 
-GetSalesModel getSalesModelFromJson(String str) =>
-    GetSalesModel.fromJson(json.decode(str));
+CreateSalesModel createSalesModelFromJson(String str) =>
+    CreateSalesModel.fromJson(json.decode(str));
 
-String getSalesModelToJson(GetSalesModel data) => json.encode(data.toJson());
+String createSalesModelToJson(CreateSalesModel data) =>
+    json.encode(data.toJson());
 
-class GetSalesModel {
-  GetSalesModel({
-    this.count,
-    this.next,
-    this.previous,
-    this.results,
-  });
-
-  int count;
-  String next;
-  dynamic previous;
-  List<Result> results;
-
-  factory GetSalesModel.fromJson(Map<String, dynamic> json) => GetSalesModel(
-        count: json["count"],
-        next: json["next"],
-        previous: json["previous"],
-        results:
-            List<Result>.from(json["results"].map((x) => Result.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "count": count,
-        "next": next,
-        "previous": previous,
-        "results": List<dynamic>.from(results.map((x) => x.toJson())),
-      };
-}
-
-class Result {
-  Result({
+class CreateSalesModel {
+  CreateSalesModel({
     this.id,
     this.customer,
     this.productData,
@@ -57,7 +29,7 @@ class Result {
   });
 
   String id;
-  Customer customer;
+  dynamic customer;
   List<ProductDatum> productData;
   String saleRegisteredBy;
   List<ProductDetail> productDetail;
@@ -71,11 +43,10 @@ class Result {
   String amountPaid;
   String refCode;
 
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
+  factory CreateSalesModel.fromJson(Map<String, dynamic> json) =>
+      CreateSalesModel(
         id: json["id"],
-        customer: json["customer"] == null
-            ? null
-            : Customer.fromJson(json["customer"]),
+        customer: json["customer"],
         productData: List<ProductDatum>.from(
             json["product_data"].map((x) => ProductDatum.fromJson(x))),
         saleRegisteredBy: json["sale_registered_by"],
@@ -94,7 +65,7 @@ class Result {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "customer": customer == null ? null : customer.toJson(),
+        "customer": customer,
         "product_data": List<dynamic>.from(productData.map((x) => x.toJson())),
         "sale_registered_by": saleRegisteredBy,
         "product_detail":
@@ -108,46 +79,6 @@ class Result {
         "tax": tax,
         "amount_paid": amountPaid,
         "ref_code": refCode,
-      };
-}
-
-class Customer {
-  Customer({
-    this.id,
-    this.name,
-    this.address,
-    this.mobile,
-    this.email,
-    this.dateCreated,
-    this.updatedAt,
-  });
-
-  String id;
-  String name;
-  String address;
-  String mobile;
-  String email;
-  DateTime dateCreated;
-  DateTime updatedAt;
-
-  factory Customer.fromJson(Map<String, dynamic> json) => Customer(
-        id: json["id"],
-        name: json["name"],
-        address: json["address"],
-        mobile: json["mobile"],
-        email: json["email"],
-        dateCreated: DateTime.parse(json["date_created"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "address": address,
-        "mobile": mobile,
-        "email": email,
-        "date_created": dateCreated.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
       };
 }
 
@@ -272,23 +203,23 @@ class Product {
 class ProductDetail {
   ProductDetail({
     this.name,
-    this.totalCost,
     this.quantityBought,
+    this.totalCost,
   });
 
   String name;
-  int totalCost;
   int quantityBought;
+  int totalCost;
 
   factory ProductDetail.fromJson(Map<String, dynamic> json) => ProductDetail(
         name: json["name"],
-        totalCost: json["total_cost"],
         quantityBought: json["quantity_bought"],
+        totalCost: json["total_cost"],
       );
 
   Map<String, dynamic> toJson() => {
         "name": name,
-        "total_cost": totalCost,
         "quantity_bought": quantityBought,
+        "total_cost": totalCost,
       };
 }

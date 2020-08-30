@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
+import 'package:stockfare_mobile/services/payment_services.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 
 class UploadExcelPage extends StatefulWidget {
@@ -15,6 +16,7 @@ class UploadExcelPage extends StatefulWidget {
 class _UploadExcelPageState extends State<UploadExcelPage> {
   File toSend;
   ProductServices _productServices = ProductServices();
+  PaymentServices _paymentServices = PaymentServices();
   Future _getFile() async {
     File file = await FilePicker.getFile();
     return file;
@@ -83,19 +85,33 @@ class _UploadExcelPageState extends State<UploadExcelPage> {
               ),
             ),
             onTap: () {
-              DialogBoxes().loading(context);
-              _productServices
-                  .productFileUpload(_addProductNotifier.categoryId, toSend)
-                  .then((value) {
-                if (value != 201 || value != 200) {
-                  Navigator.pop(context);
-                  setState(() {
-                    _error = value;
-                    _displaySnackBar(context);
-                  });
+              _paymentServices.checkForPlan().then((value) {
+                if (value == 'PREMIUM') {
+                  if (toSend == null) {
+                    setState(() {
+                      _error = 'You must select a file first';
+                      _displaySnackBar(context);
+                    });
+                  } else {
+                    DialogBoxes().loading(context);
+                    _productServices
+                        .productFileUpload(
+                            _addProductNotifier.categoryId, toSend)
+                        .then((value) {
+                      if (value != 201 || value != 200) {
+                        Navigator.pop(context);
+                        setState(() {
+                          _error = value;
+                          _displaySnackBar(context);
+                        });
+                      } else {
+                        Navigator.pop(context);
+                        DialogBoxes().success(context);
+                      }
+                    });
+                  }
                 } else {
-                  Navigator.pop(context);
-                  DialogBoxes().success(context);
+                  DialogBoxes().invalidSubscription(context);
                 }
               });
             }),

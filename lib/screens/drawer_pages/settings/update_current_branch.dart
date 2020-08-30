@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 
 class CurrentBranch extends StatefulWidget {
@@ -11,6 +12,8 @@ class _CurrentBranchState extends State<CurrentBranch> {
   String branchName;
   String branchAddress;
   bool isInstructionView;
+  String _error;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -21,6 +24,7 @@ class _CurrentBranchState extends State<CurrentBranch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.white,
         appBar: AppBar(title: Text('Update Current Branch')),
         body: Form(
@@ -137,15 +141,34 @@ class _CurrentBranchState extends State<CurrentBranch> {
                   ),
                 ),
                 onTap: () async {
+                  DialogBoxes().loading(context);
                   _productServices
                       .updateBranch(
                           branchName, branchAddress, isInstructionView)
                       .then((value) {
-                    print(value);
+                    if (value == true) {
+                      Navigator.pop(context);
+                      DialogBoxes().success(context);
+                    } else {
+                      setState(() {
+                        _error = value;
+                        _displaySnackBar(context);
+                      });
+                    }
                   });
                 }),
           ],
         )));
+  }
+
+  _displaySnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Text(
+          _error,
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 }
 

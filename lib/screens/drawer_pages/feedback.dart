@@ -60,11 +60,10 @@ class _FeedBackPageState extends State<FeedBackPage> {
                     width: 200,
                     decoration: BoxDecoration(
                         color: Theme.of(context).primaryColor,
-                        border: Border.all(color: Colors.red, width: 3),
                         borderRadius: BorderRadius.circular(20)),
                     child: Center(
                         child: Text(
-                      'Change Password',
+                      'Send',
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     )),

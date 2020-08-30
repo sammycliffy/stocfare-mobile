@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/color_models.dart';
@@ -12,7 +11,7 @@ class ProductServices {
   Future<dynamic> productAddition(
       String productCategory,
       String unitproductName,
-      int unitproductPrice,
+      double unitproductPrice,
       int unitproductQuantity,
       int unitLimit,
       int packProductPrice,
@@ -78,7 +77,7 @@ class ProductServices {
   //Add products alone
   Future<dynamic> addProductToCategory(
     String unitproductName,
-    int unitproductPrice,
+    double unitproductPrice,
     int unitproductQuantity,
     int unitLimit,
     int packProductPrice,
@@ -95,7 +94,6 @@ class ProductServices {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
     ColorsData colorsData = ColorsData(colorDataModel: data);
-    print('THIS IS UNIT PRODUCT' + categoryId);
     final String url =
         'https://stockfare-io.herokuapp.com/api/v1/inventory/create-product/$categoryId/';
     final http.Response response = await http.post(url,
@@ -185,6 +183,61 @@ class ProductServices {
     }
   }
 
+  Future<dynamic> editProduct(
+    String unitproductName,
+    double unitproductPrice,
+    int unitproductQuantity,
+    int unitLimit,
+    double packProductPrice,
+    int packQuantity,
+    int packLimit,
+    String barcode,
+    String productDescription,
+    int productDiscount,
+    int productWeight,
+    List<ColorDataModel> data,
+    String productId,
+  ) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    ColorsData colorsData = ColorsData(colorDataModel: data);
+
+    String url =
+        'https://stockfare-io.herokuapp.com/api/v1/inventory/category/product/$productId/';
+
+    final response = await http.patch(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "product_colour":
+              colorsData.colorDataModel.map((i) => i.toJson()).toList(),
+          "product_unit": {
+            "price": unitproductPrice,
+            "quantity": unitproductQuantity,
+            "limit": unitLimit
+          },
+          "product_pack": {
+            "price": packProductPrice,
+            "limit": packLimit,
+            "quantity": packQuantity,
+          },
+          "name": unitproductName,
+          "description": productDescription,
+          "weight": productWeight,
+          "bar_code": barcode,
+          "discount": productDiscount
+        }));
+    if (response.statusCode == 200) {
+      print(response.body);
+      return true;
+    } else {
+      return json.decode(response.body);
+    }
+  }
+
   Future<dynamic> deleteCategory(List<String> deleteItem) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
@@ -242,6 +295,10 @@ class ProductServices {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
+    String firebaseId = sharedPreferences.getString("firebaseId");
+    String firebaseNotificationId =
+        sharedPreferences.getString("firebaseNotificationId");
+    String businessId = sharedPreferences.getString("businessId");
     String url =
         'https://stockfare-io.herokuapp.com/api/v1/branch/update/$branchId/';
 
@@ -255,10 +312,17 @@ class ProductServices {
           "notification_status": notificationStatus,
           "name": branchName,
           "address": branchAddress,
-          "firebase_inventory_id": "string",
-          "firebase_notification_id": "string",
-          "business_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          "firebase_inventory_id": firebaseId,
+          "firebase_notification_id": firebaseNotificationId,
+          "business_id": businessId
         }));
+
+    if (response.statusCode != 200 || response.statusCode != 201) {
+      return true;
+    } else {
+      print(response.body);
+      return json.decode(response.body);
+    }
   }
 
   Future<dynamic> deleteProducts(List<String> deleteItem) async {

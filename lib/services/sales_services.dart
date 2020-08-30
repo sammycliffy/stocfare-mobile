@@ -1,12 +1,13 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:stockfare_mobile/models/create_sales_model.dart';
 import 'dart:convert';
 
 import 'package:stockfare_mobile/models/sales_model.dart';
 
 class SalesServices {
-  Future<Welcome> getallSales() async {
+  Future<GetSalesModel> getallSales() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
@@ -20,13 +21,13 @@ class SalesServices {
     });
     if (response.statusCode == 200) {
       print(response.body);
-      return Welcome.fromJson(json.decode(response.body));
+      return GetSalesModel.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load album');
     }
   }
 
-  Future<Welcome> sortedDates(int sortedDate) async {
+  Future<GetSalesModel> sortedDates(int sortedDate) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
@@ -41,13 +42,13 @@ class SalesServices {
     });
     if (response.statusCode == 200) {
       print(response.body);
-      return Welcome.fromJson(json.decode(response.body));
+      return GetSalesModel.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load album');
     }
   }
 
-  Future<bool> addSales(
+  Future<CreateSalesModel> addSales(
       List products,
       String customerName,
       String customerAddress,
@@ -63,6 +64,7 @@ class SalesServices {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
+    print(token);
     print(products);
     final String url =
         'http://stockfare-io.herokuapp.com/api/v1/sales/create-sale/$branchId/';
@@ -91,33 +93,9 @@ class SalesServices {
           "ref_code": null
         }));
     if (response.statusCode == 200) {
-      print(response.body);
-      return true;
+      return CreateSalesModel.fromJson(json.decode(response.body));
     } else {
-      print(response.body);
-      return false;
+      throw Exception('somthing went wrong');
     }
   }
 }
-
-// List result = [];
-// List name = [];
-// List dateCreated = [];
-// List prices = [];
-
-// print(sales.results.map((i) {
-//   return i.productData.map((name) {
-//     result.add(name.name);
-//     result.add(name.dateCreated);
-//     result.add('Product Unit Price ' + name.productUnit.price.toString());
-//     result.add(
-//         'Product Unit Quantity ' + name.productUnit.quantity.toString());
-//   });
-// }));
-
-// print(sales.results.map((i) {
-//   result.add('Seller' + i.saleRegisteredBy.toString());
-//   i.productDetail.map((cost) {
-//     result.add('total cost' + cost.totalCost.toString());
-//   });
-// }));

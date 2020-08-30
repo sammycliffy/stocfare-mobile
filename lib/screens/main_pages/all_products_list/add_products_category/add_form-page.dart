@@ -29,7 +29,8 @@ class _AddFormPageState extends State<AddFormPage> {
   String _colorName;
   int _colorQuantity;
   int _colorLimit;
-  var controller = new MoneyMaskedTextController();
+  var controller = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',');
   bool loading = false;
   String _error;
   bool addExtraDetails = false;
@@ -306,7 +307,7 @@ class _AddFormPageState extends State<AddFormPage> {
                                       _unitProductName,
                                       (_unitLimit * 100).round(),
                                       _unitQuantity,
-                                      int.parse(controller.text),
+                                      controller.numberValue,
                                       _productDescription,
                                       _productDiscount,
                                       _productWeight,
@@ -658,7 +659,7 @@ class _AddFormPageState extends State<AddFormPage> {
                                 _unitProductName,
                                 (_unitLimit * 100).round(),
                                 _unitQuantity,
-                                int.parse(controller.text),
+                                controller.numberValue,
                                 _productDescription,
                                 _productDiscount,
                                 _productWeight,

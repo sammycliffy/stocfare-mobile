@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stockfare_mobile/models/create_sales_model.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/sales_pages/sales_receipt.dart';
@@ -458,36 +459,28 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               ),
                             ),
                             onTap: () {
-                              // DialogBoxes().loading(context);
-                              // _salesServices
-                              //     .addSales(
-                              //         addProduct.items,
-                              //         customerName,
-                              //         customerAddress,
-                              //         customerMobile,
-                              //         customerEmail,
-                              //         addProduct.prices,
-                              //         customerChange,
-                              //         paymentMethod,
-                              //         newvalue,
-                              //         initialDeposit,
-                              //         tax,
-                              //         selectedDate.toLocal())
-                              //     .then((value) {
-                              //   if (value == true) {
-                              //     Navigator.pop(context);
-                              //     Navigator.push(
-                              //         context,
-                              //         MaterialPageRoute(
-                              //             builder: (context) =>
-                              //                 SalesReceipt()));
-                              //   }
+                              DialogBoxes().loading(context);
+                              Future<CreateSalesModel> _createSales =
+                                  _salesServices.addSales(
+                                      addProduct.items,
+                                      customerName,
+                                      customerAddress,
+                                      customerMobile,
+                                      customerEmail,
+                                      addProduct.prices,
+                                      customerChange,
+                                      paymentMethod,
+                                      newvalue,
+                                      initialDeposit,
+                                      tax,
+                                      selectedDate.toLocal());
 
-                              // });
+                              Navigator.pop(context);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SalesReceipt()));
+                                      builder: (context) =>
+                                          SalesReceipt(value: _createSales)));
                             }),
                       ),
                       SizedBox(

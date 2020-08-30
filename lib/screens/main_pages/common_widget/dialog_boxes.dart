@@ -32,6 +32,62 @@ class DialogBoxes {
     );
   }
 
+  productOutOfRange(context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          content: SingleChildScrollView(
+              child: Column(
+            children: <Widget>[
+              Icon(
+                Icons.mood_bad,
+                size: 50,
+                color: Theme.of(context).primaryColor,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                'Sorry! This product is out of Stock',
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
+            ],
+          )),
+        );
+      },
+    );
+  }
+
+  invalidSubscription(context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          content: SingleChildScrollView(
+              child: Column(
+            children: <Widget>[
+              Icon(
+                Icons.mood_bad,
+                size: 50,
+                color: Theme.of(context).primaryColor,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                'Sorry! You cannot use this service until you upgrade your plan',
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
+            ],
+          )),
+        );
+      },
+    );
+  }
+
   accountDetails(context) {
     return showDialog<void>(
       context: context,

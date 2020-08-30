@@ -6,7 +6,7 @@ class AddProductNotifier with ChangeNotifier {
   String _productCategory;
   String _productDescription;
   int _unitLimit = 0;
-  int _unitproductPrice = 0;
+  double _unitproductPrice = 0;
   int _unitproductQuantity = 0;
   int _productBarcode = 0;
   int _productDiscount = 0;
@@ -31,7 +31,7 @@ class AddProductNotifier with ChangeNotifier {
   int get packProductPrice => _packProductPrice;
   String get productDescription => _productDescription;
   String get productCategory => _productCategory;
-  int get unitproductPrice => _unitproductPrice;
+  double get unitproductPrice => _unitproductPrice;
   int get unitproductQuantity => _unitproductQuantity;
   int get unitLimit => _unitLimit;
   int get productBarcode => _productBarcode;
@@ -46,7 +46,7 @@ class AddProductNotifier with ChangeNotifier {
     String productName,
     int unitLimit,
     int unitQuantity,
-    int productPrice,
+    double productPrice,
     String productDescription,
     int productDiscount,
     int productWeight,

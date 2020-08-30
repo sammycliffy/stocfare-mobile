@@ -14,8 +14,8 @@ class AllSalesList extends StatefulWidget {
 
 class _AllSalesListState extends State<AllSalesList> {
   SalesServices _salesServices = SalesServices();
-  Future<Welcome> salesList;
-  Future<Welcome> sortedList;
+  Future<GetSalesModel> salesList;
+  Future<GetSalesModel> sortedList;
 
   List names = [];
   List totalCost = [];
@@ -173,7 +173,7 @@ class _AllSalesListState extends State<AllSalesList> {
             //this is the expanded for sorted sales by date
             Expanded(
               child: filter
-                  ? FutureBuilder<Welcome>(
+                  ? FutureBuilder<GetSalesModel>(
                       future: sortedList,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
@@ -258,7 +258,7 @@ class _AllSalesListState extends State<AllSalesList> {
                               Center(child: CircularProgressIndicator()),
                             ]);
                       })
-                  : FutureBuilder<Welcome>(
+                  : FutureBuilder<GetSalesModel>(
                       future: salesList,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {

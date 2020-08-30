@@ -7,10 +7,11 @@ import 'package:stockfare_mobile/models/user_model.dart';
 
 class AuthServices {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  String tokenz;
-  Future<String> getTokenz() async {
+
+  getTokenz() async {
     String token = await _firebaseMessaging.getToken();
-    return token;
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('firebaseToken', token);
   }
 
   Future<dynamic> userRegistration(
@@ -25,8 +26,9 @@ class AuthServices {
     String businessType,
     String referralCode,
   ) async {
-    getTokenz().then((value) => tokenz = value);
+    getTokenz();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String firebaseToken = sharedPreferences.get('firebaseToken');
     final String url =
         'http://stockfare-io.herokuapp.com/api/v2/users/register/';
     final http.Response response = await http.post(url,
@@ -41,7 +43,7 @@ class AuthServices {
             "email": phone,
             "password": password,
           },
-          "registration_id": tokenz,
+          "registration_id": firebaseToken,
           "name": businessName,
           "address": businessAddress,
           "description": businessDescription,
@@ -58,6 +60,9 @@ class AuthServices {
       sharedPreferences.setString('user_id', user.user_id);
       sharedPreferences.setString('subscription_plan',
           responseJson['business'][0]['branch'][0]['subscription_plan']);
+      sharedPreferences.setString(
+          'firebaseNotificationId', user.firebaseNotificationId);
+      sharedPreferences.setString('businessId', user.businessId);
 
       print(user.branchId);
       return user;
@@ -72,9 +77,9 @@ class AuthServices {
     String username,
     String password,
   ) async {
+    getTokenz();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    dynamic _registrationId = getTokenz();
-    getTokenz().then((value) => tokenz = value);
+    String firebaseToken = sharedPreferences.get('firebaseToken');
     final http.Response response = await http.post(
       'http://stockfare-io.herokuapp.com/api/v1/users/login/',
       headers: <String, String>{
@@ -83,7 +88,7 @@ class AuthServices {
       body: jsonEncode(<String, String>{
         "username": username,
         "password": password,
-        "registration_id": tokenz
+        "registration_id": firebaseToken
       }),
     );
 
@@ -98,6 +103,9 @@ class AuthServices {
       sharedPreferences.setString('user_id', user.userId.toString());
       sharedPreferences.setString('subscription_plan',
           responseJson['business'][0]['branch'][0]['subscription_plan']);
+      sharedPreferences.setString(
+          'firebaseNotificationId', user.firebaseNotificationId);
+      sharedPreferences.setString('businessId', user.businessId);
 
       return user;
     } else if (response.statusCode == 400) {

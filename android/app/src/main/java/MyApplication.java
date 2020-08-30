@@ -1,4 +1,3 @@
-
 package com.example.stockfare_mobile;
 import io.flutter.app.FlutterApplication;
 import io.flutter.plugin.common.PluginRegistry;
@@ -18,7 +17,3 @@ public class MyApplication extends FlutterApplication implements PluginRegistran
         FirebaseCloudMessagingPluginRegistrant.registerWith(registry);
     }
 }
-
-
-
-

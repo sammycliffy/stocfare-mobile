@@ -51,42 +51,44 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Card(
-                    color: Colors.grey,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          width: 150,
-                          height: 70,
-                          child: Center(
-                            child: Text(
-                              'BASIC PLAN',
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
+                GestureDetector(
+                                  child: Card(
+                      color: Colors.grey,
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            width: 150,
+                            height: 70,
+                            child: Center(
+                              child: Text(
+                                'BASIC PLAN',
+                                style:
+                                    TextStyle(fontSize: 18, color: Colors.white),
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          color: Colors.white,
-                          width: 150,
-                          height: 70,
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                'Price',
-                                style:
-                                    TextStyle(fontSize: 16, color: Colors.grey),
-                              ),
-                              Text(
-                                'FREE',
-                                style: TextStyle(
-                                    fontSize: 20, color: Colors.black),
-                              )
-                            ],
+                          Container(
+                            color: Colors.white,
+                            width: 150,
+                            height: 70,
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  'Price',
+                                  style:
+                                      TextStyle(fontSize: 16, color: Colors.grey),
+                                ),
+                                Text(
+                                  'FREE',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    )),
+                        ],
+                      )),
+                ),
                 SizedBox(
                   width: 10,
                 ),
