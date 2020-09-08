@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
+import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/auth_services.dart';
 
 class UpdateAccount extends StatefulWidget {
@@ -18,8 +21,14 @@ class _UpdateAccountState extends State<UpdateAccount> {
   bool loading = false;
   String _error;
   AuthServices _authServices = AuthServices();
+  ActivitiesServices _activitiesServices = ActivitiesServices();
   @override
   Widget build(BuildContext context) {
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
+    List _splitted = _signupNotifier.fullName.split(' ');
+    String _initialfirstName = _splitted[0];
+    String _initiallastName = _splitted[1];
     return WillPopScope(
       onWillPop: () async => Navigator.push(context,
           MaterialPageRoute(builder: (context) => BottomNavigationPage())),
@@ -44,6 +53,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
                       _firstName = val;
                     }),
                     decoration: InputDecoration(
+                      labelText: _initialfirstName,
                       contentPadding: EdgeInsets.all(12),
                       labelStyle:
                           TextStyle(color: Theme.of(context).primaryColor),
@@ -82,6 +92,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
                       _lastName = val;
                     }),
                     decoration: InputDecoration(
+                      labelText: _initiallastName,
                       contentPadding: EdgeInsets.all(12),
                       labelStyle:
                           TextStyle(color: Theme.of(context).primaryColor),
@@ -121,6 +132,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
                       _email = val;
                     }),
                     decoration: InputDecoration(
+                      labelText: _signupNotifier.email,
                       contentPadding: EdgeInsets.all(12),
                       labelStyle:
                           TextStyle(color: Theme.of(context).primaryColor),
@@ -159,6 +171,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
                       _phoneNumber = '+234' + val.substring(1);
                     }),
                     decoration: InputDecoration(
+                      labelText: _signupNotifier.phone,
                       contentPadding: EdgeInsets.all(12),
                       labelStyle:
                           TextStyle(color: Theme.of(context).primaryColor),
@@ -196,7 +209,6 @@ class _UpdateAccountState extends State<UpdateAccount> {
                         width: 200,
                         decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor,
-                            border: Border.all(color: Colors.red, width: 3),
                             borderRadius: BorderRadius.circular(20)),
                         child: Center(
                             child: Text(
@@ -208,22 +220,49 @@ class _UpdateAccountState extends State<UpdateAccount> {
                     ),
                     onTap: () async {
                       if (_formKey.currentState.validate()) {
-                        setState(() {
-                          DialogBoxes().loading(context);
-                        });
-                        _authServices
-                            .updateDetails(
-                                _firstName, _lastName, _email, _phoneNumber)
-                            .then((value) {
-                          if (value == 200) {
-                            Navigator.pop(context);
-                            setState(() {
-                              DialogBoxes().success(context);
-                            });
+                        _activitiesServices
+                            .checkForInternet()
+                            .then((value) async {
+                          if (value == true) {
+                            DialogBoxes().loading(context);
+
+                            dynamic result = await _authServices
+                                .updateDetails(
+                                    _firstName, _lastName, _email, _phoneNumber)
+                                .timeout(Duration(seconds: 10),
+                                    onTimeout: () => null);
+
+                            if (result != 200) {
+                              Navigator.pop(context);
+                              setState(() {
+                                result == null
+                                    ? _error =
+                                        'Opps! Error occured, please try again.'
+                                    : _error = result[0].toString();
+                                _displaySnackBar(context);
+                              });
+                            } else {
+                              Navigator.pop(context);
+                              setState(() {
+                                DialogBoxes().success(context);
+                                _signupNotifier.setProfile(
+                                  _firstName + ' ' + _lastName,
+                                  _phoneNumber,
+                                  _email,
+                                  _signupNotifier.firebaseId,
+                                  _signupNotifier.branchName,
+                                  _signupNotifier.branchAddress,
+                                  _signupNotifier.notificationStatus,
+                                  _signupNotifier.subscriptionPlan,
+                                );
+                              });
+                            }
                           } else {
                             Navigator.pop(context);
                             setState(() {
-                              _error = value.toString();
+                              _error =
+                                  'Check your internet internet connection';
+
                               _displaySnackBar(context);
                             });
                           }

@@ -1,3 +1,4 @@
+import 'package:global_configuration/global_configuration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -11,19 +12,21 @@ class SalesServices {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
-    final String url =
-        'https://stockfare-io.herokuapp.com/api/v1/sales/sales/$branchId/';
-    final http.Response response =
-        await http.get(url, headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
-    if (response.statusCode == 200) {
-      print(response.body);
-      return GetSalesModel.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to load album');
+    final String url = GlobalConfiguration().get("get-sales") + '$branchId/';
+    try {
+      final http.Response response =
+          await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+      if (response.statusCode == 200) {
+        return GetSalesModel.fromJson(json.decode(response.body));
+      } else {
+        return Future.error(json.decode(response.body));
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -33,7 +36,7 @@ class SalesServices {
     String token = sharedPreferences.getString('token');
     print(sortedDate);
     final String url =
-        'https://stockfare-io.herokuapp.com/api/v1/sales/sales/$branchId/?date=$sortedDate';
+        GlobalConfiguration().get("get-sales") + '$branchId/?date=$sortedDate';
     final http.Response response =
         await http.get(url, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -44,30 +47,31 @@ class SalesServices {
       print(response.body);
       return GetSalesModel.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to load album');
+      return Future.error('error');
     }
   }
 
   Future<CreateSalesModel> addSales(
-      List products,
-      String customerName,
-      String customerAddress,
-      String customerMobile,
-      String customerEmail,
-      int productAmount,
-      int customerChange,
-      String paymentMethod,
-      bool soldOnCredit,
-      int amountPaid,
-      int tax,
-      dynamic date) async {
+    List products,
+    String customerName,
+    String customerAddress,
+    String customerMobile,
+    String customerEmail,
+    int productAmount,
+    int customerChange,
+    String paymentMethod,
+    bool soldOnCredit,
+    int amountPaid,
+    int tax,
+    dynamic date,
+    int total,
+  ) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
     print(token);
     print(products);
-    final String url =
-        'http://stockfare-io.herokuapp.com/api/v1/sales/create-sale/$branchId/';
+    final String url = GlobalConfiguration().get("create-sales") + '$branchId/';
     final http.Response response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -83,7 +87,7 @@ class SalesServices {
             "email": customerEmail,
             "updated_at": null
           },
-          "amount": productAmount,
+          "amount": total,
           "change": customerChange,
           "payment_method": paymentMethod,
           "sold_on_credit": soldOnCredit,
@@ -95,7 +99,33 @@ class SalesServices {
     if (response.statusCode == 200) {
       return CreateSalesModel.fromJson(json.decode(response.body));
     } else {
-      throw Exception('somthing went wrong');
+      return Future.error(json.decode(response.body));
+    }
+  }
+
+  Future<dynamic> deleteSales(String id) async {
+    print(id);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    final String url = GlobalConfiguration().get("delete-sales") + '$id/';
+    try {
+      final http.Response response = await http.delete(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 204) {
+        print(response.statusCode);
+        return response.statusCode;
+      } else {
+        print(response.body);
+        return json.decode(response.body)['detail'];
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/screens/auth_pages/new_password.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
+import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/auth_services.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -11,8 +12,12 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   String data;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
   String _error;
   AuthServices _authServices = AuthServices();
+  ActivitiesServices _activitiesServices =
+      ActivitiesServices(); // check for network
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +25,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         body: SafeArea(
           child: Column(children: [
             SizedBox(
-              height: 20,
+              height: 120,
             ),
             Center(
                 child: Image.asset('assets/images/logo.png',
@@ -34,7 +39,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: Colors.red),
+                    color: Theme.of(context).primaryColor),
               ),
             ),
             Center(
@@ -47,35 +52,39 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             SizedBox(
               height: 50,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 40, right: 40),
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-                validator: (input) =>
-                    input.isEmpty ? "Enter your password" : null,
-                onChanged: (val) => setState(() {
-                  data = val;
-                }),
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(12),
-                  labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color:
-                              Theme.of(context).focusColor.withOpacity(0.2))),
-                  hintStyle: TextStyle(
-                      color: Theme.of(context).focusColor.withOpacity(0.7)),
-                  hintText: 'Phone Number or Email',
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color:
-                              Theme.of(context).focusColor.withOpacity(0.2))),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color:
-                              Theme.of(context).focusColor.withOpacity(0.5))),
+            Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 40, right: 40),
+                child: TextFormField(
+                  keyboardType: TextInputType.text,
+                  validator: (input) =>
+                      input.isEmpty ? "Phone Number or Email" : null,
+                  onChanged: (val) => setState(() {
+                    data = val;
+                  }),
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(12),
+                    labelStyle:
+                        TextStyle(color: Theme.of(context).primaryColor),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.2))),
+                    hintStyle: TextStyle(
+                        color: Theme.of(context).focusColor.withOpacity(0.7)),
+                    hintText: 'Phone Number or Email',
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.2))),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.5))),
+                  ),
+                  style: TextStyle(color: Colors.black),
                 ),
-                style: TextStyle(color: Colors.black),
               ),
             ),
             SizedBox(height: 30),
@@ -96,22 +105,37 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   ),
                 ),
                 onTap: () {
-                  DialogBoxes().loading(context);
-                  _authServices.forgotPassword(data).then((value) {
-                    if (value == false) {
-                      Navigator.pop(context);
-                      setState(() {
-                        _error =
-                            'Phone number or Email does not belong to any account';
-                        _displaySnackBar(context);
-                      });
-                    } else {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NewPassword()));
-                    }
-                  });
+                  if (_formKey.currentState.validate()) {
+                    _activitiesServices.checkForInternet().then((value) async {
+                      if (value == true) {
+                        DialogBoxes().loading(context);
+                        dynamic result = await _authServices
+                            .forgotPassword(data)
+                            .timeout(Duration(seconds: 5),
+                                onTimeout: () => null);
+                        if (result != true) {
+                          Navigator.pop(context);
+                          setState(() {
+                            result == null
+                                ? _error =
+                                    'Opps! Error occured, please try again.'
+                                : _error = 'Phone number or email not found.';
+                            _displaySnackBar(context);
+                          });
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NewPassword()));
+                        }
+                      } else {
+                        setState(() {
+                          _error = 'Check your internet connection';
+                          _displaySnackBar(context);
+                        });
+                      }
+                    });
+                  }
                 }),
           ]),
         ));

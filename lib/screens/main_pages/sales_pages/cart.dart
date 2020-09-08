@@ -15,6 +15,7 @@ class _AddCartState extends State<AddCart> {
   static List _names = [];
   static List _quantity = [];
   static List _type = [];
+  static List _id = [];
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _AddCartState extends State<AddCart> {
           _names.add(value['name']);
           _quantity.add(value['totalQuantity']);
           _type.add(value['type']);
+          _id.add(value['id']);
         });
       }));
     });
@@ -40,6 +42,8 @@ class _AddCartState extends State<AddCart> {
   @override
   Widget build(BuildContext context) {
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
+    _addProduct.addTotal(_prices.isEmpty ? 0 : _prices.reduce((a, b) => a + b));
+
     List _items = _addProduct.items;
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.2;
@@ -80,7 +84,11 @@ class _AddCartState extends State<AddCart> {
                       setState(() {
                         _addProduct.items.clear();
                         _prices.clear();
-                        // _addProduct.quantityToSell.clear();
+                        _addProduct.quantityToSell.clear();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BottomNavigationPage()));
                       });
                     },
                     child: Text('Empty'))
@@ -104,7 +112,7 @@ class _AddCartState extends State<AddCart> {
                                 height: 15,
                               ),
                               Text(
-                                _names[index].toString(),
+                                _names?.elementAt(index).toString(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
@@ -129,6 +137,8 @@ class _AddCartState extends State<AddCart> {
                                   icon: Icon(Icons.delete,
                                       color: Theme.of(context).primaryColor),
                                   onPressed: () {
+                                    _addProduct.quantityToSell.clear();
+                                    _addProduct.quantityToSell.add(_id);
                                     _addProduct.items.removeAt(index);
                                     setState(() {
                                       _names.removeAt(index);

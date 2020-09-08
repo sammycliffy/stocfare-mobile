@@ -609,27 +609,27 @@ class _AddWorkersState extends State<AddWorkers> {
                       lastName = 'Stockfare';
                     }
 
-                    _workersServices
+                    dynamic result = await _workersServices
                         .addWorkers(firstName, lastName, phoneNumber,
                             emailAddress, password, roles)
-                        .then((value) {
-                      print(value);
-                      if (value == false) {
-                        Navigator.pop(context);
-                        setState(() {
-                          _error =
-                              'Phone number or Email already belongs to a user';
-                          _displaySnackBar(context);
-                        });
-                      } else {
-                        Navigator.pop(context);
-                        DialogBoxes().success(context);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => WorkersListPage()));
-                      }
-                    });
+                        .timeout(Duration(seconds: 10), onTimeout: () => null);
+
+                    if (result != true) {
+                      Navigator.pop(context);
+                      setState(() {
+                        result == null
+                            ? _error = 'Opps! Error occured, please try again.'
+                            : _error = result[0].toString();
+                        _displaySnackBar(context);
+                      });
+                    } else {
+                      Navigator.pop(context);
+                      DialogBoxes().success(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WorkersListPage()));
+                    }
                   }
                 }),
             SizedBox(height: 30),

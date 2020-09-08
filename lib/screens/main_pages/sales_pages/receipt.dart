@@ -297,7 +297,6 @@ class _AllProductsListState extends State<AllProductsList> {
         dateCreated.add(data.dateCreated);
         return (data.productData.map((name) {
           setState(() {
-            names.add(name.name);
             price.add(name.productUnit.price);
           });
         }));
@@ -760,7 +759,9 @@ class _AllProductsListState extends State<AllProductsList> {
                     pw.Padding(
                       padding: const pw.EdgeInsets.only(right: 30, top: 10),
                       child: pw.Text(
-                        customerChange[widget.customerIndex].toString(),
+                        customerChange
+                            ?.elementAt(widget.customerIndex)
+                            .toString(),
                         style: pw.TextStyle(
                           fontSize: 16,
                         ),

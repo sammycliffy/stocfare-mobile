@@ -155,7 +155,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         width: 200,
                         decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor,
-                            border: Border.all(color: Colors.red, width: 3),
                             borderRadius: BorderRadius.circular(20)),
                         child: Center(
                             child: Text(
@@ -176,22 +175,26 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             _displaySnackBar(context);
                           });
                         } else {
-                          _authServices
+                          dynamic result = await _authServices
                               .updatePassword(oldPassword, newPassword1)
-                              .then((value) {
-                            if (value == 200) {
-                              Navigator.pop(context);
-                              setState(() {
-                                DialogBoxes().success(context);
-                              });
-                            } else {
-                              Navigator.pop(context);
-                              setState(() {
-                                _error = 'The old password is not correct';
-                                _displaySnackBar(context);
-                              });
-                            }
-                          });
+                              .timeout(Duration(seconds: 10),
+                                  onTimeout: () => null);
+
+                          if (result != 200) {
+                            Navigator.pop(context);
+                            setState(() {
+                              result == null
+                                  ? _error =
+                                      'Opps! Error occured, please try again.'
+                                  : _error = 'Old password is not correct';
+                              _displaySnackBar(context);
+                            });
+                          } else {
+                            Navigator.pop(context);
+                            setState(() {
+                              DialogBoxes().success(context);
+                            });
+                          }
                         }
                       }
                     }),

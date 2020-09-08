@@ -5,10 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/user_model.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
-import 'package:stockfare_mobile/screens/drawer_pages/logout.dart';
+import 'package:stockfare_mobile/screens/auth_pages/phone_verification.dart';
 import 'dart:async';
-
-import 'package:stockfare_mobile/screens/intro_pages/explore_page.dart';
+import 'package:stockfare_mobile/screens/intro_pages/intro_slide.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -25,7 +24,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     currentImage = Image.asset('assets/images/logo.png', width: 50, height: 50);
-    Timer(Duration(seconds: 4), () => checkForLogin());
+    Timer(
+        Duration(seconds: 3),
+        () => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) => Login())));
   }
 
   @override
@@ -83,10 +85,9 @@ class _SplashScreenState extends State<SplashScreen> {
     prefs.setInt('counter', launchCount + 1);
     if (launchCount == 0) {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => FirstIntro()));
+          MaterialPageRoute(builder: (BuildContext context) => IntroScreen()));
     } else {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (BuildContext context) => BottomNavigationPage()));
+      checkForLogin();
     }
   }
 
@@ -95,16 +96,30 @@ class _SplashScreenState extends State<SplashScreen> {
         Provider.of<SignupNotifier>(context, listen: false);
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
+    String body = prefs.getString('body');
+    dynamic user = User.fromJson(json.decode(body));
+    bool verified = prefs.getBool('verified');
     if (token == null) {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => LogoutPage()));
+          MaterialPageRoute(builder: (BuildContext context) => Login()));
+    } else if (verified == false) {
+      print(user.verified);
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => PhoneVerification()));
     } else {
-      String body = prefs.getString('body');
-      dynamic user = User.fromJson(json.decode(body));
       _signupNotifier.setProfile(
-          user.fullname, user.phone, user.email, user.firebaseId);
+          user.fullname,
+          user.phone,
+          user.email,
+          user.firebaseId,
+          user.branchName,
+          user.branchAddress,
+          user.notificationStatus,
+          user.subscriptionPlan);
+
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (BuildContext context) => BottomNavigationPage()));
     }
   }
 }
+

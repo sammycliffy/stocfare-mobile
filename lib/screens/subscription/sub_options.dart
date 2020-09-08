@@ -3,9 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
-
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
+import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/payment_services.dart';
 
 class SubOptions extends StatefulWidget {
@@ -16,6 +16,9 @@ class SubOptions extends StatefulWidget {
 class _SubOptionsState extends State<SubOptions> {
   var publicKey = 'pk_test_06b100bc626ea6bae0400111f8c7cbe604c93688';
   PaymentServices _paymentServices = PaymentServices();
+  ActivitiesServices _activitiesServices = ActivitiesServices();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _error;
   @override
   void initState() {
     super.initState();
@@ -37,6 +40,7 @@ class _SubOptionsState extends State<SubOptions> {
     SignupNotifier _signupNotifier = Provider.of<SignupNotifier>(context);
     String _email = _signupNotifier.email;
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Select Payment Method '),
         actions: <Widget>[
@@ -310,6 +314,8 @@ class _SubOptionsState extends State<SubOptions> {
   Future<dynamic> chargeCard(_email) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString('reference', _getReference());
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
     Charge charge = Charge()
       ..amount = 250000
       ..reference = _getReference()
@@ -321,14 +327,55 @@ class _SubOptionsState extends State<SubOptions> {
     );
     if (response.status == true) {
       DialogBoxes().loading(context);
-      _paymentServices.sendPaymentToServer().then((value) {
+      _activitiesServices.checkForInternet().then((value) async {
         if (value == true) {
-          Navigator.pop(context);
-          DialogBoxes().success(context);
+          dynamic result =
+              await _paymentServices.sendPaymentToServer('PREMIUM').timeout(
+                    Duration(seconds: 10),
+                    onTimeout: () => null,
+                  );
+          if (result != true) {
+            Navigator.pop(context);
+            setState(() {
+              result == null
+                  ? _error = 'Opps! Error occured, please try again.'
+                  : _error = result.toString();
+              _displaySnackBar(context);
+            });
+          } else {
+            Navigator.pop(context);
+            DialogBoxes().success(context);
+            _signupNotifier.setProfile(
+                _signupNotifier.fullName,
+                _signupNotifier.phone,
+                _signupNotifier.email,
+                _signupNotifier.firebaseId,
+                _signupNotifier.branchName,
+                _signupNotifier.branchAddress,
+                _signupNotifier.notificationStatus,
+                'PREMIUM');
+          }
+        } else {
+          setState(() {
+            _error = 'Please check your internet connection';
+
+            _displaySnackBar(context);
+          });
         }
       });
     } else {
       return false;
     }
+  }
+
+  _displaySnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+        duration: Duration(seconds: 5),
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Text(
+          _error.toString(),
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 }

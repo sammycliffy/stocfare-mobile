@@ -47,6 +47,10 @@ dependencies:
   path_provider: ^1.6.11
   flutter_paystack: ^1.0.3+1
   intro_slider: ^2.3.1
+  global_configuration: ^1.6.0
+  cached_network_image: ^2.3.1
+  font_awesome_flutter: ^8.8.1
+  connectivity: ^0.4.9+2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -62,6 +66,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/cfg/
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

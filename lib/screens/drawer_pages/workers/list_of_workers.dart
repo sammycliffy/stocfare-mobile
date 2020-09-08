@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/workers_models.dart';
+import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/workers/add_workers.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/workers/edit_workers.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
+import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/workers_services.dart';
 
 class WorkersListPage extends StatefulWidget {
@@ -14,7 +16,12 @@ class WorkersListPage extends StatefulWidget {
 class _WorkersListPageState extends State<WorkersListPage> {
   WorkersServices _workersServices = WorkersServices();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String subscriptionPlan;
+  ActivitiesServices _activitiesServices = ActivitiesServices();
+  bool isNetwork = true;
+  dynamic result;
+  bool _error = false;
+  String _errorData;
+  String _errorMessage;
   Future<WorkersList> _workersList;
   List<String> _workersName = [];
   List<String> _branchName = [];
@@ -23,52 +30,105 @@ class _WorkersListPageState extends State<WorkersListPage> {
   @override
   void initState() {
     super.initState();
-    checkForPlan().then((value) {
-      setState(() {
-        subscriptionPlan =
-            value; // assigns the value of the plan to subscription plan
-      });
+    _activitiesServices.checkForInternet().then((value) {
+      if (value == true) {
+        _workersList = _workersServices.getListOfWorkers().catchError((e) {
+          setState(() {
+            _error = true;
+            _errorData = e.toString();
+          });
+        });
+      } else {
+        setState(() {
+          isNetwork = false;
+        });
+      }
     });
-    _workersList = _workersServices.getListOfWorkers();
-    _workersList.then((value) {
-      print(value.results.map((value) {
-        _workersName.add(value.fullName);
-        _branchName.add(value.branchName);
-        _phoneNumber.add(value.phoneNumber);
-        _id.add(value.id);
-      }));
-    });
-  }
-
-  //checks the plan of the user to determine whether it is premium or free
-  Future<String> checkForPlan() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String subscriptionPlan = sharedPreferences.getString('subscription_plan');
-    return subscriptionPlan;
   }
 
   @override
   Widget build(BuildContext context) {
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
+    print(_signupNotifier.subscriptionPlan);
+    print(_error);
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Workers'),
       ),
-      body: subscriptionPlan == 'PREMIUM'
-          ? FutureBuilder<WorkersList>(
-              future: _workersList,
+      body: (() {
+        if (isNetwork == false) {
+          return GestureDetector(
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              child: Column(
+                children: [
+                  SizedBox(height: 200),
+                  Icon(
+                    Icons.mood_bad,
+                    size: 40,
+                  ),
+                  SizedBox(height: 10),
+                  Center(
+                    child: Text(
+                      'An error occured tap to refresth',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            onTap: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => super.widget));
+            },
+          );
+        } else if (_signupNotifier.subscriptionPlan != 'PREMIUM') {
+          return Column(
+            children: [
+              SizedBox(height: 200),
+              Icon(
+                Icons.mood_bad,
+                size: 40,
+              ),
+              SizedBox(height: 10),
+              Center(
+                child: Text(
+                  'You can only add workers when you \n are on Premium Plan',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18),
+                ),
+              )
+            ],
+          );
+        } else if (_error == true) {
+          return Center(
+            child: Text(
+              _errorData,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18),
+            ),
+          );
+        } else {
+          return FutureBuilder<WorkersList>(
+              future: _workersServices.getListOfWorkers(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data.count == 0) {
-                      return Center(
-                        child: Text(
-                          'You have not added any worker yet. \n Click on the button below to add.',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      );
-                    }
-
+                if (snapshot.hasData) {
+                  _workersName.clear();
+                  _branchName.clear();
+                  _phoneNumber.clear();
+                  print(snapshot.data.results?.map((value) {
+                    _workersName.add(value.fullName);
+                    _branchName.add(value.branchName);
+                    _phoneNumber.add(value.phoneNumber);
+                    _id.add(value.id);
+                  }));
+                  if (snapshot.data.count != 0) {
                     return ListView.builder(
                         itemCount: _workersName.length,
                         itemBuilder: (context, index) {
@@ -131,29 +191,51 @@ class _WorkersListPageState extends State<WorkersListPage> {
                             },
                           )));
                         });
-                  } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
+                  } else {
+                    return Center(
+                      child: Text(
+                        'You have not added any worker yet. \n Click on the button below to add.',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    );
                   }
                 }
                 return Center(child: CircularProgressIndicator());
-              })
-          : Center(
-              child: Text(
-                  'You can only add workers when you are on Premium Plan',
-                  style: TextStyle(fontSize: 18)),
+              });
+        }
+      }()),
+      floatingActionButton: (() {
+        if (_error) {
+          return Visibility(
+            child: FloatingActionButton(
+              focusColor: Theme.of(context).canvasColor,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddWorkers()));
+              },
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              backgroundColor: Theme.of(context).primaryColor,
             ),
-      floatingActionButton: FloatingActionButton(
-        focusColor: Theme.of(context).canvasColor,
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddWorkers()));
-        },
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
+            visible: false,
+          );
+        } else {
+          return FloatingActionButton(
+            focusColor: Theme.of(context).canvasColor,
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AddWorkers()));
+            },
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            backgroundColor: Theme.of(context).primaryColor,
+          );
+        }
+      }()),
     );
   }
 
@@ -213,29 +295,40 @@ class _WorkersListPageState extends State<WorkersListPage> {
                         )),
                       ),
                     ),
-                    onTap: () {
+                    onTap: () async {
                       Navigator.pop(context);
                       DialogBoxes().loading(context);
-                      _workersServices.deleteWorker(_id[index]).then((value) {
-                        if (value == 204) {
-                          Navigator.pop(_scaffoldKey.currentContext);
-                          setState(() {
-                            _workersName.clear();
-                            _branchName.clear();
-                            _phoneNumber.clear();
-                            _id.clear();
-                            _workersList = _workersServices.getListOfWorkers();
-                            _workersList.then((value) {
-                              print(value.results.map((value) {
-                                _workersName.add(value.fullName);
-                                _branchName.add(value.branchName);
-                                _phoneNumber.add(value.phoneNumber);
-                                _id.add(value.id);
-                              }));
-                            });
+                      dynamic result = await _workersServices
+                          .deleteWorker(_id[index])
+                          .timeout(Duration(seconds: 10),
+                              onTimeout: () => null);
+                      if (result != 204) {
+                        Navigator.pop(context);
+                        setState(() {
+                          result == null
+                              ? _errorMessage =
+                                  'Opps! Error occured, please try again.'
+                              : _errorMessage = result.toString();
+                          _displaySnackBar(context);
+                        });
+                      } else {
+                        Navigator.pop(_scaffoldKey.currentContext);
+                        setState(() {
+                          _workersName.clear();
+                          _branchName.clear();
+                          _phoneNumber.clear();
+                          _id.clear();
+                          _workersList = _workersServices.getListOfWorkers();
+                          _workersList.then((value) {
+                            print(value.results.map((value) {
+                              _workersName.add(value.fullName);
+                              _branchName.add(value.branchName);
+                              _phoneNumber.add(value.phoneNumber);
+                              _id.add(value.id);
+                            }));
                           });
-                        }
-                      });
+                        });
+                      }
                     }),
               ],
             )
@@ -243,5 +336,15 @@ class _WorkersListPageState extends State<WorkersListPage> {
         );
       },
     );
+  }
+
+  _displaySnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Text(
+          _errorMessage,
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 }

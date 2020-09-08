@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
+import 'package:stockfare_mobile/services/feedback_services.dart';
 
 class FeedBackPage extends StatefulWidget {
   @override
@@ -6,7 +8,8 @@ class FeedBackPage extends StatefulWidget {
 }
 
 class _FeedBackPageState extends State<FeedBackPage> {
-  String password;
+  FeedBackServices _feedBackServices = FeedBackServices();
+  String feedBack;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,9 +26,10 @@ class _FeedBackPageState extends State<FeedBackPage> {
               child: TextFormField(
                 keyboardType: TextInputType.text,
                 onChanged: (val) => setState(() {
-                  password = val;
+                  feedBack = val;
                 }),
                 decoration: InputDecoration(
+                  labelText: 'Feed back',
                   contentPadding: EdgeInsets.all(12),
                   labelStyle: TextStyle(color: Theme.of(context).primaryColor),
                   border: OutlineInputBorder(
@@ -69,7 +73,15 @@ class _FeedBackPageState extends State<FeedBackPage> {
                     )),
                   ),
                 ),
-                onTap: () async {}),
+                onTap: () async {
+                  DialogBoxes().loading(context);
+                  _feedBackServices.feedBackServices(feedBack).then((value) {
+                    if (value == 201) {
+                      Navigator.pop(context);
+                      DialogBoxes().success(context);
+                    }
+                  });
+                }),
           ],
         )));
   }

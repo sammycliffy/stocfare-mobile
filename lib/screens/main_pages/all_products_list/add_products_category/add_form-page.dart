@@ -15,6 +15,7 @@ class AddFormPage extends StatefulWidget {
 
 class _AddFormPageState extends State<AddFormPage> {
   final _formKey = GlobalKey<FormState>();
+  final _secondKey = GlobalKey<FormState>();
   final List<String> color = <String>[];
   final List<ColorDataModel> _data = [];
 
@@ -23,7 +24,7 @@ class _AddFormPageState extends State<AddFormPage> {
   String _productDescription;
   int _unitProductPrice = 0;
   int _unitQuantity = 0;
-  double _unitLimit = 0;
+  int _unitLimit = 0;
   int _productDiscount = 0;
   int _productWeight = 0;
   String _colorName;
@@ -64,6 +65,7 @@ class _AddFormPageState extends State<AddFormPage> {
                           _unitProductName = val;
                         }),
                         decoration: InputDecoration(
+                          labelText: 'Product Name',
                           contentPadding: EdgeInsets.all(12),
                           labelStyle:
                               TextStyle(color: Theme.of(context).primaryColor),
@@ -106,6 +108,7 @@ class _AddFormPageState extends State<AddFormPage> {
                               _unitProductPrice = int.parse(val);
                             }),
                             decoration: InputDecoration(
+                              labelText: 'Product Price',
                               contentPadding: EdgeInsets.all(12),
                               labelStyle: TextStyle(
                                   color: Theme.of(context).primaryColor),
@@ -144,6 +147,7 @@ class _AddFormPageState extends State<AddFormPage> {
                               _unitQuantity = int.parse(val);
                             }),
                             decoration: InputDecoration(
+                              labelText: 'Product Quantity',
                               contentPadding: EdgeInsets.all(12),
                               labelStyle: TextStyle(
                                   color: Theme.of(context).primaryColor),
@@ -179,13 +183,66 @@ class _AddFormPageState extends State<AddFormPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
+                        validator: (val) {
+                          if (val.isEmpty) {
+                            return 'Limit cannot be empty';
+                          } else if (int.parse(val) > _unitQuantity) {
+                            return 'Limit cannot be greater than quantity';
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.number,
+                        onChanged: (val) => setState(() {
+                          _unitLimit = int.parse(val);
+                        }),
+                        decoration: InputDecoration(
+                          labelText: 'Unit Limit',
+                          contentPadding: EdgeInsets.all(12),
+                          labelStyle:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.7)),
+                          hintText: 'Lowest stock quantity',
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.5))),
+                        ),
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    GestureDetector(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 200),
+                        child: Text('What is this?', style: TextStyle()),
+                      ),
+                      onTap: () {
+                        _productLimit(context);
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
                         keyboardType: TextInputType.text,
-                        validator: (input) =>
-                            input.isEmpty ? "Enter Product Description" : null,
                         onChanged: (val) => setState(() {
                           _productDescription = val;
                         }),
                         decoration: InputDecoration(
+                          labelText: 'Product Description',
                           contentPadding: EdgeInsets.all(12),
                           labelStyle:
                               TextStyle(color: Theme.of(context).primaryColor),
@@ -214,66 +271,6 @@ class _AddFormPageState extends State<AddFormPage> {
                       ),
                     ),
                     SizedBox(height: 5),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Text(
-                          'Tell us when to notify you',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ),
-                      SizedBox(width: 20),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            border: Border.all(width: 3, color: Colors.red),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                              child: Text(
-                            (_unitLimit * 500).round().toString(),
-                            style: TextStyle(color: Colors.red, fontSize: 15),
-                          )),
-                        ),
-                      ),
-                    ]),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25, right: 25),
-                      child: SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          activeTrackColor: Colors.grey[400],
-                          inactiveTrackColor: Colors.grey[400],
-                          trackShape: RectangularSliderTrackShape(),
-                          trackHeight: 4.0,
-                          thumbColor: Colors.redAccent,
-                          thumbShape:
-                              RoundSliderThumbShape(enabledThumbRadius: 12.0),
-                          overlayColor: Colors.red,
-                          overlayShape:
-                              RoundSliderOverlayShape(overlayRadius: 28.0),
-                        ),
-                        child: Slider(
-                          value: _unitLimit,
-                          onChanged: (value) {
-                            setState(() {
-                              _unitLimit = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 200),
-                        child: Text('What is this?', style: TextStyle()),
-                      ),
-                      onTap: () {
-                        _productLimit(context);
-                      },
-                    ),
                     SizedBox(height: 25),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -283,41 +280,32 @@ class _AddFormPageState extends State<AddFormPage> {
                               width: 150,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(30),
-                                  color: Theme.of(context).accentColor),
+                                  color: Colors.black),
                               child: Center(
                                 child: Text('Add pack products',
                                     style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold)),
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    )),
                               ),
                             ),
                             onTap: () {
                               if (_formKey.currentState.validate()) {
-                                if ((_unitLimit * 100).round() >
-                                    _unitQuantity) {
-                                  setState(() {
-                                    _error =
-                                        'Your limit should not be greater than quantity';
-                                    _displaySnackBar(context);
-                                  });
-                                } else {
-                                  _addProduct.setFirstProduct(
-                                      _productCategory,
-                                      _unitProductName,
-                                      (_unitLimit * 100).round(),
-                                      _unitQuantity,
-                                      controller.numberValue,
-                                      _productDescription,
-                                      _productDiscount,
-                                      _productWeight,
-                                      _data);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddPackPageCategory()));
-                                }
+                                _addProduct.setFirstProduct(
+                                    _productCategory,
+                                    _unitProductName,
+                                    _unitLimit,
+                                    _unitQuantity,
+                                    controller.numberValue,
+                                    _productDescription,
+                                    _productDiscount,
+                                    _productWeight,
+                                    _data);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AddPackPageCategory()));
                               }
                             }),
                         SizedBox(width: 20),
@@ -490,134 +478,157 @@ class _AddFormPageState extends State<AddFormPage> {
                                             color: Colors.grey[200]))),
                               ),
                               SizedBox(height: 20),
-                              SizedBox(
-                                width: 300,
-                                child: TextFormField(
-                                  // inputFormatters: [controller],
-                                  // controller: textEditingController,
-                                  keyboardType: TextInputType.number,
-
-                                  onChanged: (val) => setState(() {
-                                    _colorName = val;
-                                  }),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.all(12),
-                                    labelStyle: TextStyle(
-                                        color: Theme.of(context).primaryColor),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.2))),
-                                    hintStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .focusColor
-                                            .withOpacity(0.7)),
-                                    hintText: 'Color Name',
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.2))),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.5))),
-                                  ),
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              SizedBox(
-                                width: 300,
-                                child: TextFormField(
-                                  // inputFormatters: [controller],
-                                  // controller: textEditingController,
-                                  keyboardType: TextInputType.number,
-
-                                  onChanged: (val) => setState(() {
-                                    _colorQuantity = int.parse(val);
-                                  }),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.all(12),
-                                    labelStyle: TextStyle(
-                                        color: Theme.of(context).primaryColor),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.2))),
-                                    hintStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .focusColor
-                                            .withOpacity(0.7)),
-                                    hintText: 'Color Quantity',
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.2))),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.5))),
-                                  ),
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              SizedBox(
-                                width: 300,
-                                child: TextFormField(
-                                  // inputFormatters: [controller],
-                                  // controller: textEditingController,
-                                  keyboardType: TextInputType.number,
-
-                                  onChanged: (val) => setState(() {
-                                    _colorLimit = int.parse(val);
-                                  }),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.all(12),
-                                    labelStyle: TextStyle(
-                                        color: Theme.of(context).primaryColor),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.2))),
-                                    hintStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .focusColor
-                                            .withOpacity(0.7)),
-                                    hintText: 'Color Limit',
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.2))),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.5))),
-                                  ),
-                                  style: TextStyle(color: Colors.black),
+                              Form(
+                                key: _secondKey,
+                                child: Column(
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: 300,
+                                      child: TextFormField(
+                                        keyboardType: TextInputType.text,
+                                        validator: (val) => val.isEmpty
+                                            ? 'Cannot be empty'
+                                            : null,
+                                        onChanged: (val) => setState(() {
+                                          _colorName = val;
+                                        }),
+                                        decoration: InputDecoration(
+                                          labelText: 'Color Name',
+                                          contentPadding: EdgeInsets.all(12),
+                                          labelStyle: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .focusColor
+                                                      .withOpacity(0.2))),
+                                          hintStyle: TextStyle(
+                                              color: Theme.of(context)
+                                                  .focusColor
+                                                  .withOpacity(0.7)),
+                                          hintText: 'Color Name',
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .focusColor
+                                                      .withOpacity(0.2))),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .focusColor
+                                                      .withOpacity(0.5))),
+                                        ),
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                    SizedBox(height: 20),
+                                    SizedBox(
+                                      width: 300,
+                                      child: TextFormField(
+                                        keyboardType: TextInputType.number,
+                                        onChanged: (val) => setState(() {
+                                          _colorQuantity = int.parse(val);
+                                        }),
+                                        validator: (val) {
+                                          if (val.isEmpty) {
+                                            return 'Cannot be empty';
+                                          } else if (int.parse(val) <
+                                              _colorLimit) {
+                                            return 'Quantity cannot be < limit';
+                                          }
+                                          return null;
+                                        },
+                                        decoration: InputDecoration(
+                                          labelText: 'Color Quantity',
+                                          contentPadding: EdgeInsets.all(12),
+                                          labelStyle: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .focusColor
+                                                      .withOpacity(0.2))),
+                                          hintStyle: TextStyle(
+                                              color: Theme.of(context)
+                                                  .focusColor
+                                                  .withOpacity(0.7)),
+                                          hintText: 'Color Quantity',
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .focusColor
+                                                      .withOpacity(0.2))),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .focusColor
+                                                      .withOpacity(0.5))),
+                                        ),
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                    SizedBox(height: 20),
+                                    SizedBox(
+                                      width: 300,
+                                      child: TextFormField(
+                                        // inputFormatters: [controller],
+                                        // controller: textEditingController,
+                                        keyboardType: TextInputType.number,
+                                        validator: (val) => val.isEmpty
+                                            ? 'Cannot be empty'
+                                            : null,
+                                        onChanged: (val) => setState(() {
+                                          _colorLimit = int.parse(val);
+                                        }),
+                                        decoration: InputDecoration(
+                                          labelText: 'Color limit',
+                                          contentPadding: EdgeInsets.all(12),
+                                          labelStyle: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .focusColor
+                                                      .withOpacity(0.2))),
+                                          hintStyle: TextStyle(
+                                              color: Theme.of(context)
+                                                  .focusColor
+                                                  .withOpacity(0.7)),
+                                          hintText: 'Color Limit',
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .focusColor
+                                                      .withOpacity(0.2))),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .focusColor
+                                                      .withOpacity(0.5))),
+                                        ),
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               RaisedButton(
                                 onPressed: () {
-                                  setState(() {
-                                    color.add(
-                                        '$_colorName (Quantity: $_colorQuantity pcs)  (Limit: $_colorLimit pcs)');
-                                  });
-                                  ColorDataModel _colorData = ColorDataModel(
-                                      colorName: _colorName,
-                                      colorQuantity: _colorQuantity,
-                                      colorLimit: _colorLimit);
-                                  _data.add(_colorData);
-                                  print(_data);
+                                  if (_secondKey.currentState.validate()) {
+                                    setState(() {
+                                      color.add(
+                                          '$_colorName (Quantity: $_colorQuantity pcs)  (Limit: $_colorLimit pcs)');
+                                    });
+                                    ColorDataModel _colorData = ColorDataModel(
+                                        colorName: _colorName,
+                                        colorQuantity: _colorQuantity,
+                                        colorLimit: _colorLimit);
+                                    _data.add(_colorData);
+                                    print(_data);
+                                  }
                                 },
                                 child: const Text('Add Color',
                                     style: TextStyle(fontSize: 20)),
@@ -647,31 +658,23 @@ class _AddFormPageState extends State<AddFormPage> {
                         onTap: () {
                           print(_data);
                           if (_formKey.currentState.validate()) {
-                            if ((_unitLimit * 100).round() > _unitQuantity) {
-                              setState(() {
-                                _error =
-                                    'Your limit should not be greater than quantity';
-                                _displaySnackBar(context);
-                              });
-                            } else {
-                              _addProduct.setFirstProduct(
-                                _productCategory,
-                                _unitProductName,
-                                (_unitLimit * 100).round(),
-                                _unitQuantity,
-                                controller.numberValue,
-                                _productDescription,
-                                _productDiscount,
-                                _productWeight,
-                                _data, //list of product color, quantity and limit
-                              );
+                            _addProduct.setFirstProduct(
+                              _productCategory,
+                              _unitProductName,
+                              _unitLimit,
+                              _unitQuantity,
+                              controller.numberValue,
+                              _productDescription,
+                              _productDiscount,
+                              _productWeight,
+                              _data, //list of product color, quantity and limit
+                            );
 
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          BarcodePageProduct()));
-                            }
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        BarcodePageProduct()));
                           }
                         }),
                     SizedBox(

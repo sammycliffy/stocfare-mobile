@@ -26,7 +26,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
   bool soldOnCredit;
   String customerAddress;
   int initialDeposit = 0;
-
+  String _error;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -42,7 +43,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
+
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(title: Text('Check out')),
         body: Padding(
           padding: const EdgeInsets.only(left: 40, top: 20),
@@ -461,26 +464,38 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             onTap: () {
                               DialogBoxes().loading(context);
                               Future<CreateSalesModel> _createSales =
-                                  _salesServices.addSales(
-                                      addProduct.items,
-                                      customerName,
-                                      customerAddress,
-                                      customerMobile,
-                                      customerEmail,
-                                      addProduct.prices,
-                                      customerChange,
-                                      paymentMethod,
-                                      newvalue,
-                                      initialDeposit,
-                                      tax,
-                                      selectedDate.toLocal());
+                                  _salesServices
+                                      .addSales(
+                                          addProduct.items,
+                                          customerName,
+                                          customerAddress,
+                                          customerMobile,
+                                          customerEmail,
+                                          addProduct.prices,
+                                          customerChange,
+                                          paymentMethod,
+                                          newvalue,
+                                          initialDeposit,
+                                          tax,
+                                          selectedDate.toLocal(),
+                                          addProduct.total)
+                                      .timeout(Duration(seconds: 10),
+                                          onTimeout: () => null);
 
-                              Navigator.pop(context);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          SalesReceipt(value: _createSales)));
+                              if (_createSales == null) {
+                                setState(() {
+                                  _error = 'Network Error, please try again.';
+
+                                  _displaySnackBar(context);
+                                });
+                              } else {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SalesReceipt(value: _createSales)));
+                              }
                             }),
                       ),
                       SizedBox(
@@ -544,5 +559,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ),
       )
     ]);
+  }
+
+  _displaySnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+        duration: Duration(seconds: 5),
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Text(
+          _error.toString(),
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 }

@@ -1,12 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
-import 'package:stockfare_mobile/screens/auth_pages/login.dart';
 import 'package:stockfare_mobile/screens/main_pages/activities_pages.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/sales_pages/cart.dart';
@@ -42,6 +43,7 @@ class _HomePageState extends State<HomePage> {
   List _packQuantity = [];
   List _productId = [];
   List _productPackPrice = [];
+  List _barcode = [];
   bool newvalue = false;
   List<Map<String, dynamic>> items = [];
   List _items = [];
@@ -93,6 +95,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _scanBarcode = barcodeScanRes;
     });
+    searchFilter(barcodeScanRes);
   }
 
   @override
@@ -121,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                         Text(message['notification']['body']),
                         RaisedButton(
                             onPressed: () {
-                              print('jane');
+                              Navigator.pop(context);
                             },
                             child: Text('See Receipt'))
                       ],
@@ -135,7 +138,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.6;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.9;
     final double itemWidth = size.width / 2;
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     SignupNotifier _signupNotifier =
@@ -157,22 +160,20 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: () => SystemNavigator.pop(),
       child: Scaffold(
-          floatingActionButton: _addFloatingACtionButton
-              ? FloatingActionButton(
-                  focusColor: Theme.of(context).canvasColor,
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => FormPage()));
-                  },
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                  backgroundColor: Theme.of(context).primaryColor,
-                )
-              : SizedBox(),
+          floatingActionButton: FloatingActionButton(
+            focusColor: Theme.of(context).canvasColor,
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => FormPage()));
+            },
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
           appBar: PreferredSize(
-              preferredSize: Size.fromHeight(120.0), // here the desired height
+              preferredSize: Size.fromHeight(140.0), // here the desired height
               child: AppBar(
                 backgroundColor: Colors.white,
                 elevation: 0.0,
@@ -188,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               SizedBox(width: 100),
                               Text(
-                                'Dashboard',
+                                'Checkout',
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: Theme.of(context).primaryColor,
@@ -263,12 +264,18 @@ class _HomePageState extends State<HomePage> {
                                   padding: const EdgeInsets.only(bottom: 20),
                                   child: InkWell(
                                     child: Container(
+                                      width: 50,
+                                      height: 40,
                                       decoration: BoxDecoration(
+                                          border: Border.all(),
+                                          color: Theme.of(context).primaryColor,
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: Center(
-                                          child: Icon(Icons.assessment,
-                                              color: Colors.green, size: 40)),
+                                          child: IconButton(
+                                              icon: FaIcon(
+                                                  FontAwesomeIcons.barcode),
+                                              onPressed: null)),
                                     ),
                                     onTap: () {
                                       scanBarcodeNormal();
@@ -286,68 +293,85 @@ class _HomePageState extends State<HomePage> {
           body: Column(
             children: <Widget>[
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(
-                      padding: const EdgeInsets.only(
-                        top: 10,
-                        left: 18,
-                      ),
-                      child: InkWell(
-                        child: Container(
-                          width: 120,
-                          height: 35,
-                          decoration: BoxDecoration(
-                              color: Colors.green,
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Center(
-                            child: Text('Check out',
+                  InkWell(
+                    child: Container(
+                      width: 200,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Finish',
                                 style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                )),
-                          ),
-                        ),
-                        onTap: () {
-                          _addProduct.addItem(_items);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AddCart()));
-                        },
-                      )),
-                  GestureDetector(
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(right: 10, top: 5, left: 150),
-                      child: Stack(
-                        children: [
-                          Icon(Icons.shopping_cart,
-                              size: 30, color: Colors.black),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10, left: 20),
-                            child: Container(
-                              width: 40,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: Colors.black),
-                              child: Center(
-                                child: Text(
-                                  _addProduct.quantityToSell?.length
-                                          .toString() ??
-                                      '0',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
+                                    fontSize: 19,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                            SizedBox(
+                              width: 20,
                             ),
-                          )
-                        ],
+                            Text(
+                              _addProduct.quantityToSell?.length == null
+                                  ? '0'
+                                  : _addProduct.quantityToSell?.length
+                                      .toString(),
+                              style: TextStyle(
+                                  fontSize: 19,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      _addProduct.addItem(_items);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => AddCart()));
+                    },
                   ),
+                  // GestureDetector(
+                  //   child: Padding(
+                  //     padding:
+                  //         const EdgeInsets.only(right: 10, top: 5, left: 150),
+                  //     child: Stack(
+                  //       children: [
+                  //         Icon(Icons.shopping_cart,
+                  //             size: 30, color: Colors.black),
+                  //         Padding(
+                  //           padding: const EdgeInsets.only(top: 10, left: 20),
+                  //           child: Container(
+                  //             width: 40,
+                  //             height: 30,
+                  //             decoration: BoxDecoration(
+                  //                 borderRadius: BorderRadius.circular(30),
+                  //                 color: Colors.black),
+                  //             child: Center(
+                  //               child: Text(
+                  //                 _addProduct.quantityToSell?.length == null
+                  //                     ? '0'
+                  //                     : _addProduct.quantityToSell?.length
+                  //                         .toString(),
+                  //                 style: TextStyle(
+                  //                     color: Colors.white,
+                  //                     fontWeight: FontWeight.bold),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         )
+                  //       ],
+                  //     ),
+                  //   ),
+                  //   onTap: () {
+                  //     _addProduct.addItem(_items);
+                  //     Navigator.push(context,
+                  //         MaterialPageRoute(builder: (context) => AddCart()));
+                  //   },
+                  // ),
                 ],
               ),
               SizedBox(
@@ -368,12 +392,17 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.grey[100],
                                 child: Column(
                                   children: <Widget>[
-                                    Image.network(
-                                      _productImage[index],
-                                      width: 150,
-                                      height: 65,
-                                      fit: BoxFit.fitWidth,
-                                    ),
+                                    _productImage.asMap().containsKey(index)
+                                        ? CachedNetworkImage(
+                                            width: 200,
+                                            height: 65,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                CircularProgressIndicator(),
+                                            imageUrl: _productImage[index],
+                                          )
+                                        : Image.asset(
+                                            'assets/images/No-image.png'),
                                     Container(
                                       width: double.infinity,
                                       decoration: BoxDecoration(
@@ -443,18 +472,11 @@ class _HomePageState extends State<HomePage> {
                                   }); // count the list of items
                                   print(map);
                                   print(map[_productId[index]]);
-                                  if (_quantityToSell.length == 0 ||
-                                      map[_productId[index]] == null) {
-                                    _quantityToSell.add(_productId[index]);
-                                    _addProduct
-                                        .setQuantityToSell(_quantityToSell);
-
-                                    sellUnitProduct(
-                                        _productId[index],
-                                        _categories[index],
-                                        _productPrice[index]);
-                                  } else if (map[_productId[index]] >=
-                                      _productQuantity[index] - 1) {
+                                  if (map[_productId[index]] == null) {
+                                    map[_productId[index]] = 1;
+                                  } else if (_productQuantity[index] < 1 ||
+                                      map[_productId[index]] >=
+                                          _productQuantity[index] - 1) {
                                     DialogBoxes().productOutOfRange(context);
                                   } else {
                                     _quantityToSell.add(_productId[index]);
@@ -494,177 +516,189 @@ class _HomePageState extends State<HomePage> {
                             _categories.clear();
                             _productName.clear();
                             DataSnapshot dataValues = snapshot.data.snapshot;
-
-                            Map<dynamic, dynamic> values = dataValues
+                            var data = dataValues
                                 .value['${_signupNotifier.firebaseId}'];
-                            values.forEach((key, values) {
-                              print(values['products']?.map((value) {
-                                    _categories.add(value['name']);
-                                    _productId.add(value['id']);
-                                    print(value['product_image'].map((value) {
-                                      _productImage.add(value['image_link']);
-                                    }));
+                            if (data is String) {
+                              print('yes');
+                            } else {
+                              Map<dynamic, dynamic> values = dataValues
+                                  .value['${_signupNotifier.firebaseId}'];
+                              print(values);
+                              values?.forEach((key, values) {
+                                print(values['products']?.map((value) {
+                                      _categories.add(value['name']);
+                                      _productId.add(value['id']);
+                                      print(
+                                          value['product_image']?.map((value) {
+                                                _productImage
+                                                    .add(value['image_link']);
+                                              }) ??
+                                              '[]');
+                                      _barcode.add(value['bar_code']);
+                                      _productQuantity.add(
+                                          value['product_unit']['quantity']);
+                                      _packQuantity.add(
+                                          value['product_pack']['quantity']);
+                                      _productPrice
+                                          .add(value['product_unit']['price']);
+                                      _productPackPrice
+                                          .add(value['product_pack']['price']);
+                                    }) ??
+                                    '[]');
+                              });
 
-                                    _productQuantity
-                                        .add(value['product_unit']['quantity']);
-                                    _packQuantity
-                                        .add(value['product_pack']['quantity']);
-                                    _productPrice
-                                        .add(value['product_unit']['price']);
-                                    _productPackPrice
-                                        .add(value['product_pack']['price']);
-                                  }) ??
-                                  '[]');
-                            });
-
-                            return Expanded(
-                              child: GridView.builder(
-                                itemCount: _categories.length,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        childAspectRatio:
-                                            (itemWidth / itemHeight),
-                                        crossAxisCount: 3),
-                                itemBuilder: (BuildContext context, int index) {
-                                  return new Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: GestureDetector(
-                                      child: Card(
-                                        color: Colors.grey[100],
-                                        child: Column(
-                                          children: <Widget>[
-                                            Image.network(
-                                              _productImage[index],
-                                              width: 150,
-                                              height: 65,
-                                              fit: BoxFit.fitWidth,
-                                            ),
-                                            Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                  border: Border(
-                                                      bottom: BorderSide(
-                                                          width: 2,
-                                                          color: Colors
-                                                              .grey[200]))),
-                                              child: Center(
-                                                child: Text(
-                                                  _categories[index],
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16,
-                                                      color: Theme.of(context)
-                                                          .primaryColor),
+                              return Expanded(
+                                child: GridView.builder(
+                                  itemCount: _categories.length,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          childAspectRatio:
+                                              (itemWidth / itemHeight),
+                                          crossAxisCount: 3),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return new Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: GestureDetector(
+                                        child: Card(
+                                          color: Colors.grey[100],
+                                          child: Column(
+                                            children: <Widget>[
+                                              _productImage
+                                                      .asMap()
+                                                      .containsKey(index)
+                                                  ? CachedNetworkImage(
+                                                      width: 200,
+                                                      height: 65,
+                                                      fit: BoxFit.cover,
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          CircularProgressIndicator(),
+                                                      imageUrl:
+                                                          _productImage[index],
+                                                    )
+                                                  : Image.asset(
+                                                      'assets/images/No-image.png',
+                                                      width: 200,
+                                                      height: 65,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                              Container(
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                    border: Border(
+                                                        bottom: BorderSide(
+                                                            width: 2,
+                                                            color: Colors
+                                                                .grey[200]))),
+                                                child: Center(
+                                                  child: Text(
+                                                    _categories[index],
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16,
+                                                        color: Theme.of(context)
+                                                            .primaryColor),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Container(
-                                                  width: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                      border: Border(
-                                                          bottom: BorderSide(
-                                                              width: 2,
-                                                              color: Colors
-                                                                  .grey[200]))),
-                                                  child: Center(
-                                                    child: Text(
-                                                      '${_productPrice[index]}/Units',
-                                                      style: TextStyle(
-                                                          fontSize: 12),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Container(
+                                                    width: double.infinity,
+                                                    decoration: BoxDecoration(
+                                                        border: Border(
+                                                            bottom: BorderSide(
+                                                                width: 2,
+                                                                color:
+                                                                    Colors.grey[
+                                                                        200]))),
+                                                    child: Center(
+                                                      child: Text(
+                                                        '${_productPrice[index]}/Units',
+                                                        style: TextStyle(
+                                                            fontSize: 12),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  width: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                      border: Border(
-                                                          bottom: BorderSide(
-                                                              width: 2,
-                                                              color: Colors
-                                                                  .grey[200]))),
-                                                  child: Center(
-                                                    child: Text(
-                                                      '${_productPackPrice[index]}/Pack',
-                                                      style: TextStyle(
-                                                          fontSize: 12),
+                                                  Container(
+                                                    width: double.infinity,
+                                                    decoration: BoxDecoration(
+                                                        border: Border(
+                                                            bottom: BorderSide(
+                                                                width: 2,
+                                                                color:
+                                                                    Colors.grey[
+                                                                        200]))),
+                                                    child: Center(
+                                                      child: Text(
+                                                        '${_productPackPrice[index]}/Pack',
+                                                        style: TextStyle(
+                                                            fontSize: 12),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      onTap: () {
-                                        //check whether it is pack or unit
-                                        if (_productPackPrice[index] == 0) {
-                                          var map = Map();
-                                          _quantityToSell.forEach((element) {
-                                            if (!map.containsKey(element)) {
-                                              map[element] = 1;
-                                            } else {
-                                              map[element] += 1;
-                                            }
-                                          }); // count the list of items
+                                        onTap: () {
+                                          //check whether it is pack or unit
+                                          if (_productPackPrice[index] == 0) {
+                                            var map = Map();
+                                            _quantityToSell.forEach((element) {
+                                              if (!map.containsKey(element)) {
+                                                map[element] = 1;
+                                              } else {
+                                                map[element] += 1;
+                                              }
+                                            });
 
-                                          print(map);
-                                          print(map[_productId[index]]);
-                                          print(_quantityToSell);
-                                          if (_quantityToSell.length == 0 ||
-                                              map[_productId[index]] == null) {
-                                            setState(() {
+                                            if (map[_productId[index]] ==
+                                                null) {
+                                              map[_productId[index]] = 0;
+                                            }
+                                            if (_productQuantity[index] < 1 ||
+                                                map[_productId[index]] >=
+                                                    _productQuantity[index] -
+                                                        1) {
+                                              DialogBoxes()
+                                                  .productOutOfRange(context);
+                                            } else {
                                               _quantityToSell
                                                   .add(_productId[index]);
                                               _addProduct.setQuantityToSell(
                                                   _quantityToSell);
-                                            });
 
-                                            sellUnitProduct(
-                                                _productId[index],
-                                                _categories[index],
-                                                _productPrice[index]);
-                                          } else if (map[_productId[index]] >=
-                                              _productQuantity[index] - 1) {
-                                            DialogBoxes()
-                                                .productOutOfRange(context);
-                                            int indexToRemove = _quantityToSell
-                                                .indexOf(_productId[index]);
-                                            _items.removeAt(indexToRemove);
+                                              sellUnitProduct(
+                                                  _productId[index],
+                                                  _categories[index],
+                                                  _productPrice[index]);
+                                            }
+                                            print(_productQuantity[index]);
+                                            print(map[_productId[index]]);
                                           } else {
-                                            _quantityToSell
-                                                .add(_productId[index]);
-                                            _addProduct.setQuantityToSell(
-                                                _quantityToSell);
+                                            // send pack to the dialog page
 
-                                            sellUnitProduct(
+                                            _sellPackProduct(
+                                                _packQuantity[index],
+                                                _productQuantity[index],
                                                 _productId[index],
                                                 _categories[index],
+                                                _productPackPrice[index],
                                                 _productPrice[index]);
                                           }
-                                          print(_productQuantity[index]);
-                                          print(map[_productId[index]]);
-                                        } else {
-                                          // send pack to the dialog page
-
-                                          _sellPackProduct(
-                                              _packQuantity[index],
-                                              _productQuantity[index],
-                                              _productId[index],
-                                              _categories[index],
-                                              _productPackPrice[index],
-                                              _productPrice[index]);
-                                        }
-                                      },
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            }
                           }
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -708,11 +742,27 @@ class _HomePageState extends State<HomePage> {
 
   void searchFilter(value) {
     String capitalized = StringUtils.capitalize(value);
-    if (_categories.contains(capitalized)) {
+    int _index =
+        _categories.indexWhere((element) => element.startsWith(capitalized));
+    print(_index);
+    if (_index != -1) {
       print('Contains value');
-      int _index = _categories.indexOf(capitalized);
+      String item = _categories[_index];
       setState(() {
-        _categories.removeWhere((element) => element != capitalized);
+        _categories.removeWhere((element) => element != item);
+        _productImage.removeRange(0, _index);
+        _productPrice.removeRange(0, _index);
+        _packQuantity.removeRange(0, _index);
+        _productQuantity.removeRange(0, _index);
+
+        _search = true;
+        print(_categories);
+      });
+    } else if (_barcode.contains(value)) {
+      int _index = _barcode.indexOf(value);
+      String item = _categories[_index];
+      setState(() {
+        _categories.removeWhere((element) => element != item);
         _productImage.removeRange(0, _index);
         _productPrice.removeRange(0, _index);
         _packQuantity.removeRange(0, _index);
@@ -817,8 +867,10 @@ class _HomePageState extends State<HomePage> {
                                       color: Colors.black),
                                   child: Center(
                                     child: Text(
-                                      _addProduct.quantityToSell.length
-                                          .toString(),
+                                      _addProduct.quantityToSell?.length == null
+                                          ? '0'
+                                          : _addProduct.quantityToSell?.length
+                                              .toString(),
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),
@@ -1027,13 +1079,15 @@ class _HomePageState extends State<HomePage> {
                       ),
                       InkWell(
                         child: Container(
-                          height: 40,
-                          width: 100,
+                          height: 50,
+                          width: 150,
                           decoration: BoxDecoration(
                               color: Colors.grey[300],
                               borderRadius: BorderRadius.circular(10)),
                           child: Center(
-                            child: Text('Check out'),
+                            child: Row(
+                              children: [Text('Checkout')],
+                            ),
                           ),
                         ),
                         onTap: () {

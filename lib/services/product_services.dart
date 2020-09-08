@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/color_models.dart';
@@ -14,7 +15,7 @@ class ProductServices {
       double unitproductPrice,
       int unitproductQuantity,
       int unitLimit,
-      int packProductPrice,
+      double packProductPrice,
       int packQuantity,
       int packLimit,
       String barcode,
@@ -27,50 +28,53 @@ class ProductServices {
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
     ColorsData colorsData = ColorsData(colorDataModel: data);
-
-    final String url =
-        'https://stockfare-io.herokuapp.com/api/v1/inventory/create-category/$branchId/';
-    final http.Response response = await http.post(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(<String, dynamic>{
-          "name": productCategory,
-          "product": {
-            "product_colour":
-                colorsData.colorDataModel.map((i) => i.toJson()).toList(),
-            "product_unit": {
-              "price": unitproductPrice,
-              "quantity": unitproductQuantity,
-              "limit": unitLimit,
-            },
-            "product_pack": {
-              "price": packProductPrice,
-              "limit": unitLimit,
-              "quantity": packQuantity,
-            },
-            "image": image,
-            "name": unitproductName,
-            "barcode": barcode,
-            "description": productDescription,
-            "weight": productWeight,
-            "discount": productDiscount,
-          }
-        }));
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      print(response.statusCode);
-      return response.statusCode;
-    } else if (json.decode(response.body)['detail'] ==
-        "Given token not valid for any token type") {
-      String _response = json.decode(response.body)['detail'];
-      print(_response);
-      print('invalid token');
-      return false;
-    } else {
-      print(response.body);
-      return response.body;
+    final String url = GlobalConfiguration().get("add-products") + '$branchId/';
+    try {
+      final http.Response response = await http.post(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode(<String, dynamic>{
+            "name": productCategory,
+            "product": {
+              "product_colour":
+                  colorsData.colorDataModel.map((i) => i.toJson()).toList(),
+              "product_unit": {
+                "price": unitproductPrice,
+                "quantity": unitproductQuantity,
+                "limit": unitLimit,
+              },
+              "product_pack": {
+                "price": packProductPrice,
+                "limit": unitLimit,
+                "quantity": packQuantity,
+              },
+              "image": image,
+              "name": unitproductName,
+              "barcode": barcode,
+              "description": productDescription,
+              "weight": productWeight,
+              "discount": productDiscount,
+            }
+          }));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.statusCode);
+        return response.statusCode;
+      } else if (json.decode(response.body)['detail'] ==
+          "Given token not valid for any token type") {
+        return false;
+      } else {
+        print(response.body);
+        return response.body;
+        // return json.decode(response.body)['name'] ??
+        //   json.decode(response.body)['product']['phone_number'] ??
+        //   json.decode(response.body)['account']['email'] ??
+        //   ' ';
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -80,7 +84,7 @@ class ProductServices {
     double unitproductPrice,
     int unitproductQuantity,
     int unitLimit,
-    int packProductPrice,
+    double packProductPrice,
     int packQuantity,
     int packLimit,
     String barcode,
@@ -95,7 +99,8 @@ class ProductServices {
     String token = sharedPreferences.getString('token');
     ColorsData colorsData = ColorsData(colorDataModel: data);
     final String url =
-        'https://stockfare-io.herokuapp.com/api/v1/inventory/create-product/$categoryId/';
+        GlobalConfiguration().get("product-category") + '$categoryId/';
+
     final http.Response response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -125,6 +130,7 @@ class ProductServices {
     if (response.statusCode == 200 || response.statusCode == 201) {
       return response.statusCode;
     } else {
+      print(response.body);
       return response.body;
     }
   }
@@ -163,9 +169,8 @@ class ProductServices {
     String token = sharedPreferences.getString('token');
     print(name);
     print(categoryId);
-
-    String url =
-        'https://stockfare-io.herokuapp.com/api/v1/inventory/update-category/$categoryId/';
+    final String url =
+        GlobalConfiguration().get("update-category") + '$categoryId/';
 
     final response = await http.patch(url,
         headers: <String, String>{
@@ -180,6 +185,7 @@ class ProductServices {
       return response.statusCode;
     } else {
       print(response.body);
+      return false;
     }
   }
 
@@ -201,9 +207,8 @@ class ProductServices {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
     ColorsData colorsData = ColorsData(colorDataModel: data);
-
-    String url =
-        'https://stockfare-io.herokuapp.com/api/v1/inventory/category/product/$productId/';
+    final String url =
+        GlobalConfiguration().get("edit-product") + '$productId/';
 
     final response = await http.patch(url,
         headers: <String, String>{
@@ -234,6 +239,7 @@ class ProductServices {
       print(response.body);
       return true;
     } else {
+      print(response.body);
       return json.decode(response.body);
     }
   }
@@ -242,8 +248,8 @@ class ProductServices {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
     print(deleteItem);
-    String url =
-        'https://stockfare-io.herokuapp.com/api/v1/inventory/delete-category/';
+    final String url = GlobalConfiguration().get("delete-category");
+
     final request = http.Request("DELETE", Uri.parse(url));
     request.headers.addAll(<String, String>{
       "Accept": "application/json",
@@ -257,6 +263,7 @@ class ProductServices {
       print(response.reasonPhrase);
 
     // return await response.stream.bytesToString();
+    print(response.statusCode);
     return response.statusCode;
   }
 
@@ -267,8 +274,9 @@ class ProductServices {
     String token = sharedPreferences.getString('token');
     print(firebaseId);
     print(categoryId.toString() + 'this is category');
-    String url =
-        'http://stockfare-io.herokuapp.com/api/v2/inventory/upload_file/$categoryId/$firebaseId/';
+    final String url =
+        GlobalConfiguration().get("file-upload") + '$categoryId/$firebaseId/';
+
     print(url);
     var request = http.MultipartRequest("POST", Uri.parse(url));
     request.headers.addAll(<String, String>{
@@ -281,7 +289,6 @@ class ProductServices {
     var response = await request.send();
     var responseData = await response.stream.toBytes();
     var responseString = String.fromCharCodes(responseData);
-    var responseCode = response.statusCode;
     print(responseString);
     if (response.statusCode != 200 || response.statusCode != 201) {
       return responseString;
@@ -299,37 +306,41 @@ class ProductServices {
     String firebaseNotificationId =
         sharedPreferences.getString("firebaseNotificationId");
     String businessId = sharedPreferences.getString("businessId");
-    String url =
-        'https://stockfare-io.herokuapp.com/api/v1/branch/update/$branchId/';
+    final String url =
+        GlobalConfiguration().get("update-branch") + '$branchId/';
 
-    final response = await http.put(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(<String, dynamic>{
-          "notification_status": notificationStatus,
-          "name": branchName,
-          "address": branchAddress,
-          "firebase_inventory_id": firebaseId,
-          "firebase_notification_id": firebaseNotificationId,
-          "business_id": businessId
-        }));
+    try {
+      final response = await http.put(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode(<String, dynamic>{
+            "notification_status": notificationStatus,
+            "name": branchName,
+            "address": branchAddress,
+            "firebase_inventory_id": firebaseId,
+            "firebase_notification_id": firebaseNotificationId,
+            "business_id": businessId
+          }));
 
-    if (response.statusCode != 200 || response.statusCode != 201) {
-      return true;
-    } else {
-      print(response.body);
-      return json.decode(response.body);
+      if (response.statusCode != 200 || response.statusCode != 201) {
+        print(response.body);
+        return true;
+      } else {
+        print(response.body);
+        return json.decode(response.body);
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
   Future<dynamic> deleteProducts(List<String> deleteItem) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
-    String url =
-        'https://stockfare-io.herokuapp.com/api/v1/inventory/category/product/delete/';
+    final String url = GlobalConfiguration().get("delete-product");
     final request = http.Request("DELETE", Uri.parse(url));
     request.headers.addAll(<String, String>{
       "Accept": "application/json",
@@ -339,9 +350,11 @@ class ProductServices {
     request.body = jsonEncode(<String, dynamic>{'items': deleteItem});
     final response = await request.send();
     if (response.statusCode != 200)
-      return Future.error("error: status code ${response.statusCode}");
-    // return await response.stream.bytesToString();
+      // return Future.error("error: status code ${response.statusCode}");
+      print(response.reasonPhrase);
 
+    // return await response.stream.bytesToString();
+    print(response.statusCode);
     return response.statusCode;
   }
 
@@ -352,7 +365,8 @@ class ProductServices {
     String token = sharedPreferences.getString('token');
     print(token);
     final String url =
-        'http://stockfare-io.herokuapp.com/api/v1/inventory/category/$branchId/';
+        GlobalConfiguration().get("get-all-products") + '$branchId/';
+
     final response = await http.get(
       url,
       headers: <String, String>{
@@ -407,7 +421,7 @@ class ProductServices {
       // }));
       // return products;
     } else {
-      print('error');
+      print(response.body);
     }
   }
 

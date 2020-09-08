@@ -136,8 +136,7 @@ class Customer {
         address: json["address"],
         mobile: json["mobile"],
         email: json["email"],
-        dateCreated: DateTime.parse(json["date_created"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        dateCreated: DateTime.parse(json["date_created"] ?? ''),
       );
 
   Map<String, dynamic> toJson() => {

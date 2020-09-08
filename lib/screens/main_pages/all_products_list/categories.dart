@@ -1,7 +1,11 @@
+import 'package:basic_utils/basic_utils.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/products.dart';
+import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
+import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/product_list.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
@@ -19,7 +23,6 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   Future<ProductList> _productList;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final PageStorageBucket _bucket = new PageStorageBucket();
   ProductServices _productServices = ProductServices();
   List _categoryId = [];
   List _categories = [];
@@ -27,30 +30,46 @@ class _CategoryPageState extends State<CategoryPage> {
   bool editCategory = false;
   bool deleteCategory = false;
   String updatedCategory;
+  List _firebaseKeys = [];
   List<String> deleteItem = [];
   List<bool> checkBox = [];
-  bool search = false;
+  bool _search = false;
   bool loading = false;
+  String _error;
+
   @override
   void initState() {
     super.initState();
-    _productList = _productServices.getAllProducts();
-    _productList.then((value) {
-      print(value.results.map((category) {
-        _categoryId.add(category.id);
-        checkBox.add(false);
-        setState(() {
-          _categories.add(category.name);
-          _productCount.add(category.productCount);
-        });
-      }));
-    });
+    // _productList = _productServices.getAllProducts();
+    // _productList.then((value) {
+    //   print(value?.results?.map((category) {
+    //     _categoryId.add(category.id);
+    //     checkBox.add(false);
+    //     setState(() {
+    //       _categories.add(category.name);
+    //       _productCount.add(category.productCount);
+    //     });
+    //   }));
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
     AddProductNotifier _addProductNotifier =
         Provider.of<AddProductNotifier>(context);
+    AddProductToCart _addToCart = Provider.of<AddProductToCart>(context);
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
+    final dbRef = FirebaseDatabase.instance; //firebase database reference
+    dbRef.setPersistenceEnabled(true);
+    dbRef.setPersistenceCacheSizeBytes(10000000);
+    final databaseInstance = dbRef.reference();
+    databaseInstance.keepSynced(true);
+    final firebaseDb = databaseInstance
+        .reference()
+        .child('inventories')
+        .orderByKey()
+        .equalTo(_signupNotifier.firebaseId);
     return Scaffold(
       key: _scaffoldKey,
       drawer: DrawerPage(),
@@ -143,10 +162,16 @@ class _CategoryPageState extends State<CategoryPage> {
                   color: Colors.grey[200],
                 ),
                 child: TextFormField(
-                    onTap: () {
-                      setState(() {
-                        search = true;
-                      });
+                    onChanged: (val) {
+                      if (val.length > 0) {
+                        setState(() {
+                          searchFilter(val);
+                        });
+                      } else if (val.length <= 0) {
+                        setState(() {
+                          _search = false;
+                        });
+                      }
                     },
                     decoration: InputDecoration(
                       prefixIcon: IconButton(
@@ -162,89 +187,221 @@ class _CategoryPageState extends State<CategoryPage> {
               ),
             ),
           )),
-      body: search
-          ? Center(
-              child: Text('Through'),
-            )
-          : FutureBuilder(
-              future: _productList,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                      itemCount: _categories.length,
-                      itemBuilder: (context, index) {
-                        if (_categories.length == 0) {
-                          return Text(
-                              'You do not have any product yet. Click the button below to add');
-                        }
-                        return GestureDetector(
-                          child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Card(
-                                  semanticContainer: true,
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  elevation: 3,
-                                  child: ListTile(
-                                      title: Text(
-                                        _categories[index].toString(),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+      body: _search
+          ? ListView.builder(
+              itemCount: _categories.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Card(
+                          semanticContainer: true,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          elevation: 3,
+                          child: ListTile(
+                              title: Text(
+                                _categories[index].toString(),
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(
+                                _productCount[index].toString() + ' items',
+                              ),
+                              trailing: Container(
+                                  child: (() {
+                                if (editCategory) {
+                                  return GestureDetector(
+                                    child: Icon(Icons.edit),
+                                    onTap: () {
+                                      _updateDialog(
+                                          _categories[index].toString(),
+                                          _categoryId[index]);
+                                    },
+                                  );
+                                } else if (deleteCategory) {
+                                  return GestureDetector(
+                                    child: Container(
+                                      width: 100,
+                                      height: 100,
+                                      child: CheckboxListTile(
+                                        activeColor:
+                                            Theme.of(context).primaryColor,
+                                        value: checkBox[index],
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            checkBox[index] = newValue;
+                                            deleteItem.contains(
+                                                    _categoryId[index])
+                                                ? deleteItem
+                                                    .remove(_categoryId[index])
+                                                : deleteItem.add(
+                                                    _categoryId[index]
+                                                        .toString());
+                                          });
+                                        },
                                       ),
-                                      subtitle: Text(
-                                        _productCount[index].toString() +
-                                            ' items',
-                                      ),
-                                      trailing: Container(
-                                          child: (() {
-                                        if (editCategory) {
-                                          return GestureDetector(
-                                            child: Icon(Icons.edit),
-                                            onTap: () {
-                                              _updateDialog(
-                                                  _categories[index].toString(),
-                                                  _categoryId[index]);
-                                            },
-                                          );
-                                        } else if (deleteCategory) {
-                                          return GestureDetector(
-                                            child: Container(
-                                              width: 100,
-                                              height: 100,
-                                              child: CheckboxListTile(
-                                                activeColor: Theme.of(context)
-                                                    .primaryColor,
-                                                value: checkBox[index],
-                                                onChanged: (newValue) {
-                                                  setState(() {
-                                                    checkBox[index] = newValue;
-                                                    deleteItem.contains(
-                                                            _categoryId[index])
-                                                        ? deleteItem.remove(
-                                                            _categoryId[index])
-                                                        : deleteItem.add(
-                                                            _categoryId[index]
-                                                                .toString());
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              print(_categoryId[index]);
-                                            },
-                                          );
-                                        }
+                                    ),
+                                    onTap: () {
+                                      print(_categoryId[index]);
+                                    },
+                                  );
+                                }
 
-                                        return Icon(Icons.more_vert);
-                                      }()))))),
+                                return Icon(Icons.more_vert);
+                              }()))))),
+                  onTap: () {
+                    _addProductNotifier.setCategoryIndex(index);
+                    _addToCart.setFireId(_firebaseKeys[index]);
+                    _addProductNotifier.setCategoryId(_categoryId[index]);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ProductListPage()));
+                  },
+                );
+              })
+          : StreamBuilder(
+              stream: firebaseDb.onValue,
+              builder: (context, AsyncSnapshot<Event> snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data.snapshot.value != null) {
+                    _categories.clear();
+                    _categoryId.clear();
+                    _productCount.clear();
+                    DataSnapshot dataValues = snapshot.data.snapshot;
+                    var data =
+                        dataValues.value['${_signupNotifier.firebaseId}'];
+                    if (data is String) {
+                      print('yes');
+                    } else {
+                      Map<dynamic, dynamic> values =
+                          dataValues.value['${_signupNotifier.firebaseId}'];
+                      print(values);
+
+                      values?.forEach((key, values) {
+                        _firebaseKeys.add(key);
+                        _categories.add(values['name']);
+                        _categoryId.add(values['id']);
+                        _productCount.add(values['product_count']);
+                        checkBox.add(false);
+                      });
+
+                      return ListView.builder(
+                          itemCount: _categories.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Card(
+                                      semanticContainer: true,
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      elevation: 3,
+                                      child: ListTile(
+                                          title: Text(
+                                            _categories[index].toString(),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          subtitle: Text(
+                                            _productCount[index].toString() +
+                                                ' items',
+                                          ),
+                                          trailing: Container(
+                                              child: (() {
+                                            if (editCategory) {
+                                              return GestureDetector(
+                                                child: Icon(Icons.edit),
+                                                onTap: () {
+                                                  _updateDialog(
+                                                      _categories[index]
+                                                          .toString(),
+                                                      _categoryId[index]);
+                                                },
+                                              );
+                                            } else if (deleteCategory) {
+                                              return GestureDetector(
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 100,
+                                                  child: CheckboxListTile(
+                                                    activeColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
+                                                    value: checkBox[index],
+                                                    onChanged: (newValue) {
+                                                      setState(() {
+                                                        checkBox[index] =
+                                                            newValue;
+                                                        deleteItem.contains(
+                                                                _categoryId[
+                                                                    index])
+                                                            ? deleteItem.remove(
+                                                                _categoryId[
+                                                                    index])
+                                                            : deleteItem.add(
+                                                                _categoryId[
+                                                                        index]
+                                                                    .toString());
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  print(_categoryId[index]);
+                                                },
+                                              );
+                                            }
+
+                                            return Icon(Icons.more_vert);
+                                          }()))))),
+                              onTap: () {
+                                _addToCart.addID(
+                                    _categoryId[index], _categories[index]);
+                                _addToCart.setFireId(_firebaseKeys[index]);
+                                _addProductNotifier
+                                    .setCategoryId(_categoryId[index]);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProductListPage()));
+                              },
+                            );
+                          });
+                    }
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Center(child: Text('Add product.')),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Center(
+                        child: GestureDetector(
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                                child: Icon(Icons.add,
+                                    size: 50, color: Colors.white)),
+                          ),
                           onTap: () {
-                            _addProductNotifier.setCategoryIndex(index);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ProductListPage()));
+                                    builder: (context) => FormPage()));
                           },
-                        );
-                      });
+                        ),
+                      )
+                    ],
+                  );
                 }
                 return Center(
                   child: CircularProgressIndicator(),
@@ -329,22 +486,12 @@ class _CategoryPageState extends State<CategoryPage> {
                       .then((value) {
                     if (value == 200) {
                       Navigator.pop(_scaffoldKey.currentContext);
-
+                      DialogBoxes().success(_scaffoldKey.currentContext);
+                    } else {
+                      Navigator.pop(_scaffoldKey.currentContext);
                       setState(() {
-                        _categoryId.clear();
-                        _categories.clear();
-
-                        _productList = _productServices.getAllProducts();
-                        _productList.then((value) {
-                          print(value.results.map((category) {
-                            _categoryId.add(category.id);
-                            checkBox.add(false);
-                            setState(() {
-                              _categories.add(category.name);
-                              _productCount.add(category.productCount);
-                            });
-                          }));
-                        });
+                        _error = 'You do not have permission to update';
+                        _displaySnackBar(_scaffoldKey.currentContext);
                       });
                     }
                   });
@@ -414,22 +561,12 @@ class _CategoryPageState extends State<CategoryPage> {
                       _productServices.deleteCategory(deleteItem).then((value) {
                         if (value == 200) {
                           Navigator.pop(_scaffoldKey.currentContext);
-
+                          DialogBoxes().success(_scaffoldKey.currentContext);
+                        } else {
+                          Navigator.pop(_scaffoldKey.currentContext);
                           setState(() {
-                            _categoryId.clear();
-                            _categories.clear();
-
-                            _productList = _productServices.getAllProducts();
-                            _productList.then((value) {
-                              print(value.results.map((category) {
-                                _categoryId.add(category.id);
-                                checkBox.add(false);
-                                setState(() {
-                                  _categories.add(category.name);
-                                  _productCount.add(category.productCount);
-                                });
-                              }));
-                            });
+                            _error = 'You do not have permission to delete';
+                            _displaySnackBar(_scaffoldKey.currentContext);
                           });
                         }
                       });
@@ -440,5 +577,32 @@ class _CategoryPageState extends State<CategoryPage> {
         );
       },
     );
+  }
+
+  void searchFilter(value) {
+    String capitalized = StringUtils.capitalize(value);
+    int _index =
+        _categories.indexWhere((element) => element.startsWith(capitalized));
+    if (_index != -1) {
+      String item = _categories[_index];
+      setState(() {
+        _categories.removeWhere((element) => element != item);
+        _productCount.removeRange(0, _index);
+        _search = true;
+        print(_categories);
+      });
+    } else {
+      print('does not contain value');
+    }
+  }
+
+  _displaySnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Text(
+          _error,
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 }

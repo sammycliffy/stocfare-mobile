@@ -13,22 +13,22 @@ class AddProductNotifier with ChangeNotifier {
   int _productWeight = 0;
   List<ColorDataModel> _data;
 
-  int _packProductPrice = 0;
+  double _packProductPrice = 0;
   int _packLimit = 0;
   int _packQuantity = 0;
 
   //this is used to transfer the product index to the next page
-  int _categoryIndex = 0;
+  int _categoryIndex;
   int _productIndex = 0;
 
   //set categoryid to be used to add product;
   String _categoryId;
-
+  String _firebaseKey;
   String get unitproductName => _unitproductName;
 
   int get packLimit => _packLimit;
   int get packQuantity => _packQuantity;
-  int get packProductPrice => _packProductPrice;
+  double get packProductPrice => _packProductPrice;
   String get productDescription => _productDescription;
   String get productCategory => _productCategory;
   double get unitproductPrice => _unitproductPrice;
@@ -40,6 +40,7 @@ class AddProductNotifier with ChangeNotifier {
   int get productDiscount => _productDiscount;
   int get productWeight => _productWeight;
   String get categoryId => _categoryId;
+  String get firebasekey => _firebaseKey;
   List<ColorDataModel> get data => _data;
   void setFirstProduct(
     String productCategory,
@@ -66,7 +67,7 @@ class AddProductNotifier with ChangeNotifier {
   }
 
   void setPackProducts(
-    int packProductPrice,
+    double packProductPrice,
     int packLimit,
     int packQuantity,
   ) {
@@ -86,5 +87,9 @@ class AddProductNotifier with ChangeNotifier {
 
   void setCategoryId(String categoryId) {
     _categoryId = categoryId;
+  }
+
+  void setFirebaseKey(String firebaseKey) {
+    _firebaseKey = firebaseKey;
   }
 }

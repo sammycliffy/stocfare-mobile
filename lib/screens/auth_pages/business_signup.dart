@@ -1,11 +1,14 @@
-import 'dart:io';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stockfare_mobile/models/user_model.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/phone_verification.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/loader.dart';
+import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/auth_services.dart';
 import 'login.dart';
 
@@ -17,6 +20,7 @@ class BusinessSignupPage extends StatefulWidget {
 class _SignupPage extends State<BusinessSignupPage> {
   final _formkey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  ActivitiesServices _activitiesServices = ActivitiesServices();
   String businessName;
   String businessAddress;
   String businessDescription;
@@ -314,20 +318,13 @@ class _SignupPage extends State<BusinessSignupPage> {
                                 ),
                                 onTap: () async {
                                   if (_formkey.currentState.validate()) {
-                                    setState(() {
-                                      loading = true;
-                                    });
-                                    try {
-                                      final result =
-                                          await InternetAddress.lookup(
-                                              'google.com');
-                                      if (result.isNotEmpty &&
-                                          result[0].rawAddress.isNotEmpty) {
-                                        print('connected');
-
-                                        //send the data to the auth registration session
-                                        dynamic result =
-                                            await _auth.userRegistration(
+                                    _activitiesServices
+                                        .checkForInternet()
+                                        .then((value) async {
+                                      if (value == true) {
+                                        DialogBoxes().loading(context);
+                                        dynamic result = await _auth
+                                            .userRegistration(
                                                 _signupNotifier.firstName,
                                                 _signupNotifier.lastName,
                                                 _signupNotifier.email,
@@ -337,37 +334,31 @@ class _SignupPage extends State<BusinessSignupPage> {
                                                 businessAddress,
                                                 businessDescription,
                                                 businessType,
-                                                referralCode ?? '0');
-                                        //check if an account already existed
-                                        if (result == null) {
+                                                referralCode ?? '0')
+                                            .timeout(Duration(seconds: 10),
+                                                onTimeout: () => null);
+
+                                        if (result != true) {
+                                          Navigator.pop(context);
                                           setState(() {
-                                            loading = false;
-                                            _error =
-                                                'You already have an account with us';
+                                            result == null
+                                                ? _error =
+                                                    'Opps! An Error Occured. Please try again.'
+                                                : _error = result[0];
                                             _displaySnackBar(context);
                                           });
                                         } else {
-                                          _signupNotifier.setProfile(
-                                              result.fullname,
-                                              result.phone,
-                                              result.email,
-                                              result.firebaseId);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      PhoneVerification()));
+                                          _saveUser(context);
                                         }
+                                      } else {
+                                        setState(() {
+                                          _error =
+                                              'Check your internet connection';
+
+                                          _displaySnackBar(context);
+                                        });
                                       }
-                                    } on SocketException catch (_) {
-                                      print('not connected');
-                                      setState(() {
-                                        loading = false;
-                                        _error =
-                                            'Check your internet connection';
-                                        _displaySnackBar(context);
-                                      });
-                                    }
+                                    });
                                   }
                                 }),
                             SizedBox(height: 30),
@@ -413,5 +404,31 @@ class _SignupPage extends State<BusinessSignupPage> {
           style: TextStyle(color: Colors.white, fontSize: 15),
         ));
     _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  _saveUser(context) async {
+    final prefs = await SharedPreferences.getInstance();
+    String body = prefs.getString('body');
+    dynamic user = User.fromJson(json.decode(body));
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
+    _signupNotifier.setProfile(
+      user.fullname,
+      user.phone,
+      user.email,
+      user.firebaseId,
+      user.branchName,
+      user.branchAddress,
+      user.notificationStatus,
+      user.subscriptionPlan,
+    );
+
+    if (user.verified == false) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => PhoneVerification()));
+    } else {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => BottomNavigationPage()));
+    }
   }
 }

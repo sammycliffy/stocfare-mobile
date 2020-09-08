@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/create_sales_model.dart';
+import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -291,7 +292,7 @@ class _SalesReceiptState extends State<SalesReceipt> {
                         pw.Padding(
                           padding: const pw.EdgeInsets.only(right: 30, top: 5),
                           child: pw.Text(
-                            snapshot.data.amount,
+                            snapshot.data.amount.toString(),
                             style: pw.TextStyle(
                               fontSize: 16,
                             ),
@@ -309,9 +310,14 @@ class _SalesReceiptState extends State<SalesReceipt> {
   @override
   Widget build(BuildContext context) {
     SignupNotifier _signupNotifier = Provider.of<SignupNotifier>(context);
+    AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     return WillPopScope(
-      onWillPop: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => BottomNavigationPage())),
+      onWillPop: () {
+        _addProduct.items.clear();
+        _addProduct.quantityToSell.clear();
+        return Navigator.push(context,
+            MaterialPageRoute(builder: (context) => BottomNavigationPage()));
+      },
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -373,9 +379,6 @@ class _SalesReceiptState extends State<SalesReceipt> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
-                        SizedBox(
-                          height: 20,
-                        ),
                         Text(
                           _signupNotifier.fullName ?? '',
                           style: TextStyle(
@@ -664,7 +667,7 @@ class _SalesReceiptState extends State<SalesReceipt> {
                                       padding: const EdgeInsets.only(
                                           right: 30, top: 5),
                                       child: Text(
-                                        snapshot.data.amount,
+                                        snapshot.data.amount.toString(),
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontFamily: 'Sora',
@@ -676,13 +679,18 @@ class _SalesReceiptState extends State<SalesReceipt> {
                                 ),
                               ],
                             )),
+                        SizedBox(height: 40),
                         RaisedButton(
-                            onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        BottomNavigationPage())),
-                            child: Text('Make Sale'))
+                            onPressed: () {
+                              _addProduct.items.clear();
+                              _addProduct.quantityToSell.clear();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BottomNavigationPage()));
+                            },
+                            child: Text('Make Another Sales'))
                       ],
                     ),
                   ),
@@ -957,7 +965,7 @@ class _SalesReceiptState extends State<SalesReceipt> {
                             padding:
                                 const pw.EdgeInsets.only(right: 30, top: 5),
                             child: pw.Text(
-                              snapshot.data.amount,
+                              snapshot.data.amount.toString(),
                               style: pw.TextStyle(
                                 fontSize: 16,
                               ),

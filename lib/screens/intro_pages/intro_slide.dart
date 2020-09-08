@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intro_slider/dot_animation_enum.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
-import 'package:stockfare_mobile/screens/intro_pages/splashscreen.dart';
+import 'package:stockfare_mobile/screens/intro_pages/explore_page.dart';
 
 class IntroScreen extends StatefulWidget {
   IntroScreen({Key key}) : super(key: key);
@@ -80,7 +80,7 @@ class IntroScreenState extends State<IntroScreen> {
     // Back to the first tab
     // this.goToTab(0);
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SplashScreen()));
+        context, MaterialPageRoute(builder: (context) => FirstIntro()));
   }
 
   void onTabChangeCompleted(index) {

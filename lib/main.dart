@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
@@ -6,9 +7,10 @@ import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/intro_pages/splashscreen.dart';
 
-import 'screens/intro_pages/intro_slide.dart';
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await GlobalConfiguration().loadFromAsset("url");
 
-void main() {
   runApp(
     MultiProvider(
       providers: [
