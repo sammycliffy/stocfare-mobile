@@ -2,9 +2,11 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
@@ -85,10 +87,13 @@ class _BarcodePageState extends State<BarcodePage> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: Colors.grey)),
-                      child: Icon(
-                        Icons.assessment,
-                        color: Colors.red,
-                        size: 70,
+                      child: IconButton(
+                        icon: FaIcon(
+                          FontAwesomeIcons.barcode,
+                          size: 100,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        onPressed: null,
                       )),
                   onTap: () {
                     scanBarcodeNormal();
@@ -115,7 +120,7 @@ class _BarcodePageState extends State<BarcodePage> {
                   height: 9,
                 ),
                 Text(
-                  'Add Barcode',
+                  'Click box to scan barcode',
                   style:
                       TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                 ),
@@ -177,64 +182,61 @@ class _BarcodePageState extends State<BarcodePage> {
                   ),
                   onTap: () async {
                     _activitiesServices.checkForInternet().then((value) async {
+                      String noImage = await getImageFileFromAssets();
                       if (value == true) {
                         DialogBoxes().loading(context);
-
+                        List<int> imageBytes;
+                        String base64Image;
                         if (_image == null) {
-                          Navigator.pop(context);
-                          setState(() {
-                            _error = 'You must add product image';
-                            _displaySnackBar(context);
-                          });
+                          base64Image = noImage;
                         } else {
-                          List<int> imageBytes = _image.readAsBytesSync();
-                          String base64Image = base64.encode(imageBytes);
+                          imageBytes = _image.readAsBytesSync();
+                          base64Image = base64.encode(imageBytes);
+                        }
 
-                          dynamic result = await _productServices
-                              .productAddition(
-                                  _addProduct.productCategory,
-                                  _addProduct.unitproductName,
-                                  _addProduct.unitproductPrice,
-                                  _addProduct.unitproductQuantity,
-                                  _addProduct.unitLimit,
-                                  _addProduct.packProductPrice,
-                                  _addProduct.packQuantity,
-                                  _addProduct.packLimit,
-                                  _scanBarcode,
-                                  _addProduct.productDescription,
-                                  base64Image,
-                                  _addProduct.productDiscount,
-                                  _addProduct.productWeight,
-                                  _addProduct.data)
-                              .timeout(Duration(seconds: 10),
-                                  onTimeout: () => null);
+                        dynamic result = await _productServices
+                            .productAddition(
+                                _addProduct.productCategory,
+                                _addProduct.unitproductName,
+                                _addProduct.unitproductPrice,
+                                _addProduct.unitproductQuantity,
+                                _addProduct.unitLimit,
+                                _addProduct.packProductPrice,
+                                _addProduct.packQuantity,
+                                _addProduct.packLimit,
+                                _scanBarcode,
+                                _addProduct.productDescription,
+                                base64Image,
+                                _addProduct.productDiscount,
+                                _addProduct.productWeight,
+                                _addProduct.data)
+                            .timeout(Duration(seconds: 10),
+                                onTimeout: () => null);
 
-                          if (result != 201) {
-                            if (result == null) {
-                              Navigator.pop(context);
-                              setState(() {
-                                _error =
-                                    'Opps! Error occured, please try again.';
-                                _displaySnackBar(context);
-                              });
-                            } else if (result == false) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Login()));
-                            } else {
-                              Navigator.pop(context);
-                              setState(() {
-                                _error = result.toString();
-                                _displaySnackBar(context);
-                              });
-                            }
-                          } else {
+                        if (result != 201) {
+                          if (result == null) {
+                            Navigator.pop(context);
+                            setState(() {
+                              _error = 'Opps! Error occured, please try again.';
+                              _displaySnackBar(context);
+                            });
+                          } else if (result == false) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ProductSuccess()));
+                                    builder: (context) => Login()));
+                          } else {
+                            Navigator.pop(context);
+                            setState(() {
+                              _error = result.toString();
+                              _displaySnackBar(context);
+                            });
                           }
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProductSuccess()));
                         }
                       } else {
                         setState(() {
@@ -262,5 +264,16 @@ class _BarcodePageState extends State<BarcodePage> {
           style: TextStyle(color: Colors.white, fontSize: 15),
         ));
     _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  Future<String> getImageFileFromAssets() async {
+    final byteData = await rootBundle.load('assets/images/No-image.png');
+    String tempPath = (await getTemporaryDirectory()).path;
+    File file = File('$tempPath/No-image.png');
+    await file.writeAsBytes(byteData.buffer
+        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+    List<int> imageByte = file.readAsBytesSync();
+    String base64Image = base64.encode(imageByte);
+    return base64Image;
   }
 }

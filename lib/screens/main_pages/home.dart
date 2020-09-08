@@ -392,17 +392,14 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.grey[100],
                                 child: Column(
                                   children: <Widget>[
-                                    _productImage.asMap().containsKey(index)
-                                        ? CachedNetworkImage(
-                                            width: 200,
-                                            height: 65,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                CircularProgressIndicator(),
-                                            imageUrl: _productImage[index],
-                                          )
-                                        : Image.asset(
-                                            'assets/images/No-image.png'),
+                                    CachedNetworkImage(
+                                      width: 200,
+                                      height: 65,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                      imageUrl: _productImage[index],
+                                    ),
                                     Container(
                                       width: double.infinity,
                                       decoration: BoxDecoration(
@@ -742,8 +739,8 @@ class _HomePageState extends State<HomePage> {
 
   void searchFilter(value) {
     String capitalized = StringUtils.capitalize(value);
-    int _index =
-        _categories.indexWhere((element) => element.startsWith(capitalized));
+    int _index = _categories.indexWhere((element) =>
+        element.startsWith(capitalized) || _categories.contains(element));
     print(_index);
     if (_index != -1) {
       print('Contains value');

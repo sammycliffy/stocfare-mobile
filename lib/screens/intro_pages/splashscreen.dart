@@ -6,8 +6,8 @@ import 'package:stockfare_mobile/models/user_model.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
 import 'package:stockfare_mobile/screens/auth_pages/phone_verification.dart';
+import 'package:stockfare_mobile/screens/intro_pages/explore_page.dart';
 import 'dart:async';
-import 'package:stockfare_mobile/screens/intro_pages/intro_slide.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -24,10 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     currentImage = Image.asset('assets/images/logo.png', width: 50, height: 50);
-    Timer(
-        Duration(seconds: 3),
-        () => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => Login())));
+    Timer(Duration(seconds: 3), () => checkForFirstInstallation());
   }
 
   @override
@@ -85,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
     prefs.setInt('counter', launchCount + 1);
     if (launchCount == 0) {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => IntroScreen()));
+          MaterialPageRoute(builder: (BuildContext context) => FirstIntro()));
     } else {
       checkForLogin();
     }
@@ -122,4 +119,3 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 }
-

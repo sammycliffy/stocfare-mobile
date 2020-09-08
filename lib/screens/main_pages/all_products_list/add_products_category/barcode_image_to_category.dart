@@ -2,9 +2,11 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
@@ -77,10 +79,13 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: Colors.grey)),
-                      child: Icon(
-                        Icons.assessment,
-                        color: Colors.red,
-                        size: 70,
+                      child: IconButton(
+                        icon: FaIcon(
+                          FontAwesomeIcons.barcode,
+                          size: 100,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        onPressed: null,
                       )),
                   onTap: () {
                     scanBarcodeNormal();
@@ -107,7 +112,7 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                   height: 9,
                 ),
                 Text(
-                  'Add Barcode',
+                  'Click box to scan barcode',
                   style:
                       TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                 ),
@@ -172,14 +177,17 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                       if (value == true) {
                         DialogBoxes().loading(context);
 
-                        if (_image == null) {
-                          setState(() {
-                            _error = 'You must add product image';
-                            _displaySnackBar(context);
-                          });
-                        } else {
-                          List<int> imageBytes = _image.readAsBytesSync();
-                          String base64Image = base64.encode(imageBytes);
+                        String noImage = await getImageFileFromAssets();
+                        if (value == true) {
+                          DialogBoxes().loading(context);
+                          List<int> imageBytes;
+                          String base64Image;
+                          if (_image == null) {
+                            base64Image = noImage;
+                          } else {
+                            imageBytes = _image.readAsBytesSync();
+                            base64Image = base64.encode(imageBytes);
+                          }
                           dynamic result = await _productServices
                               .addProductToCategory(
                                   _addProduct.unitproductName,
@@ -238,5 +246,16 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
           style: TextStyle(color: Colors.white, fontSize: 15),
         ));
     _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  Future<String> getImageFileFromAssets() async {
+    final byteData = await rootBundle.load('assets/images/No-image.png');
+    String tempPath = (await getTemporaryDirectory()).path;
+    File file = File('$tempPath/No-image.png');
+    await file.writeAsBytes(byteData.buffer
+        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+    List<int> imageByte = file.readAsBytesSync();
+    String base64Image = base64.encode(imageByte);
+    return base64Image;
   }
 }
