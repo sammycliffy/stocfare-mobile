@@ -33,12 +33,6 @@ class PaymentServices {
     }
   }
 
-  Future<String> checkForPlan() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String subscriptionPlan = sharedPreferences.getString('subscription_plan');
-    return subscriptionPlan;
-  }
-
   Future<dynamic> switchPlan(String subscriptionPlan) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');

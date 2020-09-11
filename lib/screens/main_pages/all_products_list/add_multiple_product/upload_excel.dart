@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stockfare_mobile/helpers/sub_helpers.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/services/payment_services.dart';
@@ -16,7 +17,6 @@ class UploadExcelPage extends StatefulWidget {
 class _UploadExcelPageState extends State<UploadExcelPage> {
   File toSend;
   ProductServices _productServices = ProductServices();
-  PaymentServices _paymentServices = PaymentServices();
   Future _getFile() async {
     File file = await FilePicker.getFile();
     return file;
@@ -24,6 +24,7 @@ class _UploadExcelPageState extends State<UploadExcelPage> {
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String _error;
+
   @override
   Widget build(BuildContext context) {
     AddProductNotifier _addProductNotifier =
@@ -85,7 +86,7 @@ class _UploadExcelPageState extends State<UploadExcelPage> {
               ),
             ),
             onTap: () {
-              _paymentServices.checkForPlan().then((value) {
+              Subscription().getSubscriptionPlan().then((value) {
                 if (value == 'PREMIUM') {
                   if (toSend == null) {
                     setState(() {

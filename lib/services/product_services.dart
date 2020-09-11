@@ -12,10 +12,10 @@ class ProductServices {
   Future<dynamic> productAddition(
       String productCategory,
       String unitproductName,
-      double unitproductPrice,
+      int unitproductPrice,
       int unitproductQuantity,
       int unitLimit,
-      double packProductPrice,
+      int packProductPrice,
       int packQuantity,
       int packLimit,
       String barcode,
@@ -81,10 +81,10 @@ class ProductServices {
   //Add products alone
   Future<dynamic> addProductToCategory(
     String unitproductName,
-    double unitproductPrice,
+    int unitproductPrice,
     int unitproductQuantity,
     int unitLimit,
-    double packProductPrice,
+    int packProductPrice,
     int packQuantity,
     int packLimit,
     String barcode,

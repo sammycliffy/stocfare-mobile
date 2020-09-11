@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/color_models.dart';
 import 'package:stockfare_mobile/models/products.dart';
@@ -42,7 +43,7 @@ class _EditProductPageState extends State<EditProductPage> {
   bool deleteProduct = false;
   List<bool> checkBox = [];
   List deleteItem = [];
-  String _scanBarcode = 'Unknown';
+  String _scanBarcode;
   List _productId = [];
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String _error;
@@ -995,10 +996,13 @@ class _EditProductPageState extends State<EditProductPage> {
                                               BorderRadius.circular(10),
                                           border:
                                               Border.all(color: Colors.grey)),
-                                      child: Icon(
-                                        Icons.assessment,
-                                        color: Colors.red,
-                                        size: 70,
+                                      child: IconButton(
+                                        icon: FaIcon(
+                                          FontAwesomeIcons.barcode,
+                                          size: 70,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                        onPressed: null,
                                       )),
                                   onTap: () {
                                     scanBarcodeNormal();
@@ -1028,7 +1032,7 @@ class _EditProductPageState extends State<EditProductPage> {
                                   height: 9,
                                 ),
                                 Text(
-                                  'Add Barcode',
+                                  'Click box to scan barcode',
                                   style: TextStyle(
                                       color: Colors.red,
                                       fontWeight: FontWeight.bold),

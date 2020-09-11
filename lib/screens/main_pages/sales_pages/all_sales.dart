@@ -2,6 +2,7 @@ import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:stockfare_mobile/models/sales_model.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/sales_pages/receipt.dart';
@@ -20,6 +21,7 @@ class _AllSalesListState extends State<AllSalesList> {
   Future<GetSalesModel> salesList;
   Future<GetSalesModel> sortedList;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ScrollController scrollController = new ScrollController();
   bool _error = false;
   bool isNetwork = true;
   String _errorMessage;
@@ -27,19 +29,83 @@ class _AllSalesListState extends State<AllSalesList> {
   bool _searchSales = false;
   dynamic selectedDate = DateTime.now();
   List names = [];
+  List _productNames = [];
   List customerNames = [];
   List sellerNames = [];
   List dateCreated = [];
   List salesId = [];
+  int pageNumber = 1;
+  bool isLoading = false;
+  List price = [];
+  List amountSold = [];
+  List quantitySold = [];
+  List customerChange = [];
+  List referenceCode = [];
+  List tax = [];
+  List soldOnCredit = [];
+  List amountPaid = [];
+  List totalAmount = [];
+  dynamic next;
 
   @override
   initState() {
+    names.clear();
+    _productNames.clear();
+    customerNames.clear();
+    sellerNames.clear();
+    dateCreated.clear();
+    salesId.clear();
+    price.clear();
+    amountSold.clear();
+    quantitySold.clear();
+    customerChange.clear();
+    referenceCode.clear();
+    tax.clear();
+    soldOnCredit.clear();
+    amountPaid.clear();
+    totalAmount.clear();
     super.initState();
     _activitiesServices.checkForInternet().then((value) {
       if (value == true) {
-        _salesServices.getallSales().catchError((e) {
-          _error = true;
-          _errorMessage = e.toString();
+        setState(() {
+          isLoading = true;
+        });
+        salesList = _salesServices.getSalesPages(pageNumber);
+        _salesServices.getallSales(pageNumber).then((value) {
+          setState(() {
+            next = value.next;
+            print(value.results?.map((value) {
+                  salesId.add(value.id);
+                  if (value.customer == null) {
+                    customerNames.add('None');
+                  } else {
+                    customerNames.add(value.customer.name);
+                  }
+                  _productNames.add(value.productDetail);
+
+                  tax.add(value.tax);
+                  amountSold.add(value.amount);
+                  referenceCode.add(value.refCode);
+                  customerChange.add(value.change);
+                  amountPaid.add(value.amountPaid);
+                  sellerNames.add(value.saleRegisteredBy);
+                  names.add(value.productData[0].name);
+                  soldOnCredit.add(value.soldOnCredit);
+                  print(value.productData.map((value) {
+                    dateCreated.add(value.dateCreated);
+                  }));
+                }) ??
+                '[]');
+          });
+        }).whenComplete(() {
+          setState(() {
+            isLoading = false;
+          });
+        }).catchError((e) {
+          setState(() {
+            _error = true;
+            _errorMessage = e.toString();
+          });
         });
       } else {
         setState(() {
@@ -50,281 +116,150 @@ class _AllSalesListState extends State<AllSalesList> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    print(sellerNames);
-    return Scaffold(
-      key: _scaffoldKey,
-      drawer: DrawerPage(),
-      appBar: AppBar(
-        title: Text('Sales History'),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(50.0),
-          child: Padding(
-              padding: const EdgeInsets.only(
-                bottom: 10,
-              ),
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 5),
-                    child: Container(
-                      height: 45,
-                      width: 300,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Colors.grey[200],
-                      ),
-                      child: TextField(
-                          onChanged: (val) {
-                            if (val.length > 0) {
-                              setState(() {
-                                searchFilter(val);
-                              });
-                            } else if (val.length <= 0) {
-                              setState(() {
-                                _searchSales = false;
-                              });
-                            }
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: IconButton(
-                              icon: Icon(Icons.search),
-                              color: Colors.black,
-                              iconSize: 20.0,
-                              onPressed: () {},
-                            ),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.fromLTRB(25, 8, 0, 5),
-                            hintText: 'Search Stockfare',
-                          )),
-                    ),
-                  ),
-                ],
-              )),
-        ),
-      ),
-      body: (() {
-        if (isNetwork == false) {
-          return GestureDetector(
-            child: Container(
-              width: double.infinity,
-              height: double.infinity,
-              child: Column(
-                children: [
-                  SizedBox(height: 200),
-                  Icon(
-                    Icons.mood_bad,
-                    size: 40,
-                  ),
-                  SizedBox(height: 10),
-                  Center(
-                    child: Text(
-                      'An error occured',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            onTap: () {},
-          );
-        } else if (_error == true) {
-          return Center(
-            child: Text(
-              _errorMessage,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18),
-            ),
-          );
-        } else if (_sortedDate == true || _searchSales == true) {
-          return Column(
-            children: [
-              SizedBox(height: 20),
-              GestureDetector(
-                child: Center(
-                    child: Container(
-                  width: 150,
-                  height: 40,
-                  color: Colors.black,
-                  child: Center(
-                      child: Text('All Sales',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold))),
-                )),
-                onTap: () {
-                  setState(() {
-                    _sortedDate = false;
-                    _searchSales = false;
-                  });
-                },
-              ),
-              (() {
-                if (names.length == 0) {
-                  return Column(
-                    children: [
-                      SizedBox(height: 100),
-                      Center(child: Icon(Icons.mood_bad, size: 40)),
-                      Text('No Sales',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold)),
-                    ],
-                  );
-                } else {
-                  return _listView();
-                }
-              }())
-            ],
-          );
-        } else {
-          return FutureBuilder<GetSalesModel>(
-              future: _salesServices.getallSales(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  names.clear();
-                  customerNames.clear();
-                  sellerNames.clear();
-                  dateCreated.clear();
-                  salesId.clear();
-                  print(snapshot.data.results?.map((value) {
-                        salesId.add(value.id);
-                        if (value.customer == null) {
-                          customerNames.add('None');
-                        } else {
-                          customerNames.add(value.customer.name);
-                        }
-                        sellerNames.add(value.saleRegisteredBy);
-                        names.add(value.productData[0].name);
-                        print(value.productData.map((value) {
-                          dateCreated.add(value.dateCreated);
-                        }));
-                      }) ??
-                      '[]');
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 
-                  if (snapshot.data.count != 0) {
+  @override
+  Widget build(BuildContext context) {
+    print(_productNames);
+    return WillPopScope(
+      onWillPop: () => Navigator.push(context,
+          MaterialPageRoute(builder: (context) => BottomNavigationPage())),
+      child: Scaffold(
+        key: _scaffoldKey,
+        drawer: DrawerPage(),
+        appBar: AppBar(
+          title: Text('Sales History'),
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(50.0),
+            child: Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 10,
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 5),
+                      child: Container(
+                        height: 45,
+                        width: 300,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.grey[200],
+                        ),
+                        child: TextField(
+                            onChanged: (val) {
+                              if (val.length > 0) {
+                                setState(() {
+                                  searchFilter(val);
+                                });
+                              } else if (val.length <= 0) {
+                                setState(() {
+                                  _searchSales = false;
+                                });
+                              }
+                            },
+                            decoration: InputDecoration(
+                              prefixIcon: IconButton(
+                                icon: Icon(Icons.search),
+                                color: Colors.black,
+                                iconSize: 20.0,
+                                onPressed: () {},
+                              ),
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.fromLTRB(25, 8, 0, 5),
+                              hintText: 'Search Stockfare',
+                            )),
+                      ),
+                    ),
+                  ],
+                )),
+          ),
+        ),
+        body: (() {
+          if (isNetwork == false) {
+            return GestureDetector(
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                child: Column(
+                  children: [
+                    SizedBox(height: 200),
+                    Icon(
+                      Icons.mood_bad,
+                      size: 40,
+                    ),
+                    SizedBox(height: 10),
+                    Center(
+                      child: Text(
+                        'An error occured',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              onTap: () {},
+            );
+          } else if (_error == true) {
+            return Center(
+              child: Text(
+                _errorMessage,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18),
+              ),
+            );
+          } else if (_sortedDate == true || _searchSales == true) {
+            return Column(
+              children: [
+                SizedBox(height: 20),
+                GestureDetector(
+                  child: Center(
+                      child: Container(
+                    width: 150,
+                    height: 40,
+                    color: Colors.black,
+                    child: Center(
+                        child: Text('All Sales',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold))),
+                  )),
+                  onTap: () {
+                    setState(() {
+                      _sortedDate = false;
+                      _searchSales = false;
+                    });
+                  },
+                ),
+                (() {
+                  if (names.length == 0) {
                     return Column(
                       children: [
-                        GestureDetector(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Center(
-                              child: Container(
-                                  width: 220,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      border: Border.all(color: Colors.white)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text('Sort for sales using date'),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Icon(Icons.date_range,
-                                          color: Theme.of(context).primaryColor)
-                                    ],
-                                  )),
-                            ),
-                          ),
-                          onTap: () {
-                            _selectDate(context);
-                          },
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                              padding: const EdgeInsets.all(8),
-                              itemCount: sellerNames.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return GestureDetector(
-                                  child: Card(
-                                    child: ListTile(
-                                      leading: Icon(Icons.monetization_on,
-                                          color: Colors.grey),
-                                      title: Text(
-                                        names[index],
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18),
-                                      ),
-                                      subtitle: Row(
-                                        children: <Widget>[
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 1),
-                                                child: Text(
-                                                  'Buyer :  ${customerNames[index].toString()}',
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                      fontFamily: 'FireSans'),
-                                                ),
-                                              ),
-                                              SizedBox(height: 5),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 1),
-                                                child: Text(
-                                                  'Seller :  ${sellerNames[index].toString()}',
-                                                  style: TextStyle(
-                                                      color: Colors.green,
-                                                      fontFamily: 'FireSans'),
-                                                ),
-                                              ),
-                                              SizedBox(height: 5),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 1),
-                                                child: Text(
-                                                  'Date :  ${Jiffy(dateCreated[index]).fromNow()}',
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontFamily: 'FireSans'),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      trailing: IconButton(
-                                          icon: Icon(Icons.delete),
-                                          onPressed: () {
-                                            _confirmDelete(context, index);
-                                          }),
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                AllProductsList(
-                                                    customerIndex: index)));
-                                  },
-                                );
-                              }),
-                        ),
+                        SizedBox(height: 100),
+                        Center(child: Icon(Icons.mood_bad, size: 40)),
+                        Text('No Sales',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold)),
                       ],
                     );
                   } else {
-                    return Center(
-                      child: Text('You have not made any sales yet.',
-                          style: TextStyle(
-                            fontSize: 16,
-                          )),
-                    );
+                    return _listView();
                   }
-                }
-                return Center(child: CircularProgressIndicator());
-              });
-        }
-      }()),
+                }())
+              ],
+            );
+          } else if (isLoading == true) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return _listView();
+          }
+        }()),
+      ),
     );
   }
 
@@ -405,11 +340,22 @@ class _AllSalesListState extends State<AllSalesList> {
                         Navigator.pop(_scaffoldKey.currentContext);
                         setState(() {
                           names.clear();
+                          names.clear();
+                          _productNames.clear();
                           customerNames.clear();
                           sellerNames.clear();
                           dateCreated.clear();
                           salesId.clear();
-                          _salesServices.getallSales().then((value) {
+                          price.clear();
+                          amountSold.clear();
+                          quantitySold.clear();
+                          customerChange.clear();
+                          referenceCode.clear();
+                          tax.clear();
+                          soldOnCredit.clear();
+                          amountPaid.clear();
+                          totalAmount.clear();
+                          _salesServices.getallSales(0).then((value) {
                             print(value.results?.map((value) {
                                   salesId.add(value.id);
                                   if (value.customer == null) {
@@ -417,8 +363,15 @@ class _AllSalesListState extends State<AllSalesList> {
                                   } else {
                                     customerNames.add(value.customer.name);
                                   }
+                                  _productNames.add(value.productDetail);
+                                  tax.add(value.tax);
+                                  amountSold.add(value.amount);
+                                  referenceCode.add(value.refCode);
+                                  customerChange.add(value.change);
+                                  amountPaid.add(value.amountPaid);
                                   sellerNames.add(value.saleRegisteredBy);
                                   names.add(value.productData[0].name);
+                                  soldOnCredit.add(value.soldOnCredit);
                                   print(value.productData.map((value) {
                                     dateCreated.add(value.dateCreated);
                                   }));
@@ -484,9 +437,20 @@ class _AllSalesListState extends State<AllSalesList> {
       print(sortedList.then((value) {
         setState(() {
           names.clear();
-          sellerNames.clear();
+          _productNames.clear();
           customerNames.clear();
+          sellerNames.clear();
+          dateCreated.clear();
           salesId.clear();
+          price.clear();
+          amountSold.clear();
+          quantitySold.clear();
+          customerChange.clear();
+          referenceCode.clear();
+          tax.clear();
+          soldOnCredit.clear();
+          amountPaid.clear();
+          totalAmount.clear();
 
           print(value.results?.map((value) {
                 salesId.add(value.id);
@@ -495,8 +459,15 @@ class _AllSalesListState extends State<AllSalesList> {
                 } else {
                   customerNames.add(value.customer.name);
                 }
+                _productNames.add(value.productDetail);
+                tax.add(value.tax);
+                amountSold.add(value.amount);
+                referenceCode.add(value.refCode);
+                customerChange.add(value.change);
+                amountPaid.add(value.amountPaid);
                 sellerNames.add(value.saleRegisteredBy);
                 names.add(value.productData[0].name);
+                soldOnCredit.add(value.soldOnCredit);
                 print(value.productData.map((value) {
                   dateCreated.add(value.dateCreated);
                 }));
@@ -508,71 +479,131 @@ class _AllSalesListState extends State<AllSalesList> {
   }
 
   _listView() {
-    return Expanded(
-      child: ListView.builder(
-          padding: const EdgeInsets.all(8),
-          itemCount: names.length,
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              child: Card(
-                child: ListTile(
-                  leading: Icon(Icons.monetization_on, color: Colors.grey),
-                  title: Text(
-                    names[index],
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                  subtitle: Row(
-                    children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(top: 1),
-                            child: Text(
-                              'Buyer :  ${customerNames[index].toString()}',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontFamily: 'FireSans'),
+    return Column(
+      children: [
+        Expanded(
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollInfo) {
+              if (scrollInfo.metrics.pixels ==
+                  scrollInfo.metrics.maxScrollExtent) {
+                if (next != null) {
+                  setState(() {
+                    pageNumber = pageNumber + 1;
+                  });
+                  _salesServices.getSalesPages(pageNumber).then((value) {
+                    setState(() {
+                      next = value.next;
+                      print(value.results?.map((value) {
+                            salesId.add(value.id);
+                            if (value.customer == null) {
+                              customerNames.add('None');
+                            } else {
+                              customerNames.add(value.customer.name);
+                            }
+                            _productNames.add(value.productDetail);
+                            tax.add(value.tax);
+                            amountSold.add(value.amount);
+                            referenceCode.add(value.refCode);
+                            customerChange.add(value.change);
+                            amountPaid.add(value.amountPaid);
+                            sellerNames.add(value.saleRegisteredBy);
+                            names.add(value.productData[0].name);
+                            soldOnCredit.add(value.soldOnCredit);
+                            print(value.productData.map((value) {
+                              dateCreated.add(value.dateCreated);
+                            }));
+                          }) ??
+                          '[]');
+                    });
+                    print(names);
+                  });
+                }
+              }
+            },
+            child: ListView.builder(
+                padding: const EdgeInsets.all(8),
+                itemCount: names.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    child: Card(
+                      child: ListTile(
+                        leading:
+                            Icon(Icons.monetization_on, color: Colors.grey),
+                        title: Text(
+                          names[index],
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        subtitle: Row(
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 1),
+                                  child: Text(
+                                    'Buyer :  ${customerNames[index].toString()}',
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                        fontFamily: 'FireSans'),
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 1),
+                                  child: Text(
+                                    'Seller :  ${sellerNames[index].toString()}',
+                                    style: TextStyle(
+                                        color: Colors.green,
+                                        fontFamily: 'FireSans'),
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 1),
+                                  child: Text(
+                                    'Date :  ${Jiffy(dateCreated[index]).fromNow()}',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'FireSans'),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          SizedBox(height: 5),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 1),
-                            child: Text(
-                              'Seller :  ${sellerNames[index].toString()}',
-                              style: TextStyle(
-                                  color: Colors.green, fontFamily: 'FireSans'),
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 1),
-                            child: Text(
-                              'Date :  ${Jiffy(dateCreated[index]).fromNow()}',
-                              style: TextStyle(
-                                  color: Colors.black, fontFamily: 'FireSans'),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
+                        trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              _confirmDelete(context, index);
+                            }),
                       ),
-                    ],
-                  ),
-                  trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        _confirmDelete(context, index);
-                      }),
-                ),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            AllProductsList(customerIndex: index)));
-              },
-            );
-          }),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AllProductsList(
+                                    customerIndex: index,
+                                    names: _productNames,
+                                    customerNames: customerNames,
+                                    sellerNames: sellerNames,
+                                    dateCreated: dateCreated,
+                                    price: price,
+                                    amountSold: amountSold,
+                                    quantitySold: quantitySold,
+                                    customerChange: customerChange,
+                                    referenceCode: referenceCode,
+                                    tax: tax,
+                                    soldOnCredit: soldOnCredit,
+                                    amountPaid: amountPaid,
+                                  )));
+                    },
+                  );
+                }),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,21 +1,11 @@
 import 'dart:convert';
 import 'dart:async';
-import 'dart:io';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/user_model.dart';
 
 class AuthServices {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
-  getTokenz() async {
-    String token = await _firebaseMessaging.getToken();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString('firebaseToken', token);
-  }
-
   Future<dynamic> userRegistration(
     String firstName,
     String lastName,
@@ -28,52 +18,62 @@ class AuthServices {
     String businessType,
     String referralCode,
   ) async {
-    getTokenz();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String firebaseToken = sharedPreferences.get('firebaseToken');
-    final String url = GlobalConfiguration().get("signup");
-    final http.Response response = await http.post(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          "account": {
-            "first_name": firstName,
-            "last_name": lastName,
-            "phone_number": email,
-            "email": phone,
-            "password": password,
+    print(firebaseToken);
+
+    try {
+      final String url = GlobalConfiguration().get("signup");
+
+      final http.Response response = await http.post(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
           },
-          "registration_id": firebaseToken,
-          "name": businessName,
-          "address": businessAddress,
-          "description": businessDescription,
-          "referral": referralCode,
-          "business_type": businessType
-        }));
+          body: jsonEncode(<String, dynamic>{
+            "account": {
+              "first_name": firstName,
+              "last_name": lastName,
+              "phone_number": email,
+              "email": phone,
+              "password": password,
+            },
+            "registration_id": firebaseToken,
+            "name": businessName,
+            "address": businessAddress,
+            "description": businessDescription,
+            "referral": referralCode,
+            "business_type": businessType
+          }));
 
-    if (response.statusCode == 200) {
-      var responseJson = json.decode(response.body);
-      print(responseJson);
-      sharedPreferences.setString("token", responseJson['token']['access']);
-      dynamic user = User.fromJson(json.decode(response.body));
-      sharedPreferences.setString("branchId", user.branchId);
-      sharedPreferences.setString("body", response.body);
-      sharedPreferences.setBool('verified', user.verified);
-      sharedPreferences.setInt('user_id', user.userId);
-      sharedPreferences.setString('subscription_plan',
-          responseJson['business'][0]['branch'][0]['subscription_plan']);
-      sharedPreferences.setString(
-          'firebaseNotificationId', user.firebaseNotificationId);
-      sharedPreferences.setString('businessId', user.businessId);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var responseJson = json.decode(response.body);
+        print(responseJson);
+        sharedPreferences.setString("token", responseJson['token']['access']);
+        dynamic user = User.fromJson(json.decode(response.body));
+        sharedPreferences.setString("branchId", user.branchId);
+        sharedPreferences.setString("body", response.body);
+        sharedPreferences.setString("firebaseId", user.firebaseId);
+        sharedPreferences.setBool('verified', user.verified);
+        sharedPreferences.setInt('user_id', user.userId);
+        sharedPreferences.setString('subscription_plan',
+            responseJson['business'][0]['branch'][0]['subscription_plan']);
+        sharedPreferences.setString(
+            'firebaseNotificationId', user.firebaseNotificationId);
+        sharedPreferences.setString('businessId', user.businessId);
 
-      return true;
-    } else {
-      return json.decode(response.body)['name'] ??
-          json.decode(response.body)['account']['phone_number'] ??
-          json.decode(response.body)['account']['email'] ??
-          ' ';
-      // return json.decode(response.body);
+        return true;
+      } else {
+        print(response.body);
+        return json.decode(response.body)['name'] ??
+            json.decode(response.body)['registration_id'] ??
+            json.decode(response.body)['account']['phone_number'] ??
+            json.decode(response.body)['account']['email'] ??
+            json.decode(response.body)['account']['error'];
+
+        // return json.decode(response.body);
+      }
+    } on Exception catch (e) {
+      print(e.toString());
     }
   }
 
@@ -81,7 +81,6 @@ class AuthServices {
     String username,
     String password,
   ) async {
-    getTokenz();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String firebaseToken = sharedPreferences.get('firebaseToken');
     String url = GlobalConfiguration().get("login");
@@ -108,8 +107,53 @@ class AuthServices {
         sharedPreferences.setBool("verified", user.verified);
         sharedPreferences.setString("firebaseId", user.firebaseId);
         sharedPreferences.setString('user_id', user.userId.toString());
-        sharedPreferences.setString('subscription_plan',
-            responseJson['business'][0]['branch'][0]['subscription_plan']);
+        sharedPreferences.setString('subscription_plan', user.subscriptionPlan);
+        sharedPreferences.setString(
+            'firebaseNotificationId', user.firebaseNotificationId);
+        sharedPreferences.setString('businessId', user.businessId);
+
+        return true;
+      } else {
+        return json.decode(response.body)['error'];
+        // return json.decode(response.body);
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<dynamic> loginUserold(
+    String password,
+  ) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String firebaseToken = sharedPreferences.get('firebaseToken');
+    String body = sharedPreferences.getString('body');
+    dynamic user = User.fromJson(json.decode(body));
+    String url = GlobalConfiguration().get("login");
+    print(url);
+    try {
+      final http.Response response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          "username": user.phone,
+          "password": password,
+          "registration_id": firebaseToken
+        }),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var responseJson = json.decode(response.body);
+        print(responseJson);
+        sharedPreferences.setString("token", responseJson['token']['access']);
+        dynamic user = User.fromJson(json.decode(response.body));
+        sharedPreferences.setString("branchId", user.branchId);
+        sharedPreferences.setString("body", response.body);
+        sharedPreferences.setBool("verified", user.verified);
+        sharedPreferences.setString("firebaseId", user.firebaseId);
+        sharedPreferences.setString('user_id', user.userId.toString());
+        sharedPreferences.setString('subscription_plan', user.subscriptionPlan);
         sharedPreferences.setString(
             'firebaseNotificationId', user.firebaseNotificationId);
         sharedPreferences.setString('businessId', user.businessId);
@@ -156,10 +200,11 @@ class AuthServices {
     }
   }
 
-  Future<dynamic> resendCode(String data) async {
+  Future<dynamic> resendCode() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
-    print(data);
+    String body = sharedPreferences.getString('body');
+    dynamic user = User.fromJson(json.decode(body));
 
     final String url = GlobalConfiguration().get("forgot-password");
     try {
@@ -170,7 +215,7 @@ class AuthServices {
             'Authorization': 'Bearer $token',
           },
           body: jsonEncode(<String, String>{
-            "data": data,
+            "data": user.phone,
           }));
       if (response.statusCode == 200) {
         var responseJson = json.decode(response.body);

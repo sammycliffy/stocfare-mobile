@@ -44,6 +44,15 @@ class _HomePageState extends State<HomePage> {
   List _productId = [];
   List _productPackPrice = [];
   List _barcode = [];
+  List _categoriesSearch = [];
+  List _productNameSearch = [];
+  List _productPriceSearch = [];
+  List _productImageSearch = [];
+  List _productQuantitySearch = [];
+  List _packQuantitySearch = [];
+  List _productIdSearch = [];
+  List _productPackPriceSearch = [];
+  List _barcodeSearch = [];
   bool newvalue = false;
   List<Map<String, dynamic>> items = [];
   List _items = [];
@@ -54,6 +63,8 @@ class _HomePageState extends State<HomePage> {
   bool _addFloatingACtionButton = false;
   String _scanBarcode = 'Unknown';
   Map<String, dynamic> _firebaseMessage;
+  final _formKey = GlobalKey<FormState>();
+  String firebaseNumber;
 
   Future selectNotification(String payload) async {
     await flutterLocalNotificationsPlugin.cancelAll();
@@ -143,7 +154,7 @@ class _HomePageState extends State<HomePage> {
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     SignupNotifier _signupNotifier =
         Provider.of<SignupNotifier>(context, listen: false);
-
+    print(_signupNotifier.firebaseId);
     // int val = _addProduct.listOfQuantity.reduce((a, b) => a + b);
 
     final dbRef = FirebaseDatabase.instance; //firebase database reference
@@ -293,8 +304,8 @@ class _HomePageState extends State<HomePage> {
           body: Column(
             children: <Widget>[
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(width: 30),
                   InkWell(
                     child: Container(
                       width: 200,
@@ -334,44 +345,40 @@ class _HomePageState extends State<HomePage> {
                           MaterialPageRoute(builder: (context) => AddCart()));
                     },
                   ),
-                  // GestureDetector(
-                  //   child: Padding(
-                  //     padding:
-                  //         const EdgeInsets.only(right: 10, top: 5, left: 150),
-                  //     child: Stack(
-                  //       children: [
-                  //         Icon(Icons.shopping_cart,
-                  //             size: 30, color: Colors.black),
-                  //         Padding(
-                  //           padding: const EdgeInsets.only(top: 10, left: 20),
-                  //           child: Container(
-                  //             width: 40,
-                  //             height: 30,
-                  //             decoration: BoxDecoration(
-                  //                 borderRadius: BorderRadius.circular(30),
-                  //                 color: Colors.black),
-                  //             child: Center(
-                  //               child: Text(
-                  //                 _addProduct.quantityToSell?.length == null
-                  //                     ? '0'
-                  //                     : _addProduct.quantityToSell?.length
-                  //                         .toString(),
-                  //                 style: TextStyle(
-                  //                     color: Colors.white,
-                  //                     fontWeight: FontWeight.bold),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         )
-                  //       ],
-                  //     ),
-                  //   ),
-                  //   onTap: () {
-                  //     _addProduct.addItem(_items);
-                  //     Navigator.push(context,
-                  //         MaterialPageRoute(builder: (context) => AddCart()));
-                  //   },
-                  // ),
+                  SizedBox(width: 30),
+                  GestureDetector(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        right: 10,
+                        top: 5,
+                      ),
+                      child: Stack(
+                        children: [
+                          Icon(Icons.shopping_cart,
+                              size: 30, color: Colors.black),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, left: 20),
+                            child: Container(
+                              width: 40,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color: Colors.black),
+                              child: Center(
+                                  child:
+                                      Icon(Icons.clear, color: Colors.white)),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      setState(() {
+                        _items.clear();
+                        _quantityToSell.clear();
+                      });
+                    },
+                  ),
                 ],
               ),
               SizedBox(
@@ -380,7 +387,7 @@ class _HomePageState extends State<HomePage> {
               _search
                   ? Expanded(
                       child: GridView.builder(
-                        itemCount: _categories.length,
+                        itemCount: _categoriesSearch.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             childAspectRatio: (itemWidth / itemHeight),
                             crossAxisCount: 3),
@@ -392,14 +399,23 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.grey[100],
                                 child: Column(
                                   children: <Widget>[
-                                    CachedNetworkImage(
-                                      width: 200,
-                                      height: 65,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          CircularProgressIndicator(),
-                                      imageUrl: _productImage[index],
-                                    ),
+                                    _productImageSearch
+                                            .asMap()
+                                            .containsKey(index)
+                                        ? CachedNetworkImage(
+                                            width: 200,
+                                            height: 65,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                CircularProgressIndicator(),
+                                            imageUrl: _productImage[index],
+                                          )
+                                        : Image.asset(
+                                            'assets/images/No-image.png',
+                                            width: 200,
+                                            height: 65,
+                                            fit: BoxFit.cover,
+                                          ),
                                     Container(
                                       width: double.infinity,
                                       decoration: BoxDecoration(
@@ -409,7 +425,7 @@ class _HomePageState extends State<HomePage> {
                                                   color: Colors.grey[200]))),
                                       child: Center(
                                         child: Text(
-                                          _categories[index],
+                                          _categoriesSearch[index],
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16,
@@ -432,7 +448,7 @@ class _HomePageState extends State<HomePage> {
                                                           Colors.grey[200]))),
                                           child: Center(
                                             child: Text(
-                                              '${_productPrice[index]}/Units',
+                                              '${_productPriceSearch[index]}/Units',
                                               style: TextStyle(fontSize: 12),
                                             ),
                                           ),
@@ -447,7 +463,7 @@ class _HomePageState extends State<HomePage> {
                                                           Colors.grey[200]))),
                                           child: Center(
                                             child: Text(
-                                              '${_productPackPrice[index]}/Pack',
+                                              '${_productPackPriceSearch[index]}/Pack',
                                               style: TextStyle(fontSize: 12),
                                             ),
                                           ),
@@ -458,7 +474,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               onTap: () {
-                                if (_productPackPrice[index] == 0) {
+                                if (_productPackPriceSearch[index] == 0) {
                                   var map = Map();
                                   _quantityToSell.forEach((element) {
                                     if (!map.containsKey(element)) {
@@ -468,36 +484,39 @@ class _HomePageState extends State<HomePage> {
                                     }
                                   }); // count the list of items
                                   print(map);
-                                  print(map[_productId[index]]);
-                                  if (map[_productId[index]] == null) {
-                                    map[_productId[index]] = 1;
-                                  } else if (_productQuantity[index] < 1 ||
-                                      map[_productId[index]] >=
-                                          _productQuantity[index] - 1) {
+                                  print(map[_productIdSearch[index]]);
+                                  if (map[_productIdSearch[index]] == null) {
+                                    map[_productIdSearch[index]] = 0;
+                                  }
+                                  if (_productQuantitySearch[index] == 0 ||
+                                      map[_productIdSearch[index]] -
+                                              _productQuantitySearch[index] ==
+                                          0) {
                                     DialogBoxes().productOutOfRange(context);
                                   } else {
-                                    _quantityToSell.add(_productId[index]);
+                                    _quantityToSell
+                                        .add(_productIdSearch[index]);
                                     _addProduct
                                         .setQuantityToSell(_quantityToSell);
 
                                     sellUnitProduct(
-                                        _productId[index],
-                                        _categories[index],
-                                        _productPrice[index]);
+                                        _productIdSearch[index],
+                                        _categoriesSearch[index],
+                                        _productPriceSearch[index]);
                                   }
-                                  print(_productQuantity[index]);
-                                  print(map[_productId[index]]);
+                                  print(_productQuantitySearch[index]);
+                                  print(map[_productIdSearch[index]]);
                                   print(_addProduct.quantityToSell.length);
                                 } else {
                                   // send pack to the dialog page
 
                                   _sellPackProduct(
-                                      _packQuantity[index],
-                                      _productQuantity[index],
-                                      _productId[index],
-                                      _categories[index],
-                                      _productPackPrice[index],
-                                      _productPrice[index]);
+                                      _packQuantitySearch[index],
+                                      _productQuantitySearch[index],
+                                      _productIdSearch[index],
+                                      _categoriesSearch[index],
+                                      _productPackPriceSearch[index],
+                                      _productPriceSearch[index]);
                                 }
                               },
                             ),
@@ -654,15 +673,16 @@ class _HomePageState extends State<HomePage> {
                                                 map[element] += 1;
                                               }
                                             });
-
+                                            // when you change anything here make sure you change it in search
                                             if (map[_productId[index]] ==
                                                 null) {
                                               map[_productId[index]] = 0;
                                             }
-                                            if (_productQuantity[index] < 1 ||
-                                                map[_productId[index]] >=
-                                                    _productQuantity[index] -
-                                                        1) {
+                                            if (_productQuantity[index] == 0 ||
+                                                map[_productId[index]] -
+                                                        _productQuantity[
+                                                            index] ==
+                                                    0) {
                                               DialogBoxes()
                                                   .productOutOfRange(context);
                                             } else {
@@ -739,27 +759,37 @@ class _HomePageState extends State<HomePage> {
 
   void searchFilter(value) {
     String capitalized = StringUtils.capitalize(value);
-    int _index = _categories.indexWhere((element) =>
-        element.startsWith(capitalized) || _categories.contains(element));
-    print(_index);
-    if (_index != -1) {
-      print('Contains value');
-      String item = _categories[_index];
-      setState(() {
-        _categories.removeWhere((element) => element != item);
-        _productImage.removeRange(0, _index);
-        _productPrice.removeRange(0, _index);
-        _packQuantity.removeRange(0, _index);
-        _productQuantity.removeRange(0, _index);
+    _categoriesSearch.clear();
+    _productPriceSearch.clear();
+    _productImageSearch.clear();
+    _packQuantitySearch.clear();
+    _productQuantitySearch.clear();
+    _productPackPriceSearch.clear();
+    _productIdSearch.clear();
+    setState(() {
+      print(_categories.map((value) {
+        if (value.contains(capitalized)) {
+          _categoriesSearch.add(value);
+          _productPriceSearch.add(_productPrice[_categories.indexOf(value)]);
+          _productImageSearch.add(_productImage[_categories.indexOf(value)]);
+          _packQuantitySearch.add(_packQuantity[_categories.indexOf(value)]);
+          _productQuantitySearch
+              .add(_productQuantity[_categories.indexOf(value)]);
+          _productPackPriceSearch
+              .add(_productPackPrice[_categories.indexOf(value)]);
+          _productIdSearch.add(_productId[_categories.indexOf(value)]);
+        }
+      }));
+      _search = true;
+    });
+  }
 
-        _search = true;
-        print(_categories);
-      });
-    } else if (_barcode.contains(value)) {
+  void searchBarcode(value) {
+    if (_barcode.contains(value)) {
       int _index = _barcode.indexOf(value);
       String item = _categories[_index];
       setState(() {
-        _categories.removeWhere((element) => element != item);
+        _categories.removeRange(0, _index);
         _productImage.removeRange(0, _index);
         _productPrice.removeRange(0, _index);
         _packQuantity.removeRange(0, _index);
@@ -925,59 +955,79 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 20,
                   ),
-                  _error
-                      ? Text(
-                          _errorMesssage,
-                          style: TextStyle(color: Colors.red),
-                        )
-                      : SizedBox(),
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    onChanged: (val) {
-                      print(_packQuantity);
-                      print(productQuantity);
-                      if (_pack == true && int.parse(val) > _packQuantity) {
+                  Form(
+                    key: _formKey,
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      validator: (val) {
+                        if (_pack == true &&
+                            _packQuantity - _productQuantity <= -1)
+                          return 'Pack Quantity is Higher than stock $_packQuantity';
+                        else if (val.isEmpty) {
+                          return 'Cannot be empty';
+                        } else if (_pack == false &&
+                            productQuantity - _productQuantity <= -1) {
+                          return 'Unit Quantity is Higher than stock $productQuantity';
+                        }
+                        return null;
+                      },
+                      onChanged: (val) {
                         setState(() {
-                          _error = true;
-                          _errorMesssage = 'Pack Quantity is Higher than stock';
-                        });
-                      } else if (_pack == false &&
-                          int.parse(val) > productQuantity) {
-                        setState(() {
-                          _error = true;
-                          _errorMesssage = 'Unit Quantity is Higher than stock';
-                        });
-                      } else {
-                        setState(() {
-                          _error = false;
                           _productQuantity = int.parse(val);
                         });
-                      }
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(12),
-                      labelStyle:
-                          TextStyle(color: Theme.of(context).primaryColor),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .focusColor
-                                  .withOpacity(0.2))),
-                      hintStyle: TextStyle(
-                          color: Theme.of(context).focusColor.withOpacity(0.7)),
-                      hintText: 'Purchase Quantity',
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .focusColor
-                                  .withOpacity(0.2))),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .focusColor
-                                  .withOpacity(0.5))),
+                      },
+                      // onChanged: (val) {
+                      //   print(
+                      //       _packQuantity.toString() + 'this is pack quantity');
+                      //   print(productQuantity.toString() +
+                      //       'this is unit quantity');
+                      //   if (_pack == true &&
+                      //       int.parse(val) - _packQuantity == -1) {
+                      //     setState(() {
+                      //       _error = true;
+                      //       _errorMesssage =
+                      //           'Pack Quantity is Higher than stock';
+                      //     });
+                      //   } else if (_pack == false &&
+                      //       int.parse(val) - productQuantity == -1) {
+                      //     setState(() {
+                      //       _error = true;
+                      //       _errorMesssage =
+                      //           'Unit Quantity is Higher than stock';
+                      //     });
+                      //   } else {
+                      //     setState(() {
+                      //       _error = false;
+                      //       _productQuantity = int.parse(val);
+                      //     });
+                      //   }
+                      // },
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(12),
+                        labelStyle:
+                            TextStyle(color: Theme.of(context).primaryColor),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.7)),
+                        hintText: 'Purchase Quantity',
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.5))),
+                      ),
+                      style: TextStyle(color: Colors.black),
                     ),
-                    style: TextStyle(color: Colors.black),
                   ),
                   SizedBox(height: 20),
                   Row(
@@ -998,77 +1048,82 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           onTap: () {
-                            bool _packFound = false;
-                            bool _unitFound = false;
-                            int _index;
-                            int _index1;
-                            if (_productQuantity > 0) {
-                              for (var i = 0; i < _productQuantity; i++) {
-                                _quantityToSell.add(_productId);
-                                _addProduct.setQuantityToSell(_quantityToSell);
-                              }
-                              for (var i = 0; i < _items.length; i++) {
-                                if (_items.length >= 1 &&
-                                    _items[i]['id'] == _productId &&
-                                    _character == 'pack') {
-                                  _packFound = true;
-                                  _index = i;
-                                  break;
+                            if (_formKey.currentState.validate()) {
+                              print(_packQuantity - _productQuantity);
+                              print(_packQuantity);
+                              bool _packFound = false;
+                              bool _unitFound = false;
+                              int _index;
+                              int _index1;
+                              if (_productQuantity > 0) {
+                                for (var i = 0; i < _productQuantity; i++) {
+                                  _quantityToSell.add(_productId);
+                                  _addProduct
+                                      .setQuantityToSell(_quantityToSell);
+                                }
+                                for (var i = 0; i < _items.length; i++) {
+                                  if (_items.length >= 1 &&
+                                      _items[i]['id'] == _productId &&
+                                      _character == 'pack') {
+                                    _packFound = true;
+                                    _index = i;
+                                    break;
+                                  } else {
+                                    print('pack not found');
+                                  }
+
+                                  if (_items.length >= 1 &&
+                                      _items[i]['id'] == _productId &&
+                                      _character == 'unit') {
+                                    _unitFound = true;
+                                    _index1 = i;
+                                  }
+                                }
+                                if (_packFound == true) {
+                                  _items[_index]['totalQuantity'] =
+                                      _productQuantity;
+                                  _items[_index]['totalCost'] =
+                                      _productQuantity * _packPrice;
+
+                                  _shoppingCartPackQuantity = _productQuantity;
+                                  _addProduct.addShoppingCartPack(
+                                      _shoppingCartPackQuantity);
+                                } else if (_pack == true) {
+                                  _items.add({
+                                    'totalQuantity': _productQuantity,
+                                    'type': 'pack',
+                                    'id': _productId,
+                                    'totalCost': _productQuantity * _packPrice,
+                                    'name': '$_productName',
+                                    "colours": []
+                                  });
+
+                                  _shoppingCartPackQuantity = _productQuantity;
+
+                                  _addProduct.addShoppingCartPack(
+                                      _shoppingCartPackQuantity);
                                 } else {
-                                  print('pack not found');
+                                  _items.add({
+                                    'totalQuantity': _productQuantity,
+                                    'type': 'unit',
+                                    'id': _productId,
+                                    'totalCost': _productQuantity * _packPrice,
+                                    'name': '$_productName',
+                                    "colours": []
+                                  });
+
+                                  _shoppingCartUnitQuantity = _productQuantity;
+                                  _addProduct.addShoppingCartUnit(
+                                      _shoppingCartUnitQuantity);
                                 }
-
-                                if (_items.length >= 1 &&
-                                    _items[i]['id'] == _productId &&
-                                    _character == 'unit') {
-                                  _unitFound = true;
-                                  _index1 = i;
+                                if (_unitFound == true) {
+                                  _items[_index1]['totalQuantity'] =
+                                      _productQuantity;
+                                  _items[_index1]['totalCost'] =
+                                      _productQuantity * _productPrice;
                                 }
+                                Navigator.pop(context);
                               }
-                              if (_packFound == true) {
-                                _items[_index]['totalQuantity'] =
-                                    _productQuantity;
-                                _items[_index]['totalCost'] =
-                                    _productQuantity * _packPrice;
-
-                                _shoppingCartPackQuantity = _productQuantity;
-                                _addProduct.addShoppingCartPack(
-                                    _shoppingCartPackQuantity);
-                              } else if (_pack == true) {
-                                _items.add({
-                                  'totalQuantity': _productQuantity,
-                                  'type': 'pack',
-                                  'id': _productId,
-                                  'totalCost': _productQuantity * _packPrice,
-                                  'name': '$_productName',
-                                  "colours": []
-                                });
-
-                                _shoppingCartPackQuantity = _productQuantity;
-
-                                _addProduct.addShoppingCartPack(
-                                    _shoppingCartPackQuantity);
-                              } else {
-                                _items.add({
-                                  'totalQuantity': _productQuantity,
-                                  'type': 'unit',
-                                  'id': _productId,
-                                  'totalCost': _productQuantity * _packPrice,
-                                  'name': '$_productName',
-                                  "colours": []
-                                });
-
-                                _shoppingCartUnitQuantity = _productQuantity;
-                                _addProduct.addShoppingCartUnit(
-                                    _shoppingCartUnitQuantity);
-                              }
-                              if (_unitFound == true) {
-                                _items[_index1]['totalQuantity'] =
-                                    _productQuantity;
-                                _items[_index1]['totalCost'] =
-                                    _productQuantity * _productPrice;
-                              }
-                              Navigator.pop(context);
                             }
                           }),
                       SizedBox(
@@ -1082,9 +1137,7 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.grey[300],
                               borderRadius: BorderRadius.circular(10)),
                           child: Center(
-                            child: Row(
-                              children: [Text('Checkout')],
-                            ),
+                            child: Text('Checkout'),
                           ),
                         ),
                         onTap: () {

@@ -8,11 +8,14 @@ import 'dart:convert';
 import 'package:stockfare_mobile/models/sales_model.dart';
 
 class SalesServices {
-  Future<GetSalesModel> getallSales() async {
+  Future<GetSalesModel> getallSales(int pageNumber) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
-    final String url = GlobalConfiguration().get("get-sales") + '$branchId/';
+    String pageData;
+    pageNumber == 1 ? pageData = '' : pageData = '?page=$pageNumber';
+    final String url =
+        GlobalConfiguration().get("get-sales") + '$branchId/$pageData';
     try {
       final http.Response response =
           await http.get(url, headers: <String, String>{
@@ -23,7 +26,30 @@ class SalesServices {
       if (response.statusCode == 200) {
         return GetSalesModel.fromJson(json.decode(response.body));
       } else {
-        return Future.error(json.decode(response.body));
+        return Future.error(json.decode(response.body)['detail']);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<GetSalesModel> getSalesPages(int pageNumber) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String branchId = sharedPreferences.getString('branchId');
+    String token = sharedPreferences.getString('token');
+    final String url =
+        GlobalConfiguration().get("get-sales") + '$branchId/?page=$pageNumber';
+    try {
+      final http.Response response =
+          await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+      if (response.statusCode == 200) {
+        return GetSalesModel.fromJson(json.decode(response.body));
+      } else {
+        return Future.error(json.decode(response.body)['detail']);
       }
     } catch (e) {
       print(e.toString());
@@ -35,19 +61,23 @@ class SalesServices {
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
     print(sortedDate);
-    final String url =
-        GlobalConfiguration().get("get-sales") + '$branchId/?date=$sortedDate';
-    final http.Response response =
-        await http.get(url, headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
-    if (response.statusCode == 200) {
-      print(response.body);
-      return GetSalesModel.fromJson(json.decode(response.body));
-    } else {
-      return Future.error('error');
+    try {
+      final String url = GlobalConfiguration().get("get-sales") +
+          '$branchId/?date=$sortedDate';
+      final http.Response response =
+          await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+      if (response.statusCode == 200) {
+        print(response.body);
+        return GetSalesModel.fromJson(json.decode(response.body));
+      } else {
+        return Future.error('error');
+      }
+    } catch (e) {
+      print(e.tostring());
     }
   }
 
@@ -72,34 +102,39 @@ class SalesServices {
     print(token);
     print(products);
     final String url = GlobalConfiguration().get("create-sales") + '$branchId/';
-    final http.Response response = await http.post(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: json.encode(<String, dynamic>{
-          "products": products,
-          "customer": {
-            "name": customerName,
-            "address": customerAddress,
-            "mobile": customerMobile,
-            "email": customerEmail,
-            "updated_at": null
+    try {
+      final http.Response response = await http.post(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
           },
-          "amount": total,
-          "change": customerChange,
-          "payment_method": paymentMethod,
-          "sold_on_credit": soldOnCredit,
-          "tax": tax,
-          "colours": [],
-          "amount_paid": amountPaid,
-          "ref_code": null
-        }));
-    if (response.statusCode == 200) {
-      return CreateSalesModel.fromJson(json.decode(response.body));
-    } else {
-      return Future.error(json.decode(response.body));
+          body: json.encode(<String, dynamic>{
+            "products": products,
+            "customer": {
+              "name": customerName,
+              "address": customerAddress,
+              "mobile": customerMobile,
+              "email": customerEmail,
+              "updated_at": null
+            },
+            "amount": total,
+            "change": customerChange,
+            "payment_method": paymentMethod,
+            "sold_on_credit": soldOnCredit,
+            "tax": tax,
+            "colours": [],
+            "amount_paid": amountPaid,
+            "ref_code": null
+          }));
+      if (response.statusCode == 200) {
+        return CreateSalesModel.fromJson(json.decode(response.body));
+      } else {
+        print(response.body);
+        return Future.error(json.decode(response.body));
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 

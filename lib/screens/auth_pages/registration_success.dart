@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/screens/auth_pages/phone_verification.dart';
+import 'package:stockfare_mobile/screens/drawer_pages/logout.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/addProducts.dart';
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_single_products/form.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 
 class SuccessRegister extends StatelessWidget {
   @override
@@ -43,17 +46,15 @@ class SuccessRegister extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20)),
                       child: Center(
                           child: Text(
-                        'Add Products',
+                        'Continue',
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       )),
                     ),
                   ),
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AddProductPage()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LogoutPage()));
                   })
             ],
           )),

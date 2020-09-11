@@ -31,15 +31,20 @@ class HelpPage extends StatelessWidget {
             SizedBox(
               height: 15,
             ),
-            Container(
-                width: 330,
-                height: 40,
-                color: Colors.white,
-                child: Center(
-                    child: Text(
-                  ' What do we mean by Category',
-                  style: TextStyle(fontSize: 15),
-                ))),
+            InkWell(
+              child: Container(
+                  width: 330,
+                  height: 40,
+                  color: Colors.white,
+                  child: Center(
+                      child: Text(
+                    ' What do we mean by Category?',
+                    style: TextStyle(fontSize: 15),
+                  ))),
+              onTap: () {
+                category(context);
+              },
+            ),
             SizedBox(
               height: 15,
             ),
@@ -70,21 +75,6 @@ class HelpPage extends StatelessWidget {
                   ))),
               onTap: () => howDoIMakeASale(context),
             ),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-                width: 330,
-                height: 65,
-                color: Colors.white,
-                child: Center(
-                    child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    'Do i  have to manually update my inventory when i sell?',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                ))),
             SizedBox(
               height: 15,
             ),
@@ -124,6 +114,45 @@ class HelpPage extends StatelessWidget {
           ],
         ));
   }
+}
+
+category(context) {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: Colors.white,
+        content: SingleChildScrollView(
+            child: Column(
+          children: <Widget>[
+            Text(
+              'What do you mean by Category?',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              'We believe in being organized, and that is why we decided the category section should help businesses stay organized. Goods should be grouped based on types. ',
+              style: TextStyle(color: Colors.black, fontSize: 15),
+              textAlign: TextAlign.justify,
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              'To create category, click on the "Plus" button on the Product page and fill the form ',
+              style: TextStyle(color: Colors.black, fontSize: 15),
+              textAlign: TextAlign.justify,
+            ),
+          ],
+        )),
+      );
+    },
+  );
 }
 
 pricingPlan(context) {

@@ -1,15 +1,26 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/intro_pages/splashscreen.dart';
 
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+getTokenz() async {
+  String token = await _firebaseMessaging.getToken();
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  sharedPreferences.setString('firebaseToken', token);
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GlobalConfiguration().loadFromAsset("url");
+  getTokenz();
 
   runApp(
     MultiProvider(
@@ -25,6 +36,7 @@ void main() async {
         )
       ],
       child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           home: SplashScreen(),
           theme: ThemeData(
             primarySwatch: Colors.deepOrange,

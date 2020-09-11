@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stockfare_mobile/models/user_model.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/forgot_password.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/loader.dart';
 import 'package:stockfare_mobile/services/auth_services.dart';
 
@@ -144,9 +148,7 @@ class _LogoutPageState extends State<LogoutPage> {
                       ),
                       onTap: () async {
                         if (_formKey.currentState.validate()) {
-                          setState(() {
-                            loading = true;
-                          });
+                          DialogBoxes().loading(context);
 
                           try {
                             final result =
@@ -155,21 +157,20 @@ class _LogoutPageState extends State<LogoutPage> {
                                 result[0].rawAddress.isNotEmpty) {
                               print('connected');
 
-                              dynamic result = await _auth.loginUsernew(
-                                _signupNotifier.phone,
+                              dynamic result = await _auth.loginUserold(
                                 password,
                               );
 
                               if (result == null) {
+                                Navigator.pop(context);
                                 setState(() {
-                                  loading = false;
                                   _error =
                                       'Could not sign in with those credentials';
                                   _displaySnackBar(context);
                                 });
                               } else {
                                 //This will set the profile data for the notifier so that it can move between pages
-
+                                _saveUser(context);
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -201,5 +202,23 @@ class _LogoutPageState extends State<LogoutPage> {
           style: TextStyle(color: Colors.white, fontSize: 15),
         ));
     _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  _saveUser(context) async {
+    final prefs = await SharedPreferences.getInstance();
+    String body = prefs.getString('body');
+    User user = User.fromJson(json.decode(body));
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
+    _signupNotifier.setProfile(
+      user.fullname,
+      user.phone,
+      user.email,
+      user.firebaseId,
+      user.branchName,
+      user.branchAddress,
+      user.notificationStatus,
+      user.subscriptionPlan,
+    );
   }
 }

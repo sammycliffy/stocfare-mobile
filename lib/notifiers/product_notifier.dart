@@ -6,14 +6,14 @@ class AddProductNotifier with ChangeNotifier {
   String _productCategory;
   String _productDescription;
   int _unitLimit = 0;
-  double _unitproductPrice = 0;
+  int _unitproductPrice = 0;
   int _unitproductQuantity = 0;
   int _productBarcode = 0;
   int _productDiscount = 0;
   int _productWeight = 0;
   List<ColorDataModel> _data;
 
-  double _packProductPrice = 0;
+  int _packProductPrice = 0;
   int _packLimit = 0;
   int _packQuantity = 0;
 
@@ -28,10 +28,10 @@ class AddProductNotifier with ChangeNotifier {
 
   int get packLimit => _packLimit;
   int get packQuantity => _packQuantity;
-  double get packProductPrice => _packProductPrice;
+  int get packProductPrice => _packProductPrice;
   String get productDescription => _productDescription;
   String get productCategory => _productCategory;
-  double get unitproductPrice => _unitproductPrice;
+  int get unitproductPrice => _unitproductPrice;
   int get unitproductQuantity => _unitproductQuantity;
   int get unitLimit => _unitLimit;
   int get productBarcode => _productBarcode;
@@ -47,7 +47,7 @@ class AddProductNotifier with ChangeNotifier {
     String productName,
     int unitLimit,
     int unitQuantity,
-    double productPrice,
+    int productPrice,
     String productDescription,
     int productDiscount,
     int productWeight,
@@ -67,7 +67,7 @@ class AddProductNotifier with ChangeNotifier {
   }
 
   void setPackProducts(
-    double packProductPrice,
+    int packProductPrice,
     int packLimit,
     int packQuantity,
   ) {

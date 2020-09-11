@@ -479,7 +479,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           tax,
                                           selectedDate.toLocal(),
                                           addProduct.total)
-                                      .timeout(Duration(seconds: 10),
+                                      .catchError((e) {
+                                return null;
+                              }).timeout(Duration(seconds: 10),
                                           onTimeout: () => null);
 
                               if (_createSales == null) {

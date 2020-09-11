@@ -73,7 +73,7 @@ class _WorkersListPageState extends State<WorkersListPage> {
                   SizedBox(height: 10),
                   Center(
                     child: Text(
-                      'An error occured tap to refresth',
+                      'An error occured tap to refresh',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 18),
                     ),
@@ -87,24 +87,6 @@ class _WorkersListPageState extends State<WorkersListPage> {
                   MaterialPageRoute(
                       builder: (BuildContext context) => super.widget));
             },
-          );
-        } else if (_signupNotifier.subscriptionPlan != 'PREMIUM') {
-          return Column(
-            children: [
-              SizedBox(height: 200),
-              Icon(
-                Icons.mood_bad,
-                size: 40,
-              ),
-              SizedBox(height: 10),
-              Center(
-                child: Text(
-                  'You can only add workers when you \n are on Premium Plan',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18),
-                ),
-              )
-            ],
           );
         } else if (_error == true) {
           return Center(

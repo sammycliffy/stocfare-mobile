@@ -337,6 +337,8 @@ class _SignupPage extends State<BusinessSignupPage> {
                                                 referralCode ?? '0')
                                             .timeout(Duration(seconds: 10),
                                                 onTimeout: () => null);
+                                        print(result.toString() +
+                                            'this is result');
 
                                         if (result != true) {
                                           Navigator.pop(context);
@@ -431,4 +433,22 @@ class _SignupPage extends State<BusinessSignupPage> {
           MaterialPageRoute(builder: (context) => BottomNavigationPage()));
     }
   }
+}
+
+_saveUser(context) async {
+  final prefs = await SharedPreferences.getInstance();
+  String body = prefs.getString('body');
+  dynamic user = User.fromJson(json.decode(body));
+  SignupNotifier _signupNotifier =
+      Provider.of<SignupNotifier>(context, listen: false);
+  _signupNotifier.setProfile(
+    user.fullname,
+    user.phone,
+    user.email,
+    user.firebaseId,
+    user.branchName,
+    user.branchAddress,
+    user.notificationStatus,
+    user.subscriptionPlan,
+  );
 }

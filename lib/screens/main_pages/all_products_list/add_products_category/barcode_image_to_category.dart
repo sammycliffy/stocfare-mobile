@@ -13,6 +13,8 @@ import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.d
 import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 
+import '../product_success.dart';
+
 class BarcodePageProduct extends StatefulWidget {
   @override
   _BarcodePageProductState createState() => _BarcodePageProductState();
@@ -204,7 +206,7 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                                   _addProduct.productWeight,
                                   _addProduct.data,
                                   _addProduct.categoryId)
-                              .timeout(Duration(seconds: 10),
+                              .timeout(Duration(seconds: 15),
                                   onTimeout: () => null);
 
                           if (result != 200) {
@@ -217,13 +219,14 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                               _displaySnackBar(context);
                             });
                           } else {
-                            Navigator.pop(context);
-                            DialogBoxes().success(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductSuccess()));
                           }
                         }
                       } else {
                         setState(() {
-                          loading = false;
                           _error = 'Check your internet connection';
                           _displaySnackBar(context);
                         });

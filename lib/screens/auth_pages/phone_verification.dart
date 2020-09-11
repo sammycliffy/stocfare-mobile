@@ -138,7 +138,7 @@ class _PhoneVerification extends State<PhoneVerification> {
 
                             dynamic result = await _auth
                                 .verifyPhone(code)
-                                .timeout(Duration(seconds: 10),
+                                .timeout(Duration(seconds: 20),
                                     onTimeout: () => null);
                             if (result == true) {
                               Navigator.push(
@@ -164,8 +164,7 @@ class _PhoneVerification extends State<PhoneVerification> {
                       child: Text('Resend OTP', style: TextStyle(fontSize: 15)),
                       onTap: () async {
                         DialogBoxes().loading(context);
-                        dynamic result =
-                            await _auth.resendCode(_signupNotifier.phone);
+                        dynamic result = await _auth.resendCode();
                         if (result == true) {
                           Navigator.pop(context);
                         } else {

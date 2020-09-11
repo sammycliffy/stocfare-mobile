@@ -197,8 +197,10 @@ class _AddPackPageState extends State<AddPackPage> {
                         ),
                         onTap: () {
                           if (_formKey.currentState.validate()) {
-                            _addProduct.setPackProducts(controller.numberValue,
-                                _packLimit, _packQuantity ?? 0);
+                            _addProduct.setPackProducts(
+                                controller.numberValue.round(),
+                                _packLimit,
+                                _packQuantity ?? 0);
 
                             Navigator.push(
                                 context,
