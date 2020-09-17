@@ -1,8 +1,10 @@
-package com.example.stockfare_mobile;
+package com.stockfare;
 import io.flutter.app.FlutterApplication;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
 import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
+import com.facebook.FacebookSdk;
+
 
 
 public class MyApplication extends FlutterApplication implements PluginRegistrantCallback {
@@ -15,5 +17,7 @@ public class MyApplication extends FlutterApplication implements PluginRegistran
     
     public void registerWith(PluginRegistry registry) {
         FirebaseCloudMessagingPluginRegistrant.registerWith(registry);
+        
+   
     }
 }

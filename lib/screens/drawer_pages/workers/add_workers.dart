@@ -606,7 +606,7 @@ class _AddWorkersState extends State<AddWorkers> {
                       lastName = _splitted[1];
                     } else {
                       firstName = _splitted[0];
-                      lastName = 'Stockfare';
+                      lastName = 'stockfare_mobile';
                     }
 
                     dynamic result = await _workersServices

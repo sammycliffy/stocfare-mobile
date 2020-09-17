@@ -46,73 +46,13 @@ class _AllSalesListState extends State<AllSalesList> {
   List amountPaid = [];
   List totalAmount = [];
   dynamic next;
+  int realNumber = 2;
 
   @override
   initState() {
-    names.clear();
-    _productNames.clear();
-    customerNames.clear();
-    sellerNames.clear();
-    dateCreated.clear();
-    salesId.clear();
-    price.clear();
-    amountSold.clear();
-    quantitySold.clear();
-    customerChange.clear();
-    referenceCode.clear();
-    tax.clear();
-    soldOnCredit.clear();
-    amountPaid.clear();
-    totalAmount.clear();
+    _clear();
     super.initState();
-    _activitiesServices.checkForInternet().then((value) {
-      if (value == true) {
-        setState(() {
-          isLoading = true;
-        });
-        salesList = _salesServices.getSalesPages(pageNumber);
-        _salesServices.getallSales(pageNumber).then((value) {
-          setState(() {
-            next = value.next;
-            print(value.results?.map((value) {
-                  salesId.add(value.id);
-                  if (value.customer == null) {
-                    customerNames.add('None');
-                  } else {
-                    customerNames.add(value.customer.name);
-                  }
-                  _productNames.add(value.productDetail);
-
-                  tax.add(value.tax);
-                  amountSold.add(value.amount);
-                  referenceCode.add(value.refCode);
-                  customerChange.add(value.change);
-                  amountPaid.add(value.amountPaid);
-                  sellerNames.add(value.saleRegisteredBy);
-                  names.add(value.productData[0].name);
-                  soldOnCredit.add(value.soldOnCredit);
-                  print(value.productData.map((value) {
-                    dateCreated.add(value.dateCreated);
-                  }));
-                }) ??
-                '[]');
-          });
-        }).whenComplete(() {
-          setState(() {
-            isLoading = false;
-          });
-        }).catchError((e) {
-          setState(() {
-            _error = true;
-            _errorMessage = e.toString();
-          });
-        });
-      } else {
-        setState(() {
-          isNetwork = false;
-        });
-      }
-    });
+    _loadSales();
   }
 
   @override
@@ -123,7 +63,6 @@ class _AllSalesListState extends State<AllSalesList> {
 
   @override
   Widget build(BuildContext context) {
-    print(_productNames);
     return WillPopScope(
       onWillPop: () => Navigator.push(context,
           MaterialPageRoute(builder: (context) => BottomNavigationPage())),
@@ -170,7 +109,7 @@ class _AllSalesListState extends State<AllSalesList> {
                               ),
                               border: InputBorder.none,
                               contentPadding: EdgeInsets.fromLTRB(25, 8, 0, 5),
-                              hintText: 'Search Stockfare',
+                              hintText: 'Search stockfare_mobile',
                             )),
                       ),
                     ),
@@ -212,7 +151,7 @@ class _AllSalesListState extends State<AllSalesList> {
                 style: TextStyle(fontSize: 18),
               ),
             );
-          } else if (_sortedDate == true || _searchSales == true) {
+          } else if (_sortedDate == true) {
             return Column(
               children: [
                 SizedBox(height: 20),
@@ -233,24 +172,12 @@ class _AllSalesListState extends State<AllSalesList> {
                       _sortedDate = false;
                       _searchSales = false;
                     });
+                    _loadSales();
                   },
                 ),
-                (() {
-                  if (names.length == 0) {
-                    return Column(
-                      children: [
-                        SizedBox(height: 100),
-                        Center(child: Icon(Icons.mood_bad, size: 40)),
-                        Text('No Sales',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    );
-                  } else {
-                    return _listView();
-                  }
-                }())
+                Expanded(
+                  child: _listView(),
+                )
               ],
             );
           } else if (isLoading == true) {
@@ -338,26 +265,13 @@ class _AllSalesListState extends State<AllSalesList> {
                         });
                       } else {
                         Navigator.pop(_scaffoldKey.currentContext);
-                        setState(() {
-                          names.clear();
-                          names.clear();
-                          _productNames.clear();
-                          customerNames.clear();
-                          sellerNames.clear();
-                          dateCreated.clear();
-                          salesId.clear();
-                          price.clear();
-                          amountSold.clear();
-                          quantitySold.clear();
-                          customerChange.clear();
-                          referenceCode.clear();
-                          tax.clear();
-                          soldOnCredit.clear();
-                          amountPaid.clear();
-                          totalAmount.clear();
-                          _salesServices.getallSales(0).then((value) {
+
+                        _salesServices.getallSales().then((value) {
+                          setState(() {
+                            _clear();
                             print(value.results?.map((value) {
                                   salesId.add(value.id);
+                                  realNumber = 2;
                                   if (value.customer == null) {
                                     customerNames.add('None');
                                   } else {
@@ -409,7 +323,6 @@ class _AllSalesListState extends State<AllSalesList> {
       String item = names[_index];
       setState(() {
         names.removeWhere((element) => element != item);
-
         sellerNames.removeRange(0, _index);
         customerNames.removeRange(0, _index);
         salesId.removeRange(0, _index);
@@ -435,23 +348,11 @@ class _AllSalesListState extends State<AllSalesList> {
       sortedList = _salesServices
           .sortedDates((picked.toUtc().millisecondsSinceEpoch / 1000).round());
       print(sortedList.then((value) {
+        if (value.count == 0) {
+          print('no sales');
+        }
+        _clear();
         setState(() {
-          names.clear();
-          _productNames.clear();
-          customerNames.clear();
-          sellerNames.clear();
-          dateCreated.clear();
-          salesId.clear();
-          price.clear();
-          amountSold.clear();
-          quantitySold.clear();
-          customerChange.clear();
-          referenceCode.clear();
-          tax.clear();
-          soldOnCredit.clear();
-          amountPaid.clear();
-          totalAmount.clear();
-
           print(value.results?.map((value) {
                 salesId.add(value.id);
                 if (value.customer == null) {
@@ -481,129 +382,231 @@ class _AllSalesListState extends State<AllSalesList> {
   _listView() {
     return Column(
       children: [
+        SizedBox(height: 20),
+        GestureDetector(
+          child: Container(
+            width: 200,
+            height: 40,
+            color: Colors.grey[200],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Sort Sales with date'),
+                SizedBox(width: 20),
+                Icon(Icons.date_range)
+              ],
+            ),
+          ),
+          onTap: () => _selectDate(context),
+        ),
         Expanded(
           child: NotificationListener<ScrollNotification>(
             onNotification: (ScrollNotification scrollInfo) {
               if (scrollInfo.metrics.pixels ==
                   scrollInfo.metrics.maxScrollExtent) {
-                if (next != null) {
-                  setState(() {
-                    pageNumber = pageNumber + 1;
-                  });
-                  _salesServices.getSalesPages(pageNumber).then((value) {
-                    setState(() {
-                      next = value.next;
-                      print(value.results?.map((value) {
-                            salesId.add(value.id);
-                            if (value.customer == null) {
-                              customerNames.add('None');
-                            } else {
-                              customerNames.add(value.customer.name);
-                            }
-                            _productNames.add(value.productDetail);
-                            tax.add(value.tax);
-                            amountSold.add(value.amount);
-                            referenceCode.add(value.refCode);
-                            customerChange.add(value.change);
-                            amountPaid.add(value.amountPaid);
-                            sellerNames.add(value.saleRegisteredBy);
-                            names.add(value.productData[0].name);
-                            soldOnCredit.add(value.soldOnCredit);
-                            print(value.productData.map((value) {
-                              dateCreated.add(value.dateCreated);
-                            }));
-                          }) ??
-                          '[]');
-                    });
-                    print(names);
-                  });
-                }
+                setState(() {
+                  realNumber = realNumber + 1;
+                });
+                _loadData();
               }
             },
-            child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                itemCount: names.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    child: Card(
-                      child: ListTile(
-                        leading:
-                            Icon(Icons.monetization_on, color: Colors.grey),
-                        title: Text(
-                          names[index],
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        ),
-                        subtitle: Row(
-                          children: <Widget>[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+            child: (() {
+              if (names.length == 0) {
+                return Column(
+                  children: [
+                    SizedBox(height: 100),
+                    Center(child: Icon(Icons.mood_bad, size: 40)),
+                    Text('No Sales',
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold)),
+                  ],
+                );
+              } else {
+                return ListView.builder(
+                    padding: const EdgeInsets.all(8),
+                    itemCount: names.length,
+                    physics: AlwaysScrollableScrollPhysics(),
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        child: Card(
+                          child: ListTile(
+                            leading:
+                                Icon(Icons.monetization_on, color: Colors.grey),
+                            title: Text(
+                              names[index],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            ),
+                            subtitle: Row(
                               children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 1),
-                                  child: Text(
-                                    'Buyer :  ${customerNames[index].toString()}',
-                                    style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontFamily: 'FireSans'),
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 1),
-                                  child: Text(
-                                    'Seller :  ${sellerNames[index].toString()}',
-                                    style: TextStyle(
-                                        color: Colors.green,
-                                        fontFamily: 'FireSans'),
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 1),
-                                  child: Text(
-                                    'Date :  ${Jiffy(dateCreated[index]).fromNow()}',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'FireSans'),
-                                  ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 1),
+                                      child: Text(
+                                        'Buyer :  ${customerNames[index].toString()}',
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontFamily: 'FireSans'),
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 1),
+                                      child: Text(
+                                        'Seller :  ${sellerNames[index].toString()}',
+                                        style: TextStyle(
+                                            color: Colors.green,
+                                            fontFamily: 'FireSans'),
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 1),
+                                      child: Text(
+                                        'Date :  ${Jiffy(dateCreated[index]).fromNow()}',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'FireSans'),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
+                            trailing: IconButton(
+                                icon: Icon(Icons.delete),
+                                onPressed: () {
+                                  _confirmDelete(context, index);
+                                }),
+                          ),
                         ),
-                        trailing: IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {
-                              _confirmDelete(context, index);
-                            }),
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AllProductsList(
-                                    customerIndex: index,
-                                    names: _productNames,
-                                    customerNames: customerNames,
-                                    sellerNames: sellerNames,
-                                    dateCreated: dateCreated,
-                                    price: price,
-                                    amountSold: amountSold,
-                                    quantitySold: quantitySold,
-                                    customerChange: customerChange,
-                                    referenceCode: referenceCode,
-                                    tax: tax,
-                                    soldOnCredit: soldOnCredit,
-                                    amountPaid: amountPaid,
-                                  )));
-                    },
-                  );
-                }),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AllProductsList(
+                                        customerIndex: index,
+                                        names: _productNames,
+                                        customerNames: customerNames,
+                                        sellerNames: sellerNames,
+                                        dateCreated: dateCreated,
+                                        price: price,
+                                        amountSold: amountSold,
+                                        quantitySold: quantitySold,
+                                        customerChange: customerChange,
+                                        referenceCode: referenceCode,
+                                        tax: tax,
+                                        soldOnCredit: soldOnCredit,
+                                        amountPaid: amountPaid,
+                                      )));
+                        },
+                      );
+                    });
+              }
+            }()),
           ),
         ),
       ],
     );
+  }
+
+  _clear() {
+    names.clear();
+    _productNames.clear();
+    customerNames.clear();
+    sellerNames.clear();
+    dateCreated.clear();
+    salesId.clear();
+    price.clear();
+    amountSold.clear();
+    quantitySold.clear();
+    customerChange.clear();
+    referenceCode.clear();
+    tax.clear();
+    soldOnCredit.clear();
+    amountPaid.clear();
+    totalAmount.clear();
+  }
+
+  Future _loadData() async {
+    _salesServices.getSalesPages(realNumber).then((value) {
+      setState(() {
+        print(value.results?.map((value) {
+              salesId.add(value.id);
+              if (value.customer == null) {
+                customerNames.add('None');
+              } else {
+                customerNames.add(value.customer.name);
+              }
+              _productNames.add(value.productDetail);
+              tax.add(value.tax);
+              amountSold.add(value.amount);
+              referenceCode.add(value.refCode);
+              customerChange.add(value.change);
+              amountPaid.add(value.amountPaid);
+              sellerNames.add(value.saleRegisteredBy);
+              names.add(value.productData[0].name);
+              print(value.productData[0].name);
+              soldOnCredit.add(value.soldOnCredit);
+              print(value.productData.map((value) {
+                dateCreated.add(value.dateCreated);
+              }));
+            }) ??
+            '[]');
+      });
+    });
+  }
+
+  _loadSales() {
+    _activitiesServices.checkForInternet().then((value) {
+      if (value == true) {
+        setState(() {
+          isLoading = true;
+        });
+        _salesServices.getallSales().then((value) {
+          setState(() {
+            print(value?.results?.map((value) {
+                  salesId.add(value.id);
+                  if (value.customer == null) {
+                    customerNames.add('None');
+                  } else {
+                    customerNames.add(value.customer.name);
+                  }
+                  _productNames.add(value.productDetail);
+
+                  tax.add(value.tax);
+                  amountSold.add(value.amount);
+                  referenceCode.add(value.refCode);
+                  customerChange.add(value.change);
+                  amountPaid.add(value.amountPaid);
+                  sellerNames.add(value.saleRegisteredBy);
+                  names.add(value.productData[0].name);
+                  soldOnCredit.add(value.soldOnCredit);
+                  print(value.productData.map((value) {
+                    dateCreated.add(value.dateCreated);
+                  }));
+                }) ??
+                '[]' ??
+                '[]');
+          });
+        }).whenComplete(() {
+          setState(() {
+            isLoading = false;
+          });
+        }).catchError((e) {
+          setState(() {
+            _error = true;
+            _errorMessage = e.toString();
+          });
+        });
+      } else {
+        setState(() {
+          isNetwork = false;
+        });
+      }
+    });
   }
 }

@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:196605610944:android:3f4b5d32195c9094b55625",
         "android_client_info": {
-          "package_name": "com.example.stockfare_mobile"
+          "package_name": "com.stockfare"
         }
       },
       "oauth_client": [
@@ -30,13 +30,6 @@
             {
               "client_id": "196605610944-9oehqjnsimgump533dc3j0jvi9eqqt52.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "196605610944-m4st2ev46ce5vu8tdqa8a0agbmke1qd5.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "co.stockfare.ios"
-              }
             }
           ]
         }

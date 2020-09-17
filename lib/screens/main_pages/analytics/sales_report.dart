@@ -20,7 +20,7 @@ class _AnalyticsDetailsPageState extends State<AnalyticsDetailsPage> {
   List amountSold = [];
   List quantitySold = [];
   List customers = [];
-
+  bool _error = false;
   List names = [];
   List totalCost = [];
   List quantityBought = [];
@@ -31,21 +31,28 @@ class _AnalyticsDetailsPageState extends State<AnalyticsDetailsPage> {
     names.clear();
     quantityBought.clear();
     totalCost.clear();
-    print(widget.analyticsData.results.map((data) {
-      registeredBy.add(data.saleRegisteredBy);
-      amountSold.add(data.amount);
-      // customers.add(data.customer.name ?? '');
-      quantitySold.add(data.productDetail[0].quantityBought);
-      names.add(data.productDetail[0].name);
-      totalCost.add(data.productDetail[0].totalCost);
-      quantityBought.add(data.productDetail[0].quantityBought);
-      dateCreated.add(data.dateCreated);
-      return (data.productData.map((name) {
-        setState(() {
-          price.add(name.productUnit.price);
-        });
-      }));
-    }));
+    if (widget.analyticsData == null) {
+      setState(() {
+        _error = true;
+      });
+    } else {
+      print(widget.analyticsData?.results?.map((data) {
+            registeredBy.add(data.saleRegisteredBy);
+            amountSold.add(data.amount);
+            // customers.add(data.customer.name ?? '');
+            quantitySold.add(data.productDetail[0].quantityBought);
+            names.add(data.productDetail[0].name);
+            totalCost.add(data.productDetail[0].totalCost);
+            quantityBought.add(data.productDetail[0].quantityBought);
+            dateCreated.add(data.dateCreated);
+            return (data.productData.map((name) {
+              setState(() {
+                price.add(name.productUnit.price);
+              });
+            }));
+          }) ??
+          '[]');
+    }
   }
 
   @override
@@ -57,13 +64,19 @@ class _AnalyticsDetailsPageState extends State<AnalyticsDetailsPage> {
         appBar: AppBar(
           title: Text(widget.pageTitle),
         ),
-        body: widget.analyticsData.count == 0
-            ? Center(
-                child: Text(
-                'You have not made any sales yet.',
-                style: TextStyle(fontSize: 18),
-              ))
-            : ListView.builder(
+        body: (() {
+          if (_error == true) {
+            return Column(
+              children: [
+                SizedBox(height: 100),
+                Center(child: Icon(Icons.mood_bad, size: 40)),
+                Text('No Sales',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold)),
+              ],
+            );
+          } else {
+            return ListView.builder(
                 padding: const EdgeInsets.all(8),
                 itemCount: names.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -123,6 +136,8 @@ class _AnalyticsDetailsPageState extends State<AnalyticsDetailsPage> {
                       //             AllProductsList(customerIndex: index)));
                     },
                   );
-                }));
+                });
+          }
+        }()));
   }
 }

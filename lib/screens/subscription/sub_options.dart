@@ -16,7 +16,8 @@ class SubOptions extends StatefulWidget {
 }
 
 class _SubOptionsState extends State<SubOptions> {
-  var publicKey = 'pk_test_06b100bc626ea6bae0400111f8c7cbe604c93688';
+  // var testKey = 'pk_test_06b100bc626ea6bae0400111f8c7cbe604c93688';
+  var publicKey = 'pk_live_ef8036136f85c57cf6ef994d96d3badc59548882';
   PaymentServices _paymentServices = PaymentServices();
   ActivitiesServices _activitiesServices = ActivitiesServices();
 
@@ -82,7 +83,7 @@ class _SubOptionsState extends State<SubOptions> {
                       DialogBoxes().accountDetails(context);
                     },
                     child: Text(
-                      'PAY WITH BANK',
+                      'TRANSFER',
                       style: TextStyle(color: Colors.white),
                     ))
               ],

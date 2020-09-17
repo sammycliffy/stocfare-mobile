@@ -28,6 +28,13 @@ class _ProductListPageState extends State<ProductListPage> {
   List _productQuantity = [];
   List _packQuantity = [];
   List _productId = [];
+
+  List _productNameSearch = [];
+  List _productPriceSearch = [];
+  List _productQuantitySearch = [];
+  List _packQuantitySearch = [];
+  List _productIdSearch = [];
+
   bool editProduct = false;
   bool deleteProduct = false;
   List<bool> checkBox = [];
@@ -192,7 +199,7 @@ class _ProductListPageState extends State<ProductListPage> {
                     onChanged: (val) {
                       if (val.length > 0) {
                         setState(() {
-                          searchFilter(val);
+                          search(val);
                         });
                       } else if (val.length <= 0) {
                         setState(() {
@@ -209,21 +216,21 @@ class _ProductListPageState extends State<ProductListPage> {
                       ),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.fromLTRB(25, 8, 0, 5),
-                      hintText: 'Search Stockfare',
+                      hintText: 'Search stockfare_mobile',
                     )),
               ),
             ),
           )),
       body: _search
           ? ListView.builder(
-              itemCount: _productName.length,
+              itemCount: _productNameSearch.length,
               itemBuilder: (context, index) {
                 return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
                         child: ListTile(
                             title: Text(
-                              _productName[index].toString(),
+                              _productNameSearch[index].toString(),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -233,12 +240,14 @@ class _ProductListPageState extends State<ProductListPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  _productQuantity[index].toString() + ' Units',
+                                  _productQuantitySearch[index].toString() +
+                                      ' Units',
                                   style: TextStyle(fontFamily: 'FireSans'),
                                 ),
                                 SizedBox(height: 5),
                                 Text(
-                                  _packQuantity[index].toString() + ' Packs',
+                                  _packQuantitySearch[index].toString() +
+                                      ' Packs',
                                   style: TextStyle(fontFamily: 'FireSans'),
                                 )
                               ],
@@ -256,7 +265,8 @@ class _ProductListPageState extends State<ProductListPage> {
                                             builder: (context) =>
                                                 EditProductPage(
                                                   index: index,
-                                                  productId: _productId[index],
+                                                  productId:
+                                                      _productIdSearch[index],
                                                 )));
                                   },
                                 );
@@ -272,11 +282,13 @@ class _ProductListPageState extends State<ProductListPage> {
                                       onChanged: (newValue) {
                                         setState(() {
                                           checkBox[index] = newValue;
-                                          deleteItem.contains(_productId[index])
-                                              ? deleteItem
-                                                  .remove(_productId[index])
+                                          deleteItem.contains(
+                                                  _productIdSearch[index])
+                                              ? deleteItem.remove(
+                                                  _productIdSearch[index])
                                               : deleteItem.add(
-                                                  _productId[index].toString());
+                                                  _productIdSearch[index]
+                                                      .toString());
                                         });
                                       },
                                     ),
@@ -287,7 +299,8 @@ class _ProductListPageState extends State<ProductListPage> {
                                 );
                               }
 
-                              return Text(_productPrice[index].toString());
+                              return Text(
+                                  _productPriceSearch[index].toString());
                             }())))));
               })
           : StreamBuilder(
@@ -513,26 +526,26 @@ class _ProductListPageState extends State<ProductListPage> {
     );
   }
 
-  void searchFilter(value) {
+  void search(value) {
     String capitalized = StringUtils.capitalize(value);
-    int _index =
-        _productName.indexWhere((element) => element.startsWith(capitalized));
-    if (_index != -1) {
-      print('Contains value');
-
-      String item = _productName[_index];
-      setState(() {
-        _productName.removeWhere((element) => element != item);
-        _productPrice.removeRange(0, _index);
-        _packQuantity.removeRange(0, _index);
-        _productQuantity.removeRange(0, _index);
-
-        _search = true;
-        print(_productName);
-      });
-    } else {
-      print('does not contain value');
-    }
+    _productNameSearch.clear();
+    _productPriceSearch.clear();
+    _productQuantitySearch.clear();
+    _productIdSearch.clear();
+    _packQuantitySearch.clear();
+    setState(() {
+      _search = true;
+      print(_productName.map((value) {
+        if (value.contains(capitalized)) {
+          _productNameSearch.add(value);
+          _productPriceSearch.add(_productPrice[_productName.indexOf(value)]);
+          _productQuantitySearch
+              .add(_productPrice[_productName.indexOf(value)]);
+          _packQuantitySearch.add(_packQuantity[_productName.indexOf(value)]);
+          _productIdSearch.add(_productId[_productName.indexOf(value)]);
+        }
+      }));
+    });
   }
 
   _displaySnackBar(BuildContext context) {

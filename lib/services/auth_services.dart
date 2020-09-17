@@ -25,25 +25,27 @@ class AuthServices {
     try {
       final String url = GlobalConfiguration().get("signup");
 
-      final http.Response response = await http.post(url,
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(<String, dynamic>{
-            "account": {
-              "first_name": firstName,
-              "last_name": lastName,
-              "phone_number": email,
-              "email": phone,
-              "password": password,
-            },
-            "registration_id": firebaseToken,
-            "name": businessName,
-            "address": businessAddress,
-            "description": businessDescription,
-            "referral": referralCode,
-            "business_type": businessType
-          }));
+      final http.Response response = await http
+          .post(url,
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(<String, dynamic>{
+                "account": {
+                  "first_name": firstName,
+                  "last_name": lastName,
+                  "phone_number": email,
+                  "email": phone,
+                  "password": password,
+                },
+                "registration_id": firebaseToken,
+                "name": businessName,
+                "address": businessAddress,
+                "description": businessDescription,
+                "referral": referralCode,
+                "business_type": businessType
+              }))
+          .timeout(Duration(seconds: 15));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         var responseJson = json.decode(response.body);
@@ -72,6 +74,9 @@ class AuthServices {
 
         // return json.decode(response.body);
       }
+    } on TimeoutException catch (e) {
+      print(e.toString());
+      return null;
     } on Exception catch (e) {
       print(e.toString());
     }
@@ -86,17 +91,19 @@ class AuthServices {
     String url = GlobalConfiguration().get("login");
     print(url);
     try {
-      final http.Response response = await http.post(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          "username": username,
-          "password": password,
-          "registration_id": firebaseToken
-        }),
-      );
+      final http.Response response = await http
+          .post(
+            url,
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(<String, String>{
+              "username": username,
+              "password": password,
+              "registration_id": firebaseToken
+            }),
+          )
+          .timeout(Duration(seconds: 15));
       if (response.statusCode == 200 || response.statusCode == 201) {
         var responseJson = json.decode(response.body);
         print(responseJson);
@@ -117,6 +124,9 @@ class AuthServices {
         return json.decode(response.body)['error'];
         // return json.decode(response.body);
       }
+    } on TimeoutException catch (e) {
+      print(e.toString());
+      return null;
     } on Exception catch (e) {
       print(e.toString());
     }
@@ -274,7 +284,7 @@ class AuthServices {
       'token': queryToken,
       'email': queryEmail,
     };
-    var uri = Uri.https('stockfare-io.herokuapp.com',
+    var uri = Uri.https('https://api-lexical-dance.stockfare_mobile.co',
         '/api/v1/users/verify-code/', queryParameters);
     try {
       final http.Response response = await http.post(uri,

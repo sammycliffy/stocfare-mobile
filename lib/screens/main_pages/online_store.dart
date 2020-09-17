@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
-import 'package:stockfare_mobile/screens/main_pages/common_widget/main_app_bar.dart';
 
 class OnlineStore extends StatefulWidget {
   const OnlineStore({Key key}) : super(key: key);

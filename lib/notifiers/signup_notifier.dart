@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:stockfare_mobile/screens/subscription/sub_home.dart';
 
 class SignupNotifier with ChangeNotifier {
   String _firstName;

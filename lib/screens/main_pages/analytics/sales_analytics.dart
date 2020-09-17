@@ -103,7 +103,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        ' StockFare provides you \n details of what sells and what \n doesn\'t',
+                                        ' stockfare_mobile provides you \n details of what sells and what \n doesn\'t',
                                         style: TextStyle(
                                           fontSize: 16,
                                         ),

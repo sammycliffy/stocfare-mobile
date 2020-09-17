@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/services/payment_services.dart';
 
 enum SingingCharacter { pack, unit }
@@ -114,7 +112,7 @@ class DialogBoxes {
                         'Account Name',
                         style: TextStyle(color: Colors.grey),
                       ),
-                      Text('Contrail Store',
+                      Text('Contrail Stores Ltd',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18)),
                       Text(
@@ -135,7 +133,7 @@ class DialogBoxes {
                         'CONTACT NUMBER',
                         style: TextStyle(color: Colors.grey),
                       ),
-                      Text('09019955835',
+                      Text('08109980086',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18)),
                     ],

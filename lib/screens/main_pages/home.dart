@@ -3,7 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
@@ -24,17 +24,17 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-Future<dynamic> myBackgroundHandler(Map<String, dynamic> message) {
-  return _HomePageState()._showNotification(message);
-}
+// Future<dynamic> myBackgroundHandler(Map<String, dynamic> message) {
+//   return _HomePageState()._showNotification(message);
+// }
 
 class _HomePageState extends State<HomePage> {
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  // FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  //     FlutterLocalNotificationsPlugin();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   SignupNotifier _signupNotifier;
   dynamic dataInstance;
-
+  List _topCategory = [];
   List _categories = [];
   List _productName = [];
   List _productPrice = [];
@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> items = [];
   List _items = [];
   List _quantityToSell = [];
-  bool _search = false;
+  bool isSearched = false;
   int _shoppingCartPackQuantity = 0;
   int _shoppingCartUnitQuantity = 0;
   bool _addFloatingACtionButton = false;
@@ -66,26 +66,26 @@ class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
   String firebaseNumber;
 
-  Future selectNotification(String payload) async {
-    await flutterLocalNotificationsPlugin.cancelAll();
-  }
+  // Future selectNotification(String payload) async {
+  //   await flutterLocalNotificationsPlugin.cancelAll();
+  // }
 
-  Future _showNotification(Map<String, dynamic> message) async {
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-        'channelId', 'channelName', 'channelDescription',
-        importance: Importance.Max, priority: Priority.High);
+  // Future _showNotification(Map<String, dynamic> message) async {
+  //   var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+  //       'channelId', 'channelName', 'channelDescription',
+  //       importance: Importance.Max, priority: Priority.High);
 
-    var platformChannelSpecifics =
-        new NotificationDetails(androidPlatformChannelSpecifics, null);
+  //   var platformChannelSpecifics =
+  //       new NotificationDetails(androidPlatformChannelSpecifics, null);
 
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      message['notification']['title'],
-      message['notification']['body'],
-      platformChannelSpecifics,
-      payload: 'Default_Sound',
-    );
-  }
+  //   await flutterLocalNotificationsPlugin.show(
+  //     0,
+  //     message['notification']['title'],
+  //     message['notification']['body'],
+  //     platformChannelSpecifics,
+  //     payload: 'Default_Sound',
+  //   );
+  // }
 
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
@@ -105,51 +105,51 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       _scanBarcode = barcodeScanRes;
+      searchBarcode(barcodeScanRes);
     });
-    searchFilter(barcodeScanRes);
   }
 
   @override
   void initState() {
     super.initState();
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettings =
-        InitializationSettings(initializationSettingsAndroid, null);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: selectNotification);
+    // var initializationSettingsAndroid =
+    //     AndroidInitializationSettings('@mipmap/ic_launcher');
+    // var initializationSettings =
+    //     InitializationSettings(initializationSettingsAndroid, null);
+    // flutterLocalNotificationsPlugin.initialize(initializationSettings,
+    //     onSelectNotification: selectNotification);
 
     _firebaseMessaging.configure(
-        onBackgroundMessage: myBackgroundHandler,
+        // onBackgroundMessage: myBackgroundHandler,
         onMessage: (Map<String, dynamic> message) async {
-          // print('onMessage: ${message['notification']['body']}');
-          _firebaseMessage = message;
-          showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text(message['notification']['title']),
-                  content: SingleChildScrollView(
-                    child: ListBody(
-                      children: <Widget>[
-                        Text(message['notification']['body']),
-                        RaisedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text('See Receipt'))
-                      ],
-                    ),
-                  ),
-                );
-              });
-        });
+      // print('onMessage: ${message['notification']['body']}');
+      _firebaseMessage = message;
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(message['notification']['title']),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text(message['notification']['body']),
+                    RaisedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('See Receipt'))
+                  ],
+                ),
+              ),
+            );
+          });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.9;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.4;
     final double itemWidth = size.width / 2;
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     SignupNotifier _signupNotifier =
@@ -184,125 +184,144 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Theme.of(context).primaryColor,
           ),
           appBar: PreferredSize(
-              preferredSize: Size.fromHeight(140.0), // here the desired height
+              preferredSize: Size.fromHeight(120.0), // here the desired height
               child: AppBar(
                 backgroundColor: Colors.white,
                 elevation: 0.0,
                 iconTheme: IconThemeData(color: Colors.red),
-                flexibleSpace: Container(
-                    child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 40),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            children: [
-                              SizedBox(width: 100),
-                              Text(
-                                'Checkout',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(width: 110),
-                              GestureDetector(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(),
-                                  child: Stack(
-                                    children: [
-                                      Icon(Icons.notifications,
-                                          size: 30, color: Colors.black),
-                                    ],
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ActivitiesPage()));
-                                },
-                              ),
-                            ],
+                flexibleSpace: Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SizedBox(width: 10),
+                          Text(
+                            'Checkout',
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 10),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 10,
-                                ),
-                                child: Container(
-                                  height: 50,
-                                  width: 280,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Colors.grey[200],
-                                  ),
-                                  child: TextField(
-                                      onChanged: (val) {
-                                        if (val.length > 0) {
-                                          setState(() {
-                                            searchFilter(val);
-                                          });
-                                        } else if (val.length <= 0) {
-                                          setState(() {
-                                            _search = false;
-                                          });
-                                        }
-                                      },
-                                      decoration: InputDecoration(
-                                        prefixIcon: IconButton(
-                                          icon: Icon(Icons.search),
-                                          color: Colors.black,
-                                          iconSize: 20.0,
-                                          onPressed: () {},
-                                        ),
-                                        border: InputBorder.none,
-                                        contentPadding:
-                                            EdgeInsets.fromLTRB(25, 10, 0, 5),
-                                        hintText: 'Search Stockfare',
-                                      )),
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              Padding(
-                                  padding: const EdgeInsets.only(bottom: 20),
-                                  child: InkWell(
-                                    child: Container(
-                                      width: 50,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(),
-                                          color: Theme.of(context).primaryColor,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Center(
-                                          child: IconButton(
-                                              icon: FaIcon(
-                                                  FontAwesomeIcons.barcode),
-                                              onPressed: null)),
-                                    ),
-                                    onTap: () {
-                                      scanBarcodeNormal();
-                                    },
-                                  )),
-                            ],
+                          GestureDetector(
+                            child: Padding(
+                              padding: const EdgeInsets.only(),
+                              child: Icon(Icons.notifications,
+                                  size: 30, color: Colors.black),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ActivitiesPage()));
+                            },
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SizedBox(width: 10),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 10,
+                            ),
+                            child: Container(
+                              height: 50,
+                              width: 280,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Colors.grey[200],
+                              ),
+                              child: TextFormField(
+                                  onChanged: (val) {
+                                    if (val.length > 0) {
+                                      setState(() {
+                                        search(val);
+                                      });
+                                    } else if (val.length <= 0) {
+                                      setState(() {
+                                        isSearched = false;
+                                      });
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    prefixIcon: IconButton(
+                                      icon: Icon(Icons.search),
+                                      color: Colors.black,
+                                      iconSize: 20.0,
+                                      onPressed: () {},
+                                    ),
+                                    border: InputBorder.none,
+                                    contentPadding:
+                                        EdgeInsets.fromLTRB(25, 8, 0, 5),
+                                    hintText: 'Search stockfare_mobile',
+                                  )),
+                            ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child: InkWell(
+                                child: Container(
+                                  width: 50,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(),
+                                      color: Theme.of(context).primaryColor,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Center(
+                                      child: IconButton(
+                                          icon:
+                                              FaIcon(FontAwesomeIcons.barcode),
+                                          onPressed: null)),
+                                ),
+                                onTap: () {
+                                  scanBarcodeNormal();
+                                },
+                              )),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               )),
           drawer: DrawerPage(),
           body: Column(
             children: <Widget>[
+              // Container(
+              //   height: 40,
+              //   child: Row(
+              //     children: [
+              //       Container(
+              //           color: Colors.grey[200],
+              //           child: Center(
+              //               child: Text(
+              //             'Categories',
+              //           )),
+              //           height: 40,
+              //           width: 100),
+              //       Expanded(
+              //         child: ListView.builder(
+              //             itemCount: _topCategory.length,
+              //             scrollDirection: Axis.horizontal,
+              //             itemBuilder: (BuildContext context, int index) {
+              //               return Container(
+              //                 width: 100.0,
+              //                 child: Center(
+              //                     child: Text(
+              //                   _topCategory[index],
+              //                 )),
+              //               );
+              //             }),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              SizedBox(height: 10),
               Row(
                 children: <Widget>[
                   SizedBox(width: 30),
@@ -384,7 +403,7 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 20,
               ),
-              _search
+              isSearched
                   ? Expanded(
                       child: GridView.builder(
                         itemCount: _categoriesSearch.length,
@@ -408,7 +427,8 @@ class _HomePageState extends State<HomePage> {
                                             fit: BoxFit.cover,
                                             placeholder: (context, url) =>
                                                 CircularProgressIndicator(),
-                                            imageUrl: _productImage[index],
+                                            imageUrl:
+                                                _productImageSearch[index],
                                           )
                                         : Image.asset(
                                             'assets/images/No-image.png',
@@ -464,6 +484,36 @@ class _HomePageState extends State<HomePage> {
                                           child: Center(
                                             child: Text(
                                               '${_productPackPriceSearch[index]}/Pack',
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width: 2,
+                                                      color:
+                                                          Colors.grey[200]))),
+                                          child: Center(
+                                            child: Text(
+                                              '${_productQuantitySearch[index]} Units',
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width: 2,
+                                                      color:
+                                                          Colors.grey[200]))),
+                                          child: Center(
+                                            child: Text(
+                                              '${_packQuantitySearch[index]} Packs',
                                               style: TextStyle(fontSize: 12),
                                             ),
                                           ),
@@ -531,6 +581,7 @@ class _HomePageState extends State<HomePage> {
                           if (snapshot.data.snapshot.value != null) {
                             _categories.clear();
                             _productName.clear();
+                            _topCategory.clear();
                             DataSnapshot dataValues = snapshot.data.snapshot;
                             var data = dataValues
                                 .value['${_signupNotifier.firebaseId}'];
@@ -542,7 +593,8 @@ class _HomePageState extends State<HomePage> {
                               print(values);
                               values?.forEach((key, values) {
                                 print(values['products']?.map((value) {
-                                      _categories.add(value['name']);
+                                      _categories.add(StringUtils.capitalize(
+                                          value['name']));
                                       _productId.add(value['id']);
                                       print(
                                           value['product_image']?.map((value) {
@@ -561,6 +613,8 @@ class _HomePageState extends State<HomePage> {
                                           .add(value['product_pack']['price']);
                                     }) ??
                                     '[]');
+
+                                _topCategory.add(values['name']);
                               });
 
                               return Expanded(
@@ -652,6 +706,40 @@ class _HomePageState extends State<HomePage> {
                                                     child: Center(
                                                       child: Text(
                                                         '${_productPackPrice[index]}/Pack',
+                                                        style: TextStyle(
+                                                            fontSize: 12),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    width: double.infinity,
+                                                    decoration: BoxDecoration(
+                                                        border: Border(
+                                                            bottom: BorderSide(
+                                                                width: 2,
+                                                                color:
+                                                                    Colors.grey[
+                                                                        200]))),
+                                                    child: Center(
+                                                      child: Text(
+                                                        '${_productQuantity[index]} Units',
+                                                        style: TextStyle(
+                                                            fontSize: 12),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    width: double.infinity,
+                                                    decoration: BoxDecoration(
+                                                        border: Border(
+                                                            bottom: BorderSide(
+                                                                width: 2,
+                                                                color:
+                                                                    Colors.grey[
+                                                                        200]))),
+                                                    child: Center(
+                                                      child: Text(
+                                                        '${_packQuantity[index]} Packs',
                                                         style: TextStyle(
                                                             fontSize: 12),
                                                       ),
@@ -757,7 +845,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void searchFilter(value) {
+  void search(value) {
     String capitalized = StringUtils.capitalize(value);
     _categoriesSearch.clear();
     _productPriceSearch.clear();
@@ -767,11 +855,19 @@ class _HomePageState extends State<HomePage> {
     _productPackPriceSearch.clear();
     _productIdSearch.clear();
     setState(() {
+      isSearched = true;
       print(_categories.map((value) {
         if (value.contains(capitalized)) {
+          print(value);
+
           _categoriesSearch.add(value);
           _productPriceSearch.add(_productPrice[_categories.indexOf(value)]);
-          _productImageSearch.add(_productImage[_categories.indexOf(value)]);
+          if (_productImage.length == 0) {
+            print('no Image');
+          } else {
+            _productImageSearch.add(_productImage[_categories.indexOf(value)]);
+          }
+
           _packQuantitySearch.add(_packQuantity[_categories.indexOf(value)]);
           _productQuantitySearch
               .add(_productQuantity[_categories.indexOf(value)]);
@@ -779,15 +875,14 @@ class _HomePageState extends State<HomePage> {
               .add(_productPackPrice[_categories.indexOf(value)]);
           _productIdSearch.add(_productId[_categories.indexOf(value)]);
         }
+        print(_categoriesSearch);
       }));
-      _search = true;
     });
   }
 
   void searchBarcode(value) {
     if (_barcode.contains(value)) {
-      int _index = _barcode.indexOf(value);
-      String item = _categories[_index];
+      int _index = _barcode.indexWhere((element) => element == value);
       setState(() {
         _categories.removeRange(0, _index);
         _productImage.removeRange(0, _index);
@@ -795,7 +890,7 @@ class _HomePageState extends State<HomePage> {
         _packQuantity.removeRange(0, _index);
         _productQuantity.removeRange(0, _index);
 
-        _search = true;
+        isSearched = true;
         print(_categories);
       });
     } else {
@@ -976,32 +1071,6 @@ class _HomePageState extends State<HomePage> {
                           _productQuantity = int.parse(val);
                         });
                       },
-                      // onChanged: (val) {
-                      //   print(
-                      //       _packQuantity.toString() + 'this is pack quantity');
-                      //   print(productQuantity.toString() +
-                      //       'this is unit quantity');
-                      //   if (_pack == true &&
-                      //       int.parse(val) - _packQuantity == -1) {
-                      //     setState(() {
-                      //       _error = true;
-                      //       _errorMesssage =
-                      //           'Pack Quantity is Higher than stock';
-                      //     });
-                      //   } else if (_pack == false &&
-                      //       int.parse(val) - productQuantity == -1) {
-                      //     setState(() {
-                      //       _error = true;
-                      //       _errorMesssage =
-                      //           'Unit Quantity is Higher than stock';
-                      //     });
-                      //   } else {
-                      //     setState(() {
-                      //       _error = false;
-                      //       _productQuantity = int.parse(val);
-                      //     });
-                      //   }
-                      // },
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(12),
                         labelStyle:

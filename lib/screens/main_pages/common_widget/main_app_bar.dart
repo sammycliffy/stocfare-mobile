@@ -49,7 +49,7 @@ class MainAppBar {
                       ),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.fromLTRB(25, 10, 0, 5),
-                      hintText: 'Search Stockfare',
+                      hintText: 'Search stockfare_mobile',
                     )),
                   ),
                 ),

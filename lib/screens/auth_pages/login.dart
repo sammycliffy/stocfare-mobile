@@ -58,7 +58,7 @@ class _LoginState extends State<Login> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 40),
-              child: Text('Secure login to your stockfare app',
+              child: Text('Secure login to your stockfare_mobile app',
                   style: TextStyle(
                     fontSize: 14,
                   )),
@@ -194,13 +194,10 @@ class _LoginState extends State<Login> {
                               .then((value) async {
                             if (value == true) {
                               DialogBoxes().loading(context);
-                              dynamic result = await _auth
-                                  .loginUsernew(
-                                    phoneNumber,
-                                    password,
-                                  )
-                                  .timeout(Duration(seconds: 10),
-                                      onTimeout: () => null);
+                              dynamic result = await _auth.loginUsernew(
+                                phoneNumber,
+                                password,
+                              );
 
                               if (result != true) {
                                 Navigator.pop(context);
@@ -233,7 +230,7 @@ class _LoginState extends State<Login> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'New to Stockfare?',
+                        'New to Stockfare ?',
                         style: TextStyle(
                           fontSize: 14,
                         ),

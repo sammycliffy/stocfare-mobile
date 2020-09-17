@@ -3,9 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
-
-import 'package:stockfare_mobile/services/product_services.dart';
-
 import 'barcode_image.dart';
 
 class AddPackPage extends StatefulWidget {

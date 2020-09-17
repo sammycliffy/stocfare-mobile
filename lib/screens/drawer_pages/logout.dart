@@ -49,7 +49,7 @@ class _LogoutPageState extends State<LogoutPage> {
                   ),
                   Center(
                     child: Text(
-                      'Stockfare',
+                      'stockfare_mobile',
                       style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,

@@ -4,18 +4,14 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:stockfare_mobile/models/create_sales_model.dart';
 import 'dart:convert';
-
 import 'package:stockfare_mobile/models/sales_model.dart';
 
 class SalesServices {
-  Future<GetSalesModel> getallSales(int pageNumber) async {
+  Future<GetSalesModel> getallSales() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
-    String pageData;
-    pageNumber == 1 ? pageData = '' : pageData = '?page=$pageNumber';
-    final String url =
-        GlobalConfiguration().get("get-sales") + '$branchId/$pageData';
+    final String url = GlobalConfiguration().get("get-sales") + '$branchId/';
     try {
       final http.Response response =
           await http.get(url, headers: <String, String>{
@@ -47,6 +43,7 @@ class SalesServices {
         'Authorization': 'Bearer $token',
       });
       if (response.statusCode == 200) {
+        print(response.body);
         return GetSalesModel.fromJson(json.decode(response.body));
       } else {
         return Future.error(json.decode(response.body)['detail']);
@@ -77,7 +74,7 @@ class SalesServices {
         return Future.error('error');
       }
     } catch (e) {
-      print(e.tostring());
+      print(e);
     }
   }
 

@@ -98,7 +98,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       },
                       items: <String>[
                         'Cash',
-                        'Check',
+                        'Card',
                         'Transfer',
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(

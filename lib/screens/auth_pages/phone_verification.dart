@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
 import 'package:stockfare_mobile/screens/auth_pages/registration_success.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
-import 'package:stockfare_mobile/screens/main_pages/common_widget/loader.dart';
 import 'package:stockfare_mobile/services/auth_services.dart';
 
 class PhoneVerification extends StatefulWidget {
@@ -28,7 +25,6 @@ class _PhoneVerification extends State<PhoneVerification> {
 
   @override
   Widget build(BuildContext context) {
-    SignupNotifier _signupNotifier = Provider.of<SignupNotifier>(context);
     return WillPopScope(
       onWillPop: () async => Navigator.push(
           context, MaterialPageRoute(builder: (context) => Login())),

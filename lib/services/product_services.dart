@@ -67,11 +67,9 @@ class ProductServices {
         return false;
       } else {
         print(response.body);
-        return response.body;
-        // return json.decode(response.body)['name'] ??
-        //   json.decode(response.body)['product']['phone_number'] ??
-        //   json.decode(response.body)['account']['email'] ??
-        //   ' ';
+
+        return json.decode(response.body)['detail'] ??
+            json.decode(response.body)['name'][0];
       }
     } catch (e) {
       print(e.toString());
@@ -100,38 +98,42 @@ class ProductServices {
     ColorsData colorsData = ColorsData(colorDataModel: data);
     final String url =
         GlobalConfiguration().get("product-category") + '$categoryId/';
-
-    final http.Response response = await http.post(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(<String, dynamic>{
-          "product_colour":
-              colorsData.colorDataModel.map((i) => i.toJson()).toList(),
-          "product_unit": {
-            "price": unitproductPrice,
-            "quantity": unitproductQuantity,
-            "limit": unitLimit
+    try {
+      final http.Response response = await http.post(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
           },
-          "product_pack": {
-            "price": packProductPrice,
-            "limit": packLimit,
-            "quantity": packQuantity,
-          },
-          "name": unitproductName,
-          "image": image,
-          "description": productDescription,
-          "weight": productWeight,
-          "bar_code": barcode,
-          "discount": productDiscount
-        }));
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return response.statusCode;
-    } else {
-      print(response.body);
-      return response.body;
+          body: jsonEncode(<String, dynamic>{
+            "product_colour":
+                colorsData.colorDataModel.map((i) => i.toJson()).toList(),
+            "product_unit": {
+              "price": unitproductPrice,
+              "quantity": unitproductQuantity,
+              "limit": unitLimit
+            },
+            "product_pack": {
+              "price": packProductPrice,
+              "limit": packLimit,
+              "quantity": packQuantity,
+            },
+            "name": unitproductName,
+            "image": image,
+            "description": productDescription,
+            "weight": productWeight,
+            "bar_code": barcode,
+            "discount": productDiscount
+          }));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print(response.body);
+        return json.decode(response.body)['detail'] ??
+            json.decode(response.body)['name'][0];
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -291,7 +293,8 @@ class ProductServices {
     var responseString = String.fromCharCodes(responseData);
     print(responseString);
     if (response.statusCode != 200 || response.statusCode != 201) {
-      return responseString;
+      return json.decode(responseString)['error']['files'][0] ??
+          json.decode(responseString)['detail'];
     }
     print(response.statusCode);
     return response.statusCode;

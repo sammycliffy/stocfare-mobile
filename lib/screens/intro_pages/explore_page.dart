@@ -17,7 +17,7 @@ class FirstIntro extends StatelessWidget {
                 children: [
                   ClipOval(
                       child: Image.asset(
-                    'assets/images/funke.jpeg',
+                    'assets/images/avatar.png',
                     width: 70,
                     height: 70,
                     fit: BoxFit.fill,
@@ -26,13 +26,13 @@ class FirstIntro extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        'Funke Akindele       ',
+                        'Daniel Taiwo                         ',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text('Shop Owner               ',
+                      Text('Shop Owner                              ',
                           style: TextStyle(color: Colors.red, fontSize: 13)),
                       Text(
-                        'Stockfare App User      ',
+                        'stockfare_mobile App User       ',
                         style: TextStyle(fontSize: 12),
                       )
                     ],
@@ -64,7 +64,7 @@ class FirstIntro extends StatelessWidget {
                       height: 15,
                     ),
                     Text(
-                      'StockFare is dedicated to improving the way businesses in Africa operate, by combining technology with amazing user experience to creating a well thought out product, that ensures your business says thanks to you. ',
+                      'stockfare_mobile is dedicated to improving the way businesses in Africa operate, by combining technology with amazing user experience to creating a well thought out product, that ensures your business says thanks to you. ',
                       style: Theme.of(context).textTheme.bodyText2,
                       textAlign: TextAlign.justify,
                     ),

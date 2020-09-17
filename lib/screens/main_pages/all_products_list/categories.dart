@@ -28,6 +28,9 @@ class _CategoryPageState extends State<CategoryPage> {
   List _categoryId = [];
   List _categories = [];
   List _productCount = [];
+  List _categoryIdSearch = [];
+  List _categoriesSearch = [];
+  List _productCountSearch = [];
   bool editCategory = false;
   bool deleteCategory = false;
   String updatedCategory;
@@ -169,7 +172,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       onChanged: (val) {
                         if (val.length > 0) {
                           setState(() {
-                            searchFilter(val);
+                            search(val);
                           });
                         } else if (val.length <= 0) {
                           setState(() {
@@ -186,14 +189,14 @@ class _CategoryPageState extends State<CategoryPage> {
                         ),
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.fromLTRB(25, 8, 0, 5),
-                        hintText: 'Search Stockfare',
+                        hintText: 'Search stockfare_mobile',
                       )),
                 ),
               ),
             )),
         body: _search
             ? ListView.builder(
-                itemCount: _categories.length,
+                itemCount: _categoriesSearch.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     child: Padding(
@@ -204,11 +207,12 @@ class _CategoryPageState extends State<CategoryPage> {
                             elevation: 3,
                             child: ListTile(
                                 title: Text(
-                                  _categories[index].toString(),
+                                  _categoriesSearch[index].toString(),
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 subtitle: Text(
-                                  _productCount[index].toString() + ' items',
+                                  _productCountSearch[index].toString() +
+                                      ' items',
                                 ),
                                 trailing: Container(
                                     child: (() {
@@ -217,8 +221,8 @@ class _CategoryPageState extends State<CategoryPage> {
                                       child: Icon(Icons.edit),
                                       onTap: () {
                                         _updateDialog(
-                                            _categories[index].toString(),
-                                            _categoryId[index]);
+                                            _categoriesSearch[index].toString(),
+                                            _categoryIdSearch[index]);
                                       },
                                     );
                                   } else if (deleteCategory) {
@@ -234,11 +238,11 @@ class _CategoryPageState extends State<CategoryPage> {
                                             setState(() {
                                               checkBox[index] = newValue;
                                               deleteItem.contains(
-                                                      _categoryId[index])
+                                                      _categoryIdSearch[index])
                                                   ? deleteItem.remove(
-                                                      _categoryId[index])
+                                                      _categoryIdSearch[index])
                                                   : deleteItem.add(
-                                                      _categoryId[index]
+                                                      _categoryIdSearch[index]
                                                           .toString());
                                             });
                                           },
@@ -255,7 +259,8 @@ class _CategoryPageState extends State<CategoryPage> {
                     onTap: () {
                       _addProductNotifier.setCategoryIndex(index);
                       _addToCart.setFireId(_firebaseKeys[index]);
-                      _addProductNotifier.setCategoryId(_categoryId[index]);
+                      _addProductNotifier
+                          .setCategoryId(_categoryIdSearch[index]);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -279,7 +284,6 @@ class _CategoryPageState extends State<CategoryPage> {
                       } else {
                         Map<dynamic, dynamic> values =
                             dataValues.value['${_signupNotifier.firebaseId}'];
-                        print(values);
 
                         values?.forEach((key, values) {
                           _firebaseKeys.add(key);
@@ -585,21 +589,22 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
-  void searchFilter(value) {
+  void search(value) {
     String capitalized = StringUtils.capitalize(value);
-    int _index =
-        _categories.indexWhere((element) => element.startsWith(capitalized));
-    if (_index != -1) {
-      String item = _categories[_index];
-      setState(() {
-        _categories.removeWhere((element) => element != item);
-        _productCount.removeRange(0, _index);
-        _search = true;
-        print(_categories);
-      });
-    } else {
-      print('does not contain value');
-    }
+    _categoriesSearch.clear();
+    _productCountSearch.clear();
+    _categoryIdSearch.clear();
+    setState(() {
+      print(_categories);
+      _search = true;
+      print(_categories.map((value) {
+        if (value.contains(capitalized)) {
+          _categoriesSearch.add(value);
+          _productCountSearch.add(_productCount[_categories.indexOf(value)]);
+          _categoryIdSearch.add(_categoryId[_categories.indexOf(value)]);
+        }
+      }));
+    });
   }
 
   _displaySnackBar(BuildContext context) {

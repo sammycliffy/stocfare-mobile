@@ -1,15 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stockfare_mobile/models/user_model.dart';
-import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
+import 'package:stockfare_mobile/helpers/save_user.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
-import 'package:stockfare_mobile/screens/auth_pages/phone_verification.dart';
-import 'package:stockfare_mobile/screens/drawer_pages/logout.dart';
 import 'package:stockfare_mobile/screens/intro_pages/explore_page.dart';
 import 'dart:async';
-import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -92,42 +86,12 @@ class _SplashScreenState extends State<SplashScreen> {
   void checkForLogin() async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
-    String body = prefs.getString('body');
-    bool verified = prefs.getBool('verified');
+
     if (token != null) {
-      User user = User.fromJson(json.decode(body));
-      if (verified == false) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => Login()));
-      } else if (user.firebaseId == null) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => LogoutPage()));
-      } else {
-        _saveUser(context);
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => BottomNavigationPage()));
-      }
+      SaveUser().saveUser(context);
     } else {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (BuildContext context) => Login()));
     }
   }
-}
-
-_saveUser(context) async {
-  final prefs = await SharedPreferences.getInstance();
-  String body = prefs.getString('body');
-  User user = User.fromJson(json.decode(body));
-  SignupNotifier _signupNotifier =
-      Provider.of<SignupNotifier>(context, listen: false);
-  _signupNotifier.setProfile(
-    user.fullname,
-    user.phone,
-    user.email,
-    user.firebaseId,
-    user.branchName,
-    user.branchAddress,
-    user.notificationStatus,
-    user.subscriptionPlan,
-  );
 }

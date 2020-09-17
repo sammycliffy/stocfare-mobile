@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:jiffy/jiffy.dart';
 
 import 'package:stockfare_mobile/models/product_analytics_model.dart';
 

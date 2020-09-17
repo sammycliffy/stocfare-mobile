@@ -23,7 +23,7 @@ class DrawerPage extends StatelessWidget {
           DrawerHeader(
             child: Center(
               child: Text(
-                'Stockfare',
+                'stockfare_mobile',
                 style: TextStyle(fontSize: 25, color: Colors.white),
               ),
             ),

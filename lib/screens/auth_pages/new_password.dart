@@ -68,7 +68,7 @@ class _NewPassword extends State<NewPassword> {
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
-                        keyboardType: TextInputType.text,
+                        keyboardType: TextInputType.number,
                         validator: (input) =>
                             input.isEmpty ? "Enter OTP" : null,
                         onChanged: (val) => setState(() {

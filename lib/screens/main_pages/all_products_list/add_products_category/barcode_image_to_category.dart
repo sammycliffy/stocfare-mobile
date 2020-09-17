@@ -181,7 +181,6 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
 
                         String noImage = await getImageFileFromAssets();
                         if (value == true) {
-                          DialogBoxes().loading(context);
                           List<int> imageBytes;
                           String base64Image;
                           if (_image == null) {
@@ -190,8 +189,8 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                             imageBytes = _image.readAsBytesSync();
                             base64Image = base64.encode(imageBytes);
                           }
-                          dynamic result = await _productServices
-                              .addProductToCategory(
+                          dynamic result =
+                              await _productServices.addProductToCategory(
                                   _addProduct.unitproductName,
                                   _addProduct.unitproductPrice,
                                   _addProduct.unitproductQuantity,
@@ -205,11 +204,9 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                                   _addProduct.productDiscount,
                                   _addProduct.productWeight,
                                   _addProduct.data,
-                                  _addProduct.categoryId)
-                              .timeout(Duration(seconds: 15),
-                                  onTimeout: () => null);
+                                  _addProduct.categoryId);
 
-                          if (result != 200) {
+                          if (result != true) {
                             Navigator.pop(context);
                             setState(() {
                               result == null

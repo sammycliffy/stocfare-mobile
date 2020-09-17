@@ -1019,7 +1019,10 @@ class _EditProductPageState extends State<EditProductPage> {
                                           width: 2, color: Colors.grey)),
                                   child: Center(
                                       child: _scanBarcode == null
-                                          ? Text(_listBarcode[widget.index],
+                                          ? Text(
+                                              _listBarcode?.elementAt(
+                                                      widget.index) ??
+                                                  "Unknown",
                                               style:
                                                   TextStyle(color: Colors.grey))
                                           : Text(
