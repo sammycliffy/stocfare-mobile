@@ -189,7 +189,7 @@ class _CategoryPageState extends State<CategoryPage> {
                         ),
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.fromLTRB(25, 8, 0, 5),
-                        hintText: 'Search stockfare_mobile',
+                        hintText: 'Search Stockfare',
                       )),
                 ),
               ),

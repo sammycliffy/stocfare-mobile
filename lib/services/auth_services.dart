@@ -184,15 +184,17 @@ class AuthServices {
     print(data);
     final String url = GlobalConfiguration().get("forgot-password");
     try {
-      final http.Response response = await http.post(url,
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $token',
-          },
-          body: jsonEncode(<String, String>{
-            "data": data,
-          }));
+      final http.Response response = await http
+          .post(url,
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer $token',
+              },
+              body: jsonEncode(<String, String>{
+                "data": data,
+              }))
+          .timeout(Duration(seconds: 15));
       if (response.statusCode == 200) {
         var responseJson = json.decode(response.body);
         sharedPreferences.setString('queryToken', responseJson['token']);
@@ -205,6 +207,9 @@ class AuthServices {
         print(response.statusCode);
         return false;
       }
+    } on TimeoutException catch (e) {
+      print(e.toString());
+      return null;
     } on Exception catch (e) {
       print(e.toString());
     }
@@ -284,8 +289,8 @@ class AuthServices {
       'token': queryToken,
       'email': queryEmail,
     };
-    var uri = Uri.https('https://api-lexical-dance.stockfare_mobile.co',
-        '/api/v1/users/verify-code/', queryParameters);
+    final String url = GlobalConfiguration().get("base-url");
+    var uri = Uri.https(url, '/api/v1/users/verify-code/', queryParameters);
     try {
       final http.Response response = await http.post(uri,
           headers: <String, String>{

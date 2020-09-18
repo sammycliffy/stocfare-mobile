@@ -8,6 +8,7 @@ import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/intro_pages/splashscreen.dart';
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/product_details.dart';
 
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
@@ -38,6 +39,9 @@ void main() async {
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           home: SplashScreen(),
+          routes: {
+            '/product_details': (context) => ProductDetails(),
+          },
           theme: ThemeData(
             primarySwatch: Colors.deepOrange,
             canvasColor: Colors.white,

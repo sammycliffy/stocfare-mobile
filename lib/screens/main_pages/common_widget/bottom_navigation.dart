@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/categories.dart';
 import 'package:stockfare_mobile/screens/main_pages/analytics/analytics.dart';
+import 'package:stockfare_mobile/screens/main_pages/expenses/home.dart';
 import 'package:stockfare_mobile/screens/main_pages/home.dart';
 import 'package:stockfare_mobile/screens/main_pages/sales_pages/all_sales.dart';
 
@@ -27,6 +28,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
     AnalyticsPage(
       key: PageStorageKey('Page4'),
     ),
+    // Dashboard()
   ];
 
   @override
@@ -93,6 +95,19 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
               ),
             ),
             backgroundColor: Colors.green,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.money_off,
+              color: Hexcolor('#c80815'),
+            ),
+            title: Text(
+              'Dashboard',
+              style: TextStyle(
+                color: Hexcolor('#c80815'),
+              ),
+            ),
+            backgroundColor: Colors.white,
           ),
         ],
         onTap: (index) {

@@ -58,7 +58,7 @@ class _LoginState extends State<Login> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 40),
-              child: Text('Secure login to your stockfare_mobile app',
+              child: Text('Secure login to your Stockfare app',
                   style: TextStyle(
                     fontSize: 14,
                   )),

@@ -32,7 +32,7 @@ class FirstIntro extends StatelessWidget {
                       Text('Shop Owner                              ',
                           style: TextStyle(color: Colors.red, fontSize: 13)),
                       Text(
-                        'stockfare_mobile App User       ',
+                        'Stockfare App User       ',
                         style: TextStyle(fontSize: 12),
                       )
                     ],
@@ -64,7 +64,7 @@ class FirstIntro extends StatelessWidget {
                       height: 15,
                     ),
                     Text(
-                      'stockfare_mobile is dedicated to improving the way businesses in Africa operate, by combining technology with amazing user experience to creating a well thought out product, that ensures your business says thanks to you. ',
+                      'Stockfare is dedicated to improving the way businesses in Africa operate, by combining technology with amazing user experience to creating a well thought out product, that ensures your business says thanks to you. ',
                       style: Theme.of(context).textTheme.bodyText2,
                       textAlign: TextAlign.justify,
                     ),

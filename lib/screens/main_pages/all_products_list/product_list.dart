@@ -1,6 +1,7 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
@@ -23,17 +24,36 @@ class _ProductListPageState extends State<ProductListPage> {
   AddProductNotifier _addProductNotifier;
   ProductServices _productServices = ProductServices();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  var controller = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',');
+  var controller1 = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',');
+  List _listProductName = [];
+  List _listProductDescription = [];
+  List _listUnitLimit = [];
+  List _listUnitPrice = [];
+  List _listUnitQuantity = [];
+  List _listPackPrice = [];
+  List _listPackQuantity = [];
+  List _listPackLimit = [];
+  List _listBarcode = [];
+  List _listDiscount = [];
+  List _listWeight = [];
+  List _listColors = [];
+  List _imageUrl = [];
+
   List _productName = [];
   List _productPrice = [];
   List _productQuantity = [];
   List _packQuantity = [];
+  List _packPrice = [];
   List _productId = [];
-
   List _productNameSearch = [];
   List _productPriceSearch = [];
   List _productQuantitySearch = [];
   List _packQuantitySearch = [];
   List _productIdSearch = [];
+  List _packPriceSearch = [];
 
   bool editProduct = false;
   bool deleteProduct = false;
@@ -41,6 +61,7 @@ class _ProductListPageState extends State<ProductListPage> {
   List<String> deleteItem = [];
   String _error;
   bool _search = false;
+  int productCount = 0;
 
   @override
   // void initState() {
@@ -78,24 +99,14 @@ class _ProductListPageState extends State<ProductListPage> {
     SignupNotifier _signupNotifier =
         Provider.of<SignupNotifier>(context, listen: false);
     AddProductToCart _addToCart = Provider.of<AddProductToCart>(context);
-    // int val = _addProduct.listOfQuantity.reduce((a, b) => a + b);
-
-    final dbRef = FirebaseDatabase.instance; //firebase database reference
-    dbRef.setPersistenceEnabled(true);
-    dbRef.setPersistenceCacheSizeBytes(10000000);
-    final databaseInstance = dbRef.reference();
-    databaseInstance.keepSynced(true);
-    final firebaseDb = databaseInstance
-        .reference()
-        .child('inventories')
-        .orderByKey()
-        .equalTo(_signupNotifier.firebaseId);
+    final firebaseDb =
+        _productServices.getFirebaseData(_signupNotifier.firebaseId);
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: AppBar(
           title: StreamBuilder(
-              stream: firebaseDb.onValue,
+              stream: firebaseDb,
               builder: (context, AsyncSnapshot<Event> snapshot) {
                 if (snapshot.hasData) {
                   if (snapshot.data.snapshot.value != null) {
@@ -216,7 +227,7 @@ class _ProductListPageState extends State<ProductListPage> {
                       ),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.fromLTRB(25, 8, 0, 5),
-                      hintText: 'Search stockfare_mobile',
+                      hintText: 'Search Stockfare',
                     )),
               ),
             ),
@@ -299,23 +310,41 @@ class _ProductListPageState extends State<ProductListPage> {
                                 );
                               }
 
-                              return Text(
-                                  _productPriceSearch[index].toString());
+                              return Column(
+                                children: [
+                                  Text(_productPriceSearch[index].toString()),
+                                  Text(_packPriceSearch[index].toString()),
+                                ],
+                              );
                             }())))));
               })
           : StreamBuilder(
-              stream: firebaseDb.onValue,
+              stream: firebaseDb,
               builder: (context, AsyncSnapshot<Event> snapshot) {
                 if (snapshot.hasData) {
                   _productName.clear();
                   _productQuantity.clear();
                   _packQuantity.clear();
                   _productId.clear();
-
+                  _listProductName.clear();
+                  _listProductDescription.clear();
+                  _listUnitLimit.clear();
+                  _listUnitPrice.clear();
+                  _listUnitQuantity.clear();
+                  _listPackPrice.clear();
+                  _listPackQuantity.clear();
+                  _listPackLimit.clear();
+                  _listBarcode.clear();
+                  _listColors.clear();
+                  _listDiscount.clear();
+                  _listWeight.clear();
                   if (snapshot.data.snapshot
                               .value['${_signupNotifier.firebaseId}']
                           ['${_addToCart.fireId}']['product_count'] !=
                       0) {
+                    productCount = snapshot.data.snapshot
+                            .value['${_signupNotifier.firebaseId}']
+                        ['${_addToCart.fireId}']['product_count'];
                     DataSnapshot dataValues = snapshot.data.snapshot;
                     Map values =
                         dataValues.value['${_signupNotifier.firebaseId}']
@@ -326,96 +355,186 @@ class _ProductListPageState extends State<ProductListPage> {
                       _packQuantity.add(value['product_pack']['quantity']);
                       _productPrice.add(value['product_unit']['price']);
                       _productId.add(value['id']);
+                      print(value['product_image']?.map((value) {
+                            _imageUrl.add(value['image_link']);
+                          }) ??
+                          '[]');
+
+                      _packPrice.add(value['product_pack']['price']);
                       checkBox.add(false);
+                      _listProductName.add(value['name']);
+                      _productId.add(value[value['id']]);
+                      _listUnitQuantity.add(value['product_unit']['quantity']);
+                      _listBarcode.add(value['bar_code']);
+                      _listDiscount.add(value['discount']);
+                      _listWeight.add(value['weight']);
+                      if (value['product_colour'] == null) {
+                        print('no color');
+                      } else {
+                        _listColors.add(value['product_colour'][0]);
+                      }
+
+                      _listPackQuantity.add(value['product_pack']['quantity']);
+                      _listUnitPrice.add(value['product_unit']['price']);
+                      _listUnitLimit.add(value['product_unit']['limit']);
+                      _listProductDescription.add(value['description']);
+                      _listPackLimit.add(value['product_pack']['limit']);
+                      _listPackPrice.add(value['product_pack']['price']);
                     }));
 
-                    return ListView.builder(
-                        itemCount: _productName.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Card(
-                                  child: ListTile(
-                                      title: Text(
-                                        _productName[index].toString(),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      subtitle: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            _productQuantity[index].toString() +
-                                                ' Units',
-                                            style: TextStyle(
-                                                fontFamily: 'FireSans'),
-                                          ),
-                                          SizedBox(height: 5),
-                                          Text(
-                                            _packQuantity[index].toString() +
-                                                ' Packs',
-                                            style: TextStyle(
-                                                fontFamily: 'FireSans'),
-                                          )
-                                        ],
-                                      ),
-                                      trailing: Container(
-                                          child: (() {
-                                        if (editProduct) {
-                                          return GestureDetector(
-                                            child: Icon(Icons.edit),
-                                            onTap: () {
-                                              _addToCart
-                                                  .setProductIndexes(index);
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          EditProductPage(
-                                                            index: index,
-                                                            productId:
-                                                                _productId[
-                                                                    index],
-                                                          )));
-                                            },
-                                          );
-                                        } else if (deleteProduct) {
-                                          return GestureDetector(
-                                            child: Container(
-                                              width: 100,
-                                              height: 100,
-                                              child: CheckboxListTile(
-                                                activeColor: Theme.of(context)
-                                                    .primaryColor,
-                                                value: checkBox[index],
-                                                onChanged: (newValue) {
-                                                  setState(() {
-                                                    checkBox[index] = newValue;
-                                                    deleteItem.contains(
-                                                            _productId[index])
-                                                        ? deleteItem.remove(
-                                                            _productId[index])
-                                                        : deleteItem.add(
-                                                            _productId[index]
-                                                                .toString());
-                                                  });
-                                                },
+                    return Column(
+                      children: [
+                        Container(
+                          height: 40,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                'Total Products Available:',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                              Text(
+                                productCount.toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              )
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount: _productName.length,
+                              itemBuilder: (context, index) {
+                                controller.updateValue(
+                                    (_productPrice[index]).toDouble());
+                                controller1.updateValue(
+                                    (_packPrice[index]).toDouble());
+                                return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GestureDetector(
+                                      child: Card(
+                                          child: ListTile(
+                                              title: Text(
+                                                _productName[index].toString(),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            onTap: () {
-                                              print(_productId[index]);
-                                            },
-                                          );
-                                        }
+                                              subtitle: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    _productQuantity[index]
+                                                            .toString() +
+                                                        ' Units',
+                                                    style: TextStyle(
+                                                        fontFamily: 'FireSans'),
+                                                  ),
+                                                  SizedBox(height: 5),
+                                                  Text(
+                                                    _packQuantity[index]
+                                                            .toString() +
+                                                        ' Packs',
+                                                    style: TextStyle(
+                                                        fontFamily: 'FireSans'),
+                                                  )
+                                                ],
+                                              ),
+                                              trailing: Container(
+                                                  child: (() {
+                                                if (editProduct) {
+                                                  return GestureDetector(
+                                                    child: Icon(Icons.edit),
+                                                    onTap: () {
+                                                      _addToCart
+                                                          .setProductIndexes(
+                                                              index);
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  EditProductPage(
+                                                                    index:
+                                                                        index,
+                                                                    productId:
+                                                                        _productId[
+                                                                            index],
+                                                                  )));
+                                                    },
+                                                  );
+                                                } else if (deleteProduct) {
+                                                  return GestureDetector(
+                                                    child: Container(
+                                                      width: 100,
+                                                      height: 100,
+                                                      child: CheckboxListTile(
+                                                        activeColor:
+                                                            Theme.of(context)
+                                                                .primaryColor,
+                                                        value: checkBox[index],
+                                                        onChanged: (newValue) {
+                                                          setState(() {
+                                                            checkBox[index] =
+                                                                newValue;
+                                                            deleteItem
+                                                                    .contains(
+                                                                        _productId[
+                                                                            index])
+                                                                ? deleteItem.remove(
+                                                                    _productId[
+                                                                        index])
+                                                                : deleteItem.add(
+                                                                    _productId[
+                                                                            index]
+                                                                        .toString());
+                                                          });
+                                                        },
+                                                      ),
+                                                    ),
+                                                    onTap: () {
+                                                      print(_productId[index]);
+                                                    },
+                                                  );
+                                                }
 
-                                        return Text(
-                                            _productPrice[index].toString());
-                                      }())))));
-                        });
+                                                return Column(
+                                                  children: [
+                                                    SizedBox(height: 10),
+                                                    Text(controller.text
+                                                            .toString() +
+                                                        ' / Unit'),
+                                                    Text(controller1.text
+                                                            .toString() +
+                                                        ' / Pack'),
+                                                  ],
+                                                );
+                                              }())))),
+                                      onTap: () {
+                                        _addToCart.addSingleProduct(
+                                            _addToCart.categoryName,
+                                            _listProductName[index],
+                                            _listProductDescription[index],
+                                            _listUnitLimit[index],
+                                            _listUnitQuantity[index],
+                                            controller.text,
+                                            _listPackLimit[index],
+                                            _listPackQuantity[index],
+                                            controller1.text,
+                                            _listBarcode[index],
+                                            _imageUrl[index]);
+                                        Navigator.pushNamed(
+                                            context, '/product_details');
+                                      },
+                                    ));
+                              }),
+                        ),
+                      ],
+                    );
                   } else {
                     return Center(
                       child: Text(
@@ -539,6 +658,7 @@ class _ProductListPageState extends State<ProductListPage> {
         if (value.contains(capitalized)) {
           _productNameSearch.add(value);
           _productPriceSearch.add(_productPrice[_productName.indexOf(value)]);
+          _packPriceSearch.add(_packPrice[_productName.indexOf(value)]);
           _productQuantitySearch
               .add(_productPrice[_productName.indexOf(value)]);
           _packQuantitySearch.add(_packQuantity[_productName.indexOf(value)]);

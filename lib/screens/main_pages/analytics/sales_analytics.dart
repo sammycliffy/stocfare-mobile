@@ -94,7 +94,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                               Text('Sales Made This Month',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 20)),
+                                      fontSize: 18)),
                               SizedBox(height: 10),
                               Row(
                                 children: <Widget>[
@@ -103,7 +103,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        ' stockfare_mobile provides you \n details of what sells and what \n doesn\'t',
+                                        ' Stockfare provides you \n details of what sells and what \n doesn\'t',
                                         style: TextStyle(
                                           fontSize: 16,
                                         ),

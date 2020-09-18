@@ -6,7 +6,7 @@ class AddProductToCart with ChangeNotifier {
   int _prices = 0;
   int _discount = 0;
   String _productName;
-  int _productUnitPrice = 0;
+  String _productUnitPrice;
   int _productPackPrice = 0;
   int _productQuantity = 0;
   int _quantity = 0;
@@ -24,13 +24,23 @@ class AddProductToCart with ChangeNotifier {
   String _fireId;
   String _categoryName;
   String _categoryId;
+  String _description;
+  int _unitLimit;
+  int _packLimit;
+  String _packPrice;
+  String _imageUrl;
+
   int _quantityToAdd = 0;
   int _productValue;
   int get product => _product;
   int get price => _price;
   int get discount => _price;
   int get total => _total;
-  int get productUnitPrice => _productUnitPrice;
+  String get imageUrl => _imageUrl;
+  int get packLimit => _packLimit;
+  String get packPrice => _packPrice;
+  String get description => _description;
+  String get productUnitPrice => _productUnitPrice;
   String get productName => _productName;
   int get productQuantity => _productQuantity;
   int get productPackPrice => _productPackPrice;
@@ -46,6 +56,7 @@ class AddProductToCart with ChangeNotifier {
   int get value => _value;
   int get packValue => _packValue;
   bool get clear => _clear;
+  int get unitLimit => _unitLimit;
   String get fireId => _fireId;
   int get productValue => _productValue;
   List get quantityToSell => _quantityToSell;
@@ -118,5 +129,31 @@ class AddProductToCart with ChangeNotifier {
   void addID(String categoryId, String categoryName) {
     _categoryId = categoryId;
     _categoryName = categoryName;
+  }
+
+  void addSingleProduct(
+      category,
+      productName,
+      productDescription,
+      unitLimit,
+      unitQuantity,
+      unitPrice,
+      packLimit,
+      packQuantity,
+      packPrice,
+      barcode,
+      imageUrl) {
+    _categoryName = category;
+    _productName = productName;
+    _description = productDescription;
+    _unitLimit = unitLimit;
+    _quantity = unitQuantity;
+    _productUnitPrice = unitPrice;
+    _packLimit = packLimit;
+    _packQuantity = packQuantity;
+    _packPrice = packPrice;
+    barcode = barcode;
+    _imageUrl = imageUrl;
+    notifyListeners();
   }
 }

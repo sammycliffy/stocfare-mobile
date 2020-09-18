@@ -30,5 +30,7 @@
   "send-payment": "http://stockfare-io.herokuapp.com/api/v1/subscription/switch-plan/",
   "delete-sales": "http://stockfare-io.herokuapp.com/api/v1/sales/delete-sale/",
   "promo-code": "http://stockfare-io.herokuapp.com/api/v1/promotion/submit/",
-  "feedback": "http://stockfare-io.herokuapp.com/api/v2/users/feedback/"
+  "feedback": "http://stockfare-io.herokuapp.com/api/v2/users/feedback/",
+
+  "base-url": "http://stockfare-io.herokuapp.com/"
 }

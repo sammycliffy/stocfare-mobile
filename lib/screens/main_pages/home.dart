@@ -259,7 +259,7 @@ class _HomePageState extends State<HomePage> {
                                     border: InputBorder.none,
                                     contentPadding:
                                         EdgeInsets.fromLTRB(25, 8, 0, 5),
-                                    hintText: 'Search stockfare_mobile',
+                                    hintText: 'Search Stockfare',
                                   )),
                             ),
                           ),

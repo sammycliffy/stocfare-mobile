@@ -48,11 +48,11 @@ class _SignupPage extends State<SignupPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 40),
-              child: Text(
-                  'Signup to enjoy stockfare_mobile inventory management system',
-                  style: TextStyle(
-                    fontSize: 12,
-                  )),
+              child:
+                  Text('Signup to enjoy Stockfare inventory management system',
+                      style: TextStyle(
+                        fontSize: 12,
+                      )),
             ),
             SizedBox(
               height: 22,

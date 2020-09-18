@@ -1,6 +1,6 @@
 {
   "login": "https://api-lexical-dance.stockfare.co/api/v1/users/login/",
-  "signup": "http://api-lexical-dance.stockfare.co/api/v2/users/register/",
+  "signup": "https://api-lexical-dance.stockfare.co/api/v2/users/register/",
   "forgot-password": "https://api-lexical-dance.stockfare.co/api/v1/users/forgot-password/",
   "change-password": "https://api-lexical-dance.stockfare.co/api/v1/users/change-password/",
   "verify-phone": "https://api-lexical-dance.stockfare.co/api/v1/users/verify-phone-number/",
@@ -30,5 +30,7 @@
   "send-payment": "https://api-lexical-dance.stockfare.co/api/v1/subscription/switch-plan/",
   "delete-sales": "https://api-lexical-dance.stockfare.co/api/v1/sales/delete-sale/",
   "promo-code": "https://api-lexical-dance.stockfare.co/api/v1/promotion/submit/",
-  "feedback": "https://api-lexical-dance.stockfare.co/api/v2/users/feedback/"
+  "feedback": "https://api-lexical-dance.stockfare.co/api/v2/users/feedback/",
+
+  "base-url": "api-lexical-dance.stockfare.co"
 }

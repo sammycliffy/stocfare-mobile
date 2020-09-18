@@ -168,7 +168,7 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                                         snapshot.data.leastProductWeekName
                                             .toString(),
                                         style: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: 17,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
@@ -219,7 +219,7 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                                       Text(
                                         snapshot.data.mostProductWeekName,
                                         style: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: 17,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
@@ -278,7 +278,7 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 20,
+                                        height: 17,
                                       ),
                                       Text(
                                         snapshot.data.leastProductMonthName,
@@ -339,7 +339,7 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 20,
+                                        height: 17,
                                       ),
                                       Text(
                                         snapshot.data.mostProductMonthName,

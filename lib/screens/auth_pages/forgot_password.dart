@@ -109,10 +109,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     _activitiesServices.checkForInternet().then((value) async {
                       if (value == true) {
                         DialogBoxes().loading(context);
-                        dynamic result = await _authServices
-                            .forgotPassword(data)
-                            .timeout(Duration(seconds: 5),
-                                onTimeout: () => null);
+                        dynamic result =
+                            await _authServices.forgotPassword(data);
+
                         if (result != true) {
                           Navigator.pop(context);
                           setState(() {
