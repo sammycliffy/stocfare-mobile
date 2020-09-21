@@ -28,6 +28,10 @@ class _ProductListPageState extends State<ProductListPage> {
       decimalSeparator: '.', thousandSeparator: ',');
   var controller1 = new MoneyMaskedTextController(
       decimalSeparator: '.', thousandSeparator: ',');
+  var controllerSearch = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',');
+  var controllerSearch1 = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',');
   List _listProductName = [];
   List _listProductDescription = [];
   List _listUnitLimit = [];
@@ -236,87 +240,110 @@ class _ProductListPageState extends State<ProductListPage> {
           ? ListView.builder(
               itemCount: _productNameSearch.length,
               itemBuilder: (context, index) {
-                return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                        child: ListTile(
-                            title: Text(
-                              _productNameSearch[index].toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  _productQuantitySearch[index].toString() +
-                                      ' Units',
-                                  style: TextStyle(fontFamily: 'FireSans'),
+                controllerSearch
+                    .updateValue((_productPriceSearch[index]).toDouble());
+                controllerSearch1
+                    .updateValue((_packPriceSearch[index]).toDouble());
+                return GestureDetector(
+                  child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                          child: ListTile(
+                              title: Text(
+                                _productNameSearch[index].toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                SizedBox(height: 5),
-                                Text(
-                                  _packQuantitySearch[index].toString() +
-                                      ' Packs',
-                                  style: TextStyle(fontFamily: 'FireSans'),
-                                )
-                              ],
-                            ),
-                            trailing: Container(
-                                child: (() {
-                              if (editProduct) {
-                                return GestureDetector(
-                                  child: Icon(Icons.edit),
-                                  onTap: () {
-                                    _addToCart.setProductIndexes(index);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                EditProductPage(
-                                                  index: index,
-                                                  productId:
-                                                      _productIdSearch[index],
-                                                )));
-                                  },
-                                );
-                              } else if (deleteProduct) {
-                                return GestureDetector(
-                                  child: Container(
-                                    width: 100,
-                                    height: 100,
-                                    child: CheckboxListTile(
-                                      activeColor:
-                                          Theme.of(context).primaryColor,
-                                      value: checkBox[index],
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          checkBox[index] = newValue;
-                                          deleteItem.contains(
-                                                  _productIdSearch[index])
-                                              ? deleteItem.remove(
-                                                  _productIdSearch[index])
-                                              : deleteItem.add(
-                                                  _productIdSearch[index]
-                                                      .toString());
-                                        });
-                                      },
-                                    ),
+                              ),
+                              subtitle: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    _productQuantitySearch[index].toString() +
+                                        ' Units',
+                                    style: TextStyle(fontFamily: 'FireSans'),
                                   ),
-                                  onTap: () {
-                                    print(_productId[index]);
-                                  },
-                                );
-                              }
-
-                              return Column(
-                                children: [
-                                  Text(_productPriceSearch[index].toString()),
-                                  Text(_packPriceSearch[index].toString()),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    _packQuantitySearch[index].toString() +
+                                        ' Packs',
+                                    style: TextStyle(fontFamily: 'FireSans'),
+                                  )
                                 ],
-                              );
-                            }())))));
+                              ),
+                              trailing: Container(
+                                  child: (() {
+                                if (editProduct) {
+                                  return GestureDetector(
+                                    child: Icon(Icons.edit),
+                                    onTap: () {
+                                      _addToCart.setProductIndexes(index);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EditProductPage(
+                                                    index: index,
+                                                    productId:
+                                                        _productIdSearch[index],
+                                                  )));
+                                    },
+                                  );
+                                } else if (deleteProduct) {
+                                  return GestureDetector(
+                                    child: Container(
+                                      width: 100,
+                                      height: 100,
+                                      child: CheckboxListTile(
+                                        activeColor:
+                                            Theme.of(context).primaryColor,
+                                        value: checkBox[index],
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            checkBox[index] = newValue;
+                                            deleteItem.contains(
+                                                    _productIdSearch[index])
+                                                ? deleteItem.remove(
+                                                    _productIdSearch[index])
+                                                : deleteItem.add(
+                                                    _productIdSearch[index]
+                                                        .toString());
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      print(_productId[index]);
+                                    },
+                                  );
+                                }
+                                return Column(
+                                  children: [
+                                    SizedBox(height: 10),
+                                    Text(controllerSearch.text.toString() +
+                                        ' / Unit'),
+                                    Text(controllerSearch1.text.toString() +
+                                        ' / Pack'),
+                                  ],
+                                );
+                              }()))))),
+                  onTap: () {
+                    _addToCart.addSingleProduct(
+                        _addToCart.categoryName,
+                        _listProductName[index],
+                        _listProductDescription[index],
+                        _listUnitLimit[index],
+                        _listUnitQuantity[index],
+                        _listUnitPrice[index],
+                        _listPackLimit[index],
+                        _listPackQuantity[index],
+                        _listPackPrice[index],
+                        _listBarcode[index],
+                        _imageUrl[index]);
+                    Navigator.pushNamed(context, '/product_details');
+                  },
+                );
               })
           : StreamBuilder(
               stream: firebaseDb,
@@ -521,10 +548,10 @@ class _ProductListPageState extends State<ProductListPage> {
                                             _listProductDescription[index],
                                             _listUnitLimit[index],
                                             _listUnitQuantity[index],
-                                            controller.text,
+                                            _listUnitPrice[index],
                                             _listPackLimit[index],
                                             _listPackQuantity[index],
-                                            controller1.text,
+                                            _listPackPrice[index],
                                             _listBarcode[index],
                                             _imageUrl[index]);
                                         Navigator.pushNamed(
@@ -652,6 +679,7 @@ class _ProductListPageState extends State<ProductListPage> {
     _productQuantitySearch.clear();
     _productIdSearch.clear();
     _packQuantitySearch.clear();
+    _packPriceSearch.clear();
     setState(() {
       _search = true;
       print(_productName.map((value) {

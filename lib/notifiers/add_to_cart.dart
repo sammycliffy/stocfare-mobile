@@ -6,7 +6,7 @@ class AddProductToCart with ChangeNotifier {
   int _prices = 0;
   int _discount = 0;
   String _productName;
-  String _productUnitPrice;
+  int _productUnitPrice;
   int _productPackPrice = 0;
   int _productQuantity = 0;
   int _quantity = 0;
@@ -27,7 +27,7 @@ class AddProductToCart with ChangeNotifier {
   String _description;
   int _unitLimit;
   int _packLimit;
-  String _packPrice;
+  int _packPrice;
   String _imageUrl;
 
   int _quantityToAdd = 0;
@@ -38,9 +38,9 @@ class AddProductToCart with ChangeNotifier {
   int get total => _total;
   String get imageUrl => _imageUrl;
   int get packLimit => _packLimit;
-  String get packPrice => _packPrice;
+  int get packPrice => _packPrice;
   String get description => _description;
-  String get productUnitPrice => _productUnitPrice;
+  int get productUnitPrice => _productUnitPrice;
   String get productName => _productName;
   int get productQuantity => _productQuantity;
   int get productPackPrice => _productPackPrice;

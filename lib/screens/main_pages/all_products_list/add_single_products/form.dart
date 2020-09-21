@@ -1,3 +1,5 @@
+import 'package:currency_pickers/country.dart';
+import 'package:currency_pickers/currency_picker_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
@@ -30,16 +32,18 @@ class _FormPageState extends State<FormPage> {
   String _colorName;
   int _colorQuantity;
   int _colorLimit;
-
+  Country _selectedDialogCountry;
   bool loading = false;
   String _error;
   bool addExtraDetails = false;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  var controller = new MoneyMaskedTextController(
-      decimalSeparator: '.', thousandSeparator: ',');
 
   @override
   Widget build(BuildContext context) {
+    var controller = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_selectedDialogCountry.currencyCode} ');
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
     return Scaffold(
         appBar: AppBar(title: Text('Add Products')),
@@ -214,6 +218,24 @@ class _FormPageState extends State<FormPage> {
                           ),
                         ),
                       ],
+                    ),
+                    SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 230),
+                      child: InkWell(
+                        child: Container(
+                            width: 100,
+                            height: 30,
+                            decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                                child: Text(
+                              'Add Currency',
+                              style: TextStyle(color: Colors.white),
+                            ))),
+                        onTap: _openCurrencyPickerDialog,
+                      ),
                     ),
                     SizedBox(
                       height: 30,
@@ -765,4 +787,19 @@ class _FormPageState extends State<FormPage> {
       },
     );
   }
+
+  void _openCurrencyPickerDialog() => showDialog(
+        context: context,
+        builder: (context) => Theme(
+            data: Theme.of(context).copyWith(primaryColor: Colors.pink),
+            child: CurrencyPickerDialog(
+              titlePadding: EdgeInsets.all(8.0),
+              searchCursorColor: Colors.pinkAccent,
+              searchInputDecoration: InputDecoration(hintText: 'Search...'),
+              isSearchable: true,
+              title: Text('Select your Country code'),
+              onValuePicked: (Country country) =>
+                  setState(() => _selectedDialogCountry = country),
+            )),
+      );
 }

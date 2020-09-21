@@ -16,6 +16,9 @@ class _ProductDetailsState extends State<ProductDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text(' Product Details'),
+        actions: [
+          // IconButton(icon: Icon(Icons.edit), onPressed: () => ,)
+        ],
       ),
       body: SingleChildScrollView(
           child: Column(
@@ -26,7 +29,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
           Center(
             child: CachedNetworkImage(
-              width: 300,
+              width: 200,
               height: 150,
               fit: BoxFit.cover,
               placeholder: (context, url) => CircularProgressIndicator(),
@@ -41,6 +44,9 @@ class _ProductDetailsState extends State<ProductDetails> {
           //     fit: BoxFit.contain,
           //   ),
           // ),
+          SizedBox(
+            height: 20,
+          ),
           Center(
             child: Container(
                 width: 350,
@@ -81,14 +87,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ],
                 )),
           ),
-          SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              RaisedButton(
-                color: Colors.grey,
+
+          (() {
+            if (_unit == false) {
+              return RaisedButton(
+                color: Colors.green,
                 onPressed: () {
                   setState(() {
                     _unit = true;
@@ -96,11 +99,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                 },
                 child: Text('Unit Details',
                     style: TextStyle(
-                        fontSize: 19,
+                        fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: Colors.white)),
-              ),
-              RaisedButton(
+              );
+            } else {
+              return RaisedButton(
                 color: Colors.grey,
                 onPressed: () {
                   setState(() {
@@ -109,17 +113,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                 },
                 child: Text('Pack Details',
                     style: TextStyle(
-                        fontSize: 19,
+                        fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: Colors.white)),
-              ),
-            ],
-          ),
+              );
+            }
+          }()),
+
           SizedBox(height: 10),
           _unit
               ? details(_addToCart.quantity, _addToCart.productUnitPrice,
                   _addToCart.unitLimit, 'Units')
-              : details(_addToCart.productPackPrice, _addToCart.packQuantity,
+              : details(_addToCart.packQuantity, _addToCart.packPrice,
                   _addToCart.packLimit, 'Pack'),
           SizedBox(height: 20),
           Center(
@@ -163,7 +168,10 @@ details(unit, price, limit, type) {
           Text('Quantity:',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
           Text('$unit $type',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600))
+              style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.green))
         ],
       ),
       SizedBox(height: 10),
@@ -173,7 +181,10 @@ details(unit, price, limit, type) {
           Text('Price:    ',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
           Text('$price ',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600))
+              style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.green))
         ],
       ),
       SizedBox(height: 10),
@@ -183,7 +194,10 @@ details(unit, price, limit, type) {
           Text('Limit:    ',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
           Text('$limit ',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600))
+              style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.green))
         ],
       ),
     ],

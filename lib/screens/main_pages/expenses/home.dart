@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
+import 'package:stockfare_mobile/screens/main_pages/expenses/expenses.dart';
+
+import 'income.dart';
 
 class ExpensesHome extends StatefulWidget {
   @override
@@ -23,6 +26,12 @@ class _ExpensesHomeState extends State<ExpensesHome> {
             ],
           ),
           title: Text('Expenses & Income'),
+        ),
+        body: TabBarView(
+          children: [
+            ExpensesHomePage(),
+            IncomeHomePage(),
+          ],
         ),
       ),
     );

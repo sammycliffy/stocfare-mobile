@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/categories.dart';
 import 'package:stockfare_mobile/screens/main_pages/analytics/analytics.dart';
+import 'package:stockfare_mobile/screens/main_pages/dashboard/main_dashboard.dart';
 import 'package:stockfare_mobile/screens/main_pages/expenses/home.dart';
 import 'package:stockfare_mobile/screens/main_pages/home.dart';
 import 'package:stockfare_mobile/screens/main_pages/sales_pages/all_sales.dart';
@@ -25,10 +26,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
     AllSalesList(
       key: PageStorageKey('Page3'),
     ),
-    AnalyticsPage(
-      key: PageStorageKey('Page4'),
-    ),
-    // Dashboard()
+    DashBoard(),
   ];
 
   @override
@@ -83,22 +81,22 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
               ),
             ),
           ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.multiline_chart,
+          //     color: Hexcolor('#c80815'),
+          //   ),
+          //   title: Text(
+          //     'Analytics',
+          //     style: TextStyle(
+          //       color: Hexcolor('#c80815'),
+          //     ),
+          //   ),
+          //   backgroundColor: Colors.green,
+          // ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.multiline_chart,
-              color: Hexcolor('#c80815'),
-            ),
-            title: Text(
-              'Analytics',
-              style: TextStyle(
-                color: Hexcolor('#c80815'),
-              ),
-            ),
-            backgroundColor: Colors.green,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.money_off,
+              Icons.dashboard,
               color: Hexcolor('#c80815'),
             ),
             title: Text(
