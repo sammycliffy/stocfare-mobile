@@ -23,9 +23,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
     CategoryPage(
       key: PageStorageKey('Page2'),
     ),
-    AllSalesList(
-      key: PageStorageKey('Page3'),
-    ),
+    AnalyticsPage(key: PageStorageKey('Page3')),
     DashBoard(),
   ];
 
@@ -71,29 +69,17 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.monetization_on,
+              Icons.multiline_chart,
               color: Hexcolor('#c80815'),
             ),
             title: Text(
-              'Sales',
+              'Analytics',
               style: TextStyle(
                 color: Hexcolor('#c80815'),
               ),
             ),
+            backgroundColor: Colors.green,
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(
-          //     Icons.multiline_chart,
-          //     color: Hexcolor('#c80815'),
-          //   ),
-          //   title: Text(
-          //     'Analytics',
-          //     style: TextStyle(
-          //       color: Hexcolor('#c80815'),
-          //     ),
-          //   ),
-          //   backgroundColor: Colors.green,
-          // ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.dashboard,

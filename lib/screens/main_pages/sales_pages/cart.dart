@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
@@ -16,6 +18,8 @@ class _AddCartState extends State<AddCart> {
   static List _quantity = [];
   static List _type = [];
   static List _id = [];
+  var controller = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',');
 
   @override
   void initState() {
@@ -48,6 +52,8 @@ class _AddCartState extends State<AddCart> {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.2;
     final double itemWidth = size.width / 2;
+    controller.updateValue(
+        _prices.isEmpty ? 0.0 : _prices.reduce((a, b) => a + b).toDouble());
     return Scaffold(
         appBar: AppBar(
           // automaticallyImplyLeading: false,
@@ -68,15 +74,9 @@ class _AddCartState extends State<AddCart> {
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                        _prices.isEmpty
-                            ? '0'
-                            : _prices
-                                .reduce((a, b) => a + b)
-                                .toString(), //add the prices in the _prices list
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context).primaryColor))
+                    Text(controller.text, //add the prices in the _prices list
+                        style:
+                            TextStyle(fontSize: 18, color: Hexcolor('#40A099')))
                   ],
                 ),
                 RaisedButton(

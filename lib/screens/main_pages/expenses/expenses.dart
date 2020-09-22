@@ -6,6 +6,9 @@ class ExpensesHomePage extends StatefulWidget {
 }
 
 class _ExpensesHomePageState extends State<ExpensesHomePage> {
+  String paymentMethod = 'Select Expense';
+  DateTime selectedDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,13 +170,52 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
               child: Column(
             children: <Widget>[
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [Text('Back'), Text('Record Expenses')],
+                children: [
+                  Icon(Icons.arrow_back, size: 20),
+                  SizedBox(width: 5),
+                  Text('Back'),
+                  SizedBox(width: 30),
+                  Text('Record Expenses')
+                ],
               ),
               Form(
                 child: Column(
                   children: [
                     SizedBox(height: 10),
+                    Container(
+                      width: 370,
+                      child: DropdownButtonHideUnderline(
+                          child: ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton(
+                                value: paymentMethod,
+                                iconSize: 24,
+                                elevation: 16,
+                                style: TextStyle(color: Colors.black),
+                                underline: Container(
+                                  height: 4,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    paymentMethod = newValue;
+                                  });
+                                },
+                                items: <String>[
+                                  'Select Expense',
+                                  'Food',
+                                  'Transportation',
+                                  'Fuel',
+                                  'Salary'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value,
+                                        style: TextStyle(fontSize: 16)),
+                                  );
+                                }).toList(),
+                              ))),
+                    ),
                     TextFormField(
                       obscureText: true,
                       keyboardType: TextInputType.text,
@@ -183,8 +225,7 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
                       decoration: InputDecoration(
                         labelText: 'Amount',
                         contentPadding: EdgeInsets.all(12),
-                        labelStyle:
-                            TextStyle(color: Theme.of(context).primaryColor),
+                        labelStyle: TextStyle(color: Colors.grey[600]),
                         border: OutlineInputBorder(
                             borderSide: BorderSide(
                                 color: Theme.of(context)
@@ -207,6 +248,61 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
                       ),
                       style: TextStyle(color: Colors.black),
                     ),
+                    SizedBox(height: 20),
+                    Container(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        width: 350,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey[400]),
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("${selectedDate.toLocal()}".split(' ')[0],
+                                style: TextStyle(color: Colors.grey[600])),
+                            IconButton(
+                              icon: Icon(Icons.date_range,
+                                  color: Colors.grey[600]),
+                              onPressed: () {
+                                _selectDate(context);
+                              },
+                            )
+                          ],
+                        )),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      obscureText: true,
+                      keyboardType: TextInputType.text,
+                      validator: (input) =>
+                          input.isEmpty ? "Description" : null,
+                      onChanged: (val) => setState(() {}),
+                      decoration: InputDecoration(
+                        labelText: 'Description',
+                        contentPadding: EdgeInsets.all(12),
+                        labelStyle: TextStyle(color: Colors.grey[600]),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).focusColor.withOpacity(0.7)),
+                        hintText: 'Description',
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.2))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.5))),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ],
                 ),
               )
@@ -215,5 +311,17 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
         );
       },
     );
+  }
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
   }
 }

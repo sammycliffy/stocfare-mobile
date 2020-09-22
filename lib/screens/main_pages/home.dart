@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
@@ -15,6 +16,7 @@ import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'all_products_list/add_single_products/form.dart';
+import 'sales_pages/all_sales.dart';
 
 enum SingingCharacter { pack, unit }
 
@@ -149,7 +151,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.4;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 3;
     final double itemWidth = size.width / 2;
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     SignupNotifier _signupNotifier =
@@ -171,6 +173,7 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: () => SystemNavigator.pop(),
       child: Scaffold(
+          backgroundColor: Colors.grey[200],
           floatingActionButton: FloatingActionButton(
             focusColor: Theme.of(context).canvasColor,
             onPressed: () {
@@ -184,11 +187,9 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Theme.of(context).primaryColor,
           ),
           appBar: PreferredSize(
-              preferredSize: Size.fromHeight(120.0), // here the desired height
+              preferredSize: Size.fromHeight(135.0), // here the desired height
               child: AppBar(
-                backgroundColor: Colors.white,
                 elevation: 0.0,
-                iconTheme: IconThemeData(color: Colors.red),
                 flexibleSpace: Padding(
                   padding: const EdgeInsets.only(top: 40),
                   child: Column(
@@ -196,31 +197,38 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          SizedBox(width: 10),
                           Text(
                             'Checkout',
                             style: TextStyle(
                                 fontSize: 20,
-                                color: Theme.of(context).primaryColor,
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold),
                           ),
                           GestureDetector(
-                            child: Padding(
-                              padding: const EdgeInsets.only(),
-                              child: Icon(Icons.notifications,
-                                  size: 30, color: Colors.black),
+                            child: Container(
+                              width: 100,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                  color: Hexcolor('#40A099'),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Center(
+                                child: Text('Sales History',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    )),
+                              ),
                             ),
                             onTap: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ActivitiesPage()));
+                                      builder: (context) => AllSalesList()));
                             },
                           ),
                         ],
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 20,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -270,13 +278,13 @@ class _HomePageState extends State<HomePage> {
                                   width: 50,
                                   height: 40,
                                   decoration: BoxDecoration(
-                                      border: Border.all(),
-                                      color: Theme.of(context).primaryColor,
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(10)),
                                   child: Center(
                                       child: IconButton(
-                                          icon:
-                                              FaIcon(FontAwesomeIcons.barcode),
+                                          icon: FaIcon(FontAwesomeIcons.barcode,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
                                           onPressed: null)),
                                 ),
                                 onTap: () {
@@ -292,46 +300,18 @@ class _HomePageState extends State<HomePage> {
           drawer: DrawerPage(),
           body: Column(
             children: <Widget>[
-              // Container(
-              //   height: 40,
-              //   child: Row(
-              //     children: [
-              //       Container(
-              //           color: Colors.grey[200],
-              //           child: Center(
-              //               child: Text(
-              //             'Categories',
-              //           )),
-              //           height: 40,
-              //           width: 100),
-              //       Expanded(
-              //         child: ListView.builder(
-              //             itemCount: _topCategory.length,
-              //             scrollDirection: Axis.horizontal,
-              //             itemBuilder: (BuildContext context, int index) {
-              //               return Container(
-              //                 width: 100.0,
-              //                 child: Center(
-              //                     child: Text(
-              //                   _topCategory[index],
-              //                 )),
-              //               );
-              //             }),
-              //       ),
-              //     ],
-              //   ),
-              // ),
               SizedBox(height: 10),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  SizedBox(width: 30),
+                  SizedBox(width: 5),
                   InkWell(
                     child: Container(
-                      width: 200,
+                      width: 300,
                       height: 40,
                       decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(20)),
+                          color: Hexcolor('#40A099'),
+                          borderRadius: BorderRadius.circular(5)),
                       child: Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -364,7 +344,6 @@ class _HomePageState extends State<HomePage> {
                           MaterialPageRoute(builder: (context) => AddCart()));
                     },
                   ),
-                  SizedBox(width: 30),
                   GestureDetector(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -409,7 +388,7 @@ class _HomePageState extends State<HomePage> {
                         itemCount: _categoriesSearch.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             childAspectRatio: (itemWidth / itemHeight),
-                            crossAxisCount: 3),
+                            crossAxisCount: 2),
                         itemBuilder: (BuildContext context, int index) {
                           return new Padding(
                             padding: const EdgeInsets.all(2.0),
@@ -624,14 +603,13 @@ class _HomePageState extends State<HomePage> {
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           childAspectRatio:
                                               (itemWidth / itemHeight),
-                                          crossAxisCount: 3),
+                                          crossAxisCount: 2),
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     return new Padding(
                                       padding: const EdgeInsets.all(2.0),
                                       child: GestureDetector(
                                         child: Card(
-                                          color: Colors.grey[100],
                                           child: Column(
                                             children: <Widget>[
                                               _productImage
@@ -639,7 +617,7 @@ class _HomePageState extends State<HomePage> {
                                                       .containsKey(index)
                                                   ? CachedNetworkImage(
                                                       width: 200,
-                                                      height: 65,
+                                                      height: 80,
                                                       fit: BoxFit.cover,
                                                       placeholder: (context,
                                                               url) =>
@@ -650,29 +628,31 @@ class _HomePageState extends State<HomePage> {
                                                   : Image.asset(
                                                       'assets/images/No-image.png',
                                                       width: 200,
-                                                      height: 65,
+                                                      height: 80,
                                                       fit: BoxFit.cover,
                                                     ),
                                               Container(
                                                 width: double.infinity,
-                                                decoration: BoxDecoration(
-                                                    border: Border(
-                                                        bottom: BorderSide(
-                                                            width: 2,
-                                                            color: Colors
-                                                                .grey[200]))),
                                                 child: Center(
                                                   child: Text(
                                                     _categories[index],
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        fontSize: 16,
-                                                        color: Theme.of(context)
-                                                            .primaryColor),
+                                                        fontSize: 18,
+                                                        color:
+                                                            Colors.grey[600]),
                                                   ),
                                                 ),
                                               ),
+                                              Text(
+                                                '${_productQuantity[index]} Units | ${_packQuantity[index]} Packs',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.grey[600]),
+                                              ),
+                                              SizedBox(width: 5),
                                               Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
@@ -688,61 +668,25 @@ class _HomePageState extends State<HomePage> {
                                                                         200]))),
                                                     child: Center(
                                                       child: Text(
-                                                        '${_productPrice[index]}/Units',
+                                                        '${_productPrice[index]} / Units',
                                                         style: TextStyle(
-                                                            fontSize: 12),
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: Hexcolor(
+                                                              '#40A099'),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                  Container(
-                                                    width: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                        border: Border(
-                                                            bottom: BorderSide(
-                                                                width: 2,
-                                                                color:
-                                                                    Colors.grey[
-                                                                        200]))),
-                                                    child: Center(
-                                                      child: Text(
-                                                        '${_productPackPrice[index]}/Pack',
-                                                        style: TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    width: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                        border: Border(
-                                                            bottom: BorderSide(
-                                                                width: 2,
-                                                                color:
-                                                                    Colors.grey[
-                                                                        200]))),
-                                                    child: Center(
-                                                      child: Text(
-                                                        '${_productQuantity[index]} Units',
-                                                        style: TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    width: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                        border: Border(
-                                                            bottom: BorderSide(
-                                                                width: 2,
-                                                                color:
-                                                                    Colors.grey[
-                                                                        200]))),
-                                                    child: Center(
-                                                      child: Text(
-                                                        '${_packQuantity[index]} Packs',
-                                                        style: TextStyle(
-                                                            fontSize: 12),
-                                                      ),
+                                                  Text(
+                                                    '${_productPackPrice[index]} / Pack',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color:
+                                                          Hexcolor('#40A099'),
                                                     ),
                                                   ),
                                                 ],

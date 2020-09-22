@@ -15,7 +15,6 @@ class _ExpensesHomeState extends State<ExpensesHome> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        drawer: DrawerPage(),
         appBar: AppBar(
           bottom: TabBar(
             tabs: [

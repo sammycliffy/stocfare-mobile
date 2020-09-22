@@ -68,7 +68,6 @@ class _AllSalesListState extends State<AllSalesList> {
           MaterialPageRoute(builder: (context) => BottomNavigationPage())),
       child: Scaffold(
         key: _scaffoldKey,
-        drawer: DrawerPage(),
         appBar: AppBar(
           title: Text('Sales History'),
           bottom: PreferredSize(

@@ -2,6 +2,7 @@ import 'package:basic_utils/basic_utils.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
@@ -411,23 +412,22 @@ class _ProductListPageState extends State<ProductListPage> {
 
                     return Column(
                       children: [
-                        Container(
-                          height: 40,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Total Products Available:',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Theme.of(context).primaryColor),
-                              ),
-                              Text(
-                                productCount.toString(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              )
-                            ],
+                        SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 330),
+                          child: Container(
+                            width: 55,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: Hexcolor('#40A099'),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Center(
+                              child: Text(productCount.toString(),
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                            ),
                           ),
                         ),
                         Expanded(

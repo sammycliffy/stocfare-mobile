@@ -6,6 +6,8 @@ import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigat
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/expenses/home.dart';
 
+import '../activities_pages.dart';
+
 class DashBoard extends StatefulWidget {
   @override
   _DashBoardState createState() => _DashBoardState();
@@ -18,11 +20,16 @@ class _DashBoardState extends State<DashBoard> {
         appBar: AppBar(
           title: Text('Dashboard'),
           actions: [
-            Column(children: [
-              IconButton(
-                  icon: Icon(Icons.multiline_chart, color: Colors.white),
-                  onPressed: null)
-            ])
+            GestureDetector(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 50),
+                child: Icon(Icons.notifications, size: 30, color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ActivitiesPage()));
+              },
+            ),
           ],
         ),
         drawer: DrawerPage(),
@@ -213,7 +220,7 @@ class _DashBoardState extends State<DashBoard> {
       child: Container(
         padding: const EdgeInsets.only(left: 15, top: 5, right: 10),
         width: 350,
-        height: 105,
+        height: 95,
         decoration:
             BoxDecoration(borderRadius: BorderRadius.circular(5), color: color
                 // gradient: LinearGradient(
