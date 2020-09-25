@@ -254,6 +254,7 @@ class _UpdateAccountState extends State<UpdateAccount> {
                                   _signupNotifier.branchAddress,
                                   _signupNotifier.notificationStatus,
                                   _signupNotifier.subscriptionPlan,
+                                  _signupNotifier.firebaseCustomerId,
                                 );
                               });
                             }

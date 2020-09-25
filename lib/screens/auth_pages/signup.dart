@@ -1,3 +1,4 @@
+import 'package:currency_pickers/country.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';

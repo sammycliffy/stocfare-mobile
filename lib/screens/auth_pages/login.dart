@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stockfare_mobile/helpers/save_user.dart';
 import 'package:stockfare_mobile/models/user_model.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/forgot_password.dart';
@@ -20,6 +22,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String phoneNumber;
   String password;
+  DateTime d = DateTime.now();
   var _error;
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -188,6 +191,8 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       onTap: () async {
+                        // DateTime newDate = Jiffy(d).add(days: 13);
+                        // print(newDate.isAfter(DateTime.now()));
                         if (_formKey.currentState.validate()) {
                           _activitiesServices
                               .checkForInternet()
@@ -210,7 +215,7 @@ class _LoginState extends State<Login> {
                                 });
                               } else {
                                 Navigator.pop(context);
-                                _saveUser(context);
+                                SaveUser().setProfileUser(context);
                               }
                             } else {
                               setState(() {
@@ -271,31 +276,5 @@ class _LoginState extends State<Login> {
           style: TextStyle(color: Colors.white, fontSize: 15),
         ));
     _scaffoldKey.currentState.showSnackBar(snackBar);
-  }
-
-  _saveUser(context) async {
-    final prefs = await SharedPreferences.getInstance();
-    String body = prefs.getString('body');
-    dynamic user = User.fromJson(json.decode(body));
-    SignupNotifier _signupNotifier =
-        Provider.of<SignupNotifier>(context, listen: false);
-    _signupNotifier.setProfile(
-      user.fullname,
-      user.phone,
-      user.email,
-      user.firebaseId,
-      user.branchName,
-      user.branchAddress,
-      user.notificationStatus,
-      user.subscriptionPlan,
-    );
-
-    if (user.verified == false) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => PhoneVerification()));
-    } else {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => BottomNavigationPage()));
-    }
   }
 }

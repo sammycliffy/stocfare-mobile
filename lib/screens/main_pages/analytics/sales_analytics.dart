@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/sales_analytics_model.dart';
+import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/analytics/sales_report.dart';
 import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/analytics_services.dart';
@@ -37,6 +40,32 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
 
   @override
   Widget build(BuildContext context) {
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
+    var controller = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller1 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller2 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller3 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller4 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller5 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
     return (() {
       if (isNetwork == false) {
         return GestureDetector(
@@ -76,6 +105,18 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
             future: _checkSales.getAllAnalytics(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                controller
+                    .updateValue(snapshot.data.monthSalesAmount.toDouble());
+                controller1
+                    .updateValue(snapshot.data.todaySalesAmount.toDouble());
+                controller2
+                    .updateValue(snapshot.data.weekSalesAmount.toDouble());
+                controller3
+                    .updateValue(snapshot.data.monthSalesAmount.toDouble());
+                controller4
+                    .updateValue(snapshot.data.quarterSalesCount.toDouble());
+                controller5
+                    .updateValue(snapshot.data.yearSalesAmount.toDouble());
                 return Column(
                   children: <Widget>[
                     Padding(
@@ -111,7 +152,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                     ],
                                   ),
                                   SizedBox(
-                                    width: 30,
+                                    width: 10,
                                   ),
                                   Column(
                                     crossAxisAlignment:
@@ -125,8 +166,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        snapshot.data.monthSalesAmount
-                                            .toString(),
+                                        controller.text,
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
@@ -172,10 +212,9 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        snapshot.data.todaySalesAmount
-                                            .toString(),
+                                        controller1.text,
                                         style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.blueGrey),
                                       )
@@ -191,6 +230,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             AnalyticsDetailsPage(
+                                                filterBy: 'day',
                                                 analyticsData: value,
                                                 pageTitle: 'Today\'s Report')));
                               });
@@ -221,10 +261,9 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        snapshot.data.weekSalesAmount
-                                            .toString(),
+                                        controller2.text,
                                         style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.blueGrey),
                                       )
@@ -242,6 +281,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             AnalyticsDetailsPage(
+                                                filterBy: 'week',
                                                 analyticsData: value,
                                                 pageTitle: 'Week\'s Report')));
                               });
@@ -282,10 +322,9 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        snapshot.data.monthSalesAmount
-                                            .toString(),
+                                        controller3.text,
                                         style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.blueGrey),
                                       )
@@ -303,6 +342,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             AnalyticsDetailsPage(
+                                                filterBy: 'month',
                                                 analyticsData: value,
                                                 pageTitle: 'Month\'s Report')));
                               });
@@ -334,10 +374,9 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        snapshot.data.quarterSalesAmount
-                                            .toString(),
+                                        controller4.text,
                                         style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.blueGrey),
                                       )
@@ -355,6 +394,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             AnalyticsDetailsPage(
+                                                filterBy: 'quarter',
                                                 analyticsData: value,
                                                 pageTitle:
                                                     'Quarter\'s Report')));
@@ -395,10 +435,9 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        snapshot.data.yearSalesAmount
-                                            .toString(),
+                                        controller5.text,
                                         style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.blueGrey),
                                       )
@@ -416,6 +455,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => AnalyticsDetailsPage(
+                                      filterBy: 'year',
                                       analyticsData: value,
                                       pageTitle: 'Year\'s Report')));
                         });

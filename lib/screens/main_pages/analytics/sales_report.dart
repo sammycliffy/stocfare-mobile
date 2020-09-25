@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:stockfare_mobile/models/analytics_model.dart';
+import 'package:stockfare_mobile/services/analytics_services.dart';
 
 class AnalyticsDetailsPage extends StatefulWidget {
+  final String filterBy;
   final SalesAnalyticsModel analyticsData;
   final String pageTitle;
   AnalyticsDetailsPage(
-      {Key key, @required this.analyticsData, @required this.pageTitle})
+      {Key key,
+      @required this.analyticsData,
+      @required this.pageTitle,
+      @required this.filterBy})
       : super(key: key);
 
   @override
@@ -14,6 +19,8 @@ class AnalyticsDetailsPage extends StatefulWidget {
 }
 
 class _AnalyticsDetailsPageState extends State<AnalyticsDetailsPage> {
+  ScrollController _scrollController = ScrollController();
+  Analytics _checkSales = Analytics();
   List dateCreated = [];
   List price = [];
   List registeredBy = [];
@@ -24,7 +31,7 @@ class _AnalyticsDetailsPageState extends State<AnalyticsDetailsPage> {
   List names = [];
   List totalCost = [];
   List quantityBought = [];
-
+  int realNumber = 2;
   @override
   void initState() {
     super.initState();
@@ -56,6 +63,12 @@ class _AnalyticsDetailsPageState extends State<AnalyticsDetailsPage> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     print(totalCost);
     print(quantityBought);
@@ -76,68 +89,104 @@ class _AnalyticsDetailsPageState extends State<AnalyticsDetailsPage> {
               ],
             );
           } else {
-            return ListView.builder(
-                padding: const EdgeInsets.all(8),
-                itemCount: names.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    child: Card(
-                      child: ListTile(
-                        leading: Icon(Icons.card_giftcard,
-                            color: Theme.of(context).primaryColor),
-                        title: Text(
-                          names[index],
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        ),
-                        subtitle: Row(
-                          children: <Widget>[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+            return NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollInfo) {
+                if (scrollInfo.metrics.pixels ==
+                    scrollInfo.metrics.maxScrollExtent) {
+                  setState(() {
+                    realNumber = realNumber + 1;
+                  });
+                  _loadData();
+                }
+              },
+              child: Scrollbar(
+                controller: _scrollController,
+                isAlwaysShown: true,
+                child: ListView.builder(
+                    padding: const EdgeInsets.all(8),
+                    itemCount: names.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        child: Card(
+                          child: ListTile(
+                            leading: Icon(Icons.card_giftcard,
+                                color: Theme.of(context).primaryColor),
+                            title: Text(
+                              names[index],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            ),
+                            subtitle: Row(
                               children: <Widget>[
-                                Text(
-                                  'Total Cost : ${totalCost[index].toString()}',
-                                  style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: 'Sora'),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Quantity Bought :  ${quantityBought[index].toString()}',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'FireSans'),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    Jiffy(dateCreated[index])
-                                        .format("yyyy-MM-dd HH:mm:ss"),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 10,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      'Total Cost : ${totalCost[index].toString()}',
+                                      style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Sora'),
                                     ),
-                                  ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      'Quantity Bought :  ${quantityBought[index].toString()}',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'FireSans'),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 6),
+                                      child: Text(
+                                        Jiffy(dateCreated[index])
+                                            .format("yyyy-MM-dd HH:mm:ss"),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
+                            // trailing: Icon(Icons.more_vert),
+                            // isThreeLine: true,
+                          ),
                         ),
-                        trailing: Icon(Icons.more_vert),
-                        isThreeLine: true,
-                      ),
-                    ),
-                    onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) =>
-                      //             AllProductsList(customerIndex: index)));
-                    },
-                  );
-                });
+                        onTap: () {
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) =>
+                          //             AllProductsList(customerIndex: index)));
+                        },
+                      );
+                    }),
+              ),
+            );
           }
         }()));
+  }
+
+  _loadData() {
+    _checkSales.analyticsDetailsPage(widget.filterBy, realNumber).then((value) {
+      print(value?.results?.map((data) {
+            registeredBy.add(data.saleRegisteredBy);
+            amountSold.add(data.amount);
+            // customers.add(data.customer.name ?? '');
+            quantitySold.add(data.productDetail[0].quantityBought);
+            names.add(data.productDetail[0].name);
+            totalCost.add(data.productDetail[0].totalCost);
+            quantityBought.add(data.productDetail[0].quantityBought);
+            dateCreated.add(data.dateCreated);
+            return (data.productData.map((name) {
+              setState(() {
+                price.add(name.productUnit.price);
+              });
+            }));
+          }) ??
+          '[]');
+    });
   }
 }

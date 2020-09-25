@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
+import 'package:jiffy/jiffy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/user_model.dart';
 
@@ -14,14 +15,15 @@ class AuthServices {
     String email,
     String businessName,
     String businessAddress,
-    String businessDescription,
+    String country,
     String businessType,
     String referralCode,
   ) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String firebaseToken = sharedPreferences.get('firebaseToken');
     print(firebaseToken);
-
+    DateTime d = DateTime.now();
+    int newDate = Jiffy(d).add(days: 13).millisecondsSinceEpoch;
     try {
       final String url = GlobalConfiguration().get("signup");
 
@@ -41,7 +43,7 @@ class AuthServices {
                 "registration_id": firebaseToken,
                 "name": businessName,
                 "address": businessAddress,
-                "description": businessDescription,
+                "country": country,
                 "referral": referralCode,
                 "business_type": businessType
               }))
@@ -62,6 +64,7 @@ class AuthServices {
         sharedPreferences.setString(
             'firebaseNotificationId', user.firebaseNotificationId);
         sharedPreferences.setString('businessId', user.businessId);
+        sharedPreferences.setInt('date', newDate);
 
         return true;
       } else {
@@ -89,6 +92,8 @@ class AuthServices {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String firebaseToken = sharedPreferences.get('firebaseToken');
     String url = GlobalConfiguration().get("login");
+    DateTime d = DateTime.now();
+    int newDate = Jiffy(d).add(days: 13).millisecondsSinceEpoch;
     print(url);
     try {
       final http.Response response = await http
@@ -118,6 +123,7 @@ class AuthServices {
         sharedPreferences.setString(
             'firebaseNotificationId', user.firebaseNotificationId);
         sharedPreferences.setString('businessId', user.businessId);
+        sharedPreferences.setInt('date', newDate);
 
         return true;
       } else {
@@ -154,6 +160,8 @@ class AuthServices {
         }),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
+        DateTime d = DateTime.now();
+        int newDate = Jiffy(d).add(days: 13).millisecondsSinceEpoch;
         var responseJson = json.decode(response.body);
         print(responseJson);
         sharedPreferences.setString("token", responseJson['token']['access']);
@@ -167,6 +175,7 @@ class AuthServices {
         sharedPreferences.setString(
             'firebaseNotificationId', user.firebaseNotificationId);
         sharedPreferences.setString('businessId', user.businessId);
+        sharedPreferences.setInt('date', newDate);
 
         return true;
       } else {

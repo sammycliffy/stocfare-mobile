@@ -1,3 +1,5 @@
+import 'package:currency_pickers/country.dart';
+import 'package:currency_pickers/currency_picker_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/helpers/save_user.dart';
@@ -24,6 +26,7 @@ class _SignupPage extends State<BusinessSignupPage> {
   String referralCode;
   String _error;
   bool loading = false;
+  Country _selectedDialogCountry;
   AuthServices _auth = AuthServices();
   @override
   Widget build(BuildContext context) {
@@ -121,6 +124,57 @@ class _SignupPage extends State<BusinessSignupPage> {
                               padding:
                                   const EdgeInsets.only(left: 40, right: 40),
                               child: TextFormField(
+                                readOnly: true,
+                                keyboardType: TextInputType.text,
+                                validator: (val) {
+                                  if (_selectedDialogCountry == null) {
+                                    return 'Select Country';
+                                  }
+                                  return null;
+                                },
+                                onTap: () => _openCurrencyPickerDialog(),
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.all(12),
+                                  labelStyle: TextStyle(
+                                      color: Theme.of(context).primaryColor),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context)
+                                              .focusColor
+                                              .withOpacity(0.2))),
+                                  hintStyle: TextStyle(
+                                      color: Theme.of(context)
+                                          .focusColor
+                                          .withOpacity(0.7)),
+                                  prefixIcon: Icon(Icons.location_on,
+                                      color: Theme.of(context).accentColor),
+                                  hintText: (() {
+                                    if (_selectedDialogCountry == null) {
+                                      return 'Select Country';
+                                    }
+                                    return _selectedDialogCountry.name;
+                                  }()),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context)
+                                              .focusColor
+                                              .withOpacity(0.2))),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context)
+                                              .focusColor
+                                              .withOpacity(0.5))),
+                                ),
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 40, right: 40),
+                              child: TextFormField(
                                 style: TextStyle(color: Colors.black),
                                 keyboardType: TextInputType.text,
                                 validator: (input) => input.isEmpty
@@ -166,50 +220,6 @@ class _SignupPage extends State<BusinessSignupPage> {
                               padding:
                                   const EdgeInsets.only(left: 40, right: 40),
                               child: TextFormField(
-                                keyboardType: TextInputType.text,
-                                validator: (input) => input.isEmpty
-                                    ? 'Enter Business Description'
-                                    : null,
-                                onChanged: (val) => setState(() {
-                                  businessDescription = val;
-                                }),
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(12),
-                                  labelStyle: TextStyle(
-                                      color: Theme.of(context).primaryColor),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.2))),
-                                  hintStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.7)),
-                                  prefixIcon: Icon(Icons.mode_comment,
-                                      color: Theme.of(context).accentColor),
-                                  hintText: 'Briefly describe your business',
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.2))),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.5))),
-                                ),
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 40, right: 40),
-                              child: TextFormField(
                                 style: TextStyle(color: Colors.black),
                                 keyboardType: TextInputType.text,
                                 validator: (input) => input.isEmpty
@@ -233,7 +243,7 @@ class _SignupPage extends State<BusinessSignupPage> {
                                           .withOpacity(0.7)),
                                   prefixIcon: Icon(Icons.short_text,
                                       color: Theme.of(context).accentColor),
-                                  hintText: 'Enter Businesss type',
+                                  hintText: 'Enter Business type',
                                   filled: true,
                                   enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
@@ -328,7 +338,8 @@ class _SignupPage extends State<BusinessSignupPage> {
                                                 _signupNotifier.phone,
                                                 businessName,
                                                 businessAddress,
-                                                businessDescription,
+                                                _selectedDialogCountry
+                                                    .currencyCode,
                                                 businessType,
                                                 referralCode ?? '0');
 
@@ -402,4 +413,19 @@ class _SignupPage extends State<BusinessSignupPage> {
         ));
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }
+
+  void _openCurrencyPickerDialog() => showDialog(
+        context: context,
+        builder: (context) => Theme(
+            data: Theme.of(context).copyWith(primaryColor: Colors.pink),
+            child: CurrencyPickerDialog(
+              titlePadding: EdgeInsets.all(8.0),
+              searchCursorColor: Colors.pinkAccent,
+              searchInputDecoration: InputDecoration(hintText: 'Search...'),
+              isSearchable: true,
+              title: Text('Select your Country code'),
+              onValuePicked: (Country country) =>
+                  setState(() => _selectedDialogCountry = country),
+            )),
+      );
 }

@@ -17,10 +17,13 @@ class SignupNotifier with ChangeNotifier {
   String _branchAddress;
   bool _notificationStatus;
   String _subscriptionPlan;
+  String _firebaseCustomerId;
+  String _country;
   String get firstName => _firstName;
   String get fullName => _fullName;
   String get lastName => _lastName;
   String get phone => _phone;
+  String get firebaseCustomerId => _firebaseCustomerId;
   String get password => _password;
   String get email => _email;
   String get businessName => _businessName;
@@ -33,6 +36,7 @@ class SignupNotifier with ChangeNotifier {
   String get branchAddress => _branchAddress;
   bool get notificationStatus => _notificationStatus;
   String get subscriptionPlan => _subscriptionPlan;
+  String get country => _country;
 
   //set values to be transferred to the business signup page
   void setFirstPage(
@@ -53,14 +57,16 @@ class SignupNotifier with ChangeNotifier {
 
   //set profile values so that they can be called from anywhere
   void setProfile(
-      String fullName,
-      String phone,
-      String email,
-      String firebaseId,
-      String branchName,
-      String branchAddress,
-      bool notifictionStatus,
-      String subscriptionPlan) {
+    String fullName,
+    String phone,
+    String email,
+    String firebaseId,
+    String branchName,
+    String branchAddress,
+    bool notifictionStatus,
+    String subscriptionPlan,
+    String firebaseCustomerId,
+  ) {
     _fullName = fullName;
     _phone = phone;
     _email = email;
@@ -69,6 +75,12 @@ class SignupNotifier with ChangeNotifier {
     _branchAddress = branchAddress;
     _notificationStatus = notificationStatus;
     _subscriptionPlan = subscriptionPlan;
+    _firebaseCustomerId = firebaseCustomerId;
+    notifyListeners();
+  }
+
+  void setCountry(String country) {
+    _country = country;
     notifyListeners();
   }
 }

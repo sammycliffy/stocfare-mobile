@@ -4,7 +4,6 @@ import 'package:jiffy/jiffy.dart';
 import 'package:stockfare_mobile/models/sales_model.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
-import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/sales_pages/receipt.dart';
 import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/sales_services.dart';
@@ -421,89 +420,94 @@ class _AllSalesListState extends State<AllSalesList> {
                   ],
                 );
               } else {
-                return ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: names.length,
-                    physics: AlwaysScrollableScrollPhysics(),
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        child: Card(
-                          child: ListTile(
-                            leading:
-                                Icon(Icons.monetization_on, color: Colors.grey),
-                            title: Text(
-                              names[index],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
+                return Scrollbar(
+                  controller: scrollController,
+                  isAlwaysShown: true,
+                  child: ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: names.length,
+                      physics: AlwaysScrollableScrollPhysics(),
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          child: Card(
+                            child: ListTile(
+                              leading: Icon(Icons.monetization_on,
+                                  color: Colors.grey),
+                              title: Text(
+                                names[index],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                              subtitle: Row(
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 1),
+                                        child: Text(
+                                          'Buyer :  ${customerNames[index].toString()}',
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontFamily: 'FireSans'),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 1),
+                                        child: Text(
+                                          'Seller :  ${sellerNames[index].toString()}',
+                                          style: TextStyle(
+                                              color: Colors.green,
+                                              fontFamily: 'FireSans'),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 1),
+                                        child: Text(
+                                          'Date :  ${Jiffy(dateCreated[index]).fromNow()}',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontFamily: 'FireSans'),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              trailing: IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () {
+                                    _confirmDelete(context, index);
+                                  }),
                             ),
-                            subtitle: Row(
-                              children: <Widget>[
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 1),
-                                      child: Text(
-                                        'Buyer :  ${customerNames[index].toString()}',
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontFamily: 'FireSans'),
-                                      ),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 1),
-                                      child: Text(
-                                        'Seller :  ${sellerNames[index].toString()}',
-                                        style: TextStyle(
-                                            color: Colors.green,
-                                            fontFamily: 'FireSans'),
-                                      ),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 1),
-                                      child: Text(
-                                        'Date :  ${Jiffy(dateCreated[index]).fromNow()}',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'FireSans'),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            trailing: IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {
-                                  _confirmDelete(context, index);
-                                }),
                           ),
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AllProductsList(
-                                        customerIndex: index,
-                                        names: _productNames,
-                                        customerNames: customerNames,
-                                        sellerNames: sellerNames,
-                                        dateCreated: dateCreated,
-                                        price: price,
-                                        amountSold: amountSold,
-                                        quantitySold: quantitySold,
-                                        customerChange: customerChange,
-                                        referenceCode: referenceCode,
-                                        tax: tax,
-                                        soldOnCredit: soldOnCredit,
-                                        amountPaid: amountPaid,
-                                      )));
-                        },
-                      );
-                    });
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AllProductsList(
+                                          customerIndex: index,
+                                          names: _productNames,
+                                          customerNames: customerNames,
+                                          sellerNames: sellerNames,
+                                          dateCreated: dateCreated,
+                                          price: price,
+                                          amountSold: amountSold,
+                                          quantitySold: quantitySold,
+                                          customerChange: customerChange,
+                                          referenceCode: referenceCode,
+                                          tax: tax,
+                                          soldOnCredit: soldOnCredit,
+                                          amountPaid: amountPaid,
+                                        )));
+                          },
+                        );
+                      }),
+                );
               }
             }()),
           ),

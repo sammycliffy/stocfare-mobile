@@ -18,11 +18,11 @@ class _AddFormPageState extends State<AddFormPage> {
   final _secondKey = GlobalKey<FormState>();
   final List<String> color = <String>[];
   final List<ColorDataModel> _data = [];
-
   String _productCategory;
   String _unitProductName;
   String _productDescription;
   int _unitProductPrice = 0;
+  int _unitProductCostPrice = 0;
   int _unitQuantity = 0;
   int _unitLimit = 0;
   int _productDiscount = 0;
@@ -31,7 +31,9 @@ class _AddFormPageState extends State<AddFormPage> {
   int _colorQuantity;
   int _colorLimit;
   var controller = new MoneyMaskedTextController(
-      decimalSeparator: '.', thousandSeparator: ',');
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' NGN ');
+  var secondController = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' NGN ');
   bool loading = false;
   String _error;
   bool addExtraDetails = false;
@@ -104,11 +106,8 @@ class _AddFormPageState extends State<AddFormPage> {
                             keyboardType: TextInputType.number,
                             validator: (input) =>
                                 input.isEmpty ? "Enter Product Price" : null,
-                            onChanged: (val) => setState(() {
-                              _unitProductPrice = int.parse(val);
-                            }),
                             decoration: InputDecoration(
-                              labelText: 'Product Price',
+                              labelText: 'Selling Price',
                               contentPadding: EdgeInsets.all(12),
                               labelStyle: TextStyle(
                                   color: Theme.of(context).primaryColor),
@@ -140,14 +139,12 @@ class _AddFormPageState extends State<AddFormPage> {
                         SizedBox(
                           width: 150,
                           child: TextFormField(
+                            controller: secondController,
                             keyboardType: TextInputType.number,
                             validator: (input) =>
-                                input.isEmpty ? "Enter Quantity " : null,
-                            onChanged: (val) => setState(() {
-                              _unitQuantity = int.parse(val);
-                            }),
+                                input.isEmpty ? "Enter Product Price" : null,
                             decoration: InputDecoration(
-                              labelText: 'Product Quantity',
+                              labelText: 'Product Price',
                               contentPadding: EdgeInsets.all(12),
                               labelStyle: TextStyle(
                                   color: Theme.of(context).primaryColor),
@@ -160,7 +157,7 @@ class _AddFormPageState extends State<AddFormPage> {
                                   color: Theme.of(context)
                                       .focusColor
                                       .withOpacity(0.7)),
-                              hintText: 'Quantity',
+                              hintText: 'Unit price',
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context)
@@ -176,6 +173,45 @@ class _AddFormPageState extends State<AddFormPage> {
                           ),
                         ),
                       ],
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 40, right: 40, top: 20),
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        validator: (input) =>
+                            input.isEmpty ? "Enter Quantity " : null,
+                        onChanged: (val) => setState(() {
+                          _unitQuantity = int.parse(val);
+                        }),
+                        decoration: InputDecoration(
+                          labelText: 'Product Quantity',
+                          contentPadding: EdgeInsets.all(12),
+                          labelStyle:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.7)),
+                          hintText: 'Quantity',
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.5))),
+                        ),
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
                     SizedBox(
                       height: 30,
@@ -280,7 +316,7 @@ class _AddFormPageState extends State<AddFormPage> {
                               width: 150,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(30),
-                                  color: Colors.black),
+                                  color: Colors.green[700]),
                               child: Center(
                                 child: Text('Add pack products',
                                     style: TextStyle(
@@ -300,6 +336,7 @@ class _AddFormPageState extends State<AddFormPage> {
                                     _productDescription,
                                     _productDiscount,
                                     _productWeight,
+                                    secondController.numberValue.round(),
                                     _data);
                                 Navigator.push(
                                     context,
@@ -667,6 +704,7 @@ class _AddFormPageState extends State<AddFormPage> {
                               _productDescription,
                               _productDiscount,
                               _productWeight,
+                              secondController.numberValue.round(),
                               _data, //list of product color, quantity and limit
                             );
 

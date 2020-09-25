@@ -24,7 +24,7 @@ class _FormPageState extends State<FormPage> {
   String _productCategory;
   String _unitProductName;
   String _productDescription;
-  int _unitProductPrice = 0;
+  int _unitProductSellingPrice = 0;
   int _unitQuantity = 0;
   int _unitLimit = 0;
   int _productDiscount = 0;
@@ -32,18 +32,18 @@ class _FormPageState extends State<FormPage> {
   String _colorName;
   int _colorQuantity;
   int _colorLimit;
+  int _unitProductCostPrice = 0;
   Country _selectedDialogCountry;
   bool loading = false;
   String _error;
   bool addExtraDetails = false;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  var controller = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' NGN ');
+  var secondController = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' NGN ');
   @override
   Widget build(BuildContext context) {
-    var controller = new MoneyMaskedTextController(
-        decimalSeparator: '.',
-        thousandSeparator: ',',
-        leftSymbol: ' ${_selectedDialogCountry.currencyCode} ');
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
     return Scaffold(
         appBar: AppBar(title: Text('Add Products')),
@@ -99,40 +99,43 @@ class _FormPageState extends State<FormPage> {
                     SizedBox(height: 30),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        validator: (input) =>
-                            input.isEmpty ? "Enter Product Name " : null,
-                        onChanged: (val) => setState(() {
-                          _unitProductName = val;
-                        }),
-                        decoration: InputDecoration(
-                          labelText: 'Enter product Name',
-                          contentPadding: EdgeInsets.all(12),
-                          labelStyle:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .focusColor
-                                  .withOpacity(0.7)),
-                          hintText: 'Enter Product Name E.g. Cocacola',
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.5))),
+                      child: Tooltip(
+                        message: 'James',
+                        child: TextFormField(
+                          keyboardType: TextInputType.text,
+                          validator: (input) =>
+                              input.isEmpty ? "Enter Product Name " : null,
+                          onChanged: (val) => setState(() {
+                            _unitProductName = val;
+                          }),
+                          decoration: InputDecoration(
+                            labelText: 'Enter product Name',
+                            contentPadding: EdgeInsets.all(12),
+                            labelStyle: TextStyle(
+                                color: Theme.of(context).primaryColor),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.2))),
+                            hintStyle: TextStyle(
+                                color: Theme.of(context)
+                                    .focusColor
+                                    .withOpacity(0.7)),
+                            hintText: 'Enter Product Name E.g. Cocacola',
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.2))),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.5))),
+                          ),
+                          style: TextStyle(color: Colors.black),
                         ),
-                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                     SizedBox(height: 30),
@@ -145,12 +148,12 @@ class _FormPageState extends State<FormPage> {
                             controller: controller,
                             keyboardType: TextInputType.number,
                             validator: (input) =>
-                                input.isEmpty ? "Enter Product Price" : null,
+                                input.isEmpty ? "Enter Selling Price" : null,
                             onChanged: (val) => setState(() {
-                              _unitProductPrice = int.parse(val);
+                              _unitProductSellingPrice = int.parse(val);
                             }),
                             decoration: InputDecoration(
-                              labelText: 'Enter price',
+                              labelText: 'Sale price',
                               contentPadding: EdgeInsets.all(12),
                               labelStyle: TextStyle(
                                   color: Theme.of(context).primaryColor),
@@ -178,63 +181,88 @@ class _FormPageState extends State<FormPage> {
                             style: TextStyle(color: Colors.black),
                           ),
                         ),
-                        SizedBox(width: 10),
+                        SizedBox(width: 5),
                         SizedBox(
                           width: 150,
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            validator: (input) =>
-                                input.isEmpty ? "Enter Quantity " : null,
-                            onChanged: (val) => setState(() {
-                              _unitQuantity = int.parse(val);
-                            }),
-                            decoration: InputDecoration(
-                              labelText: 'Quantity',
-                              contentPadding: EdgeInsets.all(12),
-                              labelStyle: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.2))),
-                              hintStyle: TextStyle(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.7)),
-                              hintText: 'Quantity',
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.2))),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.5))),
+                          child: Tooltip(
+                            message: 'You must know what you are doing',
+                            child: TextFormField(
+                              controller: secondController,
+                              keyboardType: TextInputType.number,
+                              validator: (input) =>
+                                  input.isEmpty ? "Enter Product Price" : null,
+                              onChanged: (val) => setState(() {
+                                _unitProductCostPrice = int.parse(val);
+                              }),
+                              decoration: InputDecoration(
+                                labelText: 'Cost price',
+                                contentPadding: EdgeInsets.all(12),
+                                labelStyle: TextStyle(
+                                    color: Theme.of(context).primaryColor),
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.2))),
+                                hintStyle: TextStyle(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.7)),
+                                hintText: 'Unit price',
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.2))),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.5))),
+                              ),
+                              style: TextStyle(color: Colors.black),
                             ),
-                            style: TextStyle(color: Colors.black),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 20),
                     Padding(
-                      padding: const EdgeInsets.only(left: 230),
-                      child: InkWell(
-                        child: Container(
-                            width: 100,
-                            height: 30,
-                            decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Center(
-                                child: Text(
-                              'Add Currency',
-                              style: TextStyle(color: Colors.white),
-                            ))),
-                        onTap: _openCurrencyPickerDialog,
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        validator: (input) =>
+                            input.isEmpty ? "Enter Quantity " : null,
+                        onChanged: (val) => setState(() {
+                          _unitQuantity = int.parse(val);
+                        }),
+                        decoration: InputDecoration(
+                          labelText: 'Quantity',
+                          contentPadding: EdgeInsets.all(12),
+                          labelStyle:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.7)),
+                          hintText: 'Quantity',
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.5))),
+                        ),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                     SizedBox(
@@ -342,7 +370,7 @@ class _FormPageState extends State<FormPage> {
                               width: 150,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(30),
-                                  color: Colors.black),
+                                  color: Colors.green[700]),
                               child: Center(
                                 child: Text('Add pack products',
                                     style: TextStyle(
@@ -362,6 +390,7 @@ class _FormPageState extends State<FormPage> {
                                     _productDescription,
                                     _productDiscount,
                                     _productWeight,
+                                    _unitProductCostPrice,
                                     _data);
                                 Navigator.push(
                                     context,
@@ -730,6 +759,7 @@ class _FormPageState extends State<FormPage> {
                               _productDescription,
                               _productDiscount,
                               _productWeight,
+                              secondController.numberValue.round(),
                               _data,
                             );
 

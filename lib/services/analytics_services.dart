@@ -111,4 +111,57 @@ class Analytics {
       print(e.toString());
     }
   }
+
+  Future<SalesAnalyticsModel> analyticsDetailsPage(
+      String filterBy, pageNumber) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    String branchId = sharedPreferences.getString('branchId');
+    final String url = GlobalConfiguration().get("analytics-details") +
+        '$branchId/?filter_by=$filterBy&page=$pageNumber';
+    try {
+      final response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        return SalesAnalyticsModel.fromJson(json.decode(response.body));
+      } else {
+        return Future.error(json.decode(response.body));
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<ProductsAnalyticsList> productsAnalyticsDetailsPage(
+      String filterBy, pageNumber) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    String branchId = sharedPreferences.getString('branchId');
+    final String url = GlobalConfiguration().get("product-analytics-details") +
+        '$branchId/?filter_by=$filterBy&page=$pageNumber';
+    try {
+      final response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        return ProductsAnalyticsList.fromJson(json.decode(response.body));
+      } else {
+        print(response.body);
+        return Future.error('error');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

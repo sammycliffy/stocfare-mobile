@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:stockfare_mobile/models/sales_analytics_model.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_single_products/form.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/expenses/home.dart';
+import 'package:stockfare_mobile/services/activities_services.dart';
+import 'package:stockfare_mobile/services/analytics_services.dart';
 
 import '../activities_pages.dart';
 
@@ -14,6 +16,31 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
+  Analytics _checkSales = Analytics();
+  Future<SalesAnalytics> _salesAnalytics;
+  ActivitiesServices _activitiesServices = ActivitiesServices();
+  bool isNetwork = true;
+  String _errorData;
+  bool _error = false;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _activitiesServices.checkForInternet().then((value) {
+  //     if (value == true) {
+  //       _checkSales.getAllAnalytics().catchError((e) {
+  //         setState(() {
+  //           _error = true;
+  //           _errorData = e.toString();
+  //         });
+  //       });
+  //     } else {
+  //       setState(() {
+  //         isNetwork = false;
+  //       });
+  //     }
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +83,7 @@ class _DashBoardState extends State<DashBoard> {
                 ExpensesHome()),
             SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.only(top: 20, right: 200),
+              padding: const EdgeInsets.only(top: 20, right: 150),
               child: Text(
                 'YOUR BUSINESS REPORT',
                 style: TextStyle(fontSize: 18, color: Colors.grey[800]),
@@ -219,7 +246,7 @@ class _DashBoardState extends State<DashBoard> {
   _container(name, color, description, route) => GestureDetector(
       child: Container(
         padding: const EdgeInsets.only(left: 15, top: 5, right: 10),
-        width: 350,
+        width: 320,
         height: 95,
         decoration:
             BoxDecoration(borderRadius: BorderRadius.circular(5), color: color

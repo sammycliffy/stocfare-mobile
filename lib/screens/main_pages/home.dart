@@ -3,18 +3,18 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
-import 'package:stockfare_mobile/screens/main_pages/activities_pages.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/sales_pages/cart.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:basic_utils/basic_utils.dart';
+import 'package:stockfare_mobile/services/product_services.dart';
 import 'all_products_list/add_single_products/form.dart';
 import 'sales_pages/all_sales.dart';
 
@@ -62,11 +62,13 @@ class _HomePageState extends State<HomePage> {
   bool isSearched = false;
   int _shoppingCartPackQuantity = 0;
   int _shoppingCartUnitQuantity = 0;
-  bool _addFloatingACtionButton = false;
+  int numberToFormat = 100000;
+
   String _scanBarcode = 'Unknown';
   Map<String, dynamic> _firebaseMessage;
   final _formKey = GlobalKey<FormState>();
   String firebaseNumber;
+  ProductServices _productServices = ProductServices();
 
   // Future selectNotification(String payload) async {
   //   await flutterLocalNotificationsPlugin.cancelAll();
@@ -91,7 +93,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
-    // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           "#ff6666", "Cancel", true, ScanMode.BARCODE);
@@ -99,10 +100,6 @@ class _HomePageState extends State<HomePage> {
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
 
     setState(() {
@@ -151,29 +148,26 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 3;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.6;
     final double itemWidth = size.width / 2;
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     SignupNotifier _signupNotifier =
         Provider.of<SignupNotifier>(context, listen: false);
-    print(_signupNotifier.firebaseId);
-    // int val = _addProduct.listOfQuantity.reduce((a, b) => a + b);
-
-    final dbRef = FirebaseDatabase.instance; //firebase database reference
-    dbRef.setPersistenceEnabled(true);
-    dbRef.setPersistenceCacheSizeBytes(10000000);
-    final databaseInstance = dbRef.reference();
-    databaseInstance.keepSynced(true);
-    final firebaseDb = databaseInstance
-        .reference()
-        .child('inventories')
-        .orderByKey()
-        .equalTo(_signupNotifier.firebaseId);
+    var controller = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller1 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    final firebaseDb =
+        _productServices.getFirebaseData(_signupNotifier.firebaseId);
 
     return WillPopScope(
       onWillPop: () => SystemNavigator.pop(),
       child: Scaffold(
-          backgroundColor: Colors.grey[200],
+          backgroundColor: Colors.grey[100],
           floatingActionButton: FloatingActionButton(
             focusColor: Theme.of(context).canvasColor,
             onPressed: () {
@@ -197,6 +191,7 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
+                          SizedBox(width: 10),
                           Text(
                             'Checkout',
                             style: TextStyle(
@@ -209,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                               width: 100,
                               height: 30,
                               decoration: BoxDecoration(
-                                  color: Hexcolor('#40A099'),
+                                  color: Colors.red,
                                   borderRadius: BorderRadius.circular(10)),
                               child: Center(
                                 child: Text('Sales History',
@@ -272,7 +267,8 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Padding(
-                              padding: const EdgeInsets.only(bottom: 20),
+                              padding:
+                                  const EdgeInsets.only(bottom: 20, right: 20),
                               child: InkWell(
                                 child: Container(
                                   width: 50,
@@ -307,10 +303,10 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(width: 5),
                   InkWell(
                     child: Container(
-                      width: 300,
+                      width: 250,
                       height: 40,
                       decoration: BoxDecoration(
-                          color: Hexcolor('#40A099'),
+                          color: Colors.green[700],
                           borderRadius: BorderRadius.circular(5)),
                       child: Center(
                         child: Row(
@@ -377,6 +373,7 @@ class _HomePageState extends State<HomePage> {
                       });
                     },
                   ),
+                  SizedBox(width: 5),
                 ],
               ),
               SizedBox(
@@ -554,7 +551,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     )
                   : StreamBuilder(
-                      stream: firebaseDb.onValue,
+                      stream: firebaseDb,
                       builder: (context, AsyncSnapshot<Event> snapshot) {
                         if (snapshot.hasData) {
                           if (snapshot.data.snapshot.value != null) {
@@ -606,18 +603,23 @@ class _HomePageState extends State<HomePage> {
                                           crossAxisCount: 2),
                                   itemBuilder:
                                       (BuildContext context, int index) {
+                                    controller.updateValue(
+                                        _productPrice[index].toDouble());
+                                    controller1.updateValue(
+                                        _productPackPrice[index].toDouble());
                                     return new Padding(
                                       padding: const EdgeInsets.all(2.0),
                                       child: GestureDetector(
                                         child: Card(
                                           child: Column(
                                             children: <Widget>[
+                                              SizedBox(height: 5),
                                               _productImage
                                                       .asMap()
                                                       .containsKey(index)
                                                   ? CachedNetworkImage(
-                                                      width: 200,
-                                                      height: 80,
+                                                      width: 150,
+                                                      height: 100,
                                                       fit: BoxFit.cover,
                                                       placeholder: (context,
                                                               url) =>
@@ -627,9 +629,9 @@ class _HomePageState extends State<HomePage> {
                                                     )
                                                   : Image.asset(
                                                       'assets/images/No-image.png',
-                                                      width: 200,
-                                                      height: 80,
-                                                      fit: BoxFit.cover,
+                                                      width: 150,
+                                                      height: 100,
+                                                      fit: BoxFit.fitWidth,
                                                     ),
                                               Container(
                                                 width: double.infinity,
@@ -640,17 +642,30 @@ class _HomePageState extends State<HomePage> {
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         fontSize: 18,
+                                                        color: Theme.of(context)
+                                                            .primaryColor),
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                    border: Border(
+                                                        bottom: BorderSide(
+                                                            width: 2,
+                                                            color: Colors
+                                                                .grey[200]))),
+                                                child: Center(
+                                                  child: Text(
+                                                    '${_productQuantity[index]} Units | ${_packQuantity[index]} Packs',
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w700,
                                                         color:
                                                             Colors.grey[600]),
                                                   ),
                                                 ),
-                                              ),
-                                              Text(
-                                                '${_productQuantity[index]} Units | ${_packQuantity[index]} Packs',
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: Colors.grey[600]),
                                               ),
                                               SizedBox(width: 5),
                                               Column(
@@ -668,25 +683,24 @@ class _HomePageState extends State<HomePage> {
                                                                         200]))),
                                                     child: Center(
                                                       child: Text(
-                                                        '${_productPrice[index]} / Units',
+                                                        '${controller.text} / Units',
                                                         style: TextStyle(
                                                           fontSize: 14,
                                                           fontWeight:
                                                               FontWeight.w700,
-                                                          color: Hexcolor(
-                                                              '#40A099'),
+                                                          color:
+                                                              Colors.green[300],
                                                         ),
                                                       ),
                                                     ),
                                                   ),
                                                   Text(
-                                                    '${_productPackPrice[index]} / Pack',
+                                                    '${controller1.text} / Pack',
                                                     style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
                                                           FontWeight.w700,
-                                                      color:
-                                                          Hexcolor('#40A099'),
+                                                      color: Colors.green[300],
                                                     ),
                                                   ),
                                                 ],
@@ -1144,8 +1158,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                       InkWell(
                         child: Container(
-                          height: 50,
-                          width: 150,
+                          height: 40,
+                          width: 100,
                           decoration: BoxDecoration(
                               color: Colors.grey[300],
                               borderRadius: BorderRadius.circular(10)),

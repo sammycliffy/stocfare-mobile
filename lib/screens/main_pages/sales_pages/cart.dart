@@ -3,6 +3,7 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
+import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/sales_pages/checkout.dart';
 
@@ -47,7 +48,12 @@ class _AddCartState extends State<AddCart> {
   Widget build(BuildContext context) {
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     _addProduct.addTotal(_prices.isEmpty ? 0 : _prices.reduce((a, b) => a + b));
-
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
+    var controller = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
     List _items = _addProduct.items;
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.2;
@@ -80,6 +86,7 @@ class _AddCartState extends State<AddCart> {
                   ],
                 ),
                 RaisedButton(
+                    color: Colors.red,
                     onPressed: () {
                       setState(() {
                         _addProduct.items.clear();
@@ -105,7 +112,6 @@ class _AddCartState extends State<AddCart> {
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
                         child: Card(
-                          color: Colors.grey[100],
                           child: Column(
                             children: <Widget>[
                               SizedBox(

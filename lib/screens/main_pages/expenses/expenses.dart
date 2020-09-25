@@ -25,7 +25,7 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
               Center(
                 child: Container(
                     height: 120,
-                    width: 350,
+                    width: 330,
                     decoration: BoxDecoration(
                         color: Colors.grey[100],
                         borderRadius: BorderRadius.circular(10)),
@@ -87,7 +87,7 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
                     )),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 35.0, top: 10),
+                padding: const EdgeInsets.only(left: 35.0, top: 10, bottom: 10),
                 child: Text(
                   'RECENT ACTIVITIES',
                   style: TextStyle(color: Colors.grey, fontSize: 17),
@@ -113,7 +113,7 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
 
   _listTile(name, date, amount) => Center(
         child: Container(
-          width: 350,
+          width: 310,
           height: 70,
           decoration: BoxDecoration(
               border: Border(

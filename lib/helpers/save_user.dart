@@ -25,7 +25,32 @@ class SaveUser {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (BuildContext context) => LogoutPage()));
     } else {
+      String country;
       _signupNotifier.setProfile(
+          user.fullname,
+          user.phone,
+          user.email,
+          user.firebaseId,
+          user.branchName,
+          user.branchAddress,
+          user.notificationStatus,
+          user.subscriptionPlan,
+          user.firebaseCustomerId);
+      user.country == null ? country = 'NGN' : country = user.country;
+      _signupNotifier.setCountry(country);
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) => BottomNavigationPage()));
+    }
+  }
+
+  setProfileUser(context) async {
+    final prefs = await SharedPreferences.getInstance();
+    String body = prefs.getString('body');
+    dynamic user = User.fromJson(json.decode(body));
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
+    String country;
+    _signupNotifier.setProfile(
         user.fullname,
         user.phone,
         user.email,
@@ -34,9 +59,15 @@ class SaveUser {
         user.branchAddress,
         user.notificationStatus,
         user.subscriptionPlan,
-      );
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (BuildContext context) => BottomNavigationPage()));
+        user.firebaseCustomerId);
+    user.country == null ? country = 'NGN' : country = user.country;
+    _signupNotifier.setCountry(country);
+    if (user.verified == false) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => PhoneVerification()));
+    } else {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => BottomNavigationPage()));
     }
   }
 }

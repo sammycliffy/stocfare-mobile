@@ -12,27 +12,32 @@ class User {
   String branchAddress;
   bool notificationStatus;
   String subscriptionPlan;
+  String firebaseCustomerId;
+  String country;
 
-  User({
-    this.branchId,
-    this.fullname,
-    this.phone,
-    this.email,
-    this.firebaseId,
-    this.userId,
-    this.firebaseNotificationId,
-    this.businessId,
-    this.verified,
-    this.branchAddress,
-    this.branchName,
-    this.notificationStatus,
-    this.subscriptionPlan,
-  });
+  User(
+      {this.branchId,
+      this.fullname,
+      this.phone,
+      this.email,
+      this.firebaseId,
+      this.userId,
+      this.firebaseNotificationId,
+      this.businessId,
+      this.verified,
+      this.branchAddress,
+      this.branchName,
+      this.notificationStatus,
+      this.subscriptionPlan,
+      this.firebaseCustomerId,
+      this.country});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
         branchId: json['business'][0]['branch'][0]['id'],
         firebaseId: json['business'][0]['branch'][0]['firebase_inventory_id'],
+        firebaseCustomerId: json['business'][0]['branch'][0]
+            ['firebase_customer_id'],
         firebaseNotificationId: json['business'][0]['branch'][0]
             ['firebase_notification_id'],
         businessId: json['business'][0]["id"],
@@ -45,6 +50,7 @@ class User {
         email: json['user']['email'] ?? '',
         phone: json['user']['phone'],
         userId: json['user']['user_id'],
+        country: json['business'][0]['country'],
         verified: json['user']['verified']);
   }
 }

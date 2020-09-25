@@ -2,7 +2,6 @@ import 'package:basic_utils/basic_utils.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
@@ -43,6 +42,7 @@ class _CategoryPageState extends State<CategoryPage> {
   bool _search = false;
   bool loading = false;
   String _error;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -67,16 +67,8 @@ class _CategoryPageState extends State<CategoryPage> {
     AddProductToCart _addToCart = Provider.of<AddProductToCart>(context);
     SignupNotifier _signupNotifier =
         Provider.of<SignupNotifier>(context, listen: false);
-    final dbRef = FirebaseDatabase.instance; //firebase database reference
-    dbRef.setPersistenceEnabled(true);
-    dbRef.setPersistenceCacheSizeBytes(10000000);
-    final databaseInstance = dbRef.reference();
-    databaseInstance.keepSynced(true);
-    final firebaseDb = databaseInstance
-        .reference()
-        .child('inventories')
-        .orderByKey()
-        .equalTo(_signupNotifier.firebaseId);
+    final firebaseDb =
+        _productServices.getFirebaseData(_signupNotifier.firebaseId);
     return WillPopScope(
       onWillPop: () => Navigator.push(context,
           MaterialPageRoute(builder: (context) => BottomNavigationPage())),
@@ -272,7 +264,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   );
                 })
             : StreamBuilder(
-                stream: firebaseDb.onValue,
+                stream: firebaseDb,
                 builder: (context, AsyncSnapshot<Event> snapshot) {
                   if (snapshot.hasData) {
                     if (snapshot.data.snapshot.value != null) {
@@ -302,7 +294,7 @@ class _CategoryPageState extends State<CategoryPage> {
                           children: [
                             SizedBox(height: 5),
                             Padding(
-                              padding: const EdgeInsets.only(left: 330),
+                              padding: const EdgeInsets.only(left: 280),
                               child: Container(
                                 width: 55,
                                 height: 40,
@@ -319,99 +311,110 @@ class _CategoryPageState extends State<CategoryPage> {
                               ),
                             ),
                             Expanded(
-                              child: ListView.builder(
-                                  itemCount: _categories.length,
-                                  itemBuilder: (context, index) {
-                                    return GestureDetector(
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: Card(
-                                              semanticContainer: true,
-                                              clipBehavior:
-                                                  Clip.antiAliasWithSaveLayer,
-                                              elevation: 3,
-                                              child: ListTile(
-                                                  title: Text(
-                                                    _categories[index]
-                                                        .toString(),
-                                                    style: TextStyle(
+                              child: Scrollbar(
+                                isAlwaysShown: true,
+                                controller: _scrollController,
+                                child: ListView.builder(
+                                    itemCount: _categories.length,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Card(
+                                                semanticContainer: true,
+                                                clipBehavior:
+                                                    Clip.antiAliasWithSaveLayer,
+                                                elevation: 3,
+                                                child: ListTile(
+                                                    title: Text(
+                                                      _categories[index]
+                                                          .toString(),
+                                                      style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        fontSize: 18),
-                                                  ),
-                                                  subtitle: Text(
-                                                    _productCount[index]
-                                                            .toString() +
-                                                        ' items',
-                                                  ),
-                                                  trailing: Container(
-                                                      child: (() {
-                                                    if (editCategory) {
-                                                      return GestureDetector(
-                                                        child: Icon(Icons.edit),
-                                                        onTap: () {
-                                                          _updateDialog(
-                                                              _categories[index]
-                                                                  .toString(),
-                                                              _categoryId[
-                                                                  index]);
-                                                        },
-                                                      );
-                                                    } else if (deleteCategory) {
-                                                      return GestureDetector(
-                                                        child: Container(
-                                                          width: 100,
-                                                          height: 100,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    subtitle: Text(
+                                                      _productCount[index]
+                                                              .toString() +
+                                                          ' items',
+                                                    ),
+                                                    trailing: Container(
+                                                        child: (() {
+                                                      if (editCategory) {
+                                                        return GestureDetector(
                                                           child:
-                                                              CheckboxListTile(
-                                                            activeColor: Theme
-                                                                    .of(context)
-                                                                .primaryColor,
-                                                            value:
-                                                                checkBox[index],
-                                                            onChanged:
-                                                                (newValue) {
-                                                              setState(() {
-                                                                checkBox[
-                                                                        index] =
-                                                                    newValue;
-                                                                deleteItem
-                                                                        .contains(_categoryId[
-                                                                            index])
-                                                                    ? deleteItem.remove(
-                                                                        _categoryId[
-                                                                            index])
-                                                                    : deleteItem.add(
-                                                                        _categoryId[index]
-                                                                            .toString());
-                                                              });
-                                                            },
+                                                              Icon(Icons.edit),
+                                                          onTap: () {
+                                                            _updateDialog(
+                                                                _categories[
+                                                                        index]
+                                                                    .toString(),
+                                                                _categoryId[
+                                                                    index]);
+                                                          },
+                                                        );
+                                                      } else if (deleteCategory) {
+                                                        return GestureDetector(
+                                                          child: Container(
+                                                            width: 100,
+                                                            height: 100,
+                                                            child:
+                                                                CheckboxListTile(
+                                                              activeColor: Theme
+                                                                      .of(context)
+                                                                  .primaryColor,
+                                                              value: checkBox[
+                                                                  index],
+                                                              onChanged:
+                                                                  (newValue) {
+                                                                setState(() {
+                                                                  checkBox[
+                                                                          index] =
+                                                                      newValue;
+                                                                  deleteItem
+                                                                          .contains(_categoryId[
+                                                                              index])
+                                                                      ? deleteItem.remove(
+                                                                          _categoryId[
+                                                                              index])
+                                                                      : deleteItem.add(
+                                                                          _categoryId[index]
+                                                                              .toString());
+                                                                });
+                                                              },
+                                                            ),
                                                           ),
-                                                        ),
-                                                        onTap: () {
-                                                          print(_categoryId[
-                                                              index]);
-                                                        },
-                                                      );
-                                                    }
+                                                          onTap: () {
+                                                            print(_categoryId[
+                                                                index]);
+                                                          },
+                                                        );
+                                                      }
 
-                                                    return Icon(Icons.category);
-                                                  }()))))),
-                                      onTap: () {
-                                        _addToCart.addID(_categoryId[index],
-                                            _categories[index]);
-                                        _addToCart
-                                            .setFireId(_firebaseKeys[index]);
-                                        _addProductNotifier
-                                            .setCategoryId(_categoryId[index]);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ProductListPage()));
-                                      },
-                                    );
-                                  }),
+                                                      return Icon(
+                                                        Icons.category,
+                                                        color:
+                                                            Hexcolor('#40A099'),
+                                                      );
+                                                    }()))))),
+                                        onTap: () {
+                                          _addToCart.addID(_categoryId[index],
+                                              _categories[index]);
+                                          _addToCart
+                                              .setFireId(_firebaseKeys[index]);
+                                          _addProductNotifier.setCategoryId(
+                                              _categoryId[index]);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProductListPage()));
+                                        },
+                                      );
+                                    }),
+                              ),
                             ),
                           ],
                         );
@@ -466,7 +469,7 @@ class _CategoryPageState extends State<CategoryPage> {
             Icons.add,
             color: Colors.white,
           ),
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Colors.black,
         ),
       ),
     );

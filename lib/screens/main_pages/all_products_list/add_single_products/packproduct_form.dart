@@ -15,10 +15,13 @@ class _AddPackPageState extends State<AddPackPage> {
   String _packProductName;
 
   int _packProductPrice = 0;
+  int _packProductCostPrice = 0;
   int _packQuantity = 0;
   int _packLimit = 0;
   var controller = new MoneyMaskedTextController(
-      decimalSeparator: '.', thousandSeparator: ',');
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' NGN ');
+  var controller1 = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' NGN ');
   bool loading = false;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String _error;
@@ -52,12 +55,12 @@ class _AddPackPageState extends State<AddPackPage> {
                             keyboardType: TextInputType.number,
                             controller: controller,
                             validator: (input) =>
-                                input.isEmpty ? "Enter Product Price" : null,
+                                input.isEmpty ? "Enter Selling Price" : null,
                             onChanged: (val) => setState(() {
                               _packProductPrice = int.parse(val);
                             }),
                             decoration: InputDecoration(
-                              labelText: 'Enter product price',
+                              labelText: 'Selling price',
                               contentPadding: EdgeInsets.all(12),
                               labelStyle: TextStyle(
                                   color: Theme.of(context).primaryColor),
@@ -90,12 +93,14 @@ class _AddPackPageState extends State<AddPackPage> {
                           width: 160,
                           child: TextFormField(
                             keyboardType: TextInputType.number,
+                            controller: controller1,
                             validator: (input) =>
-                                input.isEmpty ? "Enter Quantity " : null,
+                                input.isEmpty ? "Enter Cost Price" : null,
                             onChanged: (val) => setState(() {
-                              _packQuantity = int.parse(val);
+                              _packProductCostPrice = int.parse(val);
                             }),
                             decoration: InputDecoration(
+                              labelText: 'Cost Price',
                               contentPadding: EdgeInsets.all(12),
                               labelStyle: TextStyle(
                                   color: Theme.of(context).primaryColor),
@@ -108,7 +113,7 @@ class _AddPackPageState extends State<AddPackPage> {
                                   color: Theme.of(context)
                                       .focusColor
                                       .withOpacity(0.7)),
-                              hintText: 'Quantity',
+                              hintText: 'Pack price',
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context)
@@ -124,6 +129,45 @@ class _AddPackPageState extends State<AddPackPage> {
                           ),
                         ),
                       ],
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 40, right: 40, top: 20),
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        validator: (input) =>
+                            input.isEmpty ? "Enter Quantity " : null,
+                        onChanged: (val) => setState(() {
+                          _packQuantity = int.parse(val);
+                        }),
+                        decoration: InputDecoration(
+                          labelText: 'Quantity',
+                          contentPadding: EdgeInsets.all(12),
+                          labelStyle:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.7)),
+                          hintText: 'Quantity',
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.5))),
+                        ),
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
                     SizedBox(
                       height: 20,
@@ -195,9 +239,11 @@ class _AddPackPageState extends State<AddPackPage> {
                         onTap: () {
                           if (_formKey.currentState.validate()) {
                             _addProduct.setPackProducts(
-                                controller.numberValue.round(),
-                                _packLimit,
-                                _packQuantity ?? 0);
+                              controller.numberValue.round(),
+                              _packLimit,
+                              _packQuantity ?? 0,
+                              controller1.numberValue.round(),
+                            );
 
                             Navigator.push(
                                 context,

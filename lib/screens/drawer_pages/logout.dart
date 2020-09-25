@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stockfare_mobile/helpers/save_user.dart';
 import 'package:stockfare_mobile/models/user_model.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/forgot_password.dart';
@@ -170,12 +171,7 @@ class _LogoutPageState extends State<LogoutPage> {
                                 });
                               } else {
                                 //This will set the profile data for the notifier so that it can move between pages
-                                _saveUser(context);
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            BottomNavigationPage()));
+                                SaveUser().setProfileUser(context);
                               }
                             }
                           } on SocketException catch (_) {
@@ -202,23 +198,5 @@ class _LogoutPageState extends State<LogoutPage> {
           style: TextStyle(color: Colors.white, fontSize: 15),
         ));
     _scaffoldKey.currentState.showSnackBar(snackBar);
-  }
-
-  _saveUser(context) async {
-    final prefs = await SharedPreferences.getInstance();
-    String body = prefs.getString('body');
-    User user = User.fromJson(json.decode(body));
-    SignupNotifier _signupNotifier =
-        Provider.of<SignupNotifier>(context, listen: false);
-    _signupNotifier.setProfile(
-      user.fullname,
-      user.phone,
-      user.email,
-      user.firebaseId,
-      user.branchName,
-      user.branchAddress,
-      user.notificationStatus,
-      user.subscriptionPlan,
-    );
   }
 }

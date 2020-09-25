@@ -190,7 +190,8 @@ class _CurrentBranchState extends State<CurrentBranch> {
                                 branchName,
                                 branchAddress,
                                 isInstructionView,
-                                _signupNotifier.subscriptionPlan);
+                                _signupNotifier.subscriptionPlan,
+                                _signupNotifier.firebaseCustomerId);
                           });
                         }
                       }

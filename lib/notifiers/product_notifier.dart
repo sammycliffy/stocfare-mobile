@@ -20,13 +20,15 @@ class AddProductNotifier with ChangeNotifier {
   //this is used to transfer the product index to the next page
   int _categoryIndex;
   int _productIndex = 0;
-
+  int _unitProductCostPrice = 0;
+  int _packProductCostPrice = 0;
   //set categoryid to be used to add product;
   String _categoryId;
   String _firebaseKey;
   String get unitproductName => _unitproductName;
-
+  int get packCostPrice => _packProductCostPrice;
   int get packLimit => _packLimit;
+  int get unitCostPrice => _unitProductCostPrice;
   int get packQuantity => _packQuantity;
   int get packProductPrice => _packProductPrice;
   String get productDescription => _productDescription;
@@ -51,6 +53,7 @@ class AddProductNotifier with ChangeNotifier {
     String productDescription,
     int productDiscount,
     int productWeight,
+    int unitCostPrice,
     List<ColorDataModel> data,
   ) {
     _productCategory = productCategory;
@@ -61,8 +64,9 @@ class AddProductNotifier with ChangeNotifier {
     _productDescription = productDescription;
     _productDiscount = productDiscount;
     _productWeight = productWeight;
-    _data = data;
+    _unitProductCostPrice = unitCostPrice;
 
+    _data = data;
     notifyListeners();
   }
 
@@ -70,10 +74,12 @@ class AddProductNotifier with ChangeNotifier {
     int packProductPrice,
     int packLimit,
     int packQuantity,
+    int packCostPrice,
   ) {
     _packProductPrice = packProductPrice;
     _packLimit = packLimit;
     _packQuantity = packQuantity;
+    _packProductCostPrice = packCostPrice;
     notifyListeners();
   }
 

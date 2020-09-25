@@ -14,11 +14,9 @@ class AddProductPage extends StatelessWidget {
           bottom: TabBar(
             tabs: [
               Tab(
-                icon: Icon(Icons.directions_car),
                 text: 'Add Single Product',
               ),
               Tab(
-                icon: Icon(Icons.directions_transit),
                 text: 'Add Multiple Products',
               ),
             ],

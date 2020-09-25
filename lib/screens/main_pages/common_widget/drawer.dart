@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:stockfare_mobile/screens/drawer_pages/customers.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/feedback.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/help.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/logout.dart';
@@ -23,7 +24,7 @@ class DrawerPage extends StatelessWidget {
           DrawerHeader(
             child: Center(
               child: Text(
-                'stockfare_mobile',
+                'Stockfare',
                 style: TextStyle(fontSize: 25, color: Colors.white),
               ),
             ),
@@ -45,6 +46,14 @@ class DrawerPage extends StatelessWidget {
             onTap: () => {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => WorkersListPage()))
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('Customers'),
+            onTap: () => {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CustomersPage()))
             },
           ),
           ListTile(

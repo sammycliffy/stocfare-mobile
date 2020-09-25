@@ -414,7 +414,7 @@ class _ProductListPageState extends State<ProductListPage> {
                       children: [
                         SizedBox(height: 5),
                         Padding(
-                          padding: const EdgeInsets.only(left: 330),
+                          padding: const EdgeInsets.only(left: 280),
                           child: Container(
                             width: 55,
                             height: 40,

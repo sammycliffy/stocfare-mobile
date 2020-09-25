@@ -4,6 +4,8 @@ import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/analytics/product_analytics.dart';
 import 'package:stockfare_mobile/screens/main_pages/analytics/sales_analytics.dart';
 
+import 'profit_loss.dart';
+
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({Key key}) : super(key: key);
   @override
@@ -14,7 +16,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
+        length: 3,
         child: WillPopScope(
           onWillPop: () => Navigator.push(context,
               MaterialPageRoute(builder: (context) => BottomNavigationPage())),
@@ -30,6 +32,9 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                     Tab(
                       text: 'Products',
                     ),
+                    Tab(
+                      text: 'Profits',
+                    ),
                   ],
                 ),
                 title: Text('Product Analytics'),
@@ -40,6 +45,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                     children: [
                       SalesPageAnalytics(),
                       ProductPageAnalytics(),
+                      ProfitAndLossPage(),
                     ],
                   ),
                 ),
