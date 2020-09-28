@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.6;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.8;
     final double itemWidth = size.width / 2;
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     SignupNotifier _signupNotifier =
@@ -167,7 +167,6 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: () => SystemNavigator.pop(),
       child: Scaffold(
-          backgroundColor: Colors.grey[100],
           floatingActionButton: FloatingActionButton(
             focusColor: Theme.of(context).canvasColor,
             onPressed: () {
@@ -607,18 +606,23 @@ class _HomePageState extends State<HomePage> {
                                         _productPrice[index].toDouble());
                                     controller1.updateValue(
                                         _productPackPrice[index].toDouble());
-                                    return new Padding(
+                                    return Padding(
                                       padding: const EdgeInsets.all(2.0),
                                       child: GestureDetector(
-                                        child: Card(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.grey[400],
+                                              width: 0.5,
+                                            ),
+                                          ),
                                           child: Column(
                                             children: <Widget>[
-                                              SizedBox(height: 5),
                                               _productImage
                                                       .asMap()
                                                       .containsKey(index)
                                                   ? CachedNetworkImage(
-                                                      width: 150,
+                                                      width: 120,
                                                       height: 100,
                                                       fit: BoxFit.cover,
                                                       placeholder: (context,
@@ -629,8 +633,8 @@ class _HomePageState extends State<HomePage> {
                                                     )
                                                   : Image.asset(
                                                       'assets/images/No-image.png',
-                                                      width: 150,
-                                                      height: 100,
+                                                      width: 120,
+                                                      height: 120,
                                                       fit: BoxFit.fitWidth,
                                                     ),
                                               Container(

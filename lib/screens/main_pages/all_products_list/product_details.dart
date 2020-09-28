@@ -148,7 +148,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 30),
-            child: Text(_addToCart.description,
+            child: Text(_addToCart.description ?? 'None',
                 style: TextStyle(
                   fontSize: 15,
                 )),

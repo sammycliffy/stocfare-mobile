@@ -25,14 +25,7 @@ class _ProductListPageState extends State<ProductListPage> {
   AddProductNotifier _addProductNotifier;
   ProductServices _productServices = ProductServices();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  var controller = new MoneyMaskedTextController(
-      decimalSeparator: '.', thousandSeparator: ',');
-  var controller1 = new MoneyMaskedTextController(
-      decimalSeparator: '.', thousandSeparator: ',');
-  var controllerSearch = new MoneyMaskedTextController(
-      decimalSeparator: '.', thousandSeparator: ',');
-  var controllerSearch1 = new MoneyMaskedTextController(
-      decimalSeparator: '.', thousandSeparator: ',');
+
   List _listProductName = [];
   List _listProductDescription = [];
   List _listUnitLimit = [];
@@ -103,6 +96,22 @@ class _ProductListPageState extends State<ProductListPage> {
   Widget build(BuildContext context) {
     SignupNotifier _signupNotifier =
         Provider.of<SignupNotifier>(context, listen: false);
+    var controller = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller1 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controllerSearch = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controllerSearch1 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
     AddProductToCart _addToCart = Provider.of<AddProductToCart>(context);
     final firebaseDb =
         _productServices.getFirebaseData(_signupNotifier.firebaseId);
