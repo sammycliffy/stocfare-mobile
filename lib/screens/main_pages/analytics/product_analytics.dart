@@ -168,8 +168,10 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                                         snapshot.data.leastProductWeekName
                                             .toString(),
                                         style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       ),
                                       Text(
                                         snapshot.data.leastProductSalesWeekCount
@@ -219,8 +221,10 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                                       Text(
                                         snapshot.data.mostProductWeekName,
                                         style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       ),
                                       Text(
                                         snapshot.data.mostProductSalesWeekCount
@@ -278,16 +282,18 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 17,
+                                        height: 5,
                                       ),
                                       Text(
                                         snapshot.data.leastProductMonthName,
                                         style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       ),
                                       SizedBox(
-                                        height: 10,
+                                        height: 5,
                                       ),
                                       Text(
                                         'Sold ' +
@@ -339,16 +345,18 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 17,
+                                        height: 5,
                                       ),
                                       Text(
                                         snapshot.data.mostProductMonthName,
                                         style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       ),
                                       SizedBox(
-                                        height: 10,
+                                        height: 5,
                                       ),
                                       Text(
                                         'Sold ' +

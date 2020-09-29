@@ -428,13 +428,13 @@ class _ProductListPageState extends State<ProductListPage> {
                             width: 55,
                             height: 40,
                             decoration: BoxDecoration(
-                                color: Hexcolor('#40A099'),
+                                color: Colors.grey[300],
                                 borderRadius: BorderRadius.circular(5)),
                             child: Center(
                               child: Text(productCount.toString(),
                                   style: TextStyle(
                                       fontSize: 15,
-                                      color: Colors.white,
+                                      color: Theme.of(context).primaryColor,
                                       fontWeight: FontWeight.bold)),
                             ),
                           ),

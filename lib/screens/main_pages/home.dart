@@ -177,10 +177,10 @@ class _HomePageState extends State<HomePage> {
               Icons.add,
               color: Colors.white,
             ),
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Colors.black,
           ),
           appBar: PreferredSize(
-              preferredSize: Size.fromHeight(135.0), // here the desired height
+              preferredSize: Size.fromHeight(120.0), // here the desired height
               child: AppBar(
                 elevation: 0.0,
                 flexibleSpace: Padding(
@@ -222,7 +222,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -265,6 +265,7 @@ class _HomePageState extends State<HomePage> {
                                   )),
                             ),
                           ),
+                          SizedBox(width: 10),
                           Padding(
                               padding:
                                   const EdgeInsets.only(bottom: 20, right: 20),
@@ -305,7 +306,7 @@ class _HomePageState extends State<HomePage> {
                       width: 250,
                       height: 40,
                       decoration: BoxDecoration(
-                          color: Colors.green[700],
+                          color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(5)),
                       child: Center(
                         child: Row(
@@ -314,7 +315,7 @@ class _HomePageState extends State<HomePage> {
                             Text('Finish',
                                 style: TextStyle(
                                     fontSize: 19,
-                                    color: Colors.white,
+                                    color: Theme.of(context).primaryColor,
                                     fontWeight: FontWeight.bold)),
                             SizedBox(
                               width: 20,
@@ -326,7 +327,7 @@ class _HomePageState extends State<HomePage> {
                                       .toString(),
                               style: TextStyle(
                                   fontSize: 19,
-                                  color: Colors.white,
+                                  color: Theme.of(context).primaryColor,
                                   fontWeight: FontWeight.bold),
                             )
                           ],
@@ -386,19 +387,28 @@ class _HomePageState extends State<HomePage> {
                             childAspectRatio: (itemWidth / itemHeight),
                             crossAxisCount: 2),
                         itemBuilder: (BuildContext context, int index) {
+                          controller.updateValue(
+                              _productPriceSearch[index].toDouble());
+                          controller1.updateValue(
+                              _productPackPriceSearch[index].toDouble());
                           return new Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: GestureDetector(
-                              child: Card(
-                                color: Colors.grey[100],
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey[200],
+                                    width: 2,
+                                  ),
+                                ),
                                 child: Column(
                                   children: <Widget>[
                                     _productImageSearch
                                             .asMap()
                                             .containsKey(index)
                                         ? CachedNetworkImage(
-                                            width: 200,
-                                            height: 65,
+                                            width: 120,
+                                            height: 100,
                                             fit: BoxFit.cover,
                                             placeholder: (context, url) =>
                                                 CircularProgressIndicator(),
@@ -407,10 +417,23 @@ class _HomePageState extends State<HomePage> {
                                           )
                                         : Image.asset(
                                             'assets/images/No-image.png',
-                                            width: 200,
-                                            height: 65,
-                                            fit: BoxFit.cover,
+                                            width: 120,
+                                            height: 120,
+                                            fit: BoxFit.fitWidth,
                                           ),
+                                    Container(
+                                      width: double.infinity,
+                                      child: Center(
+                                        child: Text(
+                                          _categoriesSearch[index],
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        ),
+                                      ),
+                                    ),
                                     Container(
                                       width: double.infinity,
                                       decoration: BoxDecoration(
@@ -420,15 +443,15 @@ class _HomePageState extends State<HomePage> {
                                                   color: Colors.grey[200]))),
                                       child: Center(
                                         child: Text(
-                                          _categoriesSearch[index],
+                                          '${_productQuantitySearch[index]} Units | ${_packQuantitySearch[index]} Packs',
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                              color: Theme.of(context)
-                                                  .primaryColor),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.grey[800]),
                                         ),
                                       ),
                                     ),
+                                    SizedBox(width: 5),
                                     Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -443,54 +466,17 @@ class _HomePageState extends State<HomePage> {
                                                           Colors.grey[200]))),
                                           child: Center(
                                             child: Text(
-                                              '${_productPriceSearch[index]}/Units',
-                                              style: TextStyle(fontSize: 12),
+                                              '${controller.text} / Units',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                        Container(
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  bottom: BorderSide(
-                                                      width: 2,
-                                                      color:
-                                                          Colors.grey[200]))),
-                                          child: Center(
-                                            child: Text(
-                                              '${_productPackPriceSearch[index]}/Pack',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  bottom: BorderSide(
-                                                      width: 2,
-                                                      color:
-                                                          Colors.grey[200]))),
-                                          child: Center(
-                                            child: Text(
-                                              '${_productQuantitySearch[index]} Units',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  bottom: BorderSide(
-                                                      width: 2,
-                                                      color:
-                                                          Colors.grey[200]))),
-                                          child: Center(
-                                            child: Text(
-                                              '${_packQuantitySearch[index]} Packs',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
+                                        Text(
+                                          '${controller1.text} / Pack',
+                                          style: TextStyle(
+                                            fontSize: 14,
                                           ),
                                         ),
                                       ],
@@ -607,13 +593,13 @@ class _HomePageState extends State<HomePage> {
                                     controller1.updateValue(
                                         _productPackPrice[index].toDouble());
                                     return Padding(
-                                      padding: const EdgeInsets.all(2.0),
+                                      padding: const EdgeInsets.all(5.0),
                                       child: GestureDetector(
                                         child: Container(
                                           decoration: BoxDecoration(
                                             border: Border.all(
-                                              color: Colors.grey[400],
-                                              width: 0.5,
+                                              color: Colors.grey[200],
+                                              width: 2,
                                             ),
                                           ),
                                           child: Column(
@@ -667,7 +653,7 @@ class _HomePageState extends State<HomePage> {
                                                         fontWeight:
                                                             FontWeight.w700,
                                                         color:
-                                                            Colors.grey[600]),
+                                                            Colors.grey[800]),
                                                   ),
                                                 ),
                                               ),
@@ -690,10 +676,6 @@ class _HomePageState extends State<HomePage> {
                                                         '${controller.text} / Units',
                                                         style: TextStyle(
                                                           fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          color:
-                                                              Colors.green[300],
                                                         ),
                                                       ),
                                                     ),
@@ -702,9 +684,6 @@ class _HomePageState extends State<HomePage> {
                                                     '${controller1.text} / Pack',
                                                     style: TextStyle(
                                                       fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: Colors.green[300],
                                                     ),
                                                   ),
                                                 ],

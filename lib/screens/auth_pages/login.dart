@@ -1,15 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:jiffy/jiffy.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/helpers/save_user.dart';
-import 'package:stockfare_mobile/models/user_model.dart';
-import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/forgot_password.dart';
-import 'package:stockfare_mobile/screens/auth_pages/phone_verification.dart';
 import 'package:stockfare_mobile/screens/auth_pages/signup.dart';
-import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/auth_services.dart';

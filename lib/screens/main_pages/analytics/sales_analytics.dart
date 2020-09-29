@@ -123,7 +123,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: Card(
                           child: Container(
-                        width: 400,
+                        width: 420,
                         child: Padding(
                           padding: const EdgeInsets.only(
                             left: 10,
@@ -146,13 +146,13 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                       Text(
                                         ' Stockfare provides you \n details of what sells and what \n doesn\'t',
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 15,
                                         ),
                                       ),
                                     ],
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: 5,
                                   ),
                                   Column(
                                     crossAxisAlignment:
@@ -162,14 +162,18 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                         snapshot.data.monthSalesCount
                                             .toString(),
                                         style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       ),
                                       Text(
                                         controller.text,
                                         style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       )
                                     ],
                                   )
@@ -208,7 +212,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                         snapshot.data.todaySalesCount
                                             .toString(),
                                         style: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
@@ -216,7 +220,8 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.blueGrey),
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       )
                                     ],
                                   ),
@@ -257,7 +262,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                       Text(
                                         snapshot.data.weekSalesCount.toString(),
                                         style: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
@@ -265,7 +270,8 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.blueGrey),
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       )
                                     ],
                                   ),
@@ -318,7 +324,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                         snapshot.data.monthSalesCount
                                             .toString(),
                                         style: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
@@ -326,7 +332,8 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.blueGrey),
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       )
                                     ],
                                   ),
@@ -370,7 +377,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                         snapshot.data.quarterSalesCount
                                             .toString(),
                                         style: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
@@ -378,7 +385,8 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.blueGrey),
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       )
                                     ],
                                   ),
@@ -431,7 +439,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                       Text(
                                         snapshot.data.yearSalesCount.toString(),
                                         style: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
@@ -439,7 +447,8 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.blueGrey),
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       )
                                     ],
                                   ),

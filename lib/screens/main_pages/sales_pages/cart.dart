@@ -86,7 +86,7 @@ class _AddCartState extends State<AddCart> {
                   ],
                 ),
                 RaisedButton(
-                    color: Colors.red,
+                    color: Theme.of(context).primaryColor,
                     onPressed: () {
                       setState(() {
                         _addProduct.items.clear();
@@ -98,7 +98,10 @@ class _AddCartState extends State<AddCart> {
                                 builder: (context) => BottomNavigationPage()));
                       });
                     },
-                    child: Text('Empty'))
+                    child: Text(
+                      'Empty',
+                      style: TextStyle(color: Colors.white),
+                    ))
               ],
             ),
             Expanded(
@@ -111,7 +114,13 @@ class _AddCartState extends State<AddCart> {
                     return new Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
-                        child: Card(
+                        child: Container(
+                          height: 50,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.grey[200],
+                          ),
                           child: Column(
                             children: <Widget>[
                               SizedBox(
@@ -172,8 +181,8 @@ class _AddCartState extends State<AddCart> {
                       MaterialPageRoute(builder: (context) => CheckoutPage()));
                 },
                 child: Text(
-                  'Check out',
-                  style: TextStyle(color: Colors.white),
+                  'CONTINUE',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
             ),

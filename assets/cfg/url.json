@@ -31,6 +31,9 @@
   "delete-sales": "http://stockfare-io.herokuapp.com/api/v1/sales/delete-sale/",
   "promo-code": "http://stockfare-io.herokuapp.com/api/v1/promotion/submit/",
   "feedback": "http://stockfare-io.herokuapp.com/api/v2/users/feedback/",
+  "create-expenses": "http://stockfare-io.herokuapp.com/api/v2/expenditure/create-expenses/",
+  "get-expenses-summary": "http://stockfare-io.herokuapp.com/api/v2/expenditure/expenses-summary/",
+  "expenses-dropdown": "http://stockfare-io.herokuapp.com/api/v2/expenditure/expenses-dropdown-list/",
 
   "base-url": "http://stockfare-io.herokuapp.com/"
 }

@@ -94,7 +94,7 @@ class _DashBoardState extends State<DashBoard> {
             child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 20, right: 200),
+              padding: const EdgeInsets.only(top: 20, right: 150),
               child: Text(
                 'Welcome ${_signupNotifier.fullName}!',
                 style: TextStyle(fontSize: 18),

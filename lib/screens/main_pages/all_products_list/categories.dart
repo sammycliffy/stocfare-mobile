@@ -299,13 +299,13 @@ class _CategoryPageState extends State<CategoryPage> {
                                 width: 55,
                                 height: 40,
                                 decoration: BoxDecoration(
-                                    color: Hexcolor('#40A099'),
+                                    color: Colors.grey[300],
                                     borderRadius: BorderRadius.circular(5)),
                                 child: Center(
                                   child: Text(_categories.length.toString(),
                                       style: TextStyle(
                                           fontSize: 15,
-                                          color: Colors.white,
+                                          color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.bold)),
                                 ),
                               ),
@@ -395,8 +395,8 @@ class _CategoryPageState extends State<CategoryPage> {
 
                                                       return Icon(
                                                         Icons.category,
-                                                        color:
-                                                            Hexcolor('#40A099'),
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
                                                       );
                                                     }()))))),
                                         onTap: () {

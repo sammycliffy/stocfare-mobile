@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/services/activities_services.dart';
+import 'package:stockfare_mobile/services/expenses_services.dart';
 
 class IncomeHomePage extends StatefulWidget {
   @override
-  _IncomeHomePageState createState() => _IncomeHomePageState();
+  _ExpensesHomePageState createState() => _ExpensesHomePageState();
 }
 
-class _IncomeHomePageState extends State<IncomeHomePage> {
+class _ExpensesHomePageState extends State<IncomeHomePage> {
+  String _expenses = 'Select Expense';
+  DateTime selectedDate = DateTime.now();
+  bool _isNew = false;
+  ExpensesServices _expensesServices = ExpensesServices();
+  ActivitiesServices _activitiesServices = ActivitiesServices();
+  final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _error;
+  String _amount;
+  String _description;
+  bool _loading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         floatingActionButton: FloatingActionButton(
-            onPressed: null,
+            onPressed: () => expensesForm(),
             child: Icon(Icons.add, color: Colors.white),
             backgroundColor: Colors.black),
         body: SingleChildScrollView(
@@ -21,7 +35,7 @@ class _IncomeHomePageState extends State<IncomeHomePage> {
               Center(
                 child: Container(
                     height: 120,
-                    width: 350,
+                    width: 330,
                     decoration: BoxDecoration(
                         color: Colors.grey[100],
                         borderRadius: BorderRadius.circular(10)),
@@ -83,7 +97,7 @@ class _IncomeHomePageState extends State<IncomeHomePage> {
                     )),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 35.0, top: 10),
+                padding: const EdgeInsets.only(left: 35.0, top: 10, bottom: 10),
                 child: Text(
                   'RECENT ACTIVITIES',
                   style: TextStyle(color: Colors.grey, fontSize: 17),
@@ -109,7 +123,7 @@ class _IncomeHomePageState extends State<IncomeHomePage> {
 
   _listTile(name, date, amount) => Center(
         child: Container(
-          width: 350,
+          width: 310,
           height: 70,
           decoration: BoxDecoration(
               border: Border(
@@ -156,4 +170,325 @@ class _IncomeHomePageState extends State<IncomeHomePage> {
                   color: Theme.of(context).primaryColor, fontSize: 16)),
         ],
       );
+
+  expensesForm() {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            Future<Null> _selectDate(BuildContext context) async {
+              final DateTime picked = await showDatePicker(
+                  context: context,
+                  initialDate: selectedDate,
+                  firstDate: DateTime(2015, 8),
+                  lastDate: DateTime(2101));
+              if (picked != null && picked != selectedDate)
+                setState(() {
+                  selectedDate = picked;
+                });
+            }
+
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              content: SingleChildScrollView(
+                  child: Column(
+                children: <Widget>[
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back, size: 20),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      SizedBox(width: 5),
+                      Text('Back'),
+                      SizedBox(width: 30),
+                      Text('RECORD EXPENSES',
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: Theme.of(context).primaryColor))
+                    ],
+                  ),
+                  Form(
+                    key: _formKey,
+                    child: Column(children: [
+                      SizedBox(height: 10),
+                      Container(
+                        width: 370,
+                        child: DropdownButtonHideUnderline(
+                            child: ButtonTheme(
+                                alignedDropdown: true,
+                                child: DropdownButton(
+                                  value: _expenses,
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  style: TextStyle(color: Colors.black),
+                                  underline: Container(
+                                    height: 4,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  onChanged: (String newValue) {
+                                    setState(() {
+                                      _expenses = newValue;
+                                      _error = null;
+                                    });
+                                  },
+                                  items: <String>[
+                                    'Select Expense',
+                                    'Food',
+                                    'Transportation',
+                                    'Fuel',
+                                    'Salary'
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value,
+                                          style: TextStyle(fontSize: 16)),
+                                    );
+                                  }).toList(),
+                                ))),
+                      ),
+                      _isNew
+                          ? GestureDetector(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 200),
+                                child: Container(
+                                  width: 80,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Center(
+                                      child: Text('Close',
+                                          style:
+                                              TextStyle(color: Colors.white))),
+                                ),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  _isNew = false;
+                                });
+                              })
+                          : GestureDetector(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 200),
+                                child: Container(
+                                  width: 80,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Center(
+                                      child: Text('Add new',
+                                          style:
+                                              TextStyle(color: Colors.white))),
+                                ),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  _isNew = true;
+                                });
+                              }),
+                      SizedBox(height: 10),
+                      _isNew
+                          ? TextFormField(
+                              obscureText: true,
+                              keyboardType: TextInputType.text,
+                              validator: (input) =>
+                                  input.isEmpty ? "Enter Name" : null,
+                              onChanged: (val) => setState(() {}),
+                              decoration: InputDecoration(
+                                labelText: 'Name',
+                                contentPadding: EdgeInsets.all(12),
+                                labelStyle: TextStyle(color: Colors.grey[600]),
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.2))),
+                                hintStyle: TextStyle(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.7)),
+                                hintText: 'Food',
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.2))),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.5))),
+                              ),
+                              style: TextStyle(color: Colors.black),
+                            )
+                          : SizedBox(),
+                      Text(
+                        _error ?? '',
+                        style: TextStyle(color: Colors.red, fontSize: 15),
+                      ),
+                      SizedBox(height: 3),
+                      TextFormField(
+                        keyboardType: TextInputType.text,
+                        validator: (input) =>
+                            input.isEmpty ? "Enter Amount" : null,
+                        onChanged: (val) => setState(() {
+                          _amount = val;
+                        }),
+                        decoration: InputDecoration(
+                          labelText: 'Amount',
+                          contentPadding: EdgeInsets.all(12),
+                          labelStyle: TextStyle(color: Colors.grey[600]),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.7)),
+                          hintText: '12,000.00',
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.5))),
+                        ),
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      SizedBox(height: 20),
+                      Container(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          width: 350,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey[400]),
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("${selectedDate.toLocal()}".split(' ')[0],
+                                  style: TextStyle(color: Colors.grey[600])),
+                              IconButton(
+                                icon: Icon(Icons.date_range,
+                                    color: Theme.of(context).primaryColor),
+                                onPressed: () {
+                                  _selectDate(context);
+                                },
+                              )
+                            ],
+                          )),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        obscureText: true,
+                        keyboardType: TextInputType.text,
+                        validator: (input) =>
+                            input.isEmpty ? "Description" : null,
+                        onChanged: (val) => setState(() {
+                          _description = val;
+                        }),
+                        decoration: InputDecoration(
+                          labelText: 'Description',
+                          contentPadding: EdgeInsets.all(12),
+                          labelStyle: TextStyle(color: Colors.grey[600]),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.7)),
+                          hintText: 'Description',
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.5))),
+                        ),
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      SizedBox(height: 10),
+                      _loading
+                          ? CircularProgressIndicator()
+                          : InkWell(
+                              child: Container(
+                                width: 200,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Center(
+                                    child: Text('Done',
+                                        style: TextStyle(color: Colors.white))),
+                              ),
+                              onTap: () {
+                                _activitiesServices
+                                    .checkForInternet()
+                                    .then((value) async {
+                                  if (value == true) {
+                                    if (_expenses != 'Select Expense') {
+                                      setState(() {
+                                        _loading = true;
+                                      });
+                                      dynamic result = await _expensesServices
+                                          .createExpenses(
+                                              _amount,
+                                              _description,
+                                              _expenses,
+                                              "${selectedDate.toLocal()}"
+                                                  .split(' ')[0]);
+                                    } else {
+                                      setState(() {
+                                        _error = 'You must Select an expense';
+                                      });
+                                    }
+                                  } else {
+                                    setState(() {
+                                      _error =
+                                          'Please check your internet connection';
+
+                                      _displaySnackBar(context);
+                                    });
+                                  }
+                                });
+                              },
+                            )
+                    ]),
+                  )
+                ],
+              )),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  _displaySnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+        duration: Duration(seconds: 5),
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Text(
+          _error.toString(),
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
 }

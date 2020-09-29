@@ -94,9 +94,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    SizedBox(
-                      width: 30,
-                    ),
                     Text('TOTAL PRODUCTS',
                         style: Theme.of(context).textTheme.headline6),
                     SizedBox(
@@ -112,9 +109,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 SizedBox(height: 8),
                 Row(
                   children: <Widget>[
-                    SizedBox(
-                      width: 30,
-                    ),
                     Text('TOTAL PRICE',
                         style: Theme.of(context).textTheme.headline6),
                     SizedBox(
@@ -126,9 +120,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 ),
                 Row(
                   children: <Widget>[
-                    SizedBox(
-                      width: 30,
-                    ),
                     Text('PAYMENT METHOD',
                         style: Theme.of(context).textTheme.headline6),
                     SizedBox(
@@ -441,7 +432,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   padding: const EdgeInsets.only(right: 20),
                   child: Container(
                       width: 300,
-                      height: 120,
+                      height: 150,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           border: Border.all(width: 2, color: Colors.grey)),
@@ -481,7 +472,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         },
                       )),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 40),
                 Padding(
                   padding: const EdgeInsets.only(right: 30.0),
                   child: GestureDetector(
@@ -539,7 +530,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       SalesReceipt(value: _createSales)));
                         }
                       }),
-                )
+                ),
+                SizedBox(height: 50),
               ],
             ),
           ),
@@ -650,7 +642,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   sellUnitProduct(productId, price);
                   Navigator.pop(context);
                 },
-                child: Text('Save'),
+                child: Text('Save', style: TextStyle(color: Colors.white)),
                 color: Theme.of(context).primaryColor,
               ),
             ],
