@@ -30,7 +30,11 @@ class _EditProductPageState extends State<EditProductPage> {
   final List<ColorDataModel> _data = [];
   var controller = new MoneyMaskedTextController(
       decimalSeparator: '.', thousandSeparator: ',');
+  var unitCostPrice = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',');
   var controller1 = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',');
+  var packCostPrice = new MoneyMaskedTextController(
       decimalSeparator: '.', thousandSeparator: ',');
   bool loading = false;
   ProductServices _productServices = ProductServices();
@@ -59,7 +63,8 @@ class _EditProductPageState extends State<EditProductPage> {
   List _listDiscount = [];
   List _listWeight = [];
   List _listColors = [];
-
+  List _listUnitCostPrice = [];
+  List _listPackCostPrice = [];
   String _unitProductName;
   String _productDescription;
   int _unitProductPrice = 0;
@@ -139,6 +144,8 @@ class _EditProductPageState extends State<EditProductPage> {
                     _listColors.clear();
                     _listDiscount.clear();
                     _listWeight.clear();
+                    _listPackCostPrice.clear();
+                    _listUnitCostPrice.clear();
 
                     if (snapshot.hasData) {
                       if (snapshot.data.snapshot
@@ -154,6 +161,10 @@ class _EditProductPageState extends State<EditProductPage> {
                           _productId.add(value[value['id']]);
                           _listUnitQuantity
                               .add(value['product_unit']['quantity']);
+                          _listUnitCostPrice
+                              .add(value['product_unit']['cost_price']);
+                          _listPackCostPrice
+                              .add(value['product_pack']['cost_price']);
                           _listBarcode.add(value['bar_code']);
                           _listDiscount.add(value['discount']);
                           _listWeight.add(value['weight']);
@@ -269,45 +280,92 @@ class _EditProductPageState extends State<EditProductPage> {
                                     )),
                               ),
                               SizedBox(height: 10),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 40, right: 40),
-                                child: TextFormField(
-                                  controller: controller,
-                                  keyboardType: TextInputType.text,
-                                  onChanged: (val) => setState(() {
-                                    _unitProductPrice = int.parse(val);
-                                  }),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.all(12),
-                                    labelStyle: TextStyle(
-                                        color: Theme.of(context).primaryColor),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 150,
+                                    child: TextFormField(
+                                      controller: unitCostPrice,
+                                      keyboardType: TextInputType.text,
+                                      onChanged: (val) => setState(() {
+                                        _unitProductPrice = int.parse(val);
+                                      }),
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.all(12),
+                                        labelStyle: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.2))),
+                                        hintStyle: TextStyle(
                                             color: Theme.of(context)
                                                 .focusColor
-                                                .withOpacity(0.2))),
-                                    hintStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .focusColor
-                                            .withOpacity(0.7)),
-                                    labelText: _listUnitPrice[widget.index]
-                                            .toString() +
-                                        ' (Price)',
-                                    hintText: 'Enter price',
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.2))),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.5))),
+                                                .withOpacity(0.7)),
+                                        labelText:
+                                            _listUnitCostPrice[widget.index]
+                                                    .toString() +
+                                                ' (Cost Price)',
+                                        hintText: 'Cost price',
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.2))),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.5))),
+                                      ),
+                                      style: TextStyle(color: Colors.black),
+                                    ),
                                   ),
-                                  style: TextStyle(color: Colors.black),
-                                ),
+                                  SizedBox(width: 5),
+                                  Container(
+                                    width: 150,
+                                    child: TextFormField(
+                                      controller: controller,
+                                      keyboardType: TextInputType.text,
+                                      onChanged: (val) => setState(() {
+                                        _unitProductPrice = int.parse(val);
+                                      }),
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.all(12),
+                                        labelStyle: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.2))),
+                                        hintStyle: TextStyle(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.7)),
+                                        labelText: _listUnitPrice[widget.index]
+                                                .toString() +
+                                            ' (Selling price)',
+                                        hintText: 'Enter price',
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.2))),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.5))),
+                                      ),
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                ],
                               ),
                               SizedBox(
                                 height: 20,
@@ -344,7 +402,8 @@ class _EditProductPageState extends State<EditProductPage> {
                                                 .withOpacity(0.7)),
                                         labelText:
                                             _listUnitQuantity[widget.index]
-                                                .toString(),
+                                                    .toString() +
+                                                ' (Quantity)',
                                         hintText: 'Quantity',
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
@@ -438,7 +497,8 @@ class _EditProductPageState extends State<EditProductPage> {
                                             .withOpacity(0.7)),
                                     labelText:
                                         _listProductDescription[widget.index]
-                                            .toString(),
+                                                .toString() +
+                                            ' (Description)',
                                     hintText: 'product Description',
                                     enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
@@ -850,45 +910,92 @@ class _EditProductPageState extends State<EditProductPage> {
                                     )
                                   : SizedBox(),
                               SizedBox(height: 20),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 40, right: 40),
-                                child: TextFormField(
-                                  controller: controller1,
-                                  keyboardType: TextInputType.text,
-                                  onChanged: (val) => setState(() {
-                                    _packProductPrice = int.parse(val);
-                                  }),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.all(12),
-                                    labelStyle: TextStyle(
-                                        color: Theme.of(context).primaryColor),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 150,
+                                    child: TextFormField(
+                                      controller: packCostPrice,
+                                      keyboardType: TextInputType.text,
+                                      onChanged: (val) => setState(() {
+                                        _packProductPrice = int.parse(val);
+                                      }),
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.all(12),
+                                        labelStyle: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.2))),
+                                        hintStyle: TextStyle(
                                             color: Theme.of(context)
                                                 .focusColor
-                                                .withOpacity(0.2))),
-                                    hintStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .focusColor
-                                            .withOpacity(0.7)),
-                                    labelText: _listPackPrice[widget.index]
-                                            .toString() +
-                                        ' (Pack Price)',
-                                    hintText: 'Pack Price',
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.2))),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.5))),
+                                                .withOpacity(0.7)),
+                                        labelText:
+                                            _listPackCostPrice[widget.index]
+                                                    .toString() +
+                                                ' (Pack Cost Price)',
+                                        hintText: 'Pack Price',
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.2))),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.5))),
+                                      ),
+                                      style: TextStyle(color: Colors.black),
+                                    ),
                                   ),
-                                  style: TextStyle(color: Colors.black),
-                                ),
+                                  SizedBox(width: 5),
+                                  Container(
+                                    width: 150,
+                                    child: TextFormField(
+                                      controller: controller1,
+                                      keyboardType: TextInputType.text,
+                                      onChanged: (val) => setState(() {
+                                        _packProductPrice = int.parse(val);
+                                      }),
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.all(12),
+                                        labelStyle: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.2))),
+                                        hintStyle: TextStyle(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.7)),
+                                        labelText: _listPackPrice[widget.index]
+                                                .toString() +
+                                            ' (Pack Selling Price)',
+                                        hintText: 'Pack Price',
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.2))),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.5))),
+                                      ),
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                ],
                               ),
                               SizedBox(height: 20),
                               Row(
@@ -1062,6 +1169,8 @@ class _EditProductPageState extends State<EditProductPage> {
                                     ),
                                   ),
                                   onTap: () {
+                                    print(_listPackCostPrice);
+                                    print(_listPackPrice);
                                     if (_formKey.currentState.validate()) {
                                       DialogBoxes().loading(context);
                                       _productServices
@@ -1080,6 +1189,11 @@ class _EditProductPageState extends State<EditProductPage> {
                                               _unitLimit == 0
                                                   ? _listUnitLimit[widget.index]
                                                   : _unitLimit,
+                                              unitCostPrice.numberValue == 0
+                                                  ? _listUnitCostPrice[
+                                                          widget.index]
+                                                      .toDouble()
+                                                  : unitCostPrice.numberValue,
                                               controller1.numberValue == 0
                                                   ? _listPackPrice[widget.index]
                                                       .toDouble()
@@ -1089,6 +1203,11 @@ class _EditProductPageState extends State<EditProductPage> {
                                                       widget.index]
                                                   : _packQuantity,
                                               _packLimit,
+                                              packCostPrice.numberValue == 0
+                                                  ? _listPackCostPrice[
+                                                          widget.index]
+                                                      .toDouble()
+                                                  : packCostPrice.numberValue,
                                               _scanBarcode == 'Unknown'
                                                   ? _listBarcode[widget.index]
                                                   : _scanBarcode,

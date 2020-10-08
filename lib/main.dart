@@ -42,8 +42,6 @@ void main() async {
           home: SplashScreen(),
           routes: {
             '/product_details': (context) => ProductDetails(),
-            '/edit_product': (context) =>
-                EditProductPage(index: null, productId: null)
           },
           theme: ThemeData(
             primarySwatch: Colors.deepOrange,

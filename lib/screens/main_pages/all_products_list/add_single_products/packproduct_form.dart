@@ -53,14 +53,14 @@ class _AddPackPageState extends State<AddPackPage> {
                           width: 160,
                           child: TextFormField(
                             keyboardType: TextInputType.number,
-                            controller: controller,
+                            controller: controller1,
                             validator: (input) =>
-                                input.isEmpty ? "Enter Selling Price" : null,
+                                input.isEmpty ? "Enter Cost Price" : null,
                             onChanged: (val) => setState(() {
-                              _packProductPrice = int.parse(val);
+                              _packProductCostPrice = int.parse(val);
                             }),
                             decoration: InputDecoration(
-                              labelText: 'Selling price',
+                              labelText: 'Cost Price',
                               contentPadding: EdgeInsets.all(12),
                               labelStyle: TextStyle(
                                   color: Theme.of(context).primaryColor),
@@ -93,14 +93,14 @@ class _AddPackPageState extends State<AddPackPage> {
                           width: 160,
                           child: TextFormField(
                             keyboardType: TextInputType.number,
-                            controller: controller1,
+                            controller: controller,
                             validator: (input) =>
-                                input.isEmpty ? "Enter Cost Price" : null,
+                                input.isEmpty ? "Enter Selling Price" : null,
                             onChanged: (val) => setState(() {
-                              _packProductCostPrice = int.parse(val);
+                              _packProductPrice = int.parse(val);
                             }),
                             decoration: InputDecoration(
-                              labelText: 'Cost Price',
+                              labelText: 'Selling price',
                               contentPadding: EdgeInsets.all(12),
                               labelStyle: TextStyle(
                                   color: Theme.of(context).primaryColor),

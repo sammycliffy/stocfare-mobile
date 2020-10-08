@@ -26,7 +26,6 @@ class Analytics {
       if (response.statusCode == 200) {
         return SalesAnalytics.fromJson(json.decode(response.body));
       } else {
-        print(response.body);
         return Future.error(json.decode(response.body)['detail']);
       }
     } catch (e) {

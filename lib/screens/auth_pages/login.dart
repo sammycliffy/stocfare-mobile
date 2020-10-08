@@ -210,6 +210,7 @@ class _LoginState extends State<Login> {
                                 SaveUser().setProfileUser(context);
                               }
                             } else {
+                              Navigator.pop(context);
                               setState(() {
                                 _error =
                                     'Please check your internet connection';

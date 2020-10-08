@@ -39,9 +39,11 @@ class _FormPageState extends State<FormPage> {
   bool addExtraDetails = false;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   var controller = new MoneyMaskedTextController(
-      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' NGN ');
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
   var secondController = new MoneyMaskedTextController(
-      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' NGN ');
+      decimalSeparator: '.', thousandSeparator: ',');
   @override
   Widget build(BuildContext context) {
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
@@ -144,46 +146,6 @@ class _FormPageState extends State<FormPage> {
                       children: <Widget>[
                         SizedBox(
                           width: 150,
-                          child: TextFormField(
-                            controller: controller,
-                            keyboardType: TextInputType.number,
-                            validator: (input) =>
-                                input.isEmpty ? "Enter Selling Price" : null,
-                            onChanged: (val) => setState(() {
-                              _unitProductSellingPrice = int.parse(val);
-                            }),
-                            decoration: InputDecoration(
-                              labelText: 'Sale price',
-                              contentPadding: EdgeInsets.all(12),
-                              labelStyle: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.2))),
-                              hintStyle: TextStyle(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.7)),
-                              hintText: 'Unit price',
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.2))),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.5))),
-                            ),
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        SizedBox(width: 5),
-                        SizedBox(
-                          width: 150,
                           child: Tooltip(
                             message: 'You must know what you are doing',
                             child: TextFormField(
@@ -222,6 +184,46 @@ class _FormPageState extends State<FormPage> {
                               ),
                               style: TextStyle(color: Colors.black),
                             ),
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        SizedBox(
+                          width: 150,
+                          child: TextFormField(
+                            controller: controller,
+                            keyboardType: TextInputType.number,
+                            validator: (input) =>
+                                input.isEmpty ? "Enter Selling Price" : null,
+                            onChanged: (val) => setState(() {
+                              _unitProductSellingPrice = int.parse(val);
+                            }),
+                            decoration: InputDecoration(
+                              labelText: 'Selling price',
+                              contentPadding: EdgeInsets.all(12),
+                              labelStyle: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .focusColor
+                                          .withOpacity(0.2))),
+                              hintStyle: TextStyle(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.7)),
+                              hintText: 'Unit price',
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .focusColor
+                                          .withOpacity(0.2))),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .focusColor
+                                          .withOpacity(0.5))),
+                            ),
+                            style: TextStyle(color: Colors.black),
                           ),
                         ),
                       ],
@@ -390,7 +392,7 @@ class _FormPageState extends State<FormPage> {
                                     _productDescription,
                                     _productDiscount,
                                     _productWeight,
-                                    _unitProductCostPrice,
+                                    secondController.numberValue.round(),
                                     _data);
                                 Navigator.push(
                                     context,

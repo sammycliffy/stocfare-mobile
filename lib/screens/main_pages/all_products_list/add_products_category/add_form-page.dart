@@ -102,12 +102,12 @@ class _AddFormPageState extends State<AddFormPage> {
                         SizedBox(
                           width: 150,
                           child: TextFormField(
-                            controller: controller,
+                            controller: secondController,
                             keyboardType: TextInputType.number,
                             validator: (input) =>
                                 input.isEmpty ? "Enter Product Price" : null,
                             decoration: InputDecoration(
-                              labelText: 'Selling Price',
+                              labelText: 'Cost Price',
                               contentPadding: EdgeInsets.all(12),
                               labelStyle: TextStyle(
                                   color: Theme.of(context).primaryColor),
@@ -139,12 +139,12 @@ class _AddFormPageState extends State<AddFormPage> {
                         SizedBox(
                           width: 150,
                           child: TextFormField(
-                            controller: secondController,
+                            controller: controller,
                             keyboardType: TextInputType.number,
                             validator: (input) =>
                                 input.isEmpty ? "Enter Product Price" : null,
                             decoration: InputDecoration(
-                              labelText: 'Product Price',
+                              labelText: 'Selling Price',
                               contentPadding: EdgeInsets.all(12),
                               labelStyle: TextStyle(
                                   color: Theme.of(context).primaryColor),

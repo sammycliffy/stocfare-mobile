@@ -23,7 +23,7 @@ class AuthServices {
     String firebaseToken = sharedPreferences.get('firebaseToken');
     print(firebaseToken);
     DateTime d = DateTime.now();
-    int newDate = Jiffy(d).add(days: 13).millisecondsSinceEpoch;
+    int newDate = Jiffy(d).add(days: 6).millisecondsSinceEpoch;
     try {
       final String url = GlobalConfiguration().get("signup");
 
@@ -93,7 +93,7 @@ class AuthServices {
     String firebaseToken = sharedPreferences.get('firebaseToken');
     String url = GlobalConfiguration().get("login");
     DateTime d = DateTime.now();
-    int newDate = Jiffy(d).add(days: 13).millisecondsSinceEpoch;
+    int newDate = Jiffy(d).add(days: 6).millisecondsSinceEpoch;
     print(url);
     try {
       final http.Response response = await http
@@ -161,7 +161,7 @@ class AuthServices {
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         DateTime d = DateTime.now();
-        int newDate = Jiffy(d).add(days: 13).millisecondsSinceEpoch;
+        int newDate = Jiffy(d).add(days: 6).millisecondsSinceEpoch;
         var responseJson = json.decode(response.body);
         print(responseJson);
         sharedPreferences.setString("token", responseJson['token']['access']);

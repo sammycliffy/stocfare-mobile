@@ -114,384 +114,380 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                 controller3
                     .updateValue(snapshot.data.monthSalesAmount.toDouble());
                 controller4
-                    .updateValue(snapshot.data.quarterSalesCount.toDouble());
+                    .updateValue(snapshot.data.quarterSalesAmount.toDouble());
                 controller5
                     .updateValue(snapshot.data.yearSalesAmount.toDouble());
-                return Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Card(
-                          child: Container(
-                        width: 420,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 10,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text('Sales Made This Month',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18)),
-                              SizedBox(height: 10),
-                              Row(
-                                children: <Widget>[
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        ' Stockfare provides you \n details of what sells and what \n doesn\'t',
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        snapshot.data.monthSalesCount
-                                            .toString(),
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                      ),
-                                      Text(
-                                        controller.text,
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      )),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 20, top: 10, right: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          GestureDetector(
-                            child: Card(
-                              child: Container(
-                                width: 150,
-                                height: 100,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        'Sales Today',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                      Text(
-                                        snapshot.data.todaySalesCount
-                                            .toString(),
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        controller1.text,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                return SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Card(
+                            child: Container(
+                          width: 420,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              left: 10,
                             ),
-                            onTap: () {
-                              _checkSales.analyticsDetails('day').then((value) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AnalyticsDetailsPage(
-                                                filterBy: 'day',
-                                                analyticsData: value,
-                                                pageTitle: 'Today\'s Report')));
-                              });
-                            },
-                          ),
-                          GestureDetector(
-                            child: Card(
-                              child: Container(
-                                width: 150,
-                                height: 100,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        'Sales This Week',
-                                        style: TextStyle(
-                                          fontSize: 17,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text('Sales Made This Month',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18)),
+                                Row(
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          ' Stockfare provides you \n details of what sells and what \n doesn\'t.',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                          ),
+                                          textAlign: TextAlign.justify,
                                         ),
-                                      ),
-                                      Text(
-                                        snapshot.data.weekSalesCount.toString(),
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        controller2.text,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                      )
-                                    ],
-                                  ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          snapshot.data.monthSalesCount
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        ),
+                                        Text(
+                                          controller.text,
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        )
+                                      ],
+                                    )
+                                  ],
                                 ),
-                              ),
+                              ],
                             ),
-                            onTap: () {
-                              _checkSales
-                                  .analyticsDetails('week')
-                                  .then((value) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AnalyticsDetailsPage(
-                                                filterBy: 'week',
-                                                analyticsData: value,
-                                                pageTitle: 'Week\'s Report')));
-                              });
-                            },
-                          )
-                        ],
+                          ),
+                        )),
                       ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 20, top: 10, right: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          GestureDetector(
-                            child: Card(
-                              child: Container(
-                                width: 150,
-                                height: 100,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        'Sales This Month',
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                        ),
-                                      ),
-                                      Text(
-                                        snapshot.data.monthSalesCount
-                                            .toString(),
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        controller3.text,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              _checkSales
-                                  .analyticsDetails('month')
-                                  .then((value) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AnalyticsDetailsPage(
-                                                filterBy: 'month',
-                                                analyticsData: value,
-                                                pageTitle: 'Month\'s Report')));
-                              });
-                            },
-                          ),
-                          GestureDetector(
-                            child: Card(
-                              child: Container(
-                                width: 150,
-                                height: 100,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        'Sales This Quarter',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      Text(
-                                        snapshot.data.quarterSalesCount
-                                            .toString(),
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        controller4.text,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              _checkSales
-                                  .analyticsDetails('quarter')
-                                  .then((value) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AnalyticsDetailsPage(
-                                                filterBy: 'quarter',
-                                                analyticsData: value,
-                                                pageTitle:
-                                                    'Quarter\'s Report')));
-                              });
-                            },
-                          )
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      child: Padding(
+                      Padding(
                         padding:
                             const EdgeInsets.only(left: 20, top: 10, right: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Card(
-                              child: Container(
-                                width: 150,
-                                height: 100,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        'Sales This Year',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                      Text(
-                                        snapshot.data.yearSalesCount.toString(),
-                                        style: TextStyle(
+                            GestureDetector(
+                              child: Card(
+                                child: Container(
+                                  width: 150,
+                                  height: 150,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Text(
+                                          'Sales Today',
+                                          style: TextStyle(
                                             fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        controller5.text,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                      )
-                                    ],
+                                          ),
+                                        ),
+                                        Text(
+                                          snapshot.data.todaySalesCount
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          controller1.text,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
+                              onTap: () {
+                                _checkSales
+                                    .analyticsDetails('day')
+                                    .then((value) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              AnalyticsDetailsPage(
+                                                  filterBy: 'day',
+                                                  analyticsData: value,
+                                                  pageTitle:
+                                                      'Today\'s Report')));
+                                });
+                              },
+                            ),
+                            GestureDetector(
+                              child: Card(
+                                child: Container(
+                                  width: 150,
+                                  height: 150,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Text(
+                                          'Sales This Week',
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                          ),
+                                        ),
+                                        Text(
+                                          snapshot.data.weekSalesCount
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          controller2.text,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                _checkSales
+                                    .analyticsDetails('week')
+                                    .then((value) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              AnalyticsDetailsPage(
+                                                  filterBy: 'week',
+                                                  analyticsData: value,
+                                                  pageTitle:
+                                                      'Week\'s Report')));
+                                });
+                              },
                             )
                           ],
                         ),
                       ),
-                      onTap: () {
-                        _checkSales.analyticsDetails('year').then((value) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AnalyticsDetailsPage(
-                                      filterBy: 'year',
-                                      analyticsData: value,
-                                      pageTitle: 'Year\'s Report')));
-                        });
-                      },
-                    )
-                  ],
-                );
-              } else {
-                return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Icon(
-                          Icons.monetization_on,
-                          size: 40,
-                          color: Theme.of(context).primaryColor,
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 20, top: 10, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            GestureDetector(
+                              child: Card(
+                                child: Container(
+                                  width: 150,
+                                  height: 150,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Text(
+                                          'Sales This Month',
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                          ),
+                                        ),
+                                        Text(
+                                          snapshot.data.monthSalesCount
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          controller3.text,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                _checkSales
+                                    .analyticsDetails('month')
+                                    .then((value) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              AnalyticsDetailsPage(
+                                                  filterBy: 'month',
+                                                  analyticsData: value,
+                                                  pageTitle:
+                                                      'Month\'s Report')));
+                                });
+                              },
+                            ),
+                            GestureDetector(
+                              child: Card(
+                                child: Container(
+                                  width: 150,
+                                  height: 150,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Text(
+                                          'Sales This Quarter',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        Text(
+                                          snapshot.data.quarterSalesCount
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          controller4.text,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                _checkSales
+                                    .analyticsDetails('quarter')
+                                    .then((value) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              AnalyticsDetailsPage(
+                                                  filterBy: 'quarter',
+                                                  analyticsData: value,
+                                                  pageTitle:
+                                                      'Quarter\'s Report')));
+                                });
+                              },
+                            )
+                          ],
                         ),
                       ),
-                      Center(
-                        child: Text('Your Sales Analytics',
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor)),
-                      ),
-                    ]);
+                      GestureDetector(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, top: 10, right: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Card(
+                                child: Container(
+                                  width: 150,
+                                  height: 150,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Text(
+                                          'Sales This Year',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Text(
+                                          snapshot.data.yearSalesCount
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          controller5.text,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          _checkSales.analyticsDetails('year').then((value) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AnalyticsDetailsPage(
+                                        filterBy: 'year',
+                                        analyticsData: value,
+                                        pageTitle: 'Year\'s Report')));
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                );
+              } else {
+                return Center(child: CircularProgressIndicator());
               }
             });
       }

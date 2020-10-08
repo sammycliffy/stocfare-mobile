@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/screens/subscription/sub_home.dart';
 import 'package:stockfare_mobile/services/payment_services.dart';
 
 enum SingingCharacter { pack, unit }
@@ -76,9 +77,26 @@ class DialogBoxes {
                 height: 15,
               ),
               Text(
-                'Sorry! You cannot use this service until you upgrade your plan',
+                'Sorry! You cannot use this service until you upgrade your plan.',
                 style: TextStyle(color: Colors.black, fontSize: 20),
               ),
+              SizedBox(height: 5),
+              GestureDetector(
+                child: Container(
+                    width: 100,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Center(
+                        child: Text('Upgrade',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 18)))),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SubscriptionPage())),
+              )
             ],
           )),
         );

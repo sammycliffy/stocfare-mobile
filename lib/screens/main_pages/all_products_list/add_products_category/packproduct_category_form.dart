@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
+import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_products_category/barcode_image_to_category.dart';
 
@@ -20,16 +21,16 @@ class _AddPackPageCategoryState extends State<AddPackPageCategory> {
   int _packQuantity = 0;
   int _packLimit = 0;
   bool loading = false;
+  var controller = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' NGN ');
+  var controller1 = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' NGN ');
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String _error;
   ProductServices _productServices = ProductServices();
   @override
   Widget build(BuildContext context) {
-    var controller = new MoneyMaskedTextController(
-        decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' NGN ');
-    var controller1 = new MoneyMaskedTextController(
-        decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' NGN ');
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
     return Scaffold(
         key: _scaffoldKey,
@@ -50,46 +51,6 @@ class _AddPackPageCategoryState extends State<AddPackPageCategory> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        SizedBox(
-                          width: 160,
-                          child: TextFormField(
-                            controller: controller,
-                            keyboardType: TextInputType.number,
-                            validator: (input) =>
-                                input.isEmpty ? "Enter Selling Price" : null,
-                            onChanged: (val) => setState(() {
-                              _packProductPrice = int.parse(val);
-                            }),
-                            decoration: InputDecoration(
-                              labelText: 'Selling Price',
-                              contentPadding: EdgeInsets.all(12),
-                              labelStyle: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.2))),
-                              hintStyle: TextStyle(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.7)),
-                              hintText: 'Pack price',
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.2))),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.5))),
-                            ),
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        SizedBox(width: 15),
                         SizedBox(
                           width: 160,
                           child: TextFormField(
@@ -129,8 +90,49 @@ class _AddPackPageCategoryState extends State<AddPackPageCategory> {
                             style: TextStyle(color: Colors.black),
                           ),
                         ),
+                        SizedBox(width: 15),
+                        SizedBox(
+                          width: 160,
+                          child: TextFormField(
+                            controller: controller,
+                            keyboardType: TextInputType.number,
+                            validator: (input) =>
+                                input.isEmpty ? "Enter Selling Price" : null,
+                            onChanged: (val) => setState(() {
+                              _packProductPrice = int.parse(val);
+                            }),
+                            decoration: InputDecoration(
+                              labelText: 'Selling Price',
+                              contentPadding: EdgeInsets.all(12),
+                              labelStyle: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .focusColor
+                                          .withOpacity(0.2))),
+                              hintStyle: TextStyle(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.7)),
+                              hintText: 'Pack price',
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .focusColor
+                                          .withOpacity(0.2))),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .focusColor
+                                          .withOpacity(0.5))),
+                            ),
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
                       ],
                     ),
+                    SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
@@ -237,12 +239,12 @@ class _AddPackPageCategoryState extends State<AddPackPageCategory> {
                         ),
                         onTap: () {
                           if (_formKey.currentState.validate()) {
-                            _addProduct.setPackProducts(
-                                controller.numberValue.round(),
-                                _packLimit,
-                                _packQuantity ?? 0,
-                                _packProductCostPrice);
-
+                            _addProduct.setPackProductsToCategory(
+                              controller.numberValue.round(),
+                              _packLimit,
+                              _packQuantity ?? 0,
+                              controller1.numberValue.round(),
+                            );
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

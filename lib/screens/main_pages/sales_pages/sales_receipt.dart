@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:intl/intl.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/create_sales_model.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
@@ -55,7 +57,7 @@ class _SalesReceiptState extends State<SalesReceipt> {
     });
   }
 
-  void _shareDocument(_signupNotifier, snapshot) async {
+  void _shareDocument(_signupNotifier, snapshot, amount) async {
     final doc = pw.Document();
 
     doc.addPage(pw.Page(
@@ -71,9 +73,7 @@ class _SalesReceiptState extends State<SalesReceipt> {
                     pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18),
               ),
               pw.Text(
-                DateFormat('yyyy-MM-dd @ kk:mm')
-                    .format(snapshot.data.dateCreated)
-                    .toString(),
+                Jiffy(snapshot.data.dateCreated).yMMMMEEEEdjm,
                 style:
                     pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14),
               ),
@@ -101,30 +101,6 @@ class _SalesReceiptState extends State<SalesReceipt> {
                   )
                 ],
               ),
-              for (var name in snapshot.data.productDetail)
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Padding(
-                      padding: const pw.EdgeInsets.only(left: 30, top: 10),
-                      child: pw.Text(
-                        name.name.toString() +
-                            ' ' +
-                            name.quantityBought.toString(),
-                        style: pw.TextStyle(
-                            fontSize: 16, fontWeight: pw.FontWeight.bold),
-                      ),
-                    ),
-                    pw.Padding(
-                      padding: const pw.EdgeInsets.only(right: 30, top: 10),
-                      child: pw.Text(
-                        name.totalCost.toString(),
-                        style: pw.TextStyle(
-                            fontSize: 16, fontWeight: pw.FontWeight.bold),
-                      ),
-                    )
-                  ],
-                ),
               for (var name in snapshot.data.productDetail)
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -311,7 +287,7 @@ class _SalesReceiptState extends State<SalesReceipt> {
                         pw.Padding(
                           padding: const pw.EdgeInsets.only(right: 30, top: 5),
                           child: pw.Text(
-                            snapshot.data.amount.toString(),
+                            amount,
                             style: pw.TextStyle(
                               fontSize: 16,
                             ),
@@ -328,8 +304,13 @@ class _SalesReceiptState extends State<SalesReceipt> {
 
   @override
   Widget build(BuildContext context) {
-    SignupNotifier _signupNotifier = Provider.of<SignupNotifier>(context);
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
+    var controller = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
     return WillPopScope(
       onWillPop: () {
         _addProduct.items.clear();
@@ -361,7 +342,8 @@ class _SalesReceiptState extends State<SalesReceipt> {
                         ),
                       ),
                       onTap: () {
-                        _shareDocument(_signupNotifier, snapshot);
+                        _shareDocument(
+                            _signupNotifier, snapshot, controller.text);
                       },
                     );
                   }),
@@ -376,7 +358,8 @@ class _SalesReceiptState extends State<SalesReceipt> {
                             IconButton(
                                 icon: Icon(Icons.print),
                                 onPressed: () {
-                                  _printDocument(_signupNotifier, snapshot);
+                                  _printDocument(_signupNotifier, snapshot,
+                                      controller.text);
                                 },
                                 color: Colors.white),
                             Text('Print'),
@@ -384,7 +367,8 @@ class _SalesReceiptState extends State<SalesReceipt> {
                         ),
                       ),
                       onTap: () {
-                        _printDocument(_signupNotifier, snapshot);
+                        _printDocument(
+                            _signupNotifier, snapshot, controller.text);
                       },
                     );
                   })
@@ -402,6 +386,8 @@ class _SalesReceiptState extends State<SalesReceipt> {
                   future: widget.value,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      controller
+                          .updateValue(double.parse(snapshot.data.amount));
                       return Center(
                         child: SingleChildScrollView(
                           child: Column(
@@ -417,9 +403,7 @@ class _SalesReceiptState extends State<SalesReceipt> {
                                     fontWeight: FontWeight.bold, fontSize: 18),
                               ),
                               Text(
-                                DateFormat('yyyy-MM-dd @ kk:mm')
-                                    .format(snapshot.data.dateCreated)
-                                    .toString(),
+                                Jiffy(snapshot.data.dateCreated).yMMMMEEEEdjm,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 14),
                               ),
@@ -709,7 +693,7 @@ class _SalesReceiptState extends State<SalesReceipt> {
                                             padding: const EdgeInsets.only(
                                                 right: 30, top: 5),
                                             child: Text(
-                                              snapshot.data.amount.toString(),
+                                              controller.text,
                                               style: TextStyle(
                                                   fontSize: 16,
                                                   fontFamily: 'Sora',
@@ -745,7 +729,7 @@ class _SalesReceiptState extends State<SalesReceipt> {
     );
   }
 
-  void _printDocument(_signupNotifier, snapshot) {
+  void _printDocument(_signupNotifier, snapshot, amount) {
     Printing.layoutPdf(onLayout: (pageFormat) {
       final doc = pw.Document();
 
@@ -762,9 +746,7 @@ class _SalesReceiptState extends State<SalesReceipt> {
                       fontWeight: pw.FontWeight.bold, fontSize: 18),
                 ),
                 pw.Text(
-                  DateFormat('yyyy-MM-dd @ kk:mm')
-                      .format(snapshot.data.dateCreated)
-                      .toString(),
+                  Jiffy(snapshot.data.dateCreated).yMMMMEEEEdjm,
                   style: pw.TextStyle(
                       fontWeight: pw.FontWeight.bold, fontSize: 14),
                 ),
@@ -792,30 +774,6 @@ class _SalesReceiptState extends State<SalesReceipt> {
                     )
                   ],
                 ),
-                for (var name in snapshot.data.productDetail)
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.only(left: 30, top: 10),
-                        child: pw.Text(
-                          name.name.toString() +
-                              ' ' +
-                              name.quantityBought.toString(),
-                          style: pw.TextStyle(
-                              fontSize: 16, fontWeight: pw.FontWeight.bold),
-                        ),
-                      ),
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.only(right: 30, top: 10),
-                        child: pw.Text(
-                          name.totalCost.toString(),
-                          style: pw.TextStyle(
-                              fontSize: 16, fontWeight: pw.FontWeight.bold),
-                        ),
-                      )
-                    ],
-                  ),
                 for (var name in snapshot.data.productDetail)
                   pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -1008,7 +966,7 @@ class _SalesReceiptState extends State<SalesReceipt> {
                             padding:
                                 const pw.EdgeInsets.only(right: 30, top: 5),
                             child: pw.Text(
-                              snapshot.data.amount.toString(),
+                              amount,
                               style: pw.TextStyle(
                                 fontSize: 16,
                               ),

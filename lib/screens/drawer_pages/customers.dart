@@ -68,17 +68,19 @@ class _CustomersPageState extends State<CustomersPage> {
                                   width: 50,
                                   height: 50,
                                   decoration: BoxDecoration(
-                                      color: Colors.green[200],
+                                      color: Colors.grey[200],
                                       borderRadius: BorderRadius.circular(300)),
                                   child: Center(
                                       child: Text(_customerNames[index][0],
                                           style: TextStyle(
                                               fontSize: 25,
-                                              color: Colors.white))),
+                                              color: Theme.of(context)
+                                                  .primaryColor))),
                                 ),
                                 title: Text(_customerNames[index],
                                     style: TextStyle(fontSize: 19)),
                                 subtitle: Text(_phoneNumber[index]),
+                                trailing: Icon(Icons.arrow_forward_ios),
                               ),
                               onTap: () {
                                 _customerDetails(context, index);
@@ -127,7 +129,10 @@ class _CustomersPageState extends State<CustomersPage> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text('Email:'), Text(_customerEmail[index])],
+                children: [
+                  Text('Email:'),
+                  Text(_customerEmail[index] ?? 'No Email')
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -34,6 +34,16 @@
   "create-expenses": "http://stockfare-io.herokuapp.com/api/v2/expenditure/create-expenses/",
   "get-expenses-summary": "http://stockfare-io.herokuapp.com/api/v2/expenditure/expenses-summary/",
   "expenses-dropdown": "http://stockfare-io.herokuapp.com/api/v2/expenditure/expenses-dropdown-list/",
-
+  "income-dropdown": "http://stockfare-io.herokuapp.com/api/v2/expenditure/income-dropdown-list/",
+  "get-all-expenses": "http://stockfare-io.herokuapp.com/api/v2/expenditure/expenses/",
+  "reoccuring-expenses": "http://stockfare-io.herokuapp.com/api/v2/expenditure/recurring-expenses/",
+  "reoccuring-income": "http://stockfare-io.herokuapp.com/api/v2/expenditure/recurring-income/",
+  "create-income": "http://stockfare-io.herokuapp.com/api/v2/expenditure/create-income/",
+  "get-income-summary": "http://stockfare-io.herokuapp.com/api/v2/expenditure/income-summary/",
+  "get-all-income": "http://stockfare-io.herokuapp.com/api/v2/expenditure/income/",
+  "get-all-losses": "http://stockfare-io.herokuapp.com/api/v1/analytics/loss/",
+  "get-all-profits": "http://stockfare-io.herokuapp.com/api/v1/analytics/profit/",
+  "loss-list": "http://stockfare-io.herokuapp.com/api/v1/analytics/sale-loss-list/",
+  "profit-list": "http://stockfare-io.herokuapp.com/api/v1/analytics/sale-profit-list/",
   "base-url": "http://stockfare-io.herokuapp.com/"
 }

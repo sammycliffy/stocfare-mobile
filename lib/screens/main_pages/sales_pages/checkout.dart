@@ -28,6 +28,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   bool soldOnCredit;
   String customerAddress;
   int initialDeposit = 0;
+  int editedPrice = 0;
   AddProductToCart _addProduct;
   String _error;
   static List _prices = [];
@@ -112,7 +113,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Text('TOTAL PRICE',
                         style: Theme.of(context).textTheme.headline6),
                     SizedBox(
-                      width: 110,
+                      width: 60,
                     ),
                     Text(controller1.text,
                         style: Theme.of(context).textTheme.headline6)
@@ -509,7 +510,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 initialDeposit,
                                 tax,
                                 selectedDate.toLocal(),
-                                addProduct.total)
+                                _prices.reduce((a, b) => a + b))
                             .catchError((e) {
                           return null;
                         }).timeout(Duration(seconds: 10),
@@ -600,7 +601,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
-  int editedPrice = 0;
   _editPrice(
     context,
     price,
@@ -609,6 +609,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
+        AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
         return AlertDialog(
           backgroundColor: Colors.white,
           content: SingleChildScrollView(
@@ -640,7 +641,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
               RaisedButton(
                 onPressed: () {
                   sellUnitProduct(productId, price);
+                  addProduct.addTotal(editedPrice);
                   Navigator.pop(context);
+                  print(addProduct.total);
                 },
                 child: Text('Save', style: TextStyle(color: Colors.white)),
                 color: Theme.of(context).primaryColor,

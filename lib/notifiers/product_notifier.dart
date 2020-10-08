@@ -12,7 +12,10 @@ class AddProductNotifier with ChangeNotifier {
   int _productDiscount = 0;
   int _productWeight = 0;
   List<ColorDataModel> _data;
-
+  int _packProductSellingPriceToCategory = 0;
+  int _packProductCostPriceToCategory = 0;
+  int _packProductLimitToCategory = 0;
+  int _packProductQuantityToCategory = 0;
   int _packProductPrice = 0;
   int _packLimit = 0;
   int _packQuantity = 0;
@@ -44,6 +47,11 @@ class AddProductNotifier with ChangeNotifier {
   String get categoryId => _categoryId;
   String get firebasekey => _firebaseKey;
   List<ColorDataModel> get data => _data;
+  int get packProductSellingPriceToCategory =>
+      _packProductSellingPriceToCategory;
+  int get packProductCostPriceToCategory => _packProductCostPriceToCategory;
+  int get packProductLimitToCategory => _packProductLimitToCategory;
+  int get packProductQuantityToCategory => _packProductQuantityToCategory;
   void setFirstProduct(
     String productCategory,
     String productName,
@@ -80,6 +88,19 @@ class AddProductNotifier with ChangeNotifier {
     _packLimit = packLimit;
     _packQuantity = packQuantity;
     _packProductCostPrice = packCostPrice;
+    notifyListeners();
+  }
+
+  void setPackProductsToCategory(
+    int packProductPrice,
+    int packLimit,
+    int packQuantity,
+    int packCostPrice,
+  ) {
+    _packProductSellingPriceToCategory = packProductPrice;
+    _packProductCostPriceToCategory = packCostPrice;
+    _packProductLimitToCategory = packLimit;
+    _packProductQuantityToCategory = packQuantity;
     notifyListeners();
   }
 

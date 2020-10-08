@@ -118,19 +118,19 @@ class _AddCartState extends State<AddCart> {
                           height: 50,
                           width: 100,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(10),
                             color: Colors.grey[200],
                           ),
                           child: Column(
                             children: <Widget>[
                               SizedBox(
-                                height: 15,
+                                height: 5,
                               ),
                               Text(
                                 _names?.elementAt(index).toString(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                  fontSize: 16,
                                 ),
                               ),
                               Text(
@@ -138,15 +138,12 @@ class _AddCartState extends State<AddCart> {
                                     ' ' +
                                     _type[index].toString(),
                                 style:
-                                    TextStyle(color: Colors.grey, fontSize: 18),
+                                    TextStyle(color: Colors.grey, fontSize: 16),
                               ),
                               Text(
                                 _prices[index].toString(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600, fontSize: 16),
-                              ),
-                              SizedBox(
-                                height: 5,
                               ),
                               IconButton(
                                   icon: Icon(Icons.delete,

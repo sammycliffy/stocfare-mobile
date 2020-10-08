@@ -2,7 +2,6 @@ import 'package:basic_utils/basic_utils.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
@@ -52,7 +51,7 @@ class _ProductListPageState extends State<ProductListPage> {
   List _packQuantitySearch = [];
   List _productIdSearch = [];
   List _packPriceSearch = [];
-
+  List _indexOfValue = [];
   bool editProduct = false;
   bool deleteProduct = false;
   List<bool> checkBox = [];
@@ -60,37 +59,6 @@ class _ProductListPageState extends State<ProductListPage> {
   String _error;
   bool _search = false;
   int productCount = 0;
-
-  @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //   _addProductNotifier =
-  //       Provider.of<AddProductNotifier>(context, listen: false);
-  // });
-  // _productList = _productServices.getAllProducts();
-  // _productList.then((value) {
-  //   _categoryId = value.results[_addProductNotifier.categoryIndex].id;
-  //   print(
-  //       value.results[_addProductNotifier.categoryIndex].products.map((name) {
-  //     _productName.add(name.name);
-  //     checkBox.add(false);
-  //     _productId.add(name.id);
-  //     _productPrice.add(name.productUnit.price);
-  //     _productImage.add(name.productImage[0].imageLink);
-  //     _productQuantity.add(name.productUnit.quantity);
-
-  //     _productPack.add(name.productPack.quantity);
-  //     return name.name;
-  //   }));
-
-  //   print(value.results.map((category) {
-  //     setState(() {
-  //       _categories.add(category.name);
-  //       _productCount.add(category.productCount);
-  //     });
-  //   }));
-  // });
 
   @override
   Widget build(BuildContext context) {
@@ -250,13 +218,11 @@ class _ProductListPageState extends State<ProductListPage> {
           ? ListView.builder(
               itemCount: _productNameSearch.length,
               itemBuilder: (context, index) {
-                controllerSearch
-                    .updateValue((_productPriceSearch[index]).toDouble());
-                controllerSearch1
-                    .updateValue((_packPriceSearch[index]).toDouble());
-                return GestureDetector(
-                  child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                controller.updateValue((_productPriceSearch[index]).toDouble());
+                controller1.updateValue((_packPriceSearch[index]).toDouble());
+                return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
                       child: Card(
                           child: ListTile(
                               title: Text(
@@ -294,7 +260,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   EditProductPage(
-                                                    index: index,
+                                                    index: _indexOfValue[index],
                                                     productId:
                                                         _productIdSearch[index],
                                                   )));
@@ -328,41 +294,42 @@ class _ProductListPageState extends State<ProductListPage> {
                                     },
                                   );
                                 }
+
                                 return Column(
                                   children: [
                                     SizedBox(height: 10),
-                                    Text(controllerSearch.text.toString() +
-                                        ' / Unit'),
-                                    Text(controllerSearch1.text.toString() +
+                                    Text(
+                                        controller.text.toString() + ' / Unit'),
+                                    Text(controller1.text.toString() +
                                         ' / Pack'),
                                   ],
                                 );
-                              }()))))),
-                  onTap: () {
-                    _addToCart.addSingleProduct(
-                        _addToCart.categoryName,
-                        _listProductName[index],
-                        _listProductDescription[index],
-                        _listUnitLimit[index],
-                        _listUnitQuantity[index],
-                        _listUnitPrice[index],
-                        _listPackLimit[index],
-                        _listPackQuantity[index],
-                        _listPackPrice[index],
-                        _listBarcode[index],
-                        _imageUrl[index]);
-                    Navigator.pushNamed(context, '/product_details');
-                  },
-                );
+                              }())))),
+                      onTap: () {
+                        _addToCart.addSingleProduct(
+                            _addToCart.categoryName,
+                            _listProductName[_indexOfValue[index]],
+                            _listProductDescription[_indexOfValue[index]],
+                            _listUnitLimit[_indexOfValue[index]],
+                            _listUnitQuantity[_indexOfValue[index]],
+                            _listUnitPrice[_indexOfValue[index]],
+                            _listPackLimit[_indexOfValue[index]],
+                            _listPackQuantity[_indexOfValue[index]],
+                            _listPackPrice[_indexOfValue[index]],
+                            _listBarcode[_indexOfValue[index]],
+                            _imageUrl[_indexOfValue[index]]);
+                        Navigator.pushNamed(context, '/product_details');
+                      },
+                    ));
               })
           : StreamBuilder(
               stream: firebaseDb,
               builder: (context, AsyncSnapshot<Event> snapshot) {
+                _productName.clear();
+                _productQuantity.clear();
+                _packQuantity.clear();
+                _productId.clear();
                 if (snapshot.hasData) {
-                  _productName.clear();
-                  _productQuantity.clear();
-                  _packQuantity.clear();
-                  _productId.clear();
                   _listProductName.clear();
                   _listProductDescription.clear();
                   _listUnitLimit.clear();
@@ -400,7 +367,7 @@ class _ProductListPageState extends State<ProductListPage> {
                       _packPrice.add(value['product_pack']['price']);
                       checkBox.add(false);
                       _listProductName.add(value['name']);
-                      _productId.add(value[value['id']]);
+
                       _listUnitQuantity.add(value['product_unit']['quantity']);
                       _listBarcode.add(value['bar_code']);
                       _listDiscount.add(value['discount']);
@@ -694,6 +661,7 @@ class _ProductListPageState extends State<ProductListPage> {
       print(_productName.map((value) {
         if (value.contains(capitalized)) {
           _productNameSearch.add(value);
+          _indexOfValue.add(_productName.indexOf(value));
           _productPriceSearch.add(_productPrice[_productName.indexOf(value)]);
           _packPriceSearch.add(_packPrice[_productName.indexOf(value)]);
           _productQuantitySearch
@@ -702,6 +670,7 @@ class _ProductListPageState extends State<ProductListPage> {
           _productIdSearch.add(_productId[_productName.indexOf(value)]);
         }
       }));
+      print(_indexOfValue);
     });
   }
 

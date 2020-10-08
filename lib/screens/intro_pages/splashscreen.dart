@@ -14,6 +14,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   Image currentImage;
+  int today = DateTime.now().millisecondsSinceEpoch;
 
   @override
   void initState() {
@@ -34,32 +35,31 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            child: Center(
-              child: currentImage,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: currentImage,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  'Stockfare',
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor),
+                )
+              ],
             ),
           ),
           Column(children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                right: 90,
-              ),
-              child: Text('from'),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 110),
-              child: Container(
-                width: 8,
-                height: 8,
-                color: Colors.red,
-              ),
-            ),
             Text(
-              'Contrail Store',
+              'From Contrail Store Ltd.',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 16,
               ),
             ),
             SizedBox(
@@ -86,9 +86,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void checkForLogin() async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
-
+    int date = prefs.getInt('date');
     if (token != null) {
-      SaveUser().saveUser(context);
+      if (date <= today) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) => Login()));
+      } else {
+        SaveUser().saveUser(context);
+      }
     } else {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (BuildContext context) => Login()));

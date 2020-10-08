@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/services/activities_services.dart';
@@ -62,6 +63,7 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
   @override
   Widget build(BuildContext context) {
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
+
     return Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
@@ -193,11 +195,13 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                               await _productServices.addProductToCategory(
                                   _addProduct.unitproductName,
                                   _addProduct.unitproductPrice,
+                                  _addProduct.unitCostPrice,
                                   _addProduct.unitproductQuantity,
                                   _addProduct.unitLimit,
-                                  _addProduct.packProductPrice,
-                                  _addProduct.packQuantity,
-                                  _addProduct.packLimit,
+                                  _addProduct.packProductSellingPriceToCategory,
+                                  _addProduct.packProductCostPriceToCategory,
+                                  _addProduct.packProductQuantityToCategory,
+                                  _addProduct.packProductLimitToCategory,
                                   _scanBarcode,
                                   _addProduct.productDescription,
                                   base64Image,

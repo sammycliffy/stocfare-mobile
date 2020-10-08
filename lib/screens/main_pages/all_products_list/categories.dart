@@ -37,6 +37,7 @@ class _CategoryPageState extends State<CategoryPage> {
   bool deleteCategory = false;
   String updatedCategory;
   List _firebaseKeys = [];
+  List _firebaseKeysSearch = [];
   List<String> deleteItem = [];
   List<bool> checkBox = [];
   bool _search = false;
@@ -190,79 +191,91 @@ class _CategoryPageState extends State<CategoryPage> {
               ),
             )),
         body: _search
-            ? ListView.builder(
-                itemCount: _categoriesSearch.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Card(
-                            semanticContainer: true,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            elevation: 3,
-                            child: ListTile(
-                                title: Text(
-                                  _categoriesSearch[index].toString(),
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Text(
-                                  _productCountSearch[index].toString() +
-                                      ' items',
-                                ),
-                                trailing: Container(
-                                    child: (() {
-                                  if (editCategory) {
-                                    return GestureDetector(
-                                      child: Icon(Icons.edit),
-                                      onTap: () {
-                                        _updateDialog(
-                                            _categoriesSearch[index].toString(),
-                                            _categoryIdSearch[index]);
-                                      },
-                                    );
-                                  } else if (deleteCategory) {
-                                    return GestureDetector(
-                                      child: Container(
-                                        width: 100,
-                                        height: 100,
-                                        child: CheckboxListTile(
-                                          activeColor:
-                                              Theme.of(context).primaryColor,
-                                          value: checkBox[index],
-                                          onChanged: (newValue) {
-                                            setState(() {
-                                              checkBox[index] = newValue;
-                                              deleteItem.contains(
-                                                      _categoryIdSearch[index])
-                                                  ? deleteItem.remove(
-                                                      _categoryIdSearch[index])
-                                                  : deleteItem.add(
-                                                      _categoryIdSearch[index]
-                                                          .toString());
-                                            });
-                                          },
-                                        ),
+            ? Scrollbar(
+                isAlwaysShown: true,
+                controller: _scrollController,
+                child: ListView.builder(
+                    itemCount: _categoriesSearch.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Card(
+                                semanticContainer: true,
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                elevation: 3,
+                                child: ListTile(
+                                    title: Text(
+                                      _categoriesSearch[index].toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
                                       ),
-                                      onTap: () {
-                                        print(_categoryId[index]);
-                                      },
-                                    );
-                                  }
+                                    ),
+                                    subtitle: Text(
+                                      _productCountSearch[index].toString() +
+                                          ' items',
+                                    ),
+                                    trailing: Container(
+                                        child: (() {
+                                      if (editCategory) {
+                                        return GestureDetector(
+                                          child: Icon(Icons.edit),
+                                          onTap: () {
+                                            _updateDialog(
+                                                _categoriesSearch[index]
+                                                    .toString(),
+                                                _categoryIdSearch[index]);
+                                          },
+                                        );
+                                      } else if (deleteCategory) {
+                                        return GestureDetector(
+                                          child: Container(
+                                            width: 100,
+                                            height: 100,
+                                            child: CheckboxListTile(
+                                              activeColor: Theme.of(context)
+                                                  .primaryColor,
+                                              value: checkBox[index],
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  checkBox[index] = newValue;
+                                                  deleteItem.contains(
+                                                          _categoryId[index])
+                                                      ? deleteItem.remove(
+                                                          _categoryId[index])
+                                                      : deleteItem.add(
+                                                          _categoryId[index]
+                                                              .toString());
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            print(_categoryId[index]);
+                                          },
+                                        );
+                                      }
 
-                                  return Icon(Icons.more_vert);
-                                }()))))),
-                    onTap: () {
-                      _addProductNotifier.setCategoryIndex(index);
-                      _addToCart.setFireId(_firebaseKeys[index]);
-                      _addProductNotifier
-                          .setCategoryId(_categoryIdSearch[index]);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProductListPage()));
-                    },
-                  );
-                })
+                                      return Icon(
+                                        Icons.category,
+                                        color: Theme.of(context).primaryColor,
+                                      );
+                                    }()))))),
+                        onTap: () {
+                          _addToCart.addID(_categoryIdSearch[index],
+                              _categoriesSearch[index]);
+                          _addToCart.setFireId(_firebaseKeysSearch[index]);
+                          _addProductNotifier
+                              .setCategoryId(_categoryIdSearch[index]);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProductListPage()));
+                        },
+                      );
+                    }),
+              )
             : StreamBuilder(
                 stream: firebaseDb,
                 builder: (context, AsyncSnapshot<Event> snapshot) {
@@ -636,6 +649,7 @@ class _CategoryPageState extends State<CategoryPage> {
     _categoriesSearch.clear();
     _productCountSearch.clear();
     _categoryIdSearch.clear();
+    _firebaseKeysSearch.clear();
     setState(() {
       print(_categories);
       _search = true;
@@ -644,6 +658,7 @@ class _CategoryPageState extends State<CategoryPage> {
           _categoriesSearch.add(value);
           _productCountSearch.add(_productCount[_categories.indexOf(value)]);
           _categoryIdSearch.add(_categoryId[_categories.indexOf(value)]);
+          _firebaseKeysSearch.add(_firebaseKeys[_categories.indexOf(value)]);
         }
       }));
     });

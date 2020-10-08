@@ -54,7 +54,11 @@ class _HomePageState extends State<HomePage> {
   List _packQuantitySearch = [];
   List _productIdSearch = [];
   List _productPackPriceSearch = [];
+  List _unitCostPriceSearch = [];
+  List _packCostPriceSearch = [];
   List _barcodeSearch = [];
+  List _unitCostPrice = [];
+  List _packCostPrice = [];
   bool newvalue = false;
   List<Map<String, dynamic>> items = [];
   List _items = [];
@@ -148,7 +152,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.8;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 3.2;
     final double itemWidth = size.width / 2;
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     SignupNotifier _signupNotifier =
@@ -485,6 +489,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               onTap: () {
+                                //check whether it is pack or unit
                                 if (_productPackPriceSearch[index] == 0) {
                                   var map = Map();
                                   _quantityToSell.forEach((element) {
@@ -493,9 +498,8 @@ class _HomePageState extends State<HomePage> {
                                     } else {
                                       map[element] += 1;
                                     }
-                                  }); // count the list of items
-                                  print(map);
-                                  print(map[_productIdSearch[index]]);
+                                  });
+                                  // when you change anything here make sure you change it in search
                                   if (map[_productIdSearch[index]] == null) {
                                     map[_productIdSearch[index]] = 0;
                                   }
@@ -511,13 +515,13 @@ class _HomePageState extends State<HomePage> {
                                         .setQuantityToSell(_quantityToSell);
 
                                     sellUnitProduct(
-                                        _productIdSearch[index],
-                                        _categoriesSearch[index],
-                                        _productPriceSearch[index]);
+                                      _productIdSearch[index],
+                                      _categoriesSearch[index],
+                                      _productPriceSearch[index],
+                                      _unitCostPriceSearch[index],
+                                    );
                                   }
-                                  print(_productQuantitySearch[index]);
-                                  print(map[_productIdSearch[index]]);
-                                  print(_addProduct.quantityToSell.length);
+                                  print(_quantityToSell);
                                 } else {
                                   // send pack to the dialog page
 
@@ -527,7 +531,8 @@ class _HomePageState extends State<HomePage> {
                                       _productIdSearch[index],
                                       _categoriesSearch[index],
                                       _productPackPriceSearch[index],
-                                      _productPriceSearch[index]);
+                                      _productPriceSearch[index],
+                                      _packCostPriceSearch[index]);
                                 }
                               },
                             ),
@@ -543,6 +548,8 @@ class _HomePageState extends State<HomePage> {
                             _categories.clear();
                             _productName.clear();
                             _topCategory.clear();
+                            _unitCostPrice.clear();
+                            _packCostPrice.clear();
                             DataSnapshot dataValues = snapshot.data.snapshot;
                             var data = dataValues
                                 .value['${_signupNotifier.firebaseId}'];
@@ -566,12 +573,16 @@ class _HomePageState extends State<HomePage> {
                                       _barcode.add(value['bar_code']);
                                       _productQuantity.add(
                                           value['product_unit']['quantity']);
+                                      _unitCostPrice.add(
+                                          value['product_unit']['cost_price']);
                                       _packQuantity.add(
                                           value['product_pack']['quantity']);
                                       _productPrice
                                           .add(value['product_unit']['price']);
                                       _productPackPrice
                                           .add(value['product_pack']['price']);
+                                      _packCostPrice.add(
+                                          value['product_pack']['cost_price']);
                                     }) ??
                                     '[]');
 
@@ -721,9 +732,11 @@ class _HomePageState extends State<HomePage> {
                                                   _quantityToSell);
 
                                               sellUnitProduct(
-                                                  _productId[index],
-                                                  _categories[index],
-                                                  _productPrice[index]);
+                                                _productId[index],
+                                                _categories[index],
+                                                _productPrice[index],
+                                                _unitCostPrice[index],
+                                              );
                                             }
                                             print(_productQuantity[index]);
                                             print(map[_productId[index]]);
@@ -736,7 +749,8 @@ class _HomePageState extends State<HomePage> {
                                                 _productId[index],
                                                 _categories[index],
                                                 _productPackPrice[index],
-                                                _productPrice[index]);
+                                                _productPrice[index],
+                                                _packCostPrice[index]);
                                           }
                                         },
                                       ),
@@ -795,6 +809,11 @@ class _HomePageState extends State<HomePage> {
     _productQuantitySearch.clear();
     _productPackPriceSearch.clear();
     _productIdSearch.clear();
+    _unitCostPriceSearch.clear();
+    _packCostPrice.clear();
+    _unitCostPrice.clear();
+    _packCostPriceSearch.clear();
+
     setState(() {
       isSearched = true;
       print(_categories.map((value) {
@@ -814,6 +833,19 @@ class _HomePageState extends State<HomePage> {
               .add(_productQuantity[_categories.indexOf(value)]);
           _productPackPriceSearch
               .add(_productPackPrice[_categories.indexOf(value)]);
+          if (_unitCostPriceSearch.length == 0) {
+            print('no Cost Price');
+          } else {
+            _unitCostPriceSearch
+                .add(_unitCostPrice[_categories.indexOf(value)]);
+          }
+          if (_packCostPriceSearch.length == 0) {
+            print('no Cost Price');
+          } else {
+            _packCostPriceSearch
+                .add(_packCostPrice[_categories.indexOf(value)]);
+          }
+
           _productIdSearch.add(_productId[_categories.indexOf(value)]);
         }
         print(_categoriesSearch);
@@ -839,7 +871,8 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void sellUnitProduct(_productId, _productName, _productUnitPrice) {
+  void sellUnitProduct(
+      _productId, _productName, _productUnitPrice, unitCostPrice) {
     var map = Map();
     _quantityToSell.forEach((element) {
       if (!map.containsKey(element)) {
@@ -870,19 +903,14 @@ class _HomePageState extends State<HomePage> {
         'id': _productId,
         'totalCost': _productUnitPrice * (map[_productId]),
         'name': '$_productName',
+        'cost_price': unitCostPrice,
         "colours": []
       });
     }
   }
 
-  _sellPackProduct(
-    _packQuantity,
-    productQuantity,
-    _productId,
-    _productName,
-    _packPrice,
-    _productPrice,
-  ) {
+  _sellPackProduct(_packQuantity, productQuantity, _productId, _productName,
+      _packPrice, _productPrice, packCostPrice) {
     bool _error = false;
     String _errorMesssage;
     AddProductToCart _addProduct =
@@ -1105,6 +1133,7 @@ class _HomePageState extends State<HomePage> {
                                     'id': _productId,
                                     'totalCost': _productQuantity * _packPrice,
                                     'name': '$_productName',
+                                    'cost_price': packCostPrice,
                                     "colours": []
                                   });
 
@@ -1119,6 +1148,7 @@ class _HomePageState extends State<HomePage> {
                                     'id': _productId,
                                     'totalCost': _productQuantity * _packPrice,
                                     'name': '$_productName',
+                                    'cost_price': packCostPrice,
                                     "colours": []
                                   });
 

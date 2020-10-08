@@ -13,10 +13,12 @@ class ProductServices {
   Future<dynamic> productAddition(
       String productCategory,
       String unitproductName,
-      int unitproductPrice,
+      int unitproductSellingPrice,
+      int unitProductCostPrice,
       int unitproductQuantity,
       int unitLimit,
-      int packProductPrice,
+      int packProductSellingPrice,
+      int packProductCostPrice,
       int packQuantity,
       int packLimit,
       String barcode,
@@ -43,14 +45,16 @@ class ProductServices {
               "product_colour":
                   colorsData.colorDataModel.map((i) => i.toJson()).toList(),
               "product_unit": {
-                "price": unitproductPrice,
+                "price": unitproductSellingPrice,
                 "quantity": unitproductQuantity,
                 "limit": unitLimit,
+                "cost_price": unitProductCostPrice,
               },
               "product_pack": {
-                "price": packProductPrice,
+                "price": packProductSellingPrice,
                 "limit": unitLimit,
                 "quantity": packQuantity,
+                "cost_price": unitProductCostPrice
               },
               "image": image,
               "name": unitproductName,
@@ -80,10 +84,12 @@ class ProductServices {
   //Add products alone
   Future<dynamic> addProductToCategory(
     String unitproductName,
-    int unitproductPrice,
+    int unitproductSellingPrice,
+    int unitProductCostPrice,
     int unitproductQuantity,
     int unitLimit,
-    int packProductPrice,
+    int packProductSellingPrice,
+    int packProductCostPrice,
     int packQuantity,
     int packLimit,
     String barcode,
@@ -110,14 +116,16 @@ class ProductServices {
             "product_colour":
                 colorsData.colorDataModel.map((i) => i.toJson()).toList(),
             "product_unit": {
-              "price": unitproductPrice,
+              "price": unitproductSellingPrice,
               "quantity": unitproductQuantity,
-              "limit": unitLimit
+              "limit": unitLimit,
+              "cost_price": unitProductCostPrice
             },
             "product_pack": {
-              "price": packProductPrice,
+              "price": packProductSellingPrice,
               "limit": packLimit,
               "quantity": packQuantity,
+              "cost_price": packProductCostPrice
             },
             "name": unitproductName,
             "image": image,
@@ -187,23 +195,27 @@ class ProductServices {
     String token = sharedPreferences.getString('token');
     print(name);
     print(categoryId);
-    final String url =
-        GlobalConfiguration().get("update-category") + '$categoryId/';
+    try {
+      final String url =
+          GlobalConfiguration().get("update-category") + '$categoryId/';
 
-    final response = await http.patch(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(<String, dynamic>{
-          "name": name,
-        }));
-    if (response.statusCode == 200) {
-      return response.statusCode;
-    } else {
-      print(response.body);
-      return false;
+      final response = await http.patch(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode(<String, dynamic>{
+            "name": name,
+          }));
+      if (response.statusCode == 200) {
+        return response.statusCode;
+      } else {
+        print(response.body);
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
     }
   }
 
@@ -212,9 +224,11 @@ class ProductServices {
     double unitproductPrice,
     int unitproductQuantity,
     int unitLimit,
+    double unitCostPrice,
     double packProductPrice,
     int packQuantity,
     int packLimit,
+    double packCostPrice,
     String barcode,
     String productDescription,
     int productDiscount,
@@ -225,64 +239,76 @@ class ProductServices {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
     ColorsData colorsData = ColorsData(colorDataModel: data);
-    final String url =
-        GlobalConfiguration().get("edit-product") + '$productId/';
+    print(packCostPrice);
+    print(packProductPrice);
+    print(productId);
+    try {
+      final String url =
+          GlobalConfiguration().get("edit-product") + '$productId/';
 
-    final response = await http.patch(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(<String, dynamic>{
-          "product_colour":
-              colorsData.colorDataModel.map((i) => i.toJson()).toList(),
-          "product_unit": {
-            "price": unitproductPrice,
-            "quantity": unitproductQuantity,
-            "limit": unitLimit
+      final response = await http.patch(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
           },
-          "product_pack": {
-            "price": packProductPrice,
-            "limit": packLimit,
-            "quantity": packQuantity,
-          },
-          "name": unitproductName,
-          "description": productDescription,
-          "weight": productWeight,
-          "bar_code": barcode,
-          "discount": productDiscount
-        }));
-    if (response.statusCode == 200) {
-      print(response.body);
-      return true;
-    } else {
-      print(response.body);
-      return json.decode(response.body);
+          body: jsonEncode(<String, dynamic>{
+            "product_colour":
+                colorsData.colorDataModel.map((i) => i.toJson()).toList(),
+            "product_unit": {
+              "price": unitproductPrice,
+              "quantity": unitproductQuantity,
+              "limit": unitLimit,
+              "cost_price": unitCostPrice
+            },
+            "product_pack": {
+              "price": packProductPrice,
+              "limit": packLimit,
+              "quantity": packQuantity,
+              "cost_price": packCostPrice
+            },
+            "name": unitproductName,
+            "description": productDescription,
+            "weight": productWeight,
+            "bar_code": barcode,
+            "discount": productDiscount
+          }));
+      if (response.statusCode == 200) {
+        print(response.body);
+        return true;
+      } else {
+        print(response.body);
+        return json.decode(response.body);
+      }
+    } on Exception catch (e) {
+      print(e.toString());
     }
   }
 
   Future<dynamic> deleteCategory(List<String> deleteItem) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
-    print(deleteItem);
-    final String url = GlobalConfiguration().get("delete-category");
 
-    final request = http.Request("DELETE", Uri.parse(url));
-    request.headers.addAll(<String, String>{
-      "Accept": "application/json",
-      'Authorization': 'Bearer $token',
-      'Content-Type': 'application/json; charset=UTF-8',
-    });
-    request.body = jsonEncode(<String, dynamic>{'items': deleteItem});
-    final response = await request.send();
-    if (response.statusCode != 200)
-      // return Future.error("error: status code ${response.statusCode}");
-      print(response.reasonPhrase);
+    try {
+      final String url = GlobalConfiguration().get("delete-category");
+      final request = http.Request("DELETE", Uri.parse(url));
+      request.headers.addAll(<String, String>{
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json; charset=UTF-8',
+      });
+      request.body = jsonEncode(<String, dynamic>{'items': deleteItem});
+      final response = await request.send();
+      if (response.statusCode != 200)
+        // return Future.error("error: status code ${response.statusCode}");
+        print(response.reasonPhrase);
 
-    // return await response.stream.bytesToString();
-    print(response.statusCode);
-    return response.statusCode;
+      // return await response.stream.bytesToString();
+      print(response.statusCode);
+      return response.statusCode;
+    } on Exception catch (e) {
+      print(e.toString());
+    }
   }
 
   Future<dynamic> productFileUpload(String categoryId, File file) async {

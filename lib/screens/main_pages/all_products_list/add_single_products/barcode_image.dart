@@ -193,15 +193,16 @@ class _BarcodePageState extends State<BarcodePage> {
                           imageBytes = _image.readAsBytesSync();
                           base64Image = base64.encode(imageBytes);
                         }
-
                         dynamic result = await _productServices
                             .productAddition(
                                 _addProduct.productCategory,
                                 _addProduct.unitproductName,
                                 _addProduct.unitproductPrice,
+                                _addProduct.unitCostPrice,
                                 _addProduct.unitproductQuantity,
                                 _addProduct.unitLimit,
                                 _addProduct.packProductPrice,
+                                _addProduct.packCostPrice,
                                 _addProduct.packQuantity,
                                 _addProduct.packLimit,
                                 _scanBarcode,

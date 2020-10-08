@@ -36,6 +36,7 @@ class AddProductToCart with ChangeNotifier {
   int get price => _price;
   int get discount => _price;
   int get total => _total;
+
   String get imageUrl => _imageUrl;
   int get packLimit => _packLimit;
   int get packPrice => _packPrice;
