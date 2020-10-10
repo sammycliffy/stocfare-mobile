@@ -206,7 +206,7 @@ whatIsStockfare(context) {
               height: 15,
             ),
             Text(
-              'Stockfare is a smart sales/ business analysis app that allows small and medium scale enterprises to manage their inventories, profit and loss, expenses a lot more to give a total business management package all on the go. \n We have brought revolution to the regular brick and mortar stores in Africa, and we are on a mission to increase technology acceptance amongst locals while offering them value.',
+              'Stockfare is a smart sales/ business analysis app that allows small and medium scale enterprises to manage their inventories, profit and loss, expenses and a lot more to give a total business management package all on the go. \n We have brought revolution to the regular brick and mortar stores in Africa, and we are on a mission to increase technology acceptance amongst locals while offering them value.',
               style: TextStyle(color: Colors.black, fontSize: 15),
               textAlign: TextAlign.justify,
             ),
@@ -237,7 +237,7 @@ howDoIAddWorkers(context) {
               height: 15,
             ),
             Text(
-              'Go to the side menu bar, you will find workers options, click on this and you will be directed to the workers page. Fill in details accordingly. You will choose activities that your want each worker to perform.',
+              'Go to the side menu bar, you will find worker options, click on this and you will be directed to the workers page. Fill in details accordingly. You will choose activities that you want each worker to perform.',
               style: TextStyle(color: Colors.black, fontSize: 15),
               textAlign: TextAlign.justify,
             ),
@@ -299,7 +299,7 @@ howDoIMakeASale(context) {
               height: 15,
             ),
             Text(
-              'To sell a product you can quickly scan the product barcode or click on the picture displays on your dashboard. If you are selling more than one of a product, click as many times as possible to add to cart. When this is done, click  ‘Checkout’ to finish the sale. \nYou may choose to enter your customer details, if the customer is buying on credit you can register this and also a date of payment. \nYou may now complete sale and share receipt to your customer or print using a portable bluetooth device.',
+              'To sell a product you can quickly scan the product barcode or click on the picture display on your dashboard. If you are selling more than one of a product, click as many times as possible to add to cart. When this is done, click  ‘Checkout’ to finish the sale. \nYou may choose to enter your customer details, if the customer is buying on credit you can register this and also a date of payment. \nYou may now complete sale and share receipt to your customer or print using a portable bluetooth device.',
               style: TextStyle(color: Colors.black, fontSize: 15),
               textAlign: TextAlign.justify,
             ),

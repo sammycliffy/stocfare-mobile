@@ -268,7 +268,12 @@ class _ProductListPageState extends State<ProductListPage> {
                                   child: (() {
                                 if (editProduct) {
                                   return GestureDetector(
-                                    child: Icon(Icons.edit),
+                                    child: Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                     onTap: () {
                                       _addToCart.setProductIndexes(index);
                                       Navigator.push(
@@ -468,7 +473,13 @@ class _ProductListPageState extends State<ProductListPage> {
                                                   child: (() {
                                                 if (editProduct) {
                                                   return GestureDetector(
-                                                    child: Icon(Icons.edit),
+                                                    child: Text(
+                                                      'Edit',
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
                                                     onTap: () {
                                                       _addToCart
                                                           .setProductIndexes(

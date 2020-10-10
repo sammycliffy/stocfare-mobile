@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
@@ -26,13 +26,13 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-// Future<dynamic> myBackgroundHandler(Map<String, dynamic> message) {
-//   return _HomePageState()._showNotification(message);
-// }
+Future<dynamic> myBackgroundHandler(Map<String, dynamic> message) {
+  return _HomePageState()._showNotification(message);
+}
 
 class _HomePageState extends State<HomePage> {
-  // FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  //     FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   SignupNotifier _signupNotifier;
   dynamic dataInstance;
@@ -74,26 +74,26 @@ class _HomePageState extends State<HomePage> {
   String firebaseNumber;
   ProductServices _productServices = ProductServices();
 
-  // Future selectNotification(String payload) async {
-  //   await flutterLocalNotificationsPlugin.cancelAll();
-  // }
+  Future selectNotification(String payload) async {
+    await flutterLocalNotificationsPlugin.cancelAll();
+  }
 
-  // Future _showNotification(Map<String, dynamic> message) async {
-  //   var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-  //       'channelId', 'channelName', 'channelDescription',
-  //       importance: Importance.Max, priority: Priority.High);
+  Future _showNotification(Map<String, dynamic> message) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'channelId', 'channelName', 'channelDescription',
+        importance: Importance.Max, priority: Priority.High);
 
-  //   var platformChannelSpecifics =
-  //       new NotificationDetails(androidPlatformChannelSpecifics, null);
+    var platformChannelSpecifics =
+        new NotificationDetails(androidPlatformChannelSpecifics, null);
 
-  //   await flutterLocalNotificationsPlugin.show(
-  //     0,
-  //     message['notification']['title'],
-  //     message['notification']['body'],
-  //     platformChannelSpecifics,
-  //     payload: 'Default_Sound',
-  //   );
-  // }
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      message['notification']['title'],
+      message['notification']['body'],
+      platformChannelSpecifics,
+      payload: 'Default_Sound',
+    );
+  }
 
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
@@ -115,38 +115,38 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // var initializationSettingsAndroid =
-    //     AndroidInitializationSettings('@mipmap/ic_launcher');
-    // var initializationSettings =
-    //     InitializationSettings(initializationSettingsAndroid, null);
-    // flutterLocalNotificationsPlugin.initialize(initializationSettings,
-    //     onSelectNotification: selectNotification);
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettings =
+        InitializationSettings(initializationSettingsAndroid, null);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: selectNotification);
 
     _firebaseMessaging.configure(
-        // onBackgroundMessage: myBackgroundHandler,
+        onBackgroundMessage: myBackgroundHandler,
         onMessage: (Map<String, dynamic> message) async {
-      // print('onMessage: ${message['notification']['body']}');
-      _firebaseMessage = message;
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(message['notification']['title']),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    Text(message['notification']['body']),
-                    RaisedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('See Receipt'))
-                  ],
-                ),
-              ),
-            );
-          });
-    });
+          // print('onMessage: ${message['notification']['body']}');
+          _firebaseMessage = message;
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(message['notification']['title']),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text(message['notification']['body']),
+                        RaisedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('See Receipt'))
+                      ],
+                    ),
+                  ),
+                );
+              });
+        });
   }
 
   @override

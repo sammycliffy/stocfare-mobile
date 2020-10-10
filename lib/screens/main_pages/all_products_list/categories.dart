@@ -231,7 +231,12 @@ class _CategoryPageState extends State<CategoryPage> {
                                         child: (() {
                                       if (editCategory) {
                                         return GestureDetector(
-                                          child: Icon(Icons.edit),
+                                          child: Text(
+                                            'Edit',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                           onTap: () {
                                             _updateDialog(
                                                 _categoriesSearch[index]
@@ -368,8 +373,14 @@ class _CategoryPageState extends State<CategoryPage> {
                                                         child: (() {
                                                       if (editCategory) {
                                                         return GestureDetector(
-                                                          child:
-                                                              Icon(Icons.edit),
+                                                          child: Text(
+                                                            'Edit',
+                                                            style: TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
                                                           onTap: () {
                                                             _updateDialog(
                                                                 _categories[
