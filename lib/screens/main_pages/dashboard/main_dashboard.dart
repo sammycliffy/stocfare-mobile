@@ -105,13 +105,13 @@ class _DashBoardState extends State<DashBoard> {
             ),
             _container('Add Goods', Hexcolor('#1D362A'),
                 'Click here to add Product', FormPage()),
-            SizedBox(height: 15),
+            SizedBox(height: 30),
             _container('Checkout', Theme.of(context).primaryColor,
                 'Click here to create a sale', BottomNavigationPage()),
-            SizedBox(height: 15),
+            SizedBox(height: 30),
             _container('Expense & Income', Hexcolor('#727275'),
                 'Click to record your business expenses', ExpensesHome()),
-            SizedBox(height: 20),
+            SizedBox(height: 35),
             Padding(
               padding: const EdgeInsets.only(top: 20, right: 150),
               child: Text(
@@ -198,7 +198,7 @@ class _DashBoardState extends State<DashBoard> {
   _container(name, color, description, route) => GestureDetector(
       child: Container(
         padding: const EdgeInsets.only(left: 15, top: 5, right: 10),
-        width: 320,
+        width: 350,
         height: 95,
         decoration:
             BoxDecoration(borderRadius: BorderRadius.circular(5), color: color

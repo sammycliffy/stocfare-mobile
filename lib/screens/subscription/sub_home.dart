@@ -183,7 +183,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                         fontSize: 16, color: Colors.grey),
                                   ),
                                   Text(
-                                    'NGN 2,500',
+                                    'NGN 3,000',
                                     style: TextStyle(
                                         fontSize: 20, color: Colors.black),
                                   )

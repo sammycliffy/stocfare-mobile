@@ -130,23 +130,39 @@ class _ProductListPageState extends State<ProductListPage> {
                     ],
                   )
                 : editProduct
-                    ? IconButton(
-                        icon: Icon(
-                          Icons.edit,
-                          color: Colors.grey,
+                    ? GestureDetector(
+                        child: Container(
+                          height: 50,
+                          child: Center(
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
                         ),
-                        onPressed: () {
+                        onTap: () {
                           setState(() {
                             editProduct = false;
                             deleteProduct = false;
                           });
                         })
-                    : IconButton(
-                        icon: Icon(
-                          Icons.edit,
-                          color: Colors.white,
+                    : GestureDetector(
+                        child: Container(
+                          height: 50,
+                          child: Center(
+                            child: Text(
+                              'Edit',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
                         ),
-                        onPressed: () {
+                        onTap: () {
                           setState(() {
                             editProduct = true;
                             deleteProduct = false;

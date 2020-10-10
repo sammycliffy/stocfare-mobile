@@ -17,6 +17,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
 
   int _currentIndex = 0;
   final List<Widget> _tabs = [
+    DashBoard(),
     HomePage(
       key: PageStorageKey('Page1'),
     ),
@@ -24,7 +25,6 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
       key: PageStorageKey('Page2'),
     ),
     AnalyticsPage(key: PageStorageKey('Page3')),
-    DashBoard(),
   ];
 
   @override
@@ -43,16 +43,29 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.home,
+              Icons.dashboard,
               color: Hexcolor('#c80815'),
             ),
             title: Text(
-              'Home',
+              'Dashboard',
               style: TextStyle(
                 color: Hexcolor('#c80815'),
               ),
             ),
             backgroundColor: Colors.white,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.shopping_basket,
+              color: Hexcolor('#c80815'),
+            ),
+            title: Text(
+              'Checkout',
+              style: TextStyle(
+                color: Hexcolor('#c80815'),
+              ),
+            ),
+            backgroundColor: Colors.deepOrange,
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -65,7 +78,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                 color: Hexcolor('#c80815'),
               ),
             ),
-            backgroundColor: Colors.deepOrange,
+            backgroundColor: Colors.green,
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -74,19 +87,6 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
             ),
             title: Text(
               'Analytics',
-              style: TextStyle(
-                color: Hexcolor('#c80815'),
-              ),
-            ),
-            backgroundColor: Colors.green,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.dashboard,
-              color: Hexcolor('#c80815'),
-            ),
-            title: Text(
-              'Dashboard',
               style: TextStyle(
                 color: Hexcolor('#c80815'),
               ),

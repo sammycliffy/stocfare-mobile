@@ -96,9 +96,11 @@ class _CategoryPageState extends State<CategoryPage> {
                         ),
                         SizedBox(width: 20),
                         GestureDetector(
-                            child: Text(
-                              'Delete',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            child: Container(
+                              child: Text(
+                                'Delete',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
                             onTap: () {
                               _confirmDelete(context);
@@ -106,23 +108,32 @@ class _CategoryPageState extends State<CategoryPage> {
                       ],
                     )
                   : editCategory
-                      ? IconButton(
-                          icon: Icon(
-                            Icons.edit,
-                            color: Colors.grey,
-                          ),
-                          onPressed: () {
+                      ? GestureDetector(
+                          child: Container(
+                              height: 50,
+                              child: Center(
+                                  child: Text('Cancel',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)))),
+                          onTap: () {
                             setState(() {
                               editCategory = false;
                               deleteCategory = false;
                             });
                           })
-                      : IconButton(
-                          icon: Icon(
-                            Icons.edit,
-                            color: Colors.white,
+                      : GestureDetector(
+                          child: Container(
+                            height: 50,
+                            child: Center(
+                              child: Text(
+                                'Edit',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ),
-                          onPressed: () {
+                          onTap: () {
                             setState(() {
                               editCategory = true;
                               deleteCategory = false;

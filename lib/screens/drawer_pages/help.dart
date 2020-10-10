@@ -175,7 +175,7 @@ pricingPlan(context) {
               height: 15,
             ),
             Text(
-              'We offer both free and paid services on the platform. With our free service, you are entitled to add 20 categories on the platform. To have unlimited reach of the app, you will be required to subscribe to the platform at NGN 2,500 per month. You can pay either monthly ( NGN 2500), quarterly (NGN 7500)  or annually( NGN 30,000). ',
+              'We offer both free and paid services on the platform. With our free service, you are entitled to add 20 categories on the platform. To have unlimited reach of the app, you will be required to subscribe to the platform at NGN 3,000 per month. You can pay either monthly ( NGN 3,000), quarterly (NGN 12,000)  or annually( NGN 36,000). ',
               style: TextStyle(color: Colors.black, fontSize: 15),
               textAlign: TextAlign.justify,
             ),

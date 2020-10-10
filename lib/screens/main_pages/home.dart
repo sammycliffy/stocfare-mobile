@@ -573,6 +573,8 @@ class _HomePageState extends State<HomePage> {
                                       _barcode.add(value['bar_code']);
                                       _productQuantity.add(
                                           value['product_unit']['quantity']);
+                                      print(
+                                          value['product_unit']['cost_price']);
                                       _unitCostPrice.add(
                                           value['product_unit']['cost_price']);
                                       _packQuantity.add(
@@ -588,7 +590,8 @@ class _HomePageState extends State<HomePage> {
 
                                 _topCategory.add(values['name']);
                               });
-
+                              print(_unitCostPrice);
+                              print(_packCostPrice);
                               return Expanded(
                                 child: GridView.builder(
                                   itemCount: _categories.length,
@@ -810,16 +813,14 @@ class _HomePageState extends State<HomePage> {
     _productPackPriceSearch.clear();
     _productIdSearch.clear();
     _unitCostPriceSearch.clear();
-    _packCostPrice.clear();
-    _unitCostPrice.clear();
+    _packCostPriceSearch.clear();
+    _unitCostPriceSearch.clear();
     _packCostPriceSearch.clear();
 
     setState(() {
       isSearched = true;
       print(_categories.map((value) {
         if (value.contains(capitalized)) {
-          print(value);
-
           _categoriesSearch.add(value);
           _productPriceSearch.add(_productPrice[_categories.indexOf(value)]);
           if (_productImage.length == 0) {
@@ -833,22 +834,14 @@ class _HomePageState extends State<HomePage> {
               .add(_productQuantity[_categories.indexOf(value)]);
           _productPackPriceSearch
               .add(_productPackPrice[_categories.indexOf(value)]);
-          if (_unitCostPriceSearch.length == 0) {
-            print('no Cost Price');
-          } else {
-            _unitCostPriceSearch
-                .add(_unitCostPrice[_categories.indexOf(value)]);
-          }
-          if (_packCostPriceSearch.length == 0) {
-            print('no Cost Price');
-          } else {
-            _packCostPriceSearch
-                .add(_packCostPrice[_categories.indexOf(value)]);
-          }
+
+          _unitCostPriceSearch.add(_unitCostPrice[_categories.indexOf(value)]);
+          _packCostPriceSearch.add(_packCostPrice[_categories.indexOf(value)]);
 
           _productIdSearch.add(_productId[_categories.indexOf(value)]);
         }
         print(_categoriesSearch);
+        print(_unitCostPrice.toString() + 'Cost price');
       }));
     });
   }

@@ -577,7 +577,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ),
       ),
       Padding(
-        padding: const EdgeInsets.only(left: 100, right: 100),
+        padding: const EdgeInsets.only(left: 50, right: 50, bottom: 10),
         child: RaisedButton(
           color: Theme.of(context).primaryColor,
           onPressed: () => _selectDate(context),

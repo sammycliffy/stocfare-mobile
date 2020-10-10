@@ -19,7 +19,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    currentImage = Image.asset('assets/images/logo.png', width: 50, height: 50);
+    currentImage =
+        Image.asset('assets/images/ic_launcher.png', width: 50, height: 50);
     Timer(Duration(seconds: 3), () => checkForFirstInstallation());
   }
 

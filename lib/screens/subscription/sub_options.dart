@@ -325,7 +325,7 @@ class _SubOptionsState extends State<SubOptions> {
     SignupNotifier _signupNotifier =
         Provider.of<SignupNotifier>(context, listen: false);
     Charge charge = Charge()
-      ..amount = 250000
+      ..amount = 300000
       ..reference = _getReference()
       ..email = _email;
     CheckoutResponse response = await PaystackPlugin.checkout(
