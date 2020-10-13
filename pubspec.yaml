@@ -53,6 +53,7 @@ dependencies:
   connectivity: ^0.4.9+2
   flutter_launcher_icons: "^0.7.3"
   currency_pickers: ^1.0.6
+  flutter_downloader: ^1.5.1
 
 flutter_icons:
   android: "launcher_icon"

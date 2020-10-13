@@ -26,13 +26,13 @@ class FirstIntro extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        'Daniel Taiwo                         ',
+                        'Daniel Taiwo                            ',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text('Shop Owner                              ',
+                      Text('Shop Owner                                 ',
                           style: TextStyle(color: Colors.red, fontSize: 13)),
                       Text(
-                        'Stockfare App User       ',
+                        'Stockfare App User                         ',
                         style: TextStyle(fontSize: 12),
                       )
                     ],

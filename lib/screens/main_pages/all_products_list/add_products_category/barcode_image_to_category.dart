@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
@@ -180,7 +181,9 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                     _activitiesServices.checkForInternet().then((value) async {
                       if (value == true) {
                         DialogBoxes().loading(context);
-
+                        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();   
+                        String id = sharedPreferences.getString('id');
+                        print(id);
                         String noImage = await getImageFileFromAssets();
                         if (value == true) {
                           List<int> imageBytes;
@@ -208,7 +211,7 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                                   _addProduct.productDiscount,
                                   _addProduct.productWeight,
                                   _addProduct.data,
-                                  _addProduct.categoryId);
+                                   id ?? _addProduct.categoryId );
 
                           if (result != true) {
                             Navigator.pop(context);

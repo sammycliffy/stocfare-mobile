@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     currentImage =
-        Image.asset('assets/images/ic_launcher.png', width: 50, height: 50);
+        Image.asset('assets/images/log.jpeg', width: 200, height: 200);
     Timer(Duration(seconds: 3), () => checkForFirstInstallation());
   }
 
@@ -39,21 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: currentImage,
-                ),
-                SizedBox(width: 10),
-                Text(
-                  'Stockfare',
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor),
-                )
-              ],
+            child: Center(
+              child: currentImage,
             ),
           ),
           Column(children: <Widget>[

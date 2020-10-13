@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockfare_mobile/screens/main_pages/all_products_list/addProducts.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_single_products/form.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 
@@ -58,7 +59,7 @@ class ProductSuccess extends StatelessWidget {
               SizedBox(height: 40),
               RaisedButton(
                 onPressed: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => FormPage())),
+                    MaterialPageRoute(builder: (context) => AddProductPage())),
                 child: Text('Add more Products'),
               )
             ],

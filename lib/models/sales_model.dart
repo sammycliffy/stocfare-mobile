@@ -62,13 +62,13 @@ class Result {
   String saleRegisteredBy;
   List<ProductDetail> productDetail;
   String pdfFileLink;
-  String amount;
-  String change;
+  dynamic amount;
+  dynamic change;
   String paymentMethod;
   bool soldOnCredit;
   DateTime dateCreated;
-  String tax;
-  String amountPaid;
+  dynamic tax;
+  dynamic amountPaid;
   String refCode;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
@@ -179,7 +179,7 @@ class ProductDatum {
   String weight;
   DateTime dateCreated;
   dynamic barCode;
-  String discount;
+  dynamic discount;
 
   factory ProductDatum.fromJson(Map<String, dynamic> json) => ProductDatum(
         id: json["id"],
@@ -246,7 +246,7 @@ class Product {
   });
 
   String id;
-  int price;
+  dynamic price;
   int limit;
   int quantity;
   int unit;
@@ -276,7 +276,7 @@ class ProductDetail {
   });
 
   String name;
-  int totalCost;
+  dynamic totalCost;
   int quantityBought;
 
   factory ProductDetail.fromJson(Map<String, dynamic> json) => ProductDetail(

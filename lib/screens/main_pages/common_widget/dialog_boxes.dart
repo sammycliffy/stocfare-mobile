@@ -77,7 +77,7 @@ class DialogBoxes {
                 height: 15,
               ),
               Text(
-                'Sorry! You cannot use this service until you upgrade your plan.',
+               'Your current plan does not support this activity. \nPlease upgrade to enjoy.',
                 style: TextStyle(color: Colors.black, fontSize: 20),
               ),
               SizedBox(height: 5),

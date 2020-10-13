@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/helpers/sub_helpers.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
+import 'package:path_provider/path_provider.dart';
 
 class UploadExcelPage extends StatefulWidget {
   @override
@@ -65,7 +67,19 @@ class _UploadExcelPageState extends State<UploadExcelPage> {
               });
             }),
         SizedBox(
-          height: 50,
+          height: 30,
+        ),
+        InkWell(
+          child: Text(
+            'Download Excel Sample',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+          ),
+          onTap: () {
+            downloadExcelSample();
+          },
+        ),
+        SizedBox(
+          height: 30,
         ),
         GestureDetector(
             child: Center(
@@ -116,6 +130,20 @@ class _UploadExcelPageState extends State<UploadExcelPage> {
               });
             }),
       ]),
+    );
+  }
+
+  downloadExcelSample() async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath = appDocDir.path;
+    final taskId = await FlutterDownloader.enqueue(
+      url:
+          'https://drive.google.com/uc?export=download&id=1n77fjmwOoOA4GrimMdfSJyvgtX9ksUsY',
+      savedDir: appDocPath,
+      showNotification:
+          true, // show download progress in status bar (for Android)
+      openFileFromNotification:
+          true, // click on notification to open downloaded file (for Android)
     );
   }
 

@@ -80,6 +80,7 @@ class _EditProductPageState extends State<EditProductPage> {
   int _colorQuantity;
   int _colorLimit;
   int _productCount;
+  bool addition;
 
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
@@ -376,6 +377,7 @@ class _EditProductPageState extends State<EditProductPage> {
                                   SizedBox(
                                     width: 150,
                                     child: TextFormField(
+                                      readOnly: true,
                                       keyboardType: TextInputType.number,
                                       validator: (val) {
                                         if (_unitQuantity < _unitLimit) {
@@ -387,6 +389,12 @@ class _EditProductPageState extends State<EditProductPage> {
                                         _unitQuantity = int.parse(val);
                                       }),
                                       decoration: InputDecoration(
+                                        suffixIcon: IconButton(
+                                          icon: Icon(Icons.edit),
+                                          onPressed: () => _quantityEdit(
+                                              context,
+                                              _listUnitQuantity[widget.index]),
+                                        ),
                                         contentPadding: EdgeInsets.all(12),
                                         labelStyle: TextStyle(
                                             color:
@@ -404,7 +412,7 @@ class _EditProductPageState extends State<EditProductPage> {
                                             _listUnitQuantity[widget.index]
                                                     .toString() +
                                                 ' (Quantity)',
-                                        hintText: 'Quantity',
+                                        hintText: _unitQuantity.toString(),
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: Theme.of(context)
@@ -1004,6 +1012,7 @@ class _EditProductPageState extends State<EditProductPage> {
                                   SizedBox(
                                     width: 150,
                                     child: TextFormField(
+                                      readOnly: true,
                                       keyboardType: TextInputType.number,
                                       validator: (val) {
                                         if (_packQuantity < _packLimit) {
@@ -1016,6 +1025,12 @@ class _EditProductPageState extends State<EditProductPage> {
                                       }),
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.all(12),
+                                        suffixIcon: IconButton(
+                                            icon: Icon(Icons.edit),
+                                            onPressed: () => _packQuantityEdit(
+                                                context,
+                                                _listPackQuantity[
+                                                    widget.index])),
                                         labelStyle: TextStyle(
                                             color:
                                                 Theme.of(context).primaryColor),
@@ -1032,7 +1047,7 @@ class _EditProductPageState extends State<EditProductPage> {
                                             _listPackQuantity[widget.index]
                                                     .toString() +
                                                 ' (Pack Quantity)',
-                                        hintText: 'Pack Quantity',
+                                        hintText: _packQuantity.toString(),
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: Theme.of(context)
@@ -1287,5 +1302,181 @@ class _EditProductPageState extends State<EditProductPage> {
           style: TextStyle(color: Colors.white, fontSize: 15),
         ));
     _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  _quantityEdit(context, quantity) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        int newQuantity = 0;
+
+        final _formKey = GlobalKey<FormState>();
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          content: SingleChildScrollView(
+              child: Column(
+            children: [
+              Text('Edit Quantity'),
+              SizedBox(height: 5),
+              Container(
+                height: 40,
+                width: 200,
+                child: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    validator: (val) {
+                      if (val.isEmpty) {
+                        return 'Quantity cannot be empty';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.number,
+                    onChanged: (val) => setState(() {
+                      newQuantity = int.parse(val);
+                    }),
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.2))),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.5))),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  RaisedButton(
+                    color: Colors.green,
+                    child: Text('Add'),
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        setState(() {
+                          _unitQuantity = newQuantity + quantity;
+                        });
+                        Navigator.pop(context);
+                      }
+                    },
+                  ),
+                  RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    child: Text(
+                      'Subtract',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        if (quantity - newQuantity > -1) {
+                          setState(() {
+                            _unitQuantity = quantity - newQuantity;
+                          });
+                          Navigator.pop(context);
+                        }
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          )),
+        );
+      },
+    );
+  }
+
+  _packQuantityEdit(context, quantity) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        int newQuantity = 0;
+
+        final _formKey = GlobalKey<FormState>();
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          content: SingleChildScrollView(
+              child: Column(
+            children: [
+              Text('Edit Quantity'),
+              SizedBox(height: 5),
+              Container(
+                height: 40,
+                width: 200,
+                child: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    validator: (val) {
+                      if (val.isEmpty) {
+                        return 'Quantity cannot be empty';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.number,
+                    onChanged: (val) => setState(() {
+                      newQuantity = int.parse(val);
+                    }),
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.2))),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.5))),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  RaisedButton(
+                    color: Colors.green,
+                    child: Text('Add'),
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        setState(() {
+                          _packQuantity = newQuantity + quantity;
+                        });
+                        Navigator.pop(context);
+                      }
+                    },
+                  ),
+                  RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    child: Text(
+                      'Subtract',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        if (quantity - newQuantity > -1) {
+                          setState(() {
+                            _packQuantity = quantity - newQuantity;
+                          });
+                          Navigator.pop(context);
+                        }
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          )),
+        );
+      },
+    );
   }
 }

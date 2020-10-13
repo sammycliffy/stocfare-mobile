@@ -4,6 +4,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/sales_analytics_model.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
+import 'package:stockfare_mobile/screens/auth_pages/login.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_single_products/form.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
@@ -32,10 +33,15 @@ class _DashBoardState extends State<DashBoard> {
     _activitiesServices.checkForInternet().then((value) {
       if (value == true) {
         _checkSales.getAllAnalytics().catchError((e) {
-          setState(() {
-            _error = true;
-            _errorData = e.toString();
-          });
+          if (e == "Given token not valid for any token type") {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Login()));
+          } else {
+            setState(() {
+              _error = true;
+              _errorData = e.toString();
+            });
+          }
         });
       } else {
         setState(() {

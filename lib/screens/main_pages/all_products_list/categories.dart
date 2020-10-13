@@ -1,8 +1,8 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/products.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
@@ -278,7 +278,11 @@ class _CategoryPageState extends State<CategoryPage> {
                                         color: Theme.of(context).primaryColor,
                                       );
                                     }()))))),
-                        onTap: () {
+                        onTap: () async {
+                          SharedPreferences sharedPreferences =
+                              await SharedPreferences.getInstance();
+                          sharedPreferences.remove('id');
+
                           _addToCart.addID(_categoryIdSearch[index],
                               _categoriesSearch[index]);
                           _addToCart.setFireId(_firebaseKeysSearch[index]);

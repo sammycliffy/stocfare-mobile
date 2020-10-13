@@ -66,6 +66,7 @@ class ProductServices {
           }));
       if (response.statusCode == 200 || response.statusCode == 201) {
         print(response.statusCode);
+        sharedPreferences.setString('id', json.decode(response.body)['id']);
         return response.statusCode;
       } else if (json.decode(response.body)['detail'] ==
           "Given token not valid for any token type") {

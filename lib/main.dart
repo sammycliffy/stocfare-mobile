@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +9,7 @@ import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/intro_pages/splashscreen.dart';
-import 'package:stockfare_mobile/screens/main_pages/all_products_list/edit_product.dart';
+
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/product_details.dart';
 
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -23,7 +24,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GlobalConfiguration().loadFromAsset("url");
   getTokenz();
-
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize(
+      debug: true // optional: set false to disable printing logs to console
+      );
   runApp(
     MultiProvider(
       providers: [
