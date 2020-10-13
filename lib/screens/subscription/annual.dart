@@ -10,12 +10,12 @@ import 'package:stockfare_mobile/screens/subscription/sub_home.dart';
 import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/payment_services.dart';
 
-class SubOptions extends StatefulWidget {
+class AnnualPage extends StatefulWidget {
   @override
-  _SubOptionsState createState() => _SubOptionsState();
+  _AnnualPageState createState() => _AnnualPageState();
 }
 
-class _SubOptionsState extends State<SubOptions> {
+class _AnnualPageState extends State<AnnualPage> {
   // var testKey = 'pk_test_06b100bc626ea6bae0400111f8c7cbe604c93688';
   var publicKey = 'pk_live_ef8036136f85c57cf6ef994d96d3badc59548882';
   PaymentServices _paymentServices = PaymentServices();
@@ -49,7 +49,7 @@ class _SubOptionsState extends State<SubOptions> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          title: Text('Monthly '),
+          title: Text('Annual '),
           actions: <Widget>[
             RaisedButton(
               onPressed: () {
@@ -73,7 +73,7 @@ class _SubOptionsState extends State<SubOptions> {
                       height: 10,
                     ),
                     Text(
-                      'Monthly',
+                      'Annual',
                       style:
                           TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                     ),
@@ -85,7 +85,7 @@ class _SubOptionsState extends State<SubOptions> {
                           color: Theme.of(context).primaryColor),
                     ),
                     Text(
-                      'NGN 3,000',
+                      'NGN 30,000',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
@@ -140,7 +140,7 @@ class _SubOptionsState extends State<SubOptions> {
     SignupNotifier _signupNotifier =
         Provider.of<SignupNotifier>(context, listen: false);
     Charge charge = Charge()
-      ..amount = 300000
+      ..amount = 3000000
       ..reference = _getReference()
       ..email = _email;
     CheckoutResponse response = await PaystackPlugin.checkout(

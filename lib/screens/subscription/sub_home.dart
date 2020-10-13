@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/helpers/sub_helpers.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
+import 'package:stockfare_mobile/screens/subscription/payment_type.dart';
 import 'package:stockfare_mobile/screens/subscription/sub_options.dart';
 import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/payment_services.dart';
@@ -197,7 +198,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SubOptions()));
+                              builder: (context) => PaymentOption()));
                     },
                   )
                 ],
