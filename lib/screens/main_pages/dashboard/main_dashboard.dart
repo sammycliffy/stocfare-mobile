@@ -6,9 +6,9 @@ import 'package:stockfare_mobile/models/sales_analytics_model.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_single_products/form.dart';
-import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/expenses/home.dart';
+import 'package:stockfare_mobile/screens/main_pages/home.dart';
 import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/analytics_services.dart';
 
@@ -113,7 +113,7 @@ class _DashBoardState extends State<DashBoard> {
                 'Click here to add Product', FormPage()),
             SizedBox(height: 30),
             _container('Checkout', Theme.of(context).primaryColor,
-                'Click here to create a sale', BottomNavigationPage()),
+                'Click here to create a sale', HomePage()),
             SizedBox(height: 30),
             _container('Expense & Income', Hexcolor('#727275'),
                 'Click to record your business expenses', ExpensesHome()),
@@ -153,7 +153,7 @@ class _DashBoardState extends State<DashBoard> {
                           controller3.updateValue(
                               snapshot.data.monthSalesAmount.toDouble());
                           controller4.updateValue(
-                              snapshot.data.quarterSalesCount.toDouble());
+                              snapshot.data.quarterSalesAmount.toDouble());
                           controller5.updateValue(
                               snapshot.data.yearSalesAmount.toDouble());
                           return ListView(
@@ -183,7 +183,7 @@ class _DashBoardState extends State<DashBoard> {
           decoration: BoxDecoration(
               color: Hexcolor('#40A099'),
               borderRadius: BorderRadius.circular(10)),
-          width: 120.0,
+          width: 180.0,
           child: Column(
             children: [
               SizedBox(height: 10),

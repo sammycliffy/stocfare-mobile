@@ -93,12 +93,8 @@ class PaymentOption extends StatelessWidget {
                                     horizontal: 15.0),
                                 child: Divider(),
                               ),
-                              Text(
-                                'NGN 3,500',
-                                style: TextStyle(
-                                    decoration: TextDecoration.lineThrough,
-                                    color: Colors.grey[600],
-                                    fontSize: 18),
+                              SizedBox(
+                                height: 20,
                               ),
                               Text(
                                 'NGN 3,000',
@@ -300,7 +296,7 @@ class PaymentOption extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Text(
-                                    'View Expense and Income',
+                                    'Manage Expense and Income',
                                     style: TextStyle(fontSize: 18),
                                   ),
                                   SizedBox(

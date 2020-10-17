@@ -86,7 +86,7 @@ class DrawerPage extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.border_color),
-            title: Text('Feed back'),
+            title: Text('Feedback'),
             onTap: () => {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => FeedBackPage()))

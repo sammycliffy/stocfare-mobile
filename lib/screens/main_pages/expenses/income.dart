@@ -39,7 +39,8 @@ class _ExpensesHomePageState extends State<IncomeHomePage> {
   List<String> _expensesDate = [];
   List<String> _expensesDescription = [];
   List<String> _expensesName = [];
-
+  bool _permissionError = false;
+  String _errorMessage = '';
   @override
   void initState() {
     super.initState();
@@ -52,6 +53,12 @@ class _ExpensesHomePageState extends State<IncomeHomePage> {
           setState(() {
             dropdown.addAll(value);
           });
+        }).catchError((e) {
+          setState(() {
+            _permissionError = true;
+            _errorMessage = e.toString();
+          });
+          print('this is the error in the page ' + e.toString());
         });
       } else {
         setState(() {
@@ -94,237 +101,248 @@ class _ExpensesHomePageState extends State<IncomeHomePage> {
               }()),
           child: Icon(Icons.add, color: Colors.white),
           backgroundColor: Colors.black),
-      body: _permission == false
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20),
-                Center(
-                  child: Container(
-                      height: 120,
-                      width: 330,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _container('Today', 1),
-                                _container('Week', 2),
-                                _container('Month', 3)
-                              ]),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 25.0, top: 10),
-                            child: Text(
-                              (() {
-                                if (week) {
-                                  return controller1.text;
-                                } else if (month) {
-                                  return controller2.text;
-                                } else {
-                                  return controller.text;
-                                }
-                              }()),
-                              style: TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green),
-                            ),
-                          )
-                        ],
-                      )),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 35.0),
-                  child: Text(
-                    'QUICK CATEGORIES',
-                    style: TextStyle(color: Colors.grey, fontSize: 17),
-                  ),
-                ),
-                SizedBox(height: 5),
-                Center(
-                  child: Container(
-                      padding: const EdgeInsets.only(top: 20),
-                      width: 350,
-                      height: 110,
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: Colors.grey[200]),
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          _categories('Fuel'),
-                          SizedBox(height: 5),
-                          _categories('Food'),
-                          SizedBox(height: 5),
-                          _categories('Transport'),
-                          SizedBox(height: 5),
-                          _categories('Clothes')
-                        ],
-                      )),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 35.0, top: 10, bottom: 10),
-                  child: Text(
-                    'RECENT EXPENSES',
-                    style: TextStyle(color: Colors.grey, fontSize: 17),
-                  ),
-                ),
-                Center(child: Text('No Income')),
-                SizedBox(height: 150),
-              ],
-            )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20),
-                Center(
-                  child: FutureBuilder<ExpensesSummary>(
-                      future: _incomeSummary,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          controller.updateValue(
-                              snapshot.data.todaySummary.toDouble());
-                          controller1.updateValue(
-                              snapshot.data.weekSummary.toDouble());
-                          controller2.updateValue(
-                              snapshot.data.monthSummary.toDouble());
-                          return Container(
-                              height: 120,
-                              width: 330,
-                              decoration: BoxDecoration(
-                                  color: Colors.grey[100],
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        _container('Today', 1),
-                                        _container('Week', 2),
-                                        _container('Month', 3)
-                                      ]),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 25.0, top: 10),
-                                    child: Text(
-                                      (() {
-                                        if (week) {
-                                          return controller1.text;
-                                        } else if (month) {
-                                          return controller2.text;
-                                        } else {
-                                          return controller.text;
-                                        }
-                                      }()),
-                                      style: TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.green),
-                                    ),
-                                  )
-                                ],
-                              ));
-                        }
-                        return CircularProgressIndicator();
-                      }),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 35.0),
-                  child: Text(
-                    'QUICK CATEGORIES',
-                    style: TextStyle(color: Colors.grey, fontSize: 17),
-                  ),
-                ),
-                SizedBox(height: 5),
-                Center(
-                  child: Container(
-                      padding: const EdgeInsets.only(top: 20),
-                      width: 350,
-                      height: 120,
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: Colors.grey[200]),
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          _categories('Fuel'),
-                          SizedBox(height: 5),
-                          _categories('Food'),
-                          SizedBox(height: 5),
-                          _categories('Transport'),
-                          SizedBox(height: 5),
-                          _categories('Clothes')
-                        ],
-                      )),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 35.0, top: 10, bottom: 10),
-                  child: Text(
-                    'RECENT EXPENSES',
-                    style: TextStyle(color: Colors.grey, fontSize: 17),
-                  ),
-                ),
-                FutureBuilder<List<GetAllExpenses>>(
-                    future: _getallIncome,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        _expensesName.clear();
-                        _expensesAmount.clear();
-                        _expensesDate.clear();
-                        _expensesDescription.clear();
+      body: _permissionError
+          ? Center(
+              child: Text(
+              _errorMessage,
+              style: TextStyle(fontSize: 18),
+            ))
+          : _permission == false
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20),
+                    Center(
+                      child: Container(
+                          height: 120,
+                          width: 330,
+                          decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    _container('Today', 1),
+                                    _container('Week', 2),
+                                    _container('Month', 3)
+                                  ]),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 25.0, top: 10),
+                                child: Text(
+                                  (() {
+                                    if (week) {
+                                      return controller1.text;
+                                    } else if (month) {
+                                      return controller2.text;
+                                    } else {
+                                      return controller.text;
+                                    }
+                                  }()),
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green),
+                                ),
+                              )
+                            ],
+                          )),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 35.0),
+                      child: Text(
+                        'QUICK CATEGORIES',
+                        style: TextStyle(color: Colors.grey, fontSize: 17),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Center(
+                      child: Container(
+                          padding: const EdgeInsets.only(top: 20),
+                          width: 350,
+                          height: 110,
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 1, color: Colors.grey[200]),
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              _categories('Fuel'),
+                              SizedBox(height: 5),
+                              _categories('Food'),
+                              SizedBox(height: 5),
+                              _categories('Transport'),
+                              SizedBox(height: 5),
+                              _categories('Clothes')
+                            ],
+                          )),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 35.0, top: 10, bottom: 10),
+                      child: Text(
+                        'RECENT EXPENSES',
+                        style: TextStyle(color: Colors.grey, fontSize: 17),
+                      ),
+                    ),
+                    Center(child: Text('No Income')),
+                    SizedBox(height: 150),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20),
+                    Center(
+                      child: FutureBuilder<ExpensesSummary>(
+                          future: _incomeSummary,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              controller.updateValue(
+                                  snapshot.data.todaySummary.toDouble());
+                              controller1.updateValue(
+                                  snapshot.data.weekSummary.toDouble());
+                              controller2.updateValue(
+                                  snapshot.data.monthSummary.toDouble());
+                              return Container(
+                                  height: 120,
+                                  width: 330,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[100],
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            _container('Today', 1),
+                                            _container('Week', 2),
+                                            _container('Month', 3)
+                                          ]),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 25.0, top: 10),
+                                        child: Text(
+                                          (() {
+                                            if (week) {
+                                              return controller1.text;
+                                            } else if (month) {
+                                              return controller2.text;
+                                            } else {
+                                              return controller.text;
+                                            }
+                                          }()),
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.green),
+                                        ),
+                                      )
+                                    ],
+                                  ));
+                            }
+                            return CircularProgressIndicator();
+                          }),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 35.0),
+                      child: Text(
+                        'QUICK CATEGORIES',
+                        style: TextStyle(color: Colors.grey, fontSize: 17),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Center(
+                      child: Container(
+                          padding: const EdgeInsets.only(top: 20),
+                          width: 350,
+                          height: 120,
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 1, color: Colors.grey[200]),
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              _categories('Fuel'),
+                              SizedBox(height: 5),
+                              _categories('Food'),
+                              SizedBox(height: 5),
+                              _categories('Transport'),
+                              SizedBox(height: 5),
+                              _categories('Clothes')
+                            ],
+                          )),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 35.0, top: 10, bottom: 10),
+                      child: Text(
+                        'RECENT EXPENSES',
+                        style: TextStyle(color: Colors.grey, fontSize: 17),
+                      ),
+                    ),
+                    FutureBuilder<List<GetAllExpenses>>(
+                        future: _getallIncome,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            _expensesName.clear();
+                            _expensesAmount.clear();
+                            _expensesDate.clear();
+                            _expensesDescription.clear();
 
-                        print(snapshot.data.map((value) {
-                          _expensesName.add(value.expenseMadeOnName);
-                          _expensesAmount.add(value.amount);
-                          _expensesDate.add(value.date);
-                          _expensesDescription.add(value.note);
-                        }));
+                            print(snapshot.data.map((value) {
+                              _expensesName.add(value.expenseMadeOnName);
+                              _expensesAmount.add(value.amount);
+                              _expensesDate.add(value.date);
+                              _expensesDescription.add(value.note);
+                            }));
 
-                        return Expanded(
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: _expensesName.length,
-                              itemBuilder: (context, index) {
-                                controller3.updateValue(
-                                    double.parse(_expensesAmount[index]));
-                                return _listTile(
-                                    _expensesName[index],
-                                    Jiffy(_expensesDate[index])
-                                        .format('MMMM do yyyy'),
-                                    controller3.text,
-                                    _expensesDescription[index]);
-                              }),
-                        );
-                      } else {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    })
-              ],
-            ),
+                            return Expanded(
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: _expensesName.length,
+                                  itemBuilder: (context, index) {
+                                    controller3.updateValue(
+                                        double.parse(_expensesAmount[index]));
+                                    return _listTile(
+                                        _expensesName[index],
+                                        Jiffy(_expensesDate[index])
+                                            .format('MMMM do yyyy'),
+                                        controller3.text,
+                                        _expensesDescription[index]);
+                                  }),
+                            );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        })
+                  ],
+                ),
     );
   }
 

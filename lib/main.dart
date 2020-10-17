@@ -22,7 +22,7 @@ getTokenz() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GlobalConfiguration().loadFromAsset("url");
+  await GlobalConfiguration().loadFromAsset("live_url");
   getTokenz();
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterDownloader.initialize(

@@ -176,7 +176,7 @@ class ProductDatum {
   bool active;
   String description;
   dynamic tax;
-  String weight;
+  dynamic weight;
   DateTime dateCreated;
   dynamic barCode;
   dynamic discount;
@@ -277,7 +277,7 @@ class ProductDetail {
 
   String name;
   dynamic totalCost;
-  int quantityBought;
+  dynamic quantityBought;
 
   factory ProductDetail.fromJson(Map<String, dynamic> json) => ProductDetail(
         name: json["name"],

@@ -438,7 +438,11 @@ class _CategoryPageState extends State<CategoryPage> {
                                                             .primaryColor,
                                                       );
                                                     }()))))),
-                                        onTap: () {
+                                        onTap: () async {
+                                          SharedPreferences sharedPreferences =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          sharedPreferences.remove('id');
                                           _addToCart.addID(_categoryId[index],
                                               _categories[index]);
                                           _addToCart

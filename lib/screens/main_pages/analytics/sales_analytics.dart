@@ -133,53 +133,9 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text('Sales Made This Month',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18)),
-                                Row(
-                                  children: <Widget>[
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          ' Stockfare provides you \n details of what sells and what \n doesn\'t.',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                          ),
-                                          textAlign: TextAlign.justify,
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          snapshot.data.monthSalesCount
-                                              .toString(),
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600,
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                        ),
-                                        Text(
-                                          controller.text,
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600,
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
+                                Text(
+                                    'Find below details of your daily, weekly, monthly, quarterly, & yearly sales..',
+                                    style: TextStyle(fontSize: 18)),
                               ],
                             ),
                           ),

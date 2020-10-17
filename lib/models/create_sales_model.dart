@@ -208,7 +208,7 @@ class ProductDetail {
   });
 
   String name;
-  int quantityBought;
+  dynamic quantityBought;
   int totalCost;
 
   factory ProductDetail.fromJson(Map<String, dynamic> json) => ProductDetail(

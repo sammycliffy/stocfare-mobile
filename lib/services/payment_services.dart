@@ -5,13 +5,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class PaymentServices {
-  Future<dynamic> sendPaymentToServer(String subscriptionPlan) async {
+  Future<dynamic> sendPaymentToServer(
+      String subscriptionPlan, subscriptionType) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
     String reference = sharedPreferences.getString('reference');
     String branchId = sharedPreferences.getString('branchId');
     print(promoCode);
-    final String url = GlobalConfiguration().get("send-payment") + '$branchId/';
+    final String url = GlobalConfiguration().get("send-payment") +
+        '$branchId/?subscription_type=$subscriptionType';
     try {
       final http.Response response = await http.post(url,
           headers: <String, String>{

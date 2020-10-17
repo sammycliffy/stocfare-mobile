@@ -14,7 +14,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(title: Text('Feed back')),
+        appBar: AppBar(title: Text('Feedback')),
         body: Form(
             child: Column(
           children: <Widget>[
@@ -29,7 +29,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                   feedBack = val;
                 }),
                 decoration: InputDecoration(
-                  labelText: 'Feed back',
+                  labelText: 'Feedback',
                   contentPadding: EdgeInsets.all(12),
                   labelStyle: TextStyle(color: Theme.of(context).primaryColor),
                   border: OutlineInputBorder(
@@ -40,7 +40,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                       color: Theme.of(context).focusColor.withOpacity(0.7)),
                   prefixIcon: Icon(Icons.border_color,
                       color: Theme.of(context).accentColor),
-                  hintText: 'Give us your feed back',
+                  hintText: 'Give us your feedback',
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color:

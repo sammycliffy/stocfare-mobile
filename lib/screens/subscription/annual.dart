@@ -152,11 +152,12 @@ class _AnnualPageState extends State<AnnualPage> {
       DialogBoxes().loading(context);
       _activitiesServices.checkForInternet().then((value) async {
         if (value == true) {
-          dynamic result =
-              await _paymentServices.sendPaymentToServer('PREMIUM').timeout(
-                    Duration(seconds: 10),
-                    onTimeout: () => null,
-                  );
+          dynamic result = await _paymentServices
+              .sendPaymentToServer('PREMIUM', 'annual')
+              .timeout(
+                Duration(seconds: 15),
+                onTimeout: () => null,
+              );
           if (result != true) {
             Navigator.pop(context);
             setState(() {

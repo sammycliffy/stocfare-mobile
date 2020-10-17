@@ -3,9 +3,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/categories.dart';
 import 'package:stockfare_mobile/screens/main_pages/analytics/analytics.dart';
 import 'package:stockfare_mobile/screens/main_pages/dashboard/main_dashboard.dart';
-import 'package:stockfare_mobile/screens/main_pages/expenses/home.dart';
 import 'package:stockfare_mobile/screens/main_pages/home.dart';
-import 'package:stockfare_mobile/screens/main_pages/sales_pages/all_sales.dart';
 
 class BottomNavigationPage extends StatefulWidget {
   @override

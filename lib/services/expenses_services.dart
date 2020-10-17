@@ -228,7 +228,7 @@ class ExpensesServices {
         return data;
       } else {
         print(response.statusCode);
-        return Future.error(json.decode(response.body));
+        return Future.error(json.decode(response.body)['detail']);
       }
     } catch (e) {
       print(e.toString());
@@ -256,7 +256,7 @@ class ExpensesServices {
         return data;
       } else {
         print(response.statusCode);
-        return Future.error(json.decode(response.body));
+        return Future.error(json.decode(response.body)['detail']);
       }
     } catch (e) {
       print(e.toString());

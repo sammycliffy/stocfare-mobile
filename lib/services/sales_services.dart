@@ -29,6 +29,27 @@ class SalesServices {
     }
   }
 
+  Future versionNumber() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    final String url = GlobalConfiguration().get("version-number");
+    try {
+      final http.Response response =
+          await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        return Future.error(json.decode(response.body)['detail']);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future<GetSalesModel> getSalesPages(int pageNumber) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');

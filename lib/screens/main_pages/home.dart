@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/sales_pages/cart.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
@@ -16,6 +17,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:stockfare_mobile/services/product_services.dart';
 import 'all_products_list/add_single_products/form.dart';
+
 import 'sales_pages/all_sales.dart';
 
 enum SingingCharacter { pack, unit }
@@ -68,7 +70,7 @@ class _HomePageState extends State<HomePage> {
   int _shoppingCartUnitQuantity = 0;
   int numberToFormat = 100000;
 
-  String _scanBarcode = 'Unknown';
+  String _scanBarcode;
   Map<String, dynamic> _firebaseMessage;
   final _formKey = GlobalKey<FormState>();
   String firebaseNumber;
@@ -108,7 +110,6 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       _scanBarcode = barcodeScanRes;
-      searchBarcode(barcodeScanRes);
     });
   }
 
@@ -125,27 +126,28 @@ class _HomePageState extends State<HomePage> {
     _firebaseMessaging.configure(
         onBackgroundMessage: myBackgroundHandler,
         onMessage: (Map<String, dynamic> message) async {
-          // print('onMessage: ${message['notification']['body']}');
+          print('onMessage: $message');
           _firebaseMessage = message;
-          showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text(message['notification']['title']),
-                  content: SingleChildScrollView(
-                    child: ListBody(
-                      children: <Widget>[
-                        Text(message['notification']['body']),
-                        RaisedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text('See Receipt'))
-                      ],
-                    ),
-                  ),
-                );
-              });
+          _showNotification(message);
+          // showDialog(
+          //     context: context,
+          //     builder: (context) {
+          //       return AlertDialog(
+          //         title: Text(message['notification']['title']),
+          //         content: SingleChildScrollView(
+          //           child: ListBody(
+          //             children: <Widget>[
+          //               Text(message['notification']['body']),
+          //               RaisedButton(
+          //                   onPressed: () {
+          //                     Navigator.pop(context);
+          //                   },
+          //                   child: Text('See Receipt'))
+          //             ],
+          //           ),
+          //         ),
+          //       );
+          //     });
         });
   }
 
@@ -169,7 +171,8 @@ class _HomePageState extends State<HomePage> {
         _productServices.getFirebaseData(_signupNotifier.firebaseId);
 
     return WillPopScope(
-      onWillPop: () => SystemNavigator.pop(),
+      onWillPop: () => Navigator.push(context,
+          MaterialPageRoute(builder: (context) => BottomNavigationPage())),
       child: Scaffold(
           floatingActionButton: FloatingActionButton(
             focusColor: Theme.of(context).canvasColor,
@@ -265,32 +268,58 @@ class _HomePageState extends State<HomePage> {
                                     border: InputBorder.none,
                                     contentPadding:
                                         EdgeInsets.fromLTRB(25, 8, 0, 5),
-                                    hintText: 'Search Stockfare',
+                                    hintText: _scanBarcode == null
+                                        ? 'Search Stockfare'
+                                        : _scanBarcode,
                                   )),
                             ),
                           ),
                           SizedBox(width: 10),
-                          Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 20, right: 20),
-                              child: InkWell(
-                                child: Container(
-                                  width: 50,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Center(
-                                      child: IconButton(
-                                          icon: FaIcon(FontAwesomeIcons.barcode,
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                          onPressed: null)),
-                                ),
-                                onTap: () {
-                                  scanBarcodeNormal();
-                                },
-                              )),
+                          _scanBarcode == null
+                              ? Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 20, right: 20),
+                                  child: InkWell(
+                                    child: Container(
+                                      width: 50,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Center(
+                                          child: IconButton(
+                                              icon: FaIcon(
+                                                  FontAwesomeIcons.barcode,
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                              onPressed: null)),
+                                    ),
+                                    onTap: () {
+                                      scanBarcodeNormal();
+                                    },
+                                  ))
+                              : Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 20, right: 20),
+                                  child: InkWell(
+                                    child: Container(
+                                        width: 50,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                            child: IconButton(
+                                                icon: Icon(Icons.search),
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                onPressed: null))),
+                                    onTap: () {
+                                      searchBarcode(_scanBarcode);
+                                    },
+                                  )),
                         ],
                       ),
                     ],
@@ -571,6 +600,7 @@ class _HomePageState extends State<HomePage> {
                                               }) ??
                                               '[]');
                                       _barcode.add(value['bar_code']);
+                                      print(value['bar_code']);
                                       _productQuantity.add(
                                           value['product_unit']['quantity']);
                                       print(
@@ -847,17 +877,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   void searchBarcode(value) {
+    print(_barcode);
     if (_barcode.contains(value)) {
+      print('contain value');
       int _index = _barcode.indexWhere((element) => element == value);
+
       setState(() {
         _categories.removeRange(0, _index);
+        print(_categories);
         _productImage.removeRange(0, _index);
         _productPrice.removeRange(0, _index);
         _packQuantity.removeRange(0, _index);
         _productQuantity.removeRange(0, _index);
 
         isSearched = true;
-        print(_categories);
       });
     } else {
       print('does not contain value');

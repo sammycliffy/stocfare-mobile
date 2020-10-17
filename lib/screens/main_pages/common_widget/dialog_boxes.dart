@@ -31,6 +31,47 @@ class DialogBoxes {
     );
   }
 
+  upgrader(context) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          content: SingleChildScrollView(
+              child: Column(
+            children: <Widget>[
+              Text(
+                'App update Available',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                'A new version of the app is available',
+                style: TextStyle(color: Colors.black, fontSize: 17),
+              ),
+              SizedBox(height: 10),
+              Container(
+                  width: 80,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Theme.of(context).primaryColor),
+                  child: Center(
+                      child: Text('Update',
+                          style: TextStyle(color: Colors.white))))
+            ],
+          )),
+        );
+      },
+    );
+  }
+
   productOutOfRange(context) {
     return showDialog<void>(
       context: context,
@@ -77,7 +118,7 @@ class DialogBoxes {
                 height: 15,
               ),
               Text(
-               'Your current plan does not support this activity. \nPlease upgrade to enjoy.',
+                'Your current plan does not support this activity. \nPlease upgrade to enjoy.',
                 style: TextStyle(color: Colors.black, fontSize: 20),
               ),
               SizedBox(height: 5),
