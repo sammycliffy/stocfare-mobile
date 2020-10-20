@@ -18,9 +18,13 @@ class UploadExcelPage extends StatefulWidget {
 class _UploadExcelPageState extends State<UploadExcelPage> {
   File toSend;
   ProductServices _productServices = ProductServices();
+
   Future _getFile() async {
-    File file = await FilePicker.getFile();
-    return file;
+    FilePickerResult result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      File file = File(result.files.single.path);
+      return file;
+    }
   }
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();

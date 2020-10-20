@@ -380,7 +380,7 @@ class _SalesReceiptState extends State<SalesReceipt> {
                   child: Text('Please check your internet connection'));
             } else if (_error == true) {
               return Center(
-                  child: Text('You do not have access to veiw this page'));
+                  child: Text('You do not have access to view this page'));
             } else {
               return FutureBuilder<CreateSalesModel>(
                   future: widget.value,
