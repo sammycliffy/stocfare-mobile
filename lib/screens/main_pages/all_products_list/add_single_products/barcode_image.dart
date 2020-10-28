@@ -31,12 +31,52 @@ class _BarcodePageState extends State<BarcodePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String _error;
 
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+  _imgFromCamera() async {
+    File image = await ImagePicker.pickImage(
+        source: ImageSource.camera, imageQuality: 50);
 
     setState(() {
-      _image = File(pickedFile.path);
+      _image = image;
     });
+  }
+
+  _imgFromGallery() async {
+    File image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: 50);
+
+    setState(() {
+      _image = image;
+    });
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Photo Library'),
+                      onTap: () {
+                        _imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   startBarcodeScanStream() async {
@@ -148,7 +188,7 @@ class _BarcodePageState extends State<BarcodePage> {
                           height: 150,
                         ),
                   onTap: () {
-                    getImage();
+                    _showPicker(context);
                   },
                 ),
                 SizedBox(
@@ -183,7 +223,6 @@ class _BarcodePageState extends State<BarcodePage> {
                   ),
                   onTap: () async {
                     _activitiesServices.checkForInternet().then((value) async {
-                      
                       String noImage = await getImageFileFromAssets();
                       if (value == true) {
                         DialogBoxes().loading(context);

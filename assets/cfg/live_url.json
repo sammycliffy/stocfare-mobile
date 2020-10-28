@@ -27,10 +27,24 @@
   "delete-product": "https://api-lexical-dance.stockfare.co/api/v1/inventory/category/product/delete/",
   "get-all-products": "http://api-lexical-dance.stockfare.co/api/v1/inventory/category/",
 
-  "send-payment": "https://api-lexical-dance.stockfare.co/api/v1/subscription/switch-plan/",
-  "delete-sales": "https://api-lexical-dance.stockfare.co/api/v1/sales/delete-sale/",
-  "promo-code": "https://api-lexical-dance.stockfare.co/api/v1/promotion/submit/",
-  "feedback": "https://api-lexical-dance.stockfare.co/api/v2/users/feedback/",
-
-  "base-url": "api-lexical-dance.stockfare.co"
+  "send-payment": "http://api-lexical-dance.stockfare.co/api/v1/subscription/switch-plan/",
+  "delete-sales": "http://api-lexical-dance.stockfare.co/api/v1/sales/delete-sale/",
+  "promo-code": "http://api-lexical-dance.stockfare.co/api/v1/promotion/submit/",
+  "feedback": "http://api-lexical-dance.stockfare.co/api/v2/users/feedback/",
+  "create-expenses": "http://api-lexical-dance.stockfare.co/api/v2/expenditure/create-expenses/",
+  "get-expenses-summary": "http://api-lexical-dance.stockfare.co/api/v2/expenditure/expenses-summary/",
+  "expenses-dropdown": "http://api-lexical-dance.stockfare.co/api/v2/expenditure/expenses-dropdown-list/",
+  "income-dropdown": "http://api-lexical-dance.stockfare.co/api/v2/expenditure/income-dropdown-list/",
+  "get-all-expenses": "http://api-lexical-dance.stockfare.co/api/v2/expenditure/expenses/",
+  "reoccuring-expenses": "http://api-lexical-dance.stockfare.co/api/v2/expenditure/recurring-expenses/",
+  "reoccuring-income": "http://api-lexical-dance.stockfare.co/api/v2/expenditure/recurring-income/",
+  "create-income": "http://api-lexical-dance.stockfare.co/api/v2/expenditure/create-income/",
+  "get-income-summary": "http://api-lexical-dance.stockfare.co/api/v2/expenditure/income-summary/",
+  "get-all-income": "http://api-lexical-dance.stockfare.co/api/v2/expenditure/income/",
+  "get-all-losses": "http://api-lexical-dance.stockfare.co/api/v1/analytics/loss/",
+  "get-all-profits": "http://api-lexical-dance.stockfare.co/api/v1/analytics/profit/",
+  "loss-list": "http://api-lexical-dance.stockfare.co/api/v1/analytics/sale-loss-list/",
+  "profit-list": "http://api-lexical-dance.stockfare.co/api/v1/analytics/sale-profit-list/",
+  "base-url": "http://api-lexical-dance.stockfare.co/",
+  "version-number": "https://stockfare-io.herokuapp.com/api/v2/users/verision-number/"
 }
