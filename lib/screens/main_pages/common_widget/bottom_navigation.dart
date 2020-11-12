@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/categories.dart';
 import 'package:stockfare_mobile/screens/main_pages/analytics/analytics.dart';
 import 'package:stockfare_mobile/screens/main_pages/dashboard/main_dashboard.dart';
@@ -42,12 +41,12 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.dashboard,
-              color: Hexcolor('#c80815'),
+              color: Colors.black,
             ),
             title: Text(
               'Dashboard',
               style: TextStyle(
-                color: Hexcolor('#c80815'),
+                color: Colors.black,
               ),
             ),
             backgroundColor: Colors.white,
@@ -55,12 +54,12 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.shopping_basket,
-              color: Hexcolor('#c80815'),
+              color: Colors.black,
             ),
             title: Text(
               'Checkout',
               style: TextStyle(
-                color: Hexcolor('#c80815'),
+                color: Colors.black,
               ),
             ),
             backgroundColor: Colors.deepOrange,
@@ -68,12 +67,12 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.card_giftcard,
-              color: Hexcolor('#c80815'),
+              color: Colors.black,
             ),
             title: Text(
               'Products',
               style: TextStyle(
-                color: Hexcolor('#c80815'),
+                color: Colors.black,
               ),
             ),
             backgroundColor: Colors.green,
@@ -81,12 +80,12 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.multiline_chart,
-              color: Hexcolor('#c80815'),
+              color: Colors.black,
             ),
             title: Text(
               'Analytics',
               style: TextStyle(
-                color: Hexcolor('#c80815'),
+                color: Colors.black,
               ),
             ),
             backgroundColor: Colors.white,

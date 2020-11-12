@@ -6,6 +6,7 @@ import 'package:stockfare_mobile/models/sales_analytics_model.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_single_products/form.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/expenses/home.dart';
 import 'package:stockfare_mobile/screens/main_pages/home.dart';
@@ -21,6 +22,7 @@ class DashBoard extends StatefulWidget {
 
 class _DashBoardState extends State<DashBoard> {
   Analytics _checkSales = Analytics();
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
   Future<SalesAnalytics> _salesAnalytics;
   ActivitiesServices _activitiesServices = ActivitiesServices();
   bool isNetwork = true;
@@ -30,6 +32,7 @@ class _DashBoardState extends State<DashBoard> {
   @override
   void initState() {
     super.initState();
+
     _activitiesServices.checkForInternet().then((value) {
       if (value == true) {
         _checkSales.getAllAnalytics().catchError((e) {
@@ -80,6 +83,7 @@ class _DashBoardState extends State<DashBoard> {
         thousandSeparator: ',',
         leftSymbol: ' ${_signupNotifier.country} ');
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text('Dashboard'),
           actions: [

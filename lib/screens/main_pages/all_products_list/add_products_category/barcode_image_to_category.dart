@@ -9,7 +9,6 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/services/activities_services.dart';
@@ -121,6 +120,11 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                   style:
                       TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                 ),
+                Text(
+                  '(Optional)',
+                  style: TextStyle(
+                      color: Colors.grey, fontWeight: FontWeight.bold),
+                ),
               ])),
               SizedBox(
                 height: 60,
@@ -158,6 +162,11 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                   style:
                       TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                 ),
+                Text(
+                  '(Optional)',
+                  style: TextStyle(
+                      color: Colors.grey, fontWeight: FontWeight.bold),
+                ),
               ])),
               SizedBox(
                 height: 30,
@@ -181,7 +190,8 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                     _activitiesServices.checkForInternet().then((value) async {
                       if (value == true) {
                         DialogBoxes().loading(context);
-                        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();   
+                        SharedPreferences sharedPreferences =
+                            await SharedPreferences.getInstance();
                         String id = sharedPreferences.getString('id');
                         print(id);
                         String noImage = await getImageFileFromAssets();
@@ -211,7 +221,7 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                                   _addProduct.productDiscount,
                                   _addProduct.productWeight,
                                   _addProduct.data,
-                                   id ?? _addProduct.categoryId );
+                                  id ?? _addProduct.categoryId);
 
                           if (result != true) {
                             Navigator.pop(context);

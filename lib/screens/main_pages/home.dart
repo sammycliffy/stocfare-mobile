@@ -46,6 +46,8 @@ class _HomePageState extends State<HomePage> {
   List _productQuantity = [];
   List _packQuantity = [];
   List _productId = [];
+  List _productUnitLimit = [];
+  List _productPackLimit = [];
   List _productPackPrice = [];
   List _barcode = [];
   List _categoriesSearch = [];
@@ -69,6 +71,7 @@ class _HomePageState extends State<HomePage> {
   int _shoppingCartPackQuantity = 0;
   int _shoppingCartUnitQuantity = 0;
   int numberToFormat = 100000;
+  bool stockIsLow = false;
 
   String _scanBarcode;
   Map<String, dynamic> _firebaseMessage;
@@ -118,8 +121,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     var initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettings =
-        InitializationSettings(initializationSettingsAndroid, null);
+    var initializationSettingsIos = IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(
+      initializationSettingsAndroid,
+      initializationSettingsIos,
+    );
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: selectNotification);
 
@@ -156,6 +162,7 @@ class _HomePageState extends State<HomePage> {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 3.2;
     final double itemWidth = size.width / 2;
+
     AddProductToCart _addProduct = Provider.of<AddProductToCart>(context);
     SignupNotifier _signupNotifier =
         Provider.of<SignupNotifier>(context, listen: false);
@@ -611,6 +618,10 @@ class _HomePageState extends State<HomePage> {
                                           value['product_pack']['quantity']);
                                       _productPrice
                                           .add(value['product_unit']['price']);
+                                      _productUnitLimit
+                                          .add(value['product_unit']['limit']);
+                                      _productPackLimit
+                                          .add(value['product_pack']['limit']);
                                       _productPackPrice
                                           .add(value['product_pack']['price']);
                                       _packCostPrice.add(
@@ -620,8 +631,7 @@ class _HomePageState extends State<HomePage> {
 
                                 _topCategory.add(values['name']);
                               });
-                              print(_unitCostPrice);
-                              print(_packCostPrice);
+
                               return Expanded(
                                 child: GridView.builder(
                                   itemCount: _categories.length,
@@ -636,103 +646,114 @@ class _HomePageState extends State<HomePage> {
                                         _productPrice[index].toDouble());
                                     controller1.updateValue(
                                         _productPackPrice[index].toDouble());
+                                    checkForLowStock(_productQuantity[index],
+                                        _productUnitLimit[index]);
                                     return Padding(
                                       padding: const EdgeInsets.all(5.0),
                                       child: GestureDetector(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.grey[200],
-                                              width: 2,
+                                        child: ClipRRect(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.grey[200],
+                                                width: 2,
+                                              ),
                                             ),
-                                          ),
-                                          child: Column(
-                                            children: <Widget>[
-                                              _productImage
-                                                      .asMap()
-                                                      .containsKey(index)
-                                                  ? CachedNetworkImage(
-                                                      width: 120,
-                                                      height: 100,
-                                                      fit: BoxFit.cover,
-                                                      placeholder: (context,
-                                                              url) =>
-                                                          CircularProgressIndicator(),
-                                                      imageUrl:
-                                                          _productImage[index],
-                                                    )
-                                                  : Image.asset(
-                                                      'assets/images/No-image.png',
-                                                      width: 120,
-                                                      height: 120,
-                                                      fit: BoxFit.fitWidth,
+                                            // child: Banner(
+                                            //   message: "Low Stock",
+                                            //   location: BannerLocation.topStart,
+                                            // color: Colors.orange,
+                                            child: Column(
+                                              children: <Widget>[
+                                                SizedBox(height: 10),
+                                                _productImage
+                                                        .asMap()
+                                                        .containsKey(index)
+                                                    ? CachedNetworkImage(
+                                                        width: 120,
+                                                        height: 100,
+                                                        fit: BoxFit.cover,
+                                                        placeholder: (context,
+                                                                url) =>
+                                                            CircularProgressIndicator(),
+                                                        imageUrl: _productImage[
+                                                            index],
+                                                      )
+                                                    : Image.asset(
+                                                        'assets/images/No-image.png',
+                                                        width: 120,
+                                                        height: 120,
+                                                        fit: BoxFit.fitWidth,
+                                                      ),
+                                                Container(
+                                                  width: double.infinity,
+                                                  child: Center(
+                                                    child: Text(
+                                                      _categories[index],
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 18,
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .primaryColor),
                                                     ),
-                                              Container(
-                                                width: double.infinity,
-                                                child: Center(
-                                                  child: Text(
-                                                    _categories[index],
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18,
-                                                        color: Theme.of(context)
-                                                            .primaryColor),
                                                   ),
                                                 ),
-                                              ),
-                                              Container(
-                                                width: double.infinity,
-                                                decoration: BoxDecoration(
-                                                    border: Border(
-                                                        bottom: BorderSide(
-                                                            width: 2,
-                                                            color: Colors
-                                                                .grey[200]))),
-                                                child: Center(
-                                                  child: Text(
-                                                    '${_productQuantity[index]} Units | ${_packQuantity[index]} Packs',
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color:
-                                                            Colors.grey[800]),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(width: 5),
-                                              Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Container(
-                                                    width: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                        border: Border(
-                                                            bottom: BorderSide(
-                                                                width: 2,
-                                                                color:
-                                                                    Colors.grey[
-                                                                        200]))),
-                                                    child: Center(
-                                                      child: Text(
-                                                        '${controller.text} / Units',
-                                                        style: TextStyle(
+                                                Container(
+                                                  width: double.infinity,
+                                                  decoration: BoxDecoration(
+                                                      border: Border(
+                                                          bottom: BorderSide(
+                                                              width: 2,
+                                                              color: Colors
+                                                                  .grey[200]))),
+                                                  child: Center(
+                                                    child: Text(
+                                                      '${_productQuantity[index]} Units | ${_packQuantity[index]} Packs',
+                                                      style: TextStyle(
                                                           fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color:
+                                                              Colors.grey[800]),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 5),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                          border: Border(
+                                                              bottom: BorderSide(
+                                                                  width: 2,
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      200]))),
+                                                      child: Center(
+                                                        child: Text(
+                                                          '${controller.text} / Units',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    '${controller1.text} / Pack',
-                                                    style: TextStyle(
-                                                      fontSize: 14,
+                                                    Text(
+                                                      '${controller1.text} / Pack',
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            // ),
                                           ),
                                         ),
                                         onTap: () {
@@ -771,8 +792,8 @@ class _HomePageState extends State<HomePage> {
                                                 _unitCostPrice[index],
                                               );
                                             }
-                                            print(_productQuantity[index]);
-                                            print(map[_productId[index]]);
+                                            // print(_productQuantity[index]);
+                                            // print(map[_productId[index]]);
                                           } else {
                                             // send pack to the dialog page
 
@@ -831,6 +852,13 @@ class _HomePageState extends State<HomePage> {
             ],
           )),
     );
+  }
+
+  checkForLowStock(int quantity, int limit) {
+    if (limit >= quantity) {
+      print(true);
+    }
+    print(false);
   }
 
   void search(value) {
@@ -1113,8 +1141,8 @@ class _HomePageState extends State<HomePage> {
                           ),
                           onTap: () {
                             if (_formKey.currentState.validate()) {
-                              print(_packQuantity - _productQuantity);
-                              print(_packQuantity);
+                              // print(_packQuantity - _productQuantity);
+                              // print(_packQuantity);
                               bool _packFound = false;
                               bool _unitFound = false;
                               int _index;

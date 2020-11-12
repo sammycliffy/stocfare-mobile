@@ -74,8 +74,12 @@ class ProductServices {
       } else {
         print(response.body);
 
-        return json.decode(response.body)['detail'] ??
-            json.decode(response.body)['name'][0];
+        Map result = json.decode(response.body);
+        String finalResult;
+        result.forEach((k, v) {
+          finalResult = ' ${v[0]}';
+        });
+        return finalResult;
       }
     } catch (e) {
       print(e.toString());
@@ -139,8 +143,12 @@ class ProductServices {
         return true;
       } else {
         print(response.body);
-        return json.decode(response.body)['detail'] ??
-            json.decode(response.body)['name'][0];
+        Map result = json.decode(response.body);
+        String finalResult;
+        result.forEach((k, v) {
+          finalResult = ' ${v[0]}';
+        });
+        return finalResult;
       }
     } catch (e) {
       print(e.toString());
@@ -334,13 +342,17 @@ class ProductServices {
     var response = await request.send();
     var responseData = await response.stream.toBytes();
     var responseString = String.fromCharCodes(responseData);
-    print(responseString);
+
     if (response.statusCode != 200 || response.statusCode != 201) {
-      return json.decode(responseString)['error']['files'][0] ??
-          json.decode(responseString)['detail'];
+      Map result = json.decode(responseString);
+      String finalResult;
+      result.forEach((k, v) {
+        finalResult = '$k: $v';
+      });
+      return finalResult;
+    } else {
+      return response.statusCode;
     }
-    print(response.statusCode);
-    return response.statusCode;
   }
 
   Future<dynamic> updateBranch(

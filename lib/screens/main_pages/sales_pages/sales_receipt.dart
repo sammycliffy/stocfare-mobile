@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/create_sales_model.dart';
@@ -10,6 +9,8 @@ import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/services/activities_services.dart';
+
+import '../home.dart';
 
 class SalesReceipt extends StatefulWidget {
   final Future<CreateSalesModel> value;
@@ -713,8 +714,7 @@ class _SalesReceiptState extends State<SalesReceipt> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavigationPage()));
+                                            builder: (context) => HomePage()));
                                   },
                                   child: Text('Make Another Sales'))
                             ],

@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/product_success.dart';
@@ -165,6 +164,11 @@ class _BarcodePageState extends State<BarcodePage> {
                   style:
                       TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                 ),
+                Text(
+                  '(Optional)',
+                  style: TextStyle(
+                      color: Colors.grey, fontWeight: FontWeight.bold),
+                ),
               ])),
               SizedBox(
                 height: 60,
@@ -201,6 +205,11 @@ class _BarcodePageState extends State<BarcodePage> {
                   'Add Image',
                   style:
                       TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '(Optional)',
+                  style: TextStyle(
+                      color: Colors.grey, fontWeight: FontWeight.bold),
                 ),
               ])),
               SizedBox(

@@ -263,7 +263,7 @@ class _AllSalesListState extends State<AllSalesList> {
                         });
                       } else {
                         Navigator.pop(_scaffoldKey.currentContext);
-
+                        DialogBoxes().success(_scaffoldKey.currentContext);
                         _salesServices.getallSales().then((value) {
                           setState(() {
                             _clear();

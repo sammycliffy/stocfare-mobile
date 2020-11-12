@@ -1,9 +1,14 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/helpers/save_user.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
 import 'package:stockfare_mobile/screens/intro_pages/explore_page.dart';
-import 'dart:async';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
+import 'package:stockfare_mobile/services/activities_services.dart';
+import 'package:stockfare_mobile/services/app_services.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -15,13 +20,20 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   Image currentImage;
   int today = DateTime.now().millisecondsSinceEpoch;
+  ActivitiesServices _activityServices = ActivitiesServices();
 
   @override
   void initState() {
     super.initState();
     currentImage =
         Image.asset('assets/images/log.jpeg', width: 200, height: 200);
-    Timer(Duration(seconds: 3), () => checkForFirstInstallation());
+    _activityServices.checkForInternet().then((value) {
+      if (value == true) {
+        _checkAppVersion(context);
+      } else {
+        checkForFirstInstallation();
+      }
+    });
   }
 
   @override
@@ -39,24 +51,43 @@ class _SplashScreenState extends State<SplashScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            child: Center(
-              child: currentImage,
-            ),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [currentImage, CircularProgressIndicator()]),
           ),
-          Column(children: <Widget>[
-            Text(
-              'From Contrail Store Ltd.',
-              style: TextStyle(
-                fontSize: 16,
+          Center(
+            child: Column(children: <Widget>[
+              Text(
+                'From Contrail Store Ltd.',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            )
-          ]),
+              SizedBox(
+                height: 20,
+              )
+            ]),
+          ),
         ],
       ),
     );
+  }
+
+  _checkAppVersion(context) {
+    AppServices _appServices = AppServices();
+    String _appVersionNumber = '40';
+    try {
+      _appServices.getAppVersion().then((value) {
+        if (_appVersionNumber != value) {
+          DialogBoxes().upgrader(context);
+        } else {
+          checkForFirstInstallation();
+        }
+      }).timeout(Duration(seconds: 15));
+    } on SocketException catch (e) {
+      print('this is a time out exception');
+    }
   }
 
   void checkForFirstInstallation() async {

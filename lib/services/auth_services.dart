@@ -193,17 +193,16 @@ class AuthServices {
     print(data);
     final String url = GlobalConfiguration().get("forgot-password");
     try {
-      final http.Response response = await http
-          .post(url,
-              headers: <String, String>{
-                'Content-Type': 'application/json; charset=UTF-8',
-                'Accept': 'application/json',
-                'Authorization': 'Bearer $token',
-              },
-              body: jsonEncode(<String, String>{
-                "data": data,
-              }))
-          .timeout(Duration(seconds: 15));
+      final http.Response response = await http.post(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode(<String, String>{
+            "data": data,
+          }));
+      // .timeout(Duration(seconds: 25));
       if (response.statusCode == 200) {
         var responseJson = json.decode(response.body);
         sharedPreferences.setString('queryToken', responseJson['token']);

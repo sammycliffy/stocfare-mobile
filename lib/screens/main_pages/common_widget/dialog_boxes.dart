@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stockfare_mobile/screens/subscription/sub_home.dart';
 import 'package:stockfare_mobile/services/payment_services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum SingingCharacter { pack, unit }
 
@@ -56,20 +57,34 @@ class DialogBoxes {
                 style: TextStyle(color: Colors.black, fontSize: 17),
               ),
               SizedBox(height: 10),
-              Container(
-                  width: 80,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).primaryColor),
-                  child: Center(
-                      child: Text('Update',
-                          style: TextStyle(color: Colors.white))))
+              GestureDetector(
+                child: Container(
+                    width: 80,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Theme.of(context).primaryColor),
+                    child: Center(
+                        child: Text('Update',
+                            style: TextStyle(color: Colors.white)))),
+                onTap: () {
+                  _launchURL();
+                },
+              )
             ],
           )),
         );
       },
     );
+  }
+
+  _launchURL() async {
+    const url = 'https://play.google.com/store/apps/details?id=com.stockfare';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   productOutOfRange(context) {
