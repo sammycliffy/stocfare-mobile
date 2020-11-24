@@ -105,8 +105,14 @@ class _FormPageState extends State<FormPage> {
                         message: 'James',
                         child: TextFormField(
                           keyboardType: TextInputType.text,
-                          validator: (input) =>
-                              input.isEmpty ? "Enter Product Name " : null,
+                          validator: (input) {
+                            if (input.isEmpty) {
+                              return "Enter Product Name ";
+                            } else if (input.length > 23) {
+                              return 'Product Name Too Long';
+                            }
+                            return null;
+                          },
                           onChanged: (val) => setState(() {
                             _unitProductName = val;
                           }),

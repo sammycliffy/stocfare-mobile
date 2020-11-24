@@ -29,7 +29,6 @@ class _CategoryPageState extends State<CategoryPage> {
   List _categoryId = [];
   List _categories = [];
   List _productCount = [];
-
   List _categoryIdSearch = [];
   List _categoriesSearch = [];
   List _productCountSearch = [];
@@ -43,6 +42,7 @@ class _CategoryPageState extends State<CategoryPage> {
   bool _search = false;
   bool loading = false;
   String _error;
+  List _lowStockId = [];
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -70,6 +70,8 @@ class _CategoryPageState extends State<CategoryPage> {
         Provider.of<SignupNotifier>(context, listen: false);
     final firebaseDb =
         _productServices.getFirebaseData(_signupNotifier.firebaseId);
+    final _firebaseNotification = _productServices
+        .getFirebaseNotification(_signupNotifier.notificationId);
     return WillPopScope(
       onWillPop: () => Navigator.push(context,
           MaterialPageRoute(builder: (context) => BottomNavigationPage())),
@@ -323,144 +325,220 @@ class _CategoryPageState extends State<CategoryPage> {
                           checkBox.add(false);
                         });
 
-                        return Column(
-                          children: [
-                            SizedBox(height: 5),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 280),
-                              child: Container(
-                                width: 55,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: Center(
-                                  child: Text(_categories.length.toString(),
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          color: Theme.of(context).primaryColor,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Scrollbar(
-                                isAlwaysShown: true,
-                                controller: _scrollController,
-                                child: ListView.builder(
-                                    itemCount: _categories.length,
-                                    itemBuilder: (context, index) {
-                                      return GestureDetector(
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: Card(
-                                                semanticContainer: true,
-                                                clipBehavior:
-                                                    Clip.antiAliasWithSaveLayer,
-                                                elevation: 3,
-                                                child: ListTile(
-                                                    title: Text(
-                                                      _categories[index]
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18,
-                                                      ),
-                                                    ),
-                                                    subtitle: Text(
-                                                      _productCount[index]
-                                                              .toString() +
-                                                          ' items',
-                                                    ),
-                                                    trailing: Container(
-                                                        child: (() {
-                                                      if (editCategory) {
-                                                        return GestureDetector(
-                                                          child: Text(
-                                                            'Edit',
-                                                            style: TextStyle(
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          onTap: () {
-                                                            _updateDialog(
-                                                                _categories[
-                                                                        index]
-                                                                    .toString(),
-                                                                _categoryId[
-                                                                    index]);
-                                                          },
-                                                        );
-                                                      } else if (deleteCategory) {
-                                                        return GestureDetector(
-                                                          child: Container(
-                                                            width: 100,
-                                                            height: 100,
-                                                            child:
-                                                                CheckboxListTile(
-                                                              activeColor: Theme
-                                                                      .of(context)
-                                                                  .primaryColor,
-                                                              value: checkBox[
-                                                                  index],
-                                                              onChanged:
-                                                                  (newValue) {
-                                                                setState(() {
-                                                                  checkBox[
-                                                                          index] =
-                                                                      newValue;
-                                                                  deleteItem
-                                                                          .contains(_categoryId[
-                                                                              index])
-                                                                      ? deleteItem.remove(
-                                                                          _categoryId[
-                                                                              index])
-                                                                      : deleteItem.add(
-                                                                          _categoryId[index]
-                                                                              .toString());
-                                                                });
-                                                              },
-                                                            ),
-                                                          ),
-                                                          onTap: () {
-                                                            print(_categoryId[
-                                                                index]);
-                                                          },
-                                                        );
-                                                      }
+                        return StreamBuilder(
+                            stream: _firebaseNotification,
+                            builder: (context, AsyncSnapshot<Event> snapshot1) {
+                              if (snapshot1.hasData) {
+                                _lowStockId.clear();
+                                if (snapshot1.data.snapshot.value != null) {
+                                  DataSnapshot dataValues =
+                                      snapshot1.data.snapshot;
+                                  var data = dataValues.value[
+                                      '${_signupNotifier.notificationId}'];
+                                  if (data is String) {
+                                    print('yes');
+                                  } else {
+                                    Map<dynamic, dynamic> values = dataValues
+                                            .value[
+                                        '${_signupNotifier.notificationId}'];
 
-                                                      return Icon(
-                                                        Icons.category,
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                      );
-                                                    }()))))),
-                                        onTap: () async {
-                                          SharedPreferences sharedPreferences =
-                                              await SharedPreferences
-                                                  .getInstance();
-                                          sharedPreferences.remove('id');
-                                          _addToCart.addID(_categoryId[index],
-                                              _categories[index]);
-                                          _addToCart
-                                              .setFireId(_firebaseKeys[index]);
-                                          _addProductNotifier.setCategoryId(
-                                              _categoryId[index]);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProductListPage()));
-                                        },
-                                      );
-                                    }),
-                              ),
-                            ),
-                          ],
-                        );
+                                    values?.forEach((key, values) {
+                                      print(values);
+                                      Map<dynamic, dynamic> value = values;
+                                      value?.forEach((key, data) {
+                                        Map<dynamic, dynamic> newData = data;
+                                        newData?.forEach((key, data) {
+                                          print(data);
+                                          _lowStockId.add(data['name']);
+                                        });
+                                      });
+                                    });
+                                  }
+
+                                  return Column(
+                                    children: [
+                                      SizedBox(height: 5),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 280),
+                                        child: Container(
+                                          width: 55,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey[300],
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: Center(
+                                            child: Text(
+                                                _categories.length.toString(),
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Scrollbar(
+                                          isAlwaysShown: true,
+                                          controller: _scrollController,
+                                          child: ListView.builder(
+                                              itemCount: _categories.length,
+                                              itemBuilder: (context, index) {
+                                                print(_lowStockId);
+                                                return GestureDetector(
+                                                  child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      child: Card(
+                                                          semanticContainer:
+                                                              true,
+                                                          clipBehavior: Clip
+                                                              .antiAliasWithSaveLayer,
+                                                          elevation: 3,
+                                                          child: ListTile(
+                                                              title: Row(
+                                                                children: [
+                                                                  Text(
+                                                                    _categories[
+                                                                            index]
+                                                                        .toString(),
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          18,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 50,
+                                                                  ),
+                                                                  // (() {
+                                                                  //   if (_categories[
+                                                                  //           index] ==
+                                                                  //       _lowStockId[
+                                                                  //           index]) {
+                                                                  //     return Container(
+                                                                  //         width:
+                                                                  //             40,
+                                                                  //         height:
+                                                                  //             25,
+                                                                  //         decoration: BoxDecoration(
+                                                                  //             color: Colors.orange,
+                                                                  //             borderRadius: BorderRadius.circular(5)),
+                                                                  //         child: Center(child: Text('Low', style: TextStyle(color: Colors.white))));
+                                                                  //   } else {
+                                                                  //     return SizedBox();
+                                                                  //   }
+                                                                  // }())
+                                                                ],
+                                                              ),
+                                                              subtitle: Text(
+                                                                _productCount[
+                                                                            index]
+                                                                        .toString() +
+                                                                    ' items',
+                                                              ),
+                                                              trailing:
+                                                                  Container(
+                                                                      child:
+                                                                          (() {
+                                                                if (editCategory) {
+                                                                  return GestureDetector(
+                                                                    child: Text(
+                                                                      'Edit',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                    onTap: () {
+                                                                      _updateDialog(
+                                                                          _categories[index]
+                                                                              .toString(),
+                                                                          _categoryId[
+                                                                              index]);
+                                                                    },
+                                                                  );
+                                                                } else if (deleteCategory) {
+                                                                  return GestureDetector(
+                                                                    child:
+                                                                        Container(
+                                                                      width:
+                                                                          100,
+                                                                      height:
+                                                                          100,
+                                                                      child:
+                                                                          CheckboxListTile(
+                                                                        activeColor:
+                                                                            Theme.of(context).primaryColor,
+                                                                        value: checkBox[
+                                                                            index],
+                                                                        onChanged:
+                                                                            (newValue) {
+                                                                          setState(
+                                                                              () {
+                                                                            checkBox[index] =
+                                                                                newValue;
+                                                                            deleteItem.contains(_categoryId[index])
+                                                                                ? deleteItem.remove(_categoryId[index])
+                                                                                : deleteItem.add(_categoryId[index].toString());
+                                                                          });
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                    onTap: () {
+                                                                      print(_categoryId[
+                                                                          index]);
+                                                                    },
+                                                                  );
+                                                                }
+                                                                return Icon(
+                                                                  Icons
+                                                                      .category,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColor,
+                                                                );
+                                                              }()))))),
+                                                  onTap: () async {
+                                                    SharedPreferences
+                                                        sharedPreferences =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    sharedPreferences
+                                                        .remove('id');
+                                                    _addToCart.addID(
+                                                        _categoryId[index],
+                                                        _categories[index]);
+                                                    _addToCart.setFireId(
+                                                        _firebaseKeys[index]);
+                                                    _addProductNotifier
+                                                        .setCategoryId(
+                                                            _categoryId[index]);
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ProductListPage()));
+                                                  },
+                                                );
+                                              }),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+                              }
+                              return Column(
+                                  children: [CircularProgressIndicator()]);
+                            });
                       }
                     }
                     return Column(

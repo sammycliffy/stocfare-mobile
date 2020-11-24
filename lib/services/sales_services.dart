@@ -6,7 +6,10 @@ import 'package:stockfare_mobile/models/create_sales_model.dart';
 import 'dart:convert';
 import 'package:stockfare_mobile/models/sales_model.dart';
 
+import 'analytics_services.dart';
+
 class SalesServices {
+  Analytics _checkSales = Analytics();
   Future<GetSalesModel> getallSales() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
@@ -99,7 +102,7 @@ class SalesServices {
     }
   }
 
-  Future<CreateSalesModel> addSales(
+  Future<dynamic> addSales(
     List products,
     String customerName,
     String customerAddress,
@@ -120,6 +123,7 @@ class SalesServices {
     print(token);
     print(products);
     final String url = GlobalConfiguration().get("create-sales") + '$branchId/';
+    String _error = '';
     try {
       final http.Response response = await http.post(url,
           headers: <String, String>{
@@ -146,13 +150,19 @@ class SalesServices {
             "ref_code": null
           }));
       if (response.statusCode == 200) {
+        print(response.body);
         return CreateSalesModel.fromJson(json.decode(response.body));
       } else {
-        print(response.body);
-        return Future.error(json.decode(response.body));
+        Map result = json.decode(response.body);
+        print(response.statusCode);
+        result.forEach((k, v) {
+          _error = '$k $v';
+        });
+        return _error;
       }
     } catch (e) {
       print(e.toString());
+      return Future.error(_error);
     }
   }
 

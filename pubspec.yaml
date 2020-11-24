@@ -55,8 +55,9 @@ dependencies:
   currency_pickers: ^1.0.6
   url_launcher: ^5.7.10
   flutter_downloader: ^1.5.1
-  dio: ^3.0.9
-  downloads_path_provider: ^0.1.0
+  dio: ^3.0.10
+  pull_to_refresh: ^1.6.3
+  dio_http_cache: ^0.2.11
   permission_handler: ^4.4.0+hotfix.2
   open_file: ^3.0.1
 

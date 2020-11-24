@@ -35,7 +35,8 @@ class SaveUser {
           user.branchAddress,
           user.notificationStatus,
           user.subscriptionPlan,
-          user.firebaseCustomerId);
+          user.firebaseCustomerId,
+          user.firebaseNotificationId);
       user.country == null ? country = 'NGN' : country = user.country;
       _signupNotifier.setCountry(country);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -59,7 +60,8 @@ class SaveUser {
         user.branchAddress,
         user.notificationStatus,
         user.subscriptionPlan,
-        user.firebaseCustomerId);
+        user.firebaseCustomerId,
+        user.firebaseNotificationId);
     user.country == null ? country = 'NGN' : country = user.country;
     _signupNotifier.setCountry(country);
     if (user.verified == false) {

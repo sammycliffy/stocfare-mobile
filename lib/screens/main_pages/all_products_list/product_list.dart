@@ -38,6 +38,10 @@ class _ProductListPageState extends State<ProductListPage> {
   List _listWeight = [];
   List _listColors = [];
   List _imageUrl = [];
+  List _isLowStock = [];
+  List _isOutOfStock = [];
+  List _isPackLowStock = [];
+  List _isPackOutOfStock = [];
 
   List _productName = [];
   List _productPrice = [];
@@ -51,6 +55,10 @@ class _ProductListPageState extends State<ProductListPage> {
   List _packQuantitySearch = [];
   List _productIdSearch = [];
   List _packPriceSearch = [];
+  List _isLowStockSearch = [];
+  List _isOutOfStockSearch = [];
+  List _isPackLowStockSearch = [];
+  List _isPackOutOfStockSearch = [];
   List _indexOfValue = [];
   bool editProduct = false;
   bool deleteProduct = false;
@@ -241,11 +249,48 @@ class _ProductListPageState extends State<ProductListPage> {
                     child: GestureDetector(
                       child: Card(
                           child: ListTile(
-                              title: Text(
-                                _productNameSearch[index].toString(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              title: Row(
+                                children: [
+                                  Text(
+                                    _productNameSearch[index].toString(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 50,
+                                  ),
+                                  (() {
+                                    if (_isLowStockSearch[index] == true) {
+                                      return Container(
+                                          width: 40,
+                                          height: 25,
+                                          decoration: BoxDecoration(
+                                              color: Colors.orange,
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: Center(
+                                              child: Text('Low',
+                                                  style: TextStyle(
+                                                      color: Colors.white))));
+                                    } else if (_isOutOfStockSearch[index] ==
+                                        true) {
+                                      return Container(
+                                          width: 40,
+                                          height: 25,
+                                          decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: Center(
+                                              child: Text('Out',
+                                                  style: TextStyle(
+                                                      color: Colors.white))));
+                                    } else {
+                                      return SizedBox();
+                                    }
+                                  }())
+                                ],
                               ),
                               subtitle: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -388,7 +433,13 @@ class _ProductListPageState extends State<ProductListPage> {
                       _packPrice.add(value['product_pack']['price']);
                       checkBox.add(false);
                       _listProductName.add(value['name']);
-
+                      _isLowStock.add(value['product_unit']['is_low_of_stock']);
+                      _isOutOfStock
+                          .add(value['product_unit']['is_out_of_stock']);
+                      _isPackLowStock
+                          .add(value['product_pack']['is_low_of_stock']);
+                      _isPackOutOfStock
+                          .add(value['product_pack']['is_low_of_stock']);
                       _listUnitQuantity.add(value['product_unit']['quantity']);
                       _listBarcode.add(value['bar_code']);
                       _listDiscount.add(value['discount']);
@@ -439,111 +490,153 @@ class _ProductListPageState extends State<ProductListPage> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: GestureDetector(
                                       child: Card(
-                                          child: ListTile(
-                                              title: Text(
+                                        child: ListTile(
+                                          title: Row(
+                                            children: [
+                                              Text(
                                                 _productName[index].toString(),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                              subtitle: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Text(
-                                                    _productQuantity[index]
-                                                            .toString() +
-                                                        ' Units',
-                                                    style: TextStyle(
-                                                        fontFamily: 'FireSans'),
-                                                  ),
-                                                  SizedBox(height: 5),
-                                                  Text(
-                                                    _packQuantity[index]
-                                                            .toString() +
-                                                        ' Packs',
-                                                    style: TextStyle(
-                                                        fontFamily: 'FireSans'),
-                                                  )
-                                                ],
+                                              SizedBox(
+                                                width: 50,
                                               ),
-                                              trailing: Container(
-                                                  child: (() {
-                                                if (editProduct) {
-                                                  return GestureDetector(
-                                                    child: Text(
-                                                      'Edit',
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    onTap: () {
-                                                      _addToCart
-                                                          .setProductIndexes(
-                                                              index);
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  EditProductPage(
-                                                                    index:
-                                                                        index,
-                                                                    productId:
-                                                                        _productId[
-                                                                            index],
-                                                                  )));
-                                                    },
-                                                  );
-                                                } else if (deleteProduct) {
-                                                  return GestureDetector(
-                                                    child: Container(
-                                                      width: 100,
-                                                      height: 100,
-                                                      child: CheckboxListTile(
-                                                        activeColor:
-                                                            Theme.of(context)
-                                                                .primaryColor,
-                                                        value: checkBox[index],
-                                                        onChanged: (newValue) {
-                                                          setState(() {
-                                                            checkBox[index] =
-                                                                newValue;
-                                                            deleteItem
-                                                                    .contains(
-                                                                        _productId[
-                                                                            index])
-                                                                ? deleteItem.remove(
-                                                                    _productId[
-                                                                        index])
-                                                                : deleteItem.add(
-                                                                    _productId[
-                                                                            index]
-                                                                        .toString());
-                                                          });
-                                                        },
-                                                      ),
-                                                    ),
-                                                    onTap: () {
-                                                      print(_productId[index]);
-                                                    },
-                                                  );
+                                              (() {
+                                                if (_isLowStock[index] ==
+                                                    true) {
+                                                  return Container(
+                                                      width: 40,
+                                                      height: 25,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.orange,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5)),
+                                                      child: Center(
+                                                          child: Text('Low',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white))));
+                                                } else if (_isOutOfStock[
+                                                        index] ==
+                                                    true) {
+                                                  return Container(
+                                                      width: 40,
+                                                      height: 25,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.red,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5)),
+                                                      child: Center(
+                                                          child: Text('Out',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white))));
+                                                } else {
+                                                  return SizedBox();
                                                 }
+                                              }())
+                                            ],
+                                          ),
+                                          subtitle: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                _productQuantity[index]
+                                                        .toString() +
+                                                    ' Units',
+                                                style: TextStyle(
+                                                    fontFamily: 'FireSans'),
+                                              ),
+                                              SizedBox(height: 5),
+                                              Text(
+                                                _packQuantity[index]
+                                                        .toString() +
+                                                    ' Packs',
+                                                style: TextStyle(
+                                                    fontFamily: 'FireSans'),
+                                              )
+                                            ],
+                                          ),
+                                          trailing: Container(
+                                              child: (() {
+                                            if (editProduct) {
+                                              return GestureDetector(
+                                                child: Text(
+                                                  'Edit',
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                onTap: () {
+                                                  _addToCart
+                                                      .setProductIndexes(index);
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              EditProductPage(
+                                                                index: index,
+                                                                productId:
+                                                                    _productId[
+                                                                        index],
+                                                              )));
+                                                },
+                                              );
+                                            } else if (deleteProduct) {
+                                              return GestureDetector(
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 100,
+                                                  child: CheckboxListTile(
+                                                    activeColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
+                                                    value: checkBox[index],
+                                                    onChanged: (newValue) {
+                                                      setState(() {
+                                                        checkBox[index] =
+                                                            newValue;
+                                                        deleteItem.contains(
+                                                                _productId[
+                                                                    index])
+                                                            ? deleteItem.remove(
+                                                                _productId[
+                                                                    index])
+                                                            : deleteItem.add(
+                                                                _productId[
+                                                                        index]
+                                                                    .toString());
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  print(_productId[index]);
+                                                },
+                                              );
+                                            }
 
-                                                return Column(
-                                                  children: [
-                                                    SizedBox(height: 10),
-                                                    Text(controller.text
-                                                            .toString() +
+                                            return Column(
+                                              children: [
+                                                SizedBox(height: 10),
+                                                Text(
+                                                    controller.text.toString() +
                                                         ' / Unit'),
-                                                    Text(controller1.text
-                                                            .toString() +
-                                                        ' / Pack'),
-                                                  ],
-                                                );
-                                              }())))),
+                                                Text(controller1.text
+                                                        .toString() +
+                                                    ' / Pack'),
+                                              ],
+                                            );
+                                          }())),
+                                        ),
+                                      ),
                                       onTap: () {
                                         _addToCart.addSingleProduct(
                                             _addToCart.categoryName,
@@ -683,12 +776,16 @@ class _ProductListPageState extends State<ProductListPage> {
     _productIdSearch.clear();
     _packQuantitySearch.clear();
     _packPriceSearch.clear();
+    _isLowStockSearch.clear();
+    _isOutOfStockSearch.clear();
     setState(() {
       _search = true;
       print(_productName.map((value) {
         if (value.contains(capitalized)) {
           _productNameSearch.add(value);
           _indexOfValue.add(_productName.indexOf(value));
+          _isLowStockSearch.add(_isLowStock[_productName.indexOf(value)]);
+          _isOutOfStockSearch.add(_isOutOfStock[_productName.indexOf(value)]);
           _productPriceSearch.add(_productPrice[_productName.indexOf(value)]);
           _packPriceSearch.add(_packPrice[_productName.indexOf(value)]);
           _productQuantitySearch

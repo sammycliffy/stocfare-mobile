@@ -246,16 +246,16 @@ class _UpdateAccountState extends State<UpdateAccount> {
                               setState(() {
                                 DialogBoxes().success(context);
                                 _signupNotifier.setProfile(
-                                  _firstName + ' ' + _lastName,
-                                  _phoneNumber,
-                                  _email,
-                                  _signupNotifier.firebaseId,
-                                  _signupNotifier.branchName,
-                                  _signupNotifier.branchAddress,
-                                  _signupNotifier.notificationStatus,
-                                  _signupNotifier.subscriptionPlan,
-                                  _signupNotifier.firebaseCustomerId,
-                                );
+                                    _firstName + ' ' + _lastName,
+                                    _phoneNumber,
+                                    _email,
+                                    _signupNotifier.firebaseId,
+                                    _signupNotifier.branchName,
+                                    _signupNotifier.branchAddress,
+                                    _signupNotifier.notificationStatus,
+                                    _signupNotifier.subscriptionPlan,
+                                    _signupNotifier.firebaseCustomerId,
+                                    _signupNotifier.notificationId);
                               });
                             }
                           } else {

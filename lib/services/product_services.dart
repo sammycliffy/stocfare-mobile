@@ -199,6 +199,20 @@ class ProductServices {
     return firebaseDb.onValue;
   }
 
+  Stream<Event> getFirebaseNotification(firebaseId) {
+    final dbRef = FirebaseDatabase.instance; //firebase database reference
+    dbRef.setPersistenceEnabled(true);
+    dbRef.setPersistenceCacheSizeBytes(10000000);
+    final databaseInstance = dbRef.reference();
+    databaseInstance.keepSynced(true);
+    final firebaseDb = databaseInstance
+        .reference()
+        .child('notification')
+        .orderByKey()
+        .equalTo(firebaseId);
+    return firebaseDb.onValue;
+  }
+
   Future<dynamic> updateCategory(String categoryId, String name) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');

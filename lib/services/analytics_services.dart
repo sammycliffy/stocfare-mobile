@@ -1,6 +1,7 @@
-import 'dart:convert';
+import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/analytics_model.dart';
 import 'package:stockfare_mobile/models/product_analytics_model.dart';
@@ -8,79 +9,129 @@ import 'package:stockfare_mobile/models/products_analytics_model.dart';
 import 'package:stockfare_mobile/models/sales_analytics_model.dart';
 
 class Analytics {
+  DioCacheManager _dioCacheManager;
+
   Future<SalesAnalytics> getAllAnalytics() async {
+    _dioCacheManager = DioCacheManager(CacheConfig());
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
     String branchId = sharedPreferences.getString('branchId');
     final String url =
         GlobalConfiguration().get("get-analytics") + '$branchId/';
+    Options _cacheOptions = buildCacheOptions(
+      Duration(seconds: 120),
+    );
+
+    _cacheOptions.headers.addAll({
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
     try {
-      final response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      Dio _dio = Dio();
+      _dio.interceptors.add(_dioCacheManager.interceptor);
+      Response response = await _dio.get(url, options: _cacheOptions);
       if (response.statusCode == 200) {
-        return SalesAnalytics.fromJson(json.decode(response.body));
+        print(response.data);
+        return SalesAnalytics.fromJson(response.data);
       } else {
-        return Future.error(json.decode(response.body)['detail']);
+        return Future.error(response.data['detail']);
       }
-    } catch (e) {
-      print(e.toString);
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.CONNECT_TIMEOUT) {
+        return Future.error('Network Issue');
+      } else if (e.type == DioErrorType.RECEIVE_TIMEOUT) {
+        return Future.error('Network Issue');
+      }
+    } on SocketException catch (e) {
+      return Future.error('Network Issue');
     }
   }
 
+  refreshGetAllAnalytics() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    String branchId = sharedPreferences.getString('branchId');
+    final String url =
+        GlobalConfiguration().get("get-analytics") + '$branchId/';
+
+    _dioCacheManager.deleteByPrimaryKey(url, requestMethod: "GET");
+    getAllAnalytics();
+  }
+
   Future<ProductsAnalyticsModel> getAllProducts() async {
+    _dioCacheManager = DioCacheManager(CacheConfig());
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
     String branchId = sharedPreferences.getString('branchId');
     final String url =
         GlobalConfiguration().get("get-product-analytics") + '$branchId/';
+    Options _cacheOptions = buildCacheOptions(
+      Duration(seconds: 120),
+    );
+    _cacheOptions.headers.addAll({
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
     try {
-      final response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      Dio _dio = Dio();
+      _dio.interceptors.add(_dioCacheManager.interceptor);
+      Response response = await _dio.get(url, options: _cacheOptions);
       if (response.statusCode == 200) {
-        return ProductsAnalyticsModel.fromJson(json.decode(response.body));
+        print(response.data);
+        return ProductsAnalyticsModel.fromJson(response.data);
       } else {
-        print(response.body);
-        return Future.error(json.decode(response.body)['detail']);
+        return Future.error(response.data['detail']);
       }
-    } catch (e) {
-      print(e.toString());
+    } on DioError catch (e) {
+      print(e.toString);
     }
   }
 
+  refreshgetAllProducts() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString('token');
+    String branchId = sharedPreferences.getString('branchId');
+    final String url =
+        GlobalConfiguration().get("get-product-analytics") + '$branchId/';
+
+    _dioCacheManager.deleteByPrimaryKey(url, requestMethod: "GET");
+    getAllProducts();
+  }
+
   Future<SalesAnalyticsModel> analyticsDetails(String filterBy) async {
+    _dioCacheManager = DioCacheManager(CacheConfig());
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString('token');
     String branchId = sharedPreferences.getString('branchId');
     final String url = GlobalConfiguration().get("analytics-details") +
         '$branchId/?filter_by=$filterBy';
+    Options _cacheOptions = buildCacheOptions(
+      Duration(seconds: 120),
+    );
+    _cacheOptions.headers.addAll({
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    _cacheOptions.receiveTimeout = 3000;
     try {
-      final response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      Dio _dio = Dio();
+      _dio.interceptors.add(_dioCacheManager.interceptor);
+      Response response = await _dio.get(url, options: _cacheOptions);
       if (response.statusCode == 200) {
-        return SalesAnalyticsModel.fromJson(json.decode(response.body));
+        print(response.data);
+        return SalesAnalyticsModel.fromJson(response.data);
       } else {
-        return Future.error(json.decode(response.body));
+        return Future.error(response.data['detail']);
       }
-    } catch (e) {
-      print(e.toString());
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.CONNECT_TIMEOUT) {
+        return Future.error('Network Issue');
+      } else if (e.type == DioErrorType.RECEIVE_TIMEOUT) {
+        return Future.error('Network Issue');
+      }
     }
   }
 
@@ -91,23 +142,21 @@ class Analytics {
     String branchId = sharedPreferences.getString('branchId');
     final String url = GlobalConfiguration().get("product-analytics-details") +
         '$branchId/?filter_by=$filterBy';
+    Options _cacheOptions = buildCacheOptions(
+      Duration(seconds: 120),
+    );
     try {
-      final response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      Dio _dio = Dio();
+      _dio.interceptors.add(_dioCacheManager.interceptor);
+      Response response = await _dio.get(url, options: _cacheOptions);
       if (response.statusCode == 200) {
-        return ProductsAnalyticsList.fromJson(json.decode(response.body));
+        print(response.data);
+        return ProductsAnalyticsList.fromJson(response.data);
       } else {
-        print(response.body);
-        return Future.error('error');
+        return Future.error(response.data['detail']);
       }
-    } catch (e) {
-      print(e.toString());
+    } on DioError catch (e) {
+      print(e.toString);
     }
   }
 
@@ -118,22 +167,22 @@ class Analytics {
     String branchId = sharedPreferences.getString('branchId');
     final String url = GlobalConfiguration().get("analytics-details") +
         '$branchId/?filter_by=$filterBy&page=$pageNumber';
+    Options _cacheOptions = buildCacheOptions(
+      Duration(seconds: 120),
+    );
+
     try {
-      final response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      Dio _dio = Dio();
+      _dio.interceptors.add(_dioCacheManager.interceptor);
+      Response response = await _dio.get(url, options: _cacheOptions);
       if (response.statusCode == 200) {
-        return SalesAnalyticsModel.fromJson(json.decode(response.body));
+        print(response.data);
+        return SalesAnalyticsModel.fromJson(response.data);
       } else {
-        return Future.error(json.decode(response.body));
+        return Future.error(response.data['detail']);
       }
-    } catch (e) {
-      print(e.toString());
+    } on DioError catch (e) {
+      print(e.toString);
     }
   }
 
@@ -144,23 +193,28 @@ class Analytics {
     String branchId = sharedPreferences.getString('branchId');
     final String url = GlobalConfiguration().get("product-analytics-details") +
         '$branchId/?filter_by=$filterBy&page=$pageNumber';
+
+    Options _cacheOptions = buildCacheOptions(
+      Duration(seconds: 120),
+    );
+    _cacheOptions.headers.addAll({
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
     try {
-      final response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      Dio _dio = Dio();
+      _dio.interceptors.add(_dioCacheManager.interceptor);
+      Response response = await _dio.get(url, options: _cacheOptions);
       if (response.statusCode == 200) {
-        return ProductsAnalyticsList.fromJson(json.decode(response.body));
+        print(response.data);
+        return ProductsAnalyticsList.fromJson(response.data);
       } else {
-        print(response.body);
-        return Future.error('error');
+        return Future.error(response.data['detail']);
       }
-    } catch (e) {
-      print(e.toString());
+    } on DioError catch (e) {
+      return Future.error(e);
     }
   }
 }

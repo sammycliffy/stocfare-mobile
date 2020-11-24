@@ -113,7 +113,6 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                    SizedBox(height: 10),
                     FutureBuilder<ExpensesSummary>(
                         future: _profitSummary,
                         builder: (context, snapshot) {
@@ -259,7 +258,9 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                                                         _profitListName.length),
                                               );
                                             }
-                                            return CircularProgressIndicator();
+                                            return Column(children: [
+                                              LinearProgressIndicator()
+                                            ]);
                                           })
                                     ],
                                   ),
@@ -267,7 +268,7 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                               ],
                             );
                           }
-                          return Center(child: CircularProgressIndicator());
+                          return Column(children: [LinearProgressIndicator()]);
                         }),
                     SizedBox(height: 10),
                     FutureBuilder<ExpensesSummary>(
@@ -359,60 +360,75 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                                               _lossListAmount.clear();
                                               _lossListQuantity.clear();
                                               print(snapshot.data.map((e) {
-                                                _lossListName
-                                                    .add(e.productInfo[0].name);
-                                                _lossListAmount.add(
-                                                    e.productInfo[0].amount);
-                                                _lossListQuantity.add(
-                                                    e.productInfo[0].quantity);
+                                                print(e.productInfo.map((e) {
+                                                  _lossListName.add(e.name);
+                                                  _lossListAmount.add(e.amount);
+                                                  _lossListQuantity
+                                                      .add(e.quantity);
+                                                }));
                                               }));
-                                              return Container(
-                                                height: 150,
-                                                child: ListView.builder(
-                                                    key: PageStorageKey(
-                                                        'myScrollable'),
-                                                    itemBuilder:
-                                                        (BuildContext context,
-                                                            index) {
-                                                      return GestureDetector(
-                                                          child: ListTile(
-                                                            title: Text(
-                                                                _lossListName[
-                                                                    index],
+                                              print(_lossListName);
+                                              if (_lossListName.length == 0) {
+                                                return Center(
+                                                  child: Text('No Loss'),
+                                                );
+                                              } else {
+                                                return Container(
+                                                  height: 150,
+                                                  child: ListView.builder(
+                                                      key: PageStorageKey(
+                                                          'myScrollable'),
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                              index) {
+                                                        return GestureDetector(
+                                                            child: ListTile(
+                                                              title: Text(
+                                                                  _lossListName
+                                                                          ?.elementAt(
+                                                                              index) ??
+                                                                      "",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)),
+                                                              trailing: Text(
+                                                                _lossListAmount
+                                                                        ?.elementAt(
+                                                                            index) ??
+                                                                    "",
                                                                 style: TextStyle(
                                                                     fontSize:
-                                                                        18,
+                                                                        17,
                                                                     color: Colors
-                                                                        .grey,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold)),
-                                                            trailing: Text(
-                                                              _lossListAmount[
-                                                                  index],
-                                                              style: TextStyle(
-                                                                  fontSize: 17,
-                                                                  color: Colors
-                                                                      .green),
+                                                                        .green),
+                                                              ),
                                                             ),
-                                                          ),
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            LossDetails(
-                                                                              productIndex: index,
-                                                                              profitList: snapshot.data,
-                                                                            )));
-                                                          });
-                                                    },
-                                                    itemCount:
-                                                        _lossListName.length),
-                                              );
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          LossDetails(
+                                                                            productIndex:
+                                                                                index,
+                                                                            profitList:
+                                                                                snapshot.data,
+                                                                          )));
+                                                            });
+                                                      },
+                                                      itemCount:
+                                                          _lossListName.length),
+                                                );
+                                              }
                                             }
-                                            return CircularProgressIndicator();
+                                            return Column(children: [
+                                              LinearProgressIndicator()
+                                            ]);
                                           })
                                     ],
                                   ),
@@ -420,7 +436,7 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                               ],
                             );
                           }
-                          return Center(child: CircularProgressIndicator());
+                          return SizedBox();
                         }),
                     SizedBox(height: 50),
                   ])));

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:global_configuration/global_configuration.dart';
@@ -13,7 +14,7 @@ class AppServices {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',
         },
-      );
+      ).timeout(Duration(seconds: 4));
       if (response.statusCode == 200) {
         print(json.decode(response.body)["versionCode"]);
         return json.decode(response.body)["versionCode"];
@@ -22,6 +23,9 @@ class AppServices {
         print(response.statusCode);
         return Future.error(json.decode(response.body)['detail']);
       }
+    } on TimeoutException catch (e) {
+      print(e.toString());
+      return null;
     } catch (e) {
       print(e.toString());
     }

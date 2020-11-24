@@ -45,10 +45,6 @@
   "get-all-profits": "http://api-lexical-dance.stockfare.co/api/v1/analytics/profit/",
   "loss-list": "http://api-lexical-dance.stockfare.co/api/v1/analytics/sale-loss-list/",
   "profit-list": "http://api-lexical-dance.stockfare.co/api/v1/analytics/sale-profit-list/",
-
-
   "base-url": "api-lexical-dance.stockfare.co",
-
-
-  "version-number": "https://stockfare-io.herokuapp.com/api/v2/users/verision-number/"
+  "version-number": "http://api-lexical-dance.stockfare.co/api/v2/users/verision-number/"
 }

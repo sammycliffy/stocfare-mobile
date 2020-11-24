@@ -54,7 +54,9 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [currentImage, CircularProgressIndicator()]),
+                children: [
+                  currentImage,
+                ]),
           ),
           Center(
             child: Column(children: <Widget>[
@@ -76,18 +78,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
   _checkAppVersion(context) {
     AppServices _appServices = AppServices();
-    String _appVersionNumber = '40';
-    try {
-      _appServices.getAppVersion().then((value) {
-        if (_appVersionNumber != value) {
-          DialogBoxes().upgrader(context);
-        } else {
-          checkForFirstInstallation();
-        }
-      }).timeout(Duration(seconds: 15));
-    } on SocketException catch (e) {
-      print('this is a time out exception');
-    }
+    String _appVersionNumber = '41';
+    _appServices.getAppVersion().then((value) {
+      if (value == null) {
+        checkForFirstInstallation();
+      } else if (_appVersionNumber != value) {
+        DialogBoxes().upgrader(context);
+      } else {
+        checkForFirstInstallation();
+      }
+    });
   }
 
   void checkForFirstInstallation() async {

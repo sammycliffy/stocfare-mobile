@@ -1,11 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -117,7 +114,8 @@ class _UploadExcelPageState extends State<UploadExcelPage> {
 
   Future<Directory> _getDownloadDirectory() async {
     if (Platform.isAndroid) {
-      return await DownloadsPathProvider.downloadsDirectory;
+      Directory appDocDir = await getTemporaryDirectory();
+      return appDocDir;
     }
     return await getApplicationDocumentsDirectory();
   }

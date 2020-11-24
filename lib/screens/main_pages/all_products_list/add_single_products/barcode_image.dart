@@ -261,7 +261,7 @@ class _BarcodePageState extends State<BarcodePage> {
                                 _addProduct.productDiscount,
                                 _addProduct.productWeight,
                                 _addProduct.data)
-                            .timeout(Duration(seconds: 15),
+                            .timeout(Duration(seconds: 25),
                                 onTimeout: () => null);
 
                         if (result != 201) {

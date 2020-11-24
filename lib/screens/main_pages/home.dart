@@ -60,6 +60,10 @@ class _HomePageState extends State<HomePage> {
   List _productPackPriceSearch = [];
   List _unitCostPriceSearch = [];
   List _packCostPriceSearch = [];
+  List _isLowStockSearch = [];
+  List _isOutOfStockSearch = [];
+  List _isPackLowStockSearch = [];
+  List _isPackOutOfStockSearch = [];
   List _barcodeSearch = [];
   List _unitCostPrice = [];
   List _packCostPrice = [];
@@ -71,7 +75,10 @@ class _HomePageState extends State<HomePage> {
   int _shoppingCartPackQuantity = 0;
   int _shoppingCartUnitQuantity = 0;
   int numberToFormat = 100000;
-  bool stockIsLow = false;
+  List _isLowStock = [];
+  List _isOutOfStock = [];
+  List _isPackLowStock = [];
+  List _isPackOutOfStock = [];
 
   String _scanBarcode;
   Map<String, dynamic> _firebaseMessage;
@@ -119,6 +126,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     var initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettingsIos = IOSInitializationSettings();
@@ -434,95 +442,48 @@ class _HomePageState extends State<HomePage> {
                           return new Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: GestureDetector(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey[200],
-                                    width: 2,
-                                  ),
-                                ),
-                                child: Column(
-                                  children: <Widget>[
-                                    _productImageSearch
-                                            .asMap()
-                                            .containsKey(index)
-                                        ? CachedNetworkImage(
-                                            width: 120,
-                                            height: 100,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                CircularProgressIndicator(),
-                                            imageUrl:
-                                                _productImageSearch[index],
-                                          )
-                                        : Image.asset(
-                                            'assets/images/No-image.png',
-                                            width: 120,
-                                            height: 120,
-                                            fit: BoxFit.fitWidth,
-                                          ),
-                                    Container(
-                                      width: double.infinity,
-                                      child: Center(
-                                        child: Text(
-                                          _categoriesSearch[index],
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18,
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                        ),
+                              child: ClipRRect(
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey[200],
+                                        width: 2,
                                       ),
                                     ),
-                                    Container(
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  width: 2,
-                                                  color: Colors.grey[200]))),
-                                      child: Center(
-                                        child: Text(
-                                          '${_productQuantitySearch[index]} Units | ${_packQuantitySearch[index]} Packs',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.grey[800]),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 5),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Container(
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  bottom: BorderSide(
-                                                      width: 2,
-                                                      color:
-                                                          Colors.grey[200]))),
-                                          child: Center(
-                                            child: Text(
-                                              '${controller.text} / Units',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          '${controller1.text} / Pack',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                    child: (() {
+                                      if (_isLowStockSearch[index] == true) {
+                                        return _lowStock(
+                                            _productImageSearch,
+                                            index,
+                                            _categoriesSearch,
+                                            context,
+                                            _productQuantitySearch,
+                                            _packQuantitySearch,
+                                            controller,
+                                            controller1);
+                                      } else if (_isOutOfStockSearch[index] ==
+                                          true) {
+                                        return _outOfStock(
+                                            _productImageSearch,
+                                            index,
+                                            _categoriesSearch,
+                                            context,
+                                            _productQuantitySearch,
+                                            _packQuantitySearch,
+                                            controller,
+                                            controller1);
+                                      } else {
+                                        return _realBox(
+                                            _productImageSearch,
+                                            index,
+                                            _categoriesSearch,
+                                            context,
+                                            _productQuantitySearch,
+                                            _packQuantitySearch,
+                                            controller,
+                                            controller1);
+                                      }
+                                    }())),
                               ),
                               onTap: () {
                                 //check whether it is pack or unit
@@ -586,6 +547,8 @@ class _HomePageState extends State<HomePage> {
                             _topCategory.clear();
                             _unitCostPrice.clear();
                             _packCostPrice.clear();
+                            _isLowStock.clear();
+                            _isOutOfStock.clear();
                             DataSnapshot dataValues = snapshot.data.snapshot;
                             var data = dataValues
                                 .value['${_signupNotifier.firebaseId}'];
@@ -607,11 +570,18 @@ class _HomePageState extends State<HomePage> {
                                               }) ??
                                               '[]');
                                       _barcode.add(value['bar_code']);
-                                      print(value['bar_code']);
+
                                       _productQuantity.add(
                                           value['product_unit']['quantity']);
-                                      print(
-                                          value['product_unit']['cost_price']);
+                                      _isLowStock.add(value['product_unit']
+                                          ['is_low_of_stock']);
+                                      _isOutOfStock.add(value['product_unit']
+                                          ['is_out_of_stock']);
+                                      _isPackLowStock.add(value['product_pack']
+                                          ['is_low_of_stock']);
+                                      _isPackOutOfStock.add(
+                                          value['product_pack']
+                                              ['is_low_of_stock']);
                                       _unitCostPrice.add(
                                           value['product_unit']['cost_price']);
                                       _packQuantity.add(
@@ -631,7 +601,7 @@ class _HomePageState extends State<HomePage> {
 
                                 _topCategory.add(values['name']);
                               });
-
+                              print(_isLowStock);
                               return Expanded(
                                 child: GridView.builder(
                                   itemCount: _categories.length,
@@ -653,108 +623,50 @@ class _HomePageState extends State<HomePage> {
                                       child: GestureDetector(
                                         child: ClipRRect(
                                           child: Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: Colors.grey[200],
-                                                width: 2,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Colors.grey[200],
+                                                  width: 2,
+                                                ),
                                               ),
-                                            ),
-                                            // child: Banner(
-                                            //   message: "Low Stock",
-                                            //   location: BannerLocation.topStart,
-                                            // color: Colors.orange,
-                                            child: Column(
-                                              children: <Widget>[
-                                                SizedBox(height: 10),
-                                                _productImage
-                                                        .asMap()
-                                                        .containsKey(index)
-                                                    ? CachedNetworkImage(
-                                                        width: 120,
-                                                        height: 100,
-                                                        fit: BoxFit.cover,
-                                                        placeholder: (context,
-                                                                url) =>
-                                                            CircularProgressIndicator(),
-                                                        imageUrl: _productImage[
-                                                            index],
-                                                      )
-                                                    : Image.asset(
-                                                        'assets/images/No-image.png',
-                                                        width: 120,
-                                                        height: 120,
-                                                        fit: BoxFit.fitWidth,
-                                                      ),
-                                                Container(
-                                                  width: double.infinity,
-                                                  child: Center(
-                                                    child: Text(
-                                                      _categories[index],
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 18,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .primaryColor),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                      border: Border(
-                                                          bottom: BorderSide(
-                                                              width: 2,
-                                                              color: Colors
-                                                                  .grey[200]))),
-                                                  child: Center(
-                                                    child: Text(
-                                                      '${_productQuantity[index]} Units | ${_packQuantity[index]} Packs',
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          color:
-                                                              Colors.grey[800]),
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(width: 5),
-                                                Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Container(
-                                                      width: double.infinity,
-                                                      decoration: BoxDecoration(
-                                                          border: Border(
-                                                              bottom: BorderSide(
-                                                                  width: 2,
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      200]))),
-                                                      child: Center(
-                                                        child: Text(
-                                                          '${controller.text} / Units',
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      '${controller1.text} / Pack',
-                                                      style: TextStyle(
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                            // ),
-                                          ),
+                                              child: (() {
+                                                if (_isLowStock[index] ==
+                                                    true) {
+                                                  return _lowStock(
+                                                      _productImage,
+                                                      index,
+                                                      _categories,
+                                                      context,
+                                                      _productQuantity,
+                                                      _packQuantity,
+                                                      controller,
+                                                      controller1);
+                                                } else if (_isOutOfStock[
+                                                        index] ==
+                                                    true) {
+                                                  return _outOfStock(
+                                                      _productImage,
+                                                      index,
+                                                      _categories,
+                                                      context,
+                                                      _productQuantity,
+                                                      _packQuantity,
+                                                      controller,
+                                                      controller1);
+                                                } else {
+                                                  return _realBox(
+                                                      _productImage,
+                                                      index,
+                                                      _categories,
+                                                      context,
+                                                      _productQuantity,
+                                                      _packQuantity,
+                                                      controller,
+                                                      controller1);
+                                                }
+                                              }())
+                                              // ),
+                                              ),
                                         ),
                                         onTap: () {
                                           //check whether it is pack or unit
@@ -874,6 +786,10 @@ class _HomePageState extends State<HomePage> {
     _packCostPriceSearch.clear();
     _unitCostPriceSearch.clear();
     _packCostPriceSearch.clear();
+    _isLowStockSearch.clear();
+    _isOutOfStockSearch.clear();
+    _isPackLowStockSearch.clear();
+    _isPackOutOfStockSearch.clear();
 
     setState(() {
       isSearched = true;
@@ -888,6 +804,12 @@ class _HomePageState extends State<HomePage> {
           }
 
           _packQuantitySearch.add(_packQuantity[_categories.indexOf(value)]);
+          _isLowStockSearch.add(_isLowStock[_categories.indexOf(value)]);
+          _isOutOfStockSearch.add(_isOutOfStock[_categories.indexOf(value)]);
+          _isPackLowStockSearch
+              .add(_isPackLowStock[_categories.indexOf(value)]);
+          _isPackOutOfStockSearch
+              .add(_isPackLowStock[_categories.indexOf(value)]);
           _productQuantitySearch
               .add(_productQuantity[_categories.indexOf(value)]);
           _productPackPriceSearch
@@ -1254,4 +1176,240 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+}
+
+_outOfStock(_productImage, index, _categories, context, _productQuantity,
+    _packQuantity, controller, controller1) {
+  return Banner(
+      message: "Out of Stock",
+      location: BannerLocation.topStart,
+      color: Colors.red,
+      child: Column(
+        children: <Widget>[
+          SizedBox(height: 10),
+          _productImage.asMap().containsKey(index)
+              ? CachedNetworkImage(
+                  width: 120,
+                  height: 100,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  imageUrl: _productImage[index],
+                )
+              : Image.asset(
+                  'assets/images/No-image.png',
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.fitWidth,
+                ),
+          Container(
+            width: double.infinity,
+            child: Center(
+              child: Text(
+                _categories[index],
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Theme.of(context).primaryColor),
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(width: 2, color: Colors.grey[200]))),
+            child: Center(
+              child: Text(
+                '${_productQuantity[index]} Units | ${_packQuantity[index]} Packs',
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey[800]),
+              ),
+            ),
+          ),
+          SizedBox(width: 5),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(width: 2, color: Colors.grey[200]))),
+                child: Center(
+                  child: Text(
+                    '${controller.text} / Units',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
+              Text(
+                '${controller1.text} / Pack',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ));
+}
+
+_lowStock(_productImage, index, _categories, context, _productQuantity,
+    _packQuantity, controller, controller1) {
+  return Banner(
+      message: "Low Stock",
+      location: BannerLocation.topStart,
+      color: Colors.orange,
+      child: Column(
+        children: <Widget>[
+          SizedBox(height: 10),
+          _productImage.asMap().containsKey(index)
+              ? CachedNetworkImage(
+                  width: 120,
+                  height: 100,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  imageUrl: _productImage[index],
+                )
+              : Image.asset(
+                  'assets/images/No-image.png',
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.fitWidth,
+                ),
+          Container(
+            width: double.infinity,
+            child: Center(
+              child: Text(
+                _categories[index],
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Theme.of(context).primaryColor),
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(width: 2, color: Colors.grey[200]))),
+            child: Center(
+              child: Text(
+                '${_productQuantity[index]} Units | ${_packQuantity[index]} Packs',
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey[800]),
+              ),
+            ),
+          ),
+          SizedBox(width: 5),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(width: 2, color: Colors.grey[200]))),
+                child: Center(
+                  child: Text(
+                    '${controller.text} / Units',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
+              Text(
+                '${controller1.text} / Pack',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ));
+}
+
+_realBox(_productImage, index, _categories, context, _productQuantity,
+    _packQuantity, controller, controller1) {
+  return Column(
+    children: <Widget>[
+      SizedBox(height: 10),
+      _productImage.asMap().containsKey(index)
+          ? CachedNetworkImage(
+              width: 120,
+              height: 100,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => CircularProgressIndicator(),
+              imageUrl: _productImage[index],
+            )
+          : Image.asset(
+              'assets/images/No-image.png',
+              width: 120,
+              height: 120,
+              fit: BoxFit.fitWidth,
+            ),
+      Container(
+        width: double.infinity,
+        child: Center(
+          child: Text(
+            _categories[index],
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Theme.of(context).primaryColor),
+          ),
+        ),
+      ),
+      Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+            border:
+                Border(bottom: BorderSide(width: 2, color: Colors.grey[200]))),
+        child: Center(
+          child: Text(
+            '${_productQuantity[index]} Units | ${_packQuantity[index]} Packs',
+            style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Colors.grey[800]),
+          ),
+        ),
+      ),
+      SizedBox(width: 5),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(width: 2, color: Colors.grey[200]))),
+            child: Center(
+              child: Text(
+                '${controller.text} / Units',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+          Text(
+            '${controller1.text} / Pack',
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
 }

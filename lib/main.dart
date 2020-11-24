@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -22,7 +24,7 @@ getTokenz() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GlobalConfiguration().loadFromAsset("url");
+  await GlobalConfiguration().loadFromAsset("live_url");
   getTokenz();
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterDownloader.initialize(

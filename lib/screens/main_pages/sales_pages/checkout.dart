@@ -494,9 +494,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           )),
                         ),
                       ),
-                      onTap: () {
+                      onTap: () async {
                         DialogBoxes().loading(context);
-                        Future<CreateSalesModel> _createSales = _salesServices
+                        dynamic _createSales = await _salesServices
                             .addSales(
                                 addProduct.items,
                                 customerName,

@@ -18,10 +18,12 @@ class SignupNotifier with ChangeNotifier {
   bool _notificationStatus;
   String _subscriptionPlan;
   String _firebaseCustomerId;
+  String _notificationId;
   String _country;
   String get firstName => _firstName;
   String get fullName => _fullName;
   String get lastName => _lastName;
+  String get notificationId => _notificationId;
   String get phone => _phone;
   String get firebaseCustomerId => _firebaseCustomerId;
   String get password => _password;
@@ -57,16 +59,16 @@ class SignupNotifier with ChangeNotifier {
 
   //set profile values so that they can be called from anywhere
   void setProfile(
-    String fullName,
-    String phone,
-    String email,
-    String firebaseId,
-    String branchName,
-    String branchAddress,
-    bool notifictionStatus,
-    String subscriptionPlan,
-    String firebaseCustomerId,
-  ) {
+      String fullName,
+      String phone,
+      String email,
+      String firebaseId,
+      String branchName,
+      String branchAddress,
+      bool notifictionStatus,
+      String subscriptionPlan,
+      String firebaseCustomerId,
+      String notificationId) {
     _fullName = fullName;
     _phone = phone;
     _email = email;
@@ -76,6 +78,7 @@ class SignupNotifier with ChangeNotifier {
     _notificationStatus = notificationStatus;
     _subscriptionPlan = subscriptionPlan;
     _firebaseCustomerId = firebaseCustomerId;
+    _notificationId = notificationId;
     notifyListeners();
   }
 

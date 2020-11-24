@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
+import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -6,7 +10,6 @@ import 'package:stockfare_mobile/models/sales_analytics_model.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_single_products/form.dart';
-import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/expenses/home.dart';
 import 'package:stockfare_mobile/screens/main_pages/home.dart';
@@ -28,30 +31,42 @@ class _DashBoardState extends State<DashBoard> {
   bool isNetwork = true;
   String _errorData;
   bool _error = false;
+  StreamSubscription<ConnectivityResult> subscription;
 
   @override
   void initState() {
     super.initState();
-
-    _activitiesServices.checkForInternet().then((value) {
-      if (value == true) {
-        _checkSales.getAllAnalytics().catchError((e) {
-          if (e == "Given token not valid for any token type") {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Login()));
-          } else {
-            setState(() {
-              _error = true;
-              _errorData = e.toString();
-            });
-          }
-        });
-      } else {
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
         setState(() {
           isNetwork = false;
         });
+      } else {
+        setState(() {
+          isNetwork = true;
+        });
       }
     });
+    _checkSales.getAllAnalytics().catchError((e) {
+      if (e == "Given token not valid for any token type") {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Login()));
+      } else {
+        setState(() {
+          _error = true;
+          _errorData = e.toString();
+        });
+      }
+    });
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+
+    subscription.cancel();
   }
 
   @override
@@ -142,39 +157,42 @@ class _DashBoardState extends State<DashBoard> {
                   ),
                 );
               } else {
-                return Container(
-                  height: 100,
-                  child: FutureBuilder<SalesAnalytics>(
-                      future: _checkSales.getAllAnalytics(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          controller.updateValue(
-                              snapshot.data.monthSalesAmount.toDouble());
-                          controller1.updateValue(
-                              snapshot.data.todaySalesAmount.toDouble());
-                          controller2.updateValue(
-                              snapshot.data.weekSalesAmount.toDouble());
-                          controller3.updateValue(
-                              snapshot.data.monthSalesAmount.toDouble());
-                          controller4.updateValue(
-                              snapshot.data.quarterSalesAmount.toDouble());
-                          controller5.updateValue(
-                              snapshot.data.yearSalesAmount.toDouble());
-                          return ListView(
-                            // This next line does the trick.
-                            scrollDirection: Axis.horizontal,
-                            children: <Widget>[
-                              _daysCount('Today', controller1.text),
-                              _daysCount('Week', controller2.text),
-                              _daysCount('Month', controller3.text),
-                              _daysCount('Quarter', controller4.text),
-                              _daysCount('Year', controller5.text)
-                            ],
-                          );
-                        }
-                        return Center(child: CircularProgressIndicator());
-                      }),
-                );
+                return isNetwork == false
+                    ? Center(child: Text('No Internet'))
+                    : Container(
+                        height: 100,
+                        child: FutureBuilder<SalesAnalytics>(
+                            future: _checkSales.getAllAnalytics(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                controller.updateValue(
+                                    snapshot.data.monthSalesAmount.toDouble());
+                                controller1.updateValue(
+                                    snapshot.data.todaySalesAmount.toDouble());
+                                controller2.updateValue(
+                                    snapshot.data.weekSalesAmount.toDouble());
+                                controller3.updateValue(
+                                    snapshot.data.monthSalesAmount.toDouble());
+                                controller4.updateValue(snapshot
+                                    .data.quarterSalesAmount
+                                    .toDouble());
+                                controller5.updateValue(
+                                    snapshot.data.yearSalesAmount.toDouble());
+                                return ListView(
+                                  // This next line does the trick.
+                                  scrollDirection: Axis.horizontal,
+                                  children: <Widget>[
+                                    _daysCount('Today', controller1.text),
+                                    _daysCount('Week', controller2.text),
+                                    _daysCount('Month', controller3.text),
+                                    _daysCount('Quarter', controller4.text),
+                                    _daysCount('Year', controller5.text)
+                                  ],
+                                );
+                              }
+                              return Center(child: SizedBox());
+                            }),
+                      );
               }
             }())
           ],

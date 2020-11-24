@@ -108,7 +108,7 @@ class AuthServices {
               "registration_id": firebaseToken
             }),
           )
-          .timeout(Duration(seconds: 15));
+          .timeout(Duration(seconds: 20));
       if (response.statusCode == 200 || response.statusCode == 201) {
         var responseJson = json.decode(response.body);
         print(responseJson);
