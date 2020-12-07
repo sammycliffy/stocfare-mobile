@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/sales_analytics_model.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/analytics/sales_report.dart';
+import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/analytics_services.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -21,7 +22,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   Future<SalesAnalytics> _salesAnalytics;
-  StreamSubscription<ConnectivityResult> subscription;
+  ActivitiesServices _activitiesServices = ActivitiesServices();
 
   bool isNetwork = true;
   String _errorData;
@@ -48,24 +49,19 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
   @override
   void initState() {
     super.initState();
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        setState(() {
-          isNetwork = false;
+    _activitiesServices.checkForInternet().then((value) {
+      if (value == true) {
+        _checkSales.getAllAnalytics().catchError((e) {
+          setState(() {
+            _error = true;
+            _errorData = e.toString();
+          });
         });
       } else {
         setState(() {
-          isNetwork = true;
+          isNetwork = false;
         });
       }
-    });
-    _checkSales.getAllAnalytics().catchError((e) {
-      setState(() {
-        _error = true;
-        _errorData = e.toString();
-      });
     });
   }
 
@@ -126,7 +122,7 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
       } else if (_error == true) {
         return Center(
           child: Text(
-            _errorData,
+            _errorData ?? 'Sorry an Error',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 18),
           ),

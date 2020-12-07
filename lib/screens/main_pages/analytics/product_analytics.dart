@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -17,25 +18,23 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
   ActivitiesServices _activitiesServices = ActivitiesServices();
   bool _error = false;
   String _errorData = '';
-  bool isNetwork = true;
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-
+  bool _isNetwork = true;
   @override
   void initState() {
     super.initState();
     _activitiesServices.checkForInternet().then((value) {
       if (value == true) {
         _checkproduct.getAllProducts().catchError((e) {
+          print('${e.toString()} this is the error');
           setState(() {
             _error = true;
             _errorData = e.toString();
           });
         });
       } else {
-        setState(() {
-          isNetwork = false;
-        });
+        _isNetwork = false;
       }
     });
   }
@@ -51,32 +50,23 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
   @override
   Widget build(BuildContext context) {
     return (() {
-      if (isNetwork == false) {
-        return GestureDetector(
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            child: Column(
-              children: [
-                SizedBox(height: 200),
-                Icon(
-                  Icons.mood_bad,
-                  size: 40,
-                ),
-                SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    'An error occured',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18),
-                  ),
-                )
-              ],
+      if (_isNetwork == false) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.signal_cellular_connected_no_internet_4_bar,
+              size: 40,
             ),
-          ),
-          onTap: () {
-            setState(() {});
-          },
+            SizedBox(height: 10),
+            Center(
+              child: Text(
+                'no Internet',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18),
+              ),
+            )
+          ],
         );
       } else if (_error == true) {
         return Center(
@@ -233,19 +223,19 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                                     ),
                                   ),
                                   onTap: () {
-                                    _checkproduct
-                                        .productsAnalyticsDetails(
-                                            'least_sold_week')
-                                        .then((value) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProductsAnalyticsDetailsPage(
-                                                      analyticsData: value,
-                                                      pageTitle:
-                                                          'LEAST SOLD WEEK\'S REPORT')));
-                                    });
+                                    // _checkproduct
+                                    //     .productsAnalyticsDetails(
+                                    //         'least_sold_week')
+                                    //     .then((value) {
+                                    //   Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //           builder: (context) =>
+                                    //               ProductsAnalyticsDetailsPage(
+                                    //                   analyticsData: value,
+                                    //                   pageTitle:
+                                    //                       'LEAST SOLD WEEK\'S REPORT')));
+                                    // });
                                   },
                                 ),
                                 GestureDetector(
@@ -291,19 +281,19 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                                     ),
                                   ),
                                   onTap: () {
-                                    _checkproduct
-                                        .productsAnalyticsDetails(
-                                            'most_sold_week')
-                                        .then((value) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProductsAnalyticsDetailsPage(
-                                                      analyticsData: value,
-                                                      pageTitle:
-                                                          'MOST SOLD WEEK\'S REPORT')));
-                                    });
+                                    // _checkproduct
+                                    //     .productsAnalyticsDetails(
+                                    //         'most_sold_week')
+                                    //     .then((value) {
+                                    //   Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //           builder: (context) =>
+                                    //               ProductsAnalyticsDetailsPage(
+                                    //                   analyticsData: value,
+                                    //                   pageTitle:
+                                    //                       'MOST SOLD WEEK\'S REPORT')));
+                                    // });
                                   },
                                 )
                               ],
@@ -367,19 +357,19 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                                     ),
                                   ),
                                   onTap: () {
-                                    _checkproduct
-                                        .productsAnalyticsDetails(
-                                            'least_sold_month')
-                                        .then((value) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProductsAnalyticsDetailsPage(
-                                                      analyticsData: value,
-                                                      pageTitle:
-                                                          'LEAST SOLD MONTH\'S REPORT')));
-                                    });
+                                    // _checkproduct
+                                    //     .productsAnalyticsDetails(
+                                    //         'least_sold_month')
+                                    //     .then((value) {
+                                    //   Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //           builder: (context) =>
+                                    //               ProductsAnalyticsDetailsPage(
+                                    //                   analyticsData: value,
+                                    //                   pageTitle:
+                                    //                       'LEAST SOLD MONTH\'S REPORT')));
+                                    // });
                                   },
                                 ),
                                 GestureDetector(
@@ -434,19 +424,19 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                                     ),
                                   ),
                                   onTap: () {
-                                    _checkproduct
-                                        .productsAnalyticsDetails(
-                                            'most_sold_month')
-                                        .then((value) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProductsAnalyticsDetailsPage(
-                                                      analyticsData: value,
-                                                      pageTitle:
-                                                          'MOST SOLD MONTH\'S REPORT')));
-                                    });
+                                    // _checkproduct
+                                    //     .productsAnalyticsDetails(
+                                    //         'most_sold_month')
+                                    //     .then((value) {
+                                    //   Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //           builder: (context) =>
+                                    //               ProductsAnalyticsDetailsPage(
+                                    //                   analyticsData: value,
+                                    //                   pageTitle:
+                                    //                       'MOST SOLD MONTH\'S REPORT')));
+                                    // });
                                   },
                                 )
                               ],
@@ -510,19 +500,19 @@ class _ProductPageAnalyticsState extends State<ProductPageAnalytics> {
                                     ),
                                   ),
                                   onTap: () {
-                                    _checkproduct
-                                        .productsAnalyticsDetails(
-                                            'least_sold_month')
-                                        .then((value) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProductsAnalyticsDetailsPage(
-                                                      analyticsData: value,
-                                                      pageTitle:
-                                                          'LEAST SOLD MONTH\'S REPORT')));
-                                    });
+                                    // _checkproduct
+                                    //     .productsAnalyticsDetails(
+                                    //         'least_sold_month')
+                                    //     .then((value) {
+                                    //   Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //           builder: (context) =>
+                                    //               ProductsAnalyticsDetailsPage(
+                                    //                   analyticsData: value,
+                                    //                   pageTitle:
+                                    //                       'LEAST SOLD MONTH\'S REPORT')));
+                                    // });
                                   },
                                 ),
                               ],

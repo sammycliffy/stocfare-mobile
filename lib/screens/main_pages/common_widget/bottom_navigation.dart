@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/categories.dart';
 import 'package:stockfare_mobile/screens/main_pages/analytics/analytics.dart';
 import 'package:stockfare_mobile/screens/main_pages/dashboard/main_dashboard.dart';
@@ -11,7 +13,6 @@ class BottomNavigationPage extends StatefulWidget {
 
 class _BottomNavigationPageState extends State<BottomNavigationPage> {
   final PageStorageBucket bucket = PageStorageBucket();
-
   int _currentIndex = 0;
   final List<Widget> _tabs = [
     DashBoard(),
@@ -26,10 +27,13 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
 
   @override
   Widget build(BuildContext context) {
+    SignupNotifier _signupNotifier = Provider.of<SignupNotifier>(context);
+    print('${_signupNotifier.pageNumber} this is page number');
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: PageStorage(
-        child: _tabs[_currentIndex],
+        child: _tabs[_signupNotifier.pageNumber],
         bucket: bucket,
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -92,9 +96,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
           ),
         ],
         onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+          _signupNotifier.setPageNumber(index);
         },
       ),
     );

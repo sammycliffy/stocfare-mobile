@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -10,6 +9,7 @@ import 'package:stockfare_mobile/models/sales_analytics_model.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/auth_pages/login.dart';
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/add_single_products/form.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
 import 'package:stockfare_mobile/screens/main_pages/expenses/home.dart';
 import 'package:stockfare_mobile/screens/main_pages/home.dart';
@@ -132,7 +132,7 @@ class _DashBoardState extends State<DashBoard> {
                 'Click here to add Product', FormPage()),
             SizedBox(height: 30),
             _container('Checkout', Theme.of(context).primaryColor,
-                'Click here to create a sale', HomePage()),
+                'Click here to create a sale', BottomNavigationPage()),
             SizedBox(height: 30),
             _container('Expense & Income', Hexcolor('#727275'),
                 'Click to record your business expenses', ExpensesHome()),
@@ -258,6 +258,10 @@ class _DashBoardState extends State<DashBoard> {
           ],
         ),
       ),
-      onTap: () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => route)));
+      onTap: () {
+        SignupNotifier _signupNotifier =
+            Provider.of<SignupNotifier>(context, listen: false);
+        _signupNotifier.setPageNumber(1);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => route));
+      });
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:jiffy/jiffy.dart';
@@ -7,7 +8,6 @@ import 'package:stockfare_mobile/models/all_expenses_model.dart';
 import 'package:stockfare_mobile/models/expenses-summary.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
-import 'package:stockfare_mobile/screens/subscription/sub_home.dart';
 import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/expenses_services.dart';
 
@@ -42,25 +42,32 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
   List<String> _expensesName = [];
   bool _permissionError = false;
   String _errorMessage = '';
+  bool isNetwork = true;
+
   @override
   void initState() {
     super.initState();
+
     Subscription().getSubscriptionPlan().then((value) {
       if (value == 'PREMIUM') {
-        setState(() {
-          _expensesSummary = _expensesServices.getExpenseSummary();
-          _getallExpenses = _expensesServices.getAllExpenses();
-          _expensesServices.reOccuringExpenses();
-          _expensesServices.getExpenseDropdown();
-        });
-        _expensesServices.getExpenseDropdown().then((value) {
-          dropdown.addAll(value);
-        }).catchError((e) {
-          setState(() {
-            _permissionError = true;
-            _errorMessage = e.toString();
-          });
-          print('this is the error in the page ' + e.toString());
+        _activitiesServices.checkForInternet().then((value) {
+          if (value == true) {
+            setState(() {
+              _expensesServices.reOccuringExpenses();
+              _expensesServices.getExpenseDropdown();
+            });
+            _expensesServices.getExpenseDropdown().then((value) {
+              dropdown.addAll(value);
+            }).catchError((e) {
+              print('${e.toString()} this is the error message');
+              setState(() {
+                _permissionError = true;
+                _errorMessage = e ?? 'This is wrong';
+              });
+            });
+          } else {
+            isNetwork = false;
+          }
         });
       } else {
         setState(() {
@@ -102,17 +109,17 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
               }()),
           child: Icon(Icons.add, color: Colors.white),
           backgroundColor: Colors.black),
-      body: _permissionError
+      body: isNetwork == false
           ? Center(
               child: Text(
-              _errorMessage,
+              'App is Offline',
               style: TextStyle(fontSize: 18),
             ))
           : _permission == false
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 20),
+                    // SizedBox(height: 20),
                     Center(
                       child: Container(
                           height: 120,
@@ -205,10 +212,10 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 20),
+                    // SizedBox(height: 20),
                     Center(
                       child: FutureBuilder<ExpensesSummary>(
-                          future: _expensesSummary,
+                          future: _expensesServices.getExpenseSummary(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               controller.updateValue(
@@ -261,7 +268,9 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
                                     ],
                                   ));
                             }
-                            return CircularProgressIndicator();
+                            return Column(
+                              children: [LinearProgressIndicator()],
+                            );
                           }),
                     ),
                     SizedBox(
@@ -307,7 +316,7 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
                       ),
                     ),
                     FutureBuilder<List<GetAllExpenses>>(
-                        future: _getallExpenses,
+                        future: _expensesServices.getAllExpenses(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             _expensesName.clear();
@@ -337,9 +346,7 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
                                   }),
                             );
                           } else {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
+                            return SizedBox();
                           }
                         })
                   ],
@@ -724,6 +731,8 @@ class _ExpensesHomePageState extends State<ExpensesHomePage> {
                                       .checkForInternet()
                                       .then((value) async {
                                     if (value == true) {
+                                      _expensesServices
+                                          .refreshgetExpensesAndSummary();
                                       String expensesToSend;
                                       if (_newExpenses == null) {
                                         expensesToSend = _expenses;

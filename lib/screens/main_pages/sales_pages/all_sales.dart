@@ -1,6 +1,8 @@
 import 'package:basic_utils/basic_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stockfare_mobile/models/sales_model.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
@@ -21,6 +23,8 @@ class _AllSalesListState extends State<AllSalesList> {
   Future<GetSalesModel> sortedList;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final ScrollController scrollController = new ScrollController();
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   bool _error = false;
   bool isNetwork = true;
   String _errorMessage;
@@ -45,7 +49,24 @@ class _AllSalesListState extends State<AllSalesList> {
   List amountPaid = [];
   List totalAmount = [];
   dynamic next;
-  int realNumber = 2;
+  int realNumber = 1;
+  int sortedNumber = 1;
+  int date;
+  void _onLoading() async {
+    await Future.delayed(Duration(milliseconds: 4000));
+    setState(() {
+      realNumber++;
+    });
+    if (mounted) _loadData();
+  }
+
+  void _onLoadingSortedDates() async {
+    await Future.delayed(Duration(milliseconds: 4000));
+    setState(() {
+      sortedNumber++;
+    });
+    if (mounted) _selectDatePages();
+  }
 
   @override
   initState() {
@@ -58,6 +79,15 @@ class _AllSalesListState extends State<AllSalesList> {
   void dispose() {
     scrollController.dispose();
     super.dispose();
+  }
+
+  void _onRefresh() async {
+    setState(() {
+      _salesServices.refreshgetallSales();
+      _loadSales();
+    });
+    await Future.delayed(Duration(milliseconds: 1000));
+    _refreshController.refreshCompleted();
   }
 
   @override
@@ -160,7 +190,7 @@ class _AllSalesListState extends State<AllSalesList> {
                     height: 40,
                     color: Colors.black,
                     child: Center(
-                        child: Text('All Sales',
+                        child: Text('Back to sales',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold))),
@@ -179,7 +209,9 @@ class _AllSalesListState extends State<AllSalesList> {
               ],
             );
           } else if (isLoading == true) {
-            return Center(child: CircularProgressIndicator());
+            return Column(
+              children: [LinearProgressIndicator()],
+            );
           } else {
             return _listView();
           }
@@ -252,6 +284,7 @@ class _AllSalesListState extends State<AllSalesList> {
                           .timeout(Duration(seconds: 10),
                               onTimeout: () => null);
                       if (result != 204) {
+                        print(result);
                         Navigator.pop(_scaffoldKey.currentContext);
 
                         setState(() {
@@ -269,7 +302,7 @@ class _AllSalesListState extends State<AllSalesList> {
                             _clear();
                             print(value.results?.map((value) {
                                   salesId.add(value.id);
-                                  realNumber = 2;
+                                  realNumber = 1;
                                   if (value.customer == null) {
                                     customerNames.add('None');
                                   } else {
@@ -342,7 +375,9 @@ class _AllSalesListState extends State<AllSalesList> {
       setState(() {
         _sortedDate = true;
         _searchSales = false;
+        date = (picked.toUtc().millisecondsSinceEpoch / 1000).round();
       });
+
       sortedList = _salesServices
           .sortedDates((picked.toUtc().millisecondsSinceEpoch / 1000).round());
       print(sortedList.then((value) {
@@ -377,6 +412,41 @@ class _AllSalesListState extends State<AllSalesList> {
     }
   }
 
+  _selectDatePages() {
+    print('$sortedNumber and $date');
+    sortedList = _salesServices.sortedDatePages(date, sortedNumber);
+    print(sortedList.then((value) {
+      if (value.count == 0) {
+        print('no sales');
+      }
+      setState(() {
+        print(value.results?.map((value) {
+              salesId.add(value.id);
+              if (value.customer == null) {
+                customerNames.add('None');
+              } else {
+                customerNames.add(value.customer.name);
+              }
+              _productNames.add(value.productDetail);
+              tax.add(value.tax);
+              amountSold.add(value.amount);
+              referenceCode.add(value.refCode);
+              customerChange.add(value.change);
+              amountPaid.add(value.amountPaid);
+              sellerNames.add(value.saleRegisteredBy);
+              names.add(value.productData[0].name);
+              soldOnCredit.add(value.soldOnCredit);
+              print(value.productData.map((value) {
+                dateCreated.add(value.dateCreated);
+              }));
+            }) ??
+            '[]');
+      });
+    }).catchError((e) {
+      _refreshController.loadNoData();
+    }));
+  }
+
   _listView() {
     return Column(
       children: [
@@ -398,119 +468,139 @@ class _AllSalesListState extends State<AllSalesList> {
           onTap: () => _selectDate(context),
         ),
         Expanded(
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification scrollInfo) {
-              if (scrollInfo.metrics.pixels ==
-                  scrollInfo.metrics.maxScrollExtent) {
-                setState(() {
-                  realNumber = realNumber + 1;
-                });
-                _loadData();
-              }
-            },
-            child: (() {
-              if (names.length == 0) {
-                return Column(
-                  children: [
-                    SizedBox(height: 100),
-                    Center(child: Icon(Icons.mood_bad, size: 40)),
-                    Text('No Sales',
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold)),
-                  ],
-                );
-              } else {
-                return Scrollbar(
+          child: (() {
+            if (names.length == 0) {
+              return Column(
+                children: [
+                  SizedBox(height: 100),
+                  Center(child: Icon(Icons.mood_bad, size: 40)),
+                  Text('No Sales',
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold)),
+                ],
+              );
+            } else {
+              return Scrollbar(
                   controller: scrollController,
                   isAlwaysShown: true,
-                  child: ListView.builder(
-                      padding: const EdgeInsets.all(8),
-                      itemCount: names.length,
-                      physics: AlwaysScrollableScrollPhysics(),
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          child: Card(
-                            child: ListTile(
-                              leading: Icon(Icons.monetization_on,
-                                  color: Colors.grey),
-                              title: Text(
-                                names[index],
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                              subtitle: Row(
-                                children: <Widget>[
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 1),
-                                        child: Text(
-                                          'Buyer :  ${customerNames[index].toString()}',
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontFamily: 'FireSans'),
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 1),
-                                        child: Text(
-                                          'Seller :  ${sellerNames[index].toString()}',
-                                          style: TextStyle(
-                                              color: Colors.green,
-                                              fontFamily: 'FireSans'),
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 1),
-                                        child: Text(
-                                          'Date :  ${Jiffy(dateCreated[index]).fromNow()}',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontFamily: 'FireSans'),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              trailing: IconButton(
-                                  icon: Icon(Icons.delete),
-                                  onPressed: () {
-                                    _confirmDelete(context, index);
-                                  }),
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AllProductsList(
-                                          customerIndex: index,
-                                          names: _productNames,
-                                          customerNames: customerNames,
-                                          sellerNames: sellerNames,
-                                          dateCreated: dateCreated,
-                                          price: price,
-                                          amountSold: amountSold,
-                                          quantitySold: quantitySold,
-                                          customerChange: customerChange,
-                                          referenceCode: referenceCode,
-                                          tax: tax,
-                                          soldOnCredit: soldOnCredit,
-                                          amountPaid: amountPaid,
-                                        )));
-                          },
+                  child: SmartRefresher(
+                    enablePullDown: true,
+                    enablePullUp: true,
+                    header: WaterDropHeader(),
+                    footer: CustomFooter(
+                      builder: (BuildContext context, LoadStatus mode) {
+                        Widget body;
+                        if (mode == LoadStatus.idle) {
+                          body = Text("pull up load");
+                        } else if (mode == LoadStatus.loading) {
+                          body = CupertinoActivityIndicator();
+                        } else if (mode == LoadStatus.failed) {
+                          body = Text("Load Failed!Click retry!");
+                        } else if (mode == LoadStatus.canLoading) {
+                          body = Text("release to load more");
+                        } else {
+                          body = Text("No more Data");
+                        }
+                        return Container(
+                          height: 55.0,
+                          child: Center(child: body),
                         );
-                      }),
-                );
-              }
-            }()),
-          ),
+                      },
+                    ),
+                    controller: _refreshController,
+                    onLoading: _sortedDate ? _onLoadingSortedDates : _onLoading,
+                    onRefresh: _onRefresh,
+                    child: ListView.builder(
+                        padding: const EdgeInsets.all(8),
+                        itemCount: names.length,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            child: Card(
+                              child: ListTile(
+                                leading: Icon(Icons.monetization_on,
+                                    color: Colors.grey),
+                                title: Text(
+                                  names[index],
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                subtitle: Row(
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 1),
+                                          child: Text(
+                                            'Buyer :  ${customerNames[index].toString()}',
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                fontFamily: 'FireSans'),
+                                          ),
+                                        ),
+                                        SizedBox(height: 5),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 1),
+                                          child: Text(
+                                            'Seller :  ${sellerNames[index].toString()}',
+                                            style: TextStyle(
+                                                color: Colors.green,
+                                                fontFamily: 'FireSans'),
+                                          ),
+                                        ),
+                                        SizedBox(height: 5),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 1),
+                                          child: Text(
+                                            'Date :  ${Jiffy(dateCreated[index]).format("yyyy-MM-dd HH:mm:ss")}',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: 'FireSans'),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                trailing: IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {
+                                      _confirmDelete(context, index);
+                                    }),
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AllProductsList(
+                                            customerIndex: index,
+                                            names: _productNames,
+                                            customerNames: customerNames,
+                                            sellerNames: sellerNames,
+                                            dateCreated: dateCreated,
+                                            price: price,
+                                            amountSold: amountSold,
+                                            quantitySold: quantitySold,
+                                            customerChange: customerChange,
+                                            referenceCode: referenceCode,
+                                            tax: tax,
+                                            soldOnCredit: soldOnCredit,
+                                            amountPaid: amountPaid,
+                                          )));
+                            },
+                          );
+                        }),
+                  ));
+            }
+          }()),
         ),
       ],
     );
@@ -536,6 +626,7 @@ class _AllSalesListState extends State<AllSalesList> {
 
   Future _loadData() async {
     _salesServices.getSalesPages(realNumber).then((value) {
+      print(realNumber);
       setState(() {
         print(value.results?.map((value) {
               salesId.add(value.id);
@@ -560,6 +651,10 @@ class _AllSalesListState extends State<AllSalesList> {
             }) ??
             '[]');
       });
+    }).whenComplete(() {
+      return _refreshController.loadComplete();
+    }).catchError((e) {
+      _refreshController.loadNoData();
     });
   }
 

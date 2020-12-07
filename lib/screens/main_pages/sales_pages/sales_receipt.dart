@@ -707,19 +707,14 @@ class _SalesReceiptState extends State<SalesReceipt> {
                                   onPressed: () {
                                     _addProduct.items.clear();
                                     _addProduct.quantityToSell.clear();
+                                    _signupNotifier.setPageNumber(1);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => HomePage()));
+                                            builder: (context) =>
+                                                BottomNavigationPage()));
                                   },
                                   child: Text('Make Another Sales')),
-                              IconButton(
-                                  icon: Icon(Icons.home),
-                                  onPressed: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              BottomNavigationPage())))
                             ],
                           )
                         ],

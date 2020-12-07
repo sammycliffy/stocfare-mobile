@@ -20,7 +20,9 @@ class SignupNotifier with ChangeNotifier {
   String _firebaseCustomerId;
   String _notificationId;
   String _country;
+  int _pageNumber = 0;
   String get firstName => _firstName;
+  int get pageNumber => _pageNumber;
   String get fullName => _fullName;
   String get lastName => _lastName;
   String get notificationId => _notificationId;
@@ -84,6 +86,12 @@ class SignupNotifier with ChangeNotifier {
 
   void setCountry(String country) {
     _country = country;
+    notifyListeners();
+  }
+
+  //product Navigation
+  void setPageNumber(int pageNumber) {
+    _pageNumber = pageNumber;
     notifyListeners();
   }
 }

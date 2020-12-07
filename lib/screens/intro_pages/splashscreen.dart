@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/helpers/save_user.dart';
@@ -78,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   _checkAppVersion(context) {
     AppServices _appServices = AppServices();
-    String _appVersionNumber = '41';
+    String _appVersionNumber = '45';
     _appServices.getAppVersion().then((value) {
       if (value == null) {
         checkForFirstInstallation();
