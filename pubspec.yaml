@@ -5,7 +5,8 @@ description: A new Flutter project.
 # pub.dev using `pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-# The following defines the version and build number for your application.
+# The following defines the version and build number for your application
+
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
 # Both the version and the builder number may be overridden in flutter
@@ -39,6 +40,7 @@ dependencies:
   firebase_database: ^4.1.1
   flutter_masked_text: ^0.8.0
   printing: ^3.5.0
+  getflutter: ^1.0.7
   file_picker: ^2.0.7
   jiffy: ^3.0.1
   flutter_local_notifications: ^1.4.4+4

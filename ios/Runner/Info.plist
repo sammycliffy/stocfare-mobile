@@ -5,13 +5,17 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	 <key>NSCameraUsageDescription</key>
+    <string>camera</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>photos</string>
+	<key>MinimumOSVersion</key>
+	<string>9.0</string>
 	<key>CFBundleName</key>
 	<string>stockfare_mobile</string>
 	<key>CFBundlePackageType</key>
@@ -22,6 +26,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<string>$(EXECUTABLE_NAME)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>

@@ -11,6 +11,7 @@ import 'package:stockfare_mobile/screens/main_pages/all_products_list/product_li
 import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/drawer.dart';
+import 'package:stockfare_mobile/screens/main_pages/dashboard/main_dashboard.dart';
 
 import 'package:stockfare_mobile/services/product_services.dart';
 
@@ -75,522 +76,543 @@ class _CategoryPageState extends State<CategoryPage> {
     return WillPopScope(
       onWillPop: () => Navigator.push(context,
           MaterialPageRoute(builder: (context) => BottomNavigationPage())),
-      child: Scaffold(
-        key: _scaffoldKey,
-        drawer: DrawerPage(),
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-            title: Text('Category List'),
-            actions: <Widget>[
-              deleteCategory
-                  ? Row(
-                      children: <Widget>[
-                        GestureDetector(
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          onTap: () {
-                            setState(() {
-                              deleteCategory = false;
-                            });
-                          },
-                        ),
-                        SizedBox(width: 20),
-                        GestureDetector(
-                            child: Container(
+      child: Container(
+        decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+                colors: [
+              Colors.red[100],
+              Colors.white,
+            ],
+                stops: [
+              0.0,
+              1.0
+            ],
+                begin: FractionalOffset.topCenter,
+                end: FractionalOffset.bottomCenter,
+                tileMode: TileMode.repeated)),
+        child: WillPopScope(
+          onWillPop: () => Navigator.push(
+              context, MaterialPageRoute(builder: (context) => DashBoard())),
+          child: Scaffold(
+            key: _scaffoldKey,
+            drawer: DrawerPage(),
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+                title: Text('Category List'),
+                actions: <Widget>[
+                  deleteCategory
+                      ? Row(
+                          children: <Widget>[
+                            GestureDetector(
                               child: Text(
-                                'Delete',
+                                'Cancel',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
+                              onTap: () {
+                                setState(() {
+                                  deleteCategory = false;
+                                });
+                              },
                             ),
-                            onTap: () {
-                              _confirmDelete(context);
-                            })
-                      ],
-                    )
-                  : editCategory
-                      ? GestureDetector(
-                          child: Container(
-                              height: 50,
-                              child: Center(
-                                  child: Text('Cancel',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)))),
-                          onTap: () {
+                            SizedBox(width: 20),
+                            GestureDetector(
+                                child: Container(
+                                  child: Text(
+                                    'Delete',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                onTap: () {
+                                  _confirmDelete(context);
+                                })
+                          ],
+                        )
+                      : editCategory
+                          ? GestureDetector(
+                              child: Container(
+                                  height: 50,
+                                  child: Center(
+                                      child: Text('Cancel',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold)))),
+                              onTap: () {
+                                setState(() {
+                                  editCategory = false;
+                                  deleteCategory = false;
+                                });
+                              })
+                          : GestureDetector(
+                              child: Container(
+                                height: 50,
+                                child: Center(
+                                  child: Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  editCategory = true;
+                                  deleteCategory = false;
+                                });
+                              }),
+                  deleteCategory
+                      ? IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.grey,
+                          ),
+                          onPressed: () {
                             setState(() {
-                              editCategory = false;
                               deleteCategory = false;
                             });
                           })
-                      : GestureDetector(
-                          child: Container(
-                            height: 50,
-                            child: Center(
-                              child: Text(
-                                'Edit',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                      : IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.white,
                           ),
-                          onTap: () {
+                          onPressed: () {
                             setState(() {
-                              editCategory = true;
-                              deleteCategory = false;
+                              deleteCategory = true;
+                              editCategory = false;
                             });
-                          }),
-              deleteCategory
-                  ? IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: Colors.grey,
+                          })
+                ],
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(50.0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 10,
+                    ),
+                    child: Container(
+                      height: 45,
+                      width: 300,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Colors.grey[200],
                       ),
-                      onPressed: () {
-                        setState(() {
-                          deleteCategory = false;
-                        });
-                      })
-                  : IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          deleteCategory = true;
-                          editCategory = false;
-                        });
-                      })
-            ],
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(50.0),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 10,
-                ),
-                child: Container(
-                  height: 45,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: Colors.grey[200],
-                  ),
-                  child: TextFormField(
-                      onChanged: (val) {
-                        if (val.length > 0) {
-                          setState(() {
-                            search(val);
-                          });
-                        } else if (val.length <= 0) {
-                          setState(() {
-                            _search = false;
-                          });
-                        }
-                      },
-                      decoration: InputDecoration(
-                        prefixIcon: IconButton(
-                          icon: Icon(Icons.search),
-                          color: Colors.black,
-                          iconSize: 20.0,
-                          onPressed: () {},
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.fromLTRB(25, 8, 0, 5),
-                        hintText: 'Search Stockfare',
-                      )),
-                ),
-              ),
-            )),
-        body: _search
-            ? Scrollbar(
-                isAlwaysShown: true,
-                controller: _scrollController,
-                child: ListView.builder(
-                    itemCount: _categoriesSearch.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Card(
-                                semanticContainer: true,
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                elevation: 3,
-                                child: ListTile(
-                                    title: Text(
-                                      _categoriesSearch[index].toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    subtitle: Text(
-                                      _productCountSearch[index].toString() +
-                                          ' items',
-                                    ),
-                                    trailing: Container(
-                                        child: (() {
-                                      if (editCategory) {
-                                        return GestureDetector(
-                                          child: Text(
-                                            'Edit',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          onTap: () {
-                                            _updateDialog(
-                                                _categoriesSearch[index]
-                                                    .toString(),
-                                                _categoryIdSearch[index]);
-                                          },
-                                        );
-                                      } else if (deleteCategory) {
-                                        return GestureDetector(
-                                          child: Container(
-                                            width: 100,
-                                            height: 100,
-                                            child: CheckboxListTile(
-                                              activeColor: Theme.of(context)
-                                                  .primaryColor,
-                                              value: checkBox[index],
-                                              onChanged: (newValue) {
-                                                setState(() {
-                                                  checkBox[index] = newValue;
-                                                  deleteItem.contains(
-                                                          _categoryId[index])
-                                                      ? deleteItem.remove(
-                                                          _categoryId[index])
-                                                      : deleteItem.add(
-                                                          _categoryId[index]
-                                                              .toString());
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                          onTap: () {
-                                            print(_categoryId[index]);
-                                          },
-                                        );
-                                      }
-
-                                      return Icon(
-                                        Icons.category,
-                                        color: Theme.of(context).primaryColor,
-                                      );
-                                    }()))))),
-                        onTap: () async {
-                          SharedPreferences sharedPreferences =
-                              await SharedPreferences.getInstance();
-                          sharedPreferences.remove('id');
-
-                          _addToCart.addID(_categoryIdSearch[index],
-                              _categoriesSearch[index]);
-                          _addToCart.setFireId(_firebaseKeysSearch[index]);
-                          _addProductNotifier
-                              .setCategoryId(_categoryIdSearch[index]);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProductListPage()));
-                        },
-                      );
-                    }),
-              )
-            : StreamBuilder(
-                stream: firebaseDb,
-                builder: (context, AsyncSnapshot<Event> snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data.snapshot.value != null) {
-                      _categories.clear();
-                      _categoryId.clear();
-                      _productCount.clear();
-
-                      DataSnapshot dataValues = snapshot.data.snapshot;
-                      var data =
-                          dataValues.value['${_signupNotifier.firebaseId}'];
-                      if (data is String) {
-                        print('yes');
-                      } else {
-                        Map<dynamic, dynamic> values =
-                            dataValues.value['${_signupNotifier.firebaseId}'];
-
-                        values?.forEach((key, values) {
-                          _firebaseKeys.add(key);
-
-                          _categories.add(values['name']);
-                          _categoryId.add(values['id']);
-                          _productCount.add(values['product_count']);
-                          checkBox.add(false);
-                        });
-
-                        return StreamBuilder(
-                            stream: _firebaseNotification,
-                            builder: (context, AsyncSnapshot<Event> snapshot1) {
-                              if (snapshot1.hasData) {
-                                _lowStockId.clear();
-                                if (snapshot1.data.snapshot.value != null) {
-                                  DataSnapshot dataValues =
-                                      snapshot1.data.snapshot;
-                                  var data = dataValues.value[
-                                      '${_signupNotifier.notificationId}'];
-                                  if (data is String) {
-                                    print('yes');
-                                  } else {
-                                    Map<dynamic, dynamic> values = dataValues
-                                            .value[
-                                        '${_signupNotifier.notificationId}'];
-
-                                    values?.forEach((key, values) {
-                                      print(values);
-                                      Map<dynamic, dynamic> value = values;
-                                      value?.forEach((key, data) {
-                                        Map<dynamic, dynamic> newData = data;
-                                        newData?.forEach((key, data) {
-                                          print(data);
-                                          _lowStockId.add(data['name']);
-                                        });
-                                      });
-                                    });
-                                  }
-
-                                  return Column(
-                                    children: [
-                                      SizedBox(height: 5),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 280),
-                                        child: Container(
-                                          width: 55,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey[300],
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
-                                          child: Center(
-                                            child: Text(
-                                                _categories.length.toString(),
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Scrollbar(
-                                          isAlwaysShown: true,
-                                          controller: _scrollController,
-                                          child: ListView.builder(
-                                              itemCount: _categories.length,
-                                              itemBuilder: (context, index) {
-                                                print(_lowStockId);
-                                                return GestureDetector(
-                                                  child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5.0),
-                                                      child: Card(
-                                                          semanticContainer:
-                                                              true,
-                                                          clipBehavior: Clip
-                                                              .antiAliasWithSaveLayer,
-                                                          elevation: 3,
-                                                          child: ListTile(
-                                                              title: Row(
-                                                                children: [
-                                                                  Text(
-                                                                    _categories[
-                                                                            index]
-                                                                        .toString(),
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      fontSize:
-                                                                          18,
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 50,
-                                                                  ),
-                                                                  // (() {
-                                                                  //   if (_categories[
-                                                                  //           index] ==
-                                                                  //       _lowStockId[
-                                                                  //           index]) {
-                                                                  //     return Container(
-                                                                  //         width:
-                                                                  //             40,
-                                                                  //         height:
-                                                                  //             25,
-                                                                  //         decoration: BoxDecoration(
-                                                                  //             color: Colors.orange,
-                                                                  //             borderRadius: BorderRadius.circular(5)),
-                                                                  //         child: Center(child: Text('Low', style: TextStyle(color: Colors.white))));
-                                                                  //   } else {
-                                                                  //     return SizedBox();
-                                                                  //   }
-                                                                  // }())
-                                                                ],
-                                                              ),
-                                                              subtitle: Text(
-                                                                _productCount[
-                                                                            index]
-                                                                        .toString() +
-                                                                    ' items',
-                                                              ),
-                                                              trailing:
-                                                                  Container(
-                                                                      child:
-                                                                          (() {
-                                                                if (editCategory) {
-                                                                  return GestureDetector(
-                                                                    child: Text(
-                                                                      'Edit',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              16,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
-                                                                    onTap: () {
-                                                                      _updateDialog(
-                                                                          _categories[index]
-                                                                              .toString(),
-                                                                          _categoryId[
-                                                                              index]);
-                                                                    },
-                                                                  );
-                                                                } else if (deleteCategory) {
-                                                                  return GestureDetector(
-                                                                    child:
-                                                                        Container(
-                                                                      width:
-                                                                          100,
-                                                                      height:
-                                                                          100,
-                                                                      child:
-                                                                          CheckboxListTile(
-                                                                        activeColor:
-                                                                            Theme.of(context).primaryColor,
-                                                                        value: checkBox[
-                                                                            index],
-                                                                        onChanged:
-                                                                            (newValue) {
-                                                                          setState(
-                                                                              () {
-                                                                            checkBox[index] =
-                                                                                newValue;
-                                                                            deleteItem.contains(_categoryId[index])
-                                                                                ? deleteItem.remove(_categoryId[index])
-                                                                                : deleteItem.add(_categoryId[index].toString());
-                                                                          });
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                    onTap: () {
-                                                                      print(_categoryId[
-                                                                          index]);
-                                                                    },
-                                                                  );
-                                                                }
-                                                                return Icon(
-                                                                  Icons
-                                                                      .category,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .primaryColor,
-                                                                );
-                                                              }()))))),
-                                                  onTap: () async {
-                                                    SharedPreferences
-                                                        sharedPreferences =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    sharedPreferences
-                                                        .remove('id');
-                                                    _addToCart.addID(
-                                                        _categoryId[index],
-                                                        _categories[index]);
-                                                    _addToCart.setFireId(
-                                                        _firebaseKeys[index]);
-                                                    _addProductNotifier
-                                                        .setCategoryId(
-                                                            _categoryId[index]);
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ProductListPage()));
-                                                  },
-                                                );
-                                              }),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                }
-                              }
-                              return Column(
-                                  children: [CircularProgressIndicator()]);
-                            });
-                      }
-                    }
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 40,
-                        ),
-                        Center(child: Text('Add product.')),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Center(
-                          child: GestureDetector(
-                            child: Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Center(
-                                  child: Icon(Icons.add,
-                                      size: 50, color: Colors.white)),
+                      child: TextFormField(
+                          onChanged: (val) {
+                            if (val.length > 0) {
+                              setState(() {
+                                search(val);
+                              });
+                            } else if (val.length <= 0) {
+                              setState(() {
+                                _search = false;
+                              });
+                            }
+                          },
+                          decoration: InputDecoration(
+                            prefixIcon: IconButton(
+                              icon: Icon(Icons.search),
+                              color: Colors.black,
+                              iconSize: 20.0,
+                              onPressed: () {},
                             ),
-                            onTap: () {
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.fromLTRB(25, 8, 0, 5),
+                            hintText: 'Search Stockfare',
+                          )),
+                    ),
+                  ),
+                )),
+            body: _search
+                ? Scrollbar(
+                    isAlwaysShown: true,
+                    controller: _scrollController,
+                    child: ListView.builder(
+                        itemCount: _categoriesSearch.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Card(
+                                    semanticContainer: true,
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    elevation: 3,
+                                    child: ListTile(
+                                        title: Text(
+                                          _categoriesSearch[index].toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          _productCountSearch[index]
+                                                  .toString() +
+                                              ' items',
+                                        ),
+                                        trailing: Container(
+                                            child: (() {
+                                          if (editCategory) {
+                                            return GestureDetector(
+                                              child: Text(
+                                                'Edit',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              onTap: () {
+                                                _updateDialog(
+                                                    _categoriesSearch[index]
+                                                        .toString(),
+                                                    _categoryIdSearch[index]);
+                                              },
+                                            );
+                                          } else if (deleteCategory) {
+                                            return GestureDetector(
+                                              child: Container(
+                                                width: 100,
+                                                height: 100,
+                                                child: CheckboxListTile(
+                                                  activeColor: Theme.of(context)
+                                                      .primaryColor,
+                                                  value: checkBox[index],
+                                                  onChanged: (newValue) {
+                                                    setState(() {
+                                                      checkBox[index] =
+                                                          newValue;
+                                                      deleteItem.contains(
+                                                              _categoryId[
+                                                                  index])
+                                                          ? deleteItem.remove(
+                                                              _categoryId[
+                                                                  index])
+                                                          : deleteItem.add(
+                                                              _categoryId[index]
+                                                                  .toString());
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                print(_categoryId[index]);
+                                              },
+                                            );
+                                          }
+
+                                          return Image.asset(
+                                              'assets/images/category.png');
+                                        }()))))),
+                            onTap: () async {
+                              SharedPreferences sharedPreferences =
+                                  await SharedPreferences.getInstance();
+                              sharedPreferences.remove('id');
+
+                              _addToCart.addID(_categoryIdSearch[index],
+                                  _categoriesSearch[index]);
+                              _addToCart.setFireId(_firebaseKeysSearch[index]);
+                              _addProductNotifier
+                                  .setCategoryId(_categoryIdSearch[index]);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => FormPage()));
+                                      builder: (context) => ProductListPage()));
                             },
-                          ),
-                        )
-                      ],
-                    );
-                  }
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
+                          );
+                        }),
+                  )
+                : StreamBuilder(
+                    stream: firebaseDb,
+                    builder: (context, AsyncSnapshot<Event> snapshot) {
+                      if (snapshot.hasData) {
+                        if (snapshot.data.snapshot.value != null) {
+                          _categories.clear();
+                          _categoryId.clear();
+                          _productCount.clear();
+
+                          DataSnapshot dataValues = snapshot.data.snapshot;
+                          var data =
+                              dataValues.value['${_signupNotifier.firebaseId}'];
+                          if (data is String) {
+                            print('yes');
+                          } else {
+                            Map<dynamic, dynamic> values = dataValues
+                                .value['${_signupNotifier.firebaseId}'];
+
+                            values?.forEach((key, values) {
+                              _firebaseKeys.add(key);
+
+                              _categories.add(values['name']);
+                              _categoryId.add(values['id']);
+                              _productCount.add(values['product_count']);
+                              checkBox.add(false);
+                            });
+
+                            return StreamBuilder(
+                                stream: _firebaseNotification,
+                                builder:
+                                    (context, AsyncSnapshot<Event> snapshot1) {
+                                  if (snapshot1.hasData) {
+                                    _lowStockId.clear();
+                                    if (snapshot1.data.snapshot.value != null) {
+                                      DataSnapshot dataValues =
+                                          snapshot1.data.snapshot;
+                                      var data = dataValues.value[
+                                          '${_signupNotifier.notificationId}'];
+                                      if (data is String) {
+                                        print('yes');
+                                      } else {
+                                        Map<dynamic,
+                                            dynamic> values = dataValues
+                                                .value[
+                                            '${_signupNotifier.notificationId}'];
+
+                                        values?.forEach((key, values) {
+                                          print(values);
+                                          Map<dynamic, dynamic> value = values;
+                                          value?.forEach((key, data) {
+                                            Map<dynamic, dynamic> newData =
+                                                data;
+                                            newData?.forEach((key, data) {
+                                              print(data);
+                                              _lowStockId.add(data['name']);
+                                            });
+                                          });
+                                        });
+                                      }
+
+                                      return Column(
+                                        children: [
+                                          SizedBox(height: 5),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 280),
+                                            child: Container(
+                                              width: 55,
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.blue[700],
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              child: Center(
+                                                child: Text(
+                                                    _categories.length
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Scrollbar(
+                                              isAlwaysShown: true,
+                                              controller: _scrollController,
+                                              child: ListView.builder(
+                                                  itemCount: _categories.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    print(_lowStockId);
+                                                    return GestureDetector(
+                                                      child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(5.0),
+                                                          child: Card(
+                                                              semanticContainer:
+                                                                  true,
+                                                              clipBehavior: Clip
+                                                                  .antiAliasWithSaveLayer,
+                                                              elevation: 3,
+                                                              child: ListTile(
+                                                                  title: Row(
+                                                                    children: [
+                                                                      Text(
+                                                                        _categories[index]
+                                                                            .toString(),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              18,
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            50,
+                                                                      ),
+                                                                      // (() {
+                                                                      //   if (_categories[
+                                                                      //           index] ==
+                                                                      //       _lowStockId[
+                                                                      //           index]) {
+                                                                      //     return Container(
+                                                                      //         width:
+                                                                      //             40,
+                                                                      //         height:
+                                                                      //             25,
+                                                                      //         decoration: BoxDecoration(
+                                                                      //             color: Colors.orange,
+                                                                      //             borderRadius: BorderRadius.circular(5)),
+                                                                      //         child: Center(child: Text('Low', style: TextStyle(color: Colors.white))));
+                                                                      //   } else {
+                                                                      //     return SizedBox();
+                                                                      //   }
+                                                                      // }())
+                                                                    ],
+                                                                  ),
+                                                                  subtitle:
+                                                                      Text(
+                                                                    _productCount[index]
+                                                                            .toString() +
+                                                                        ' items',
+                                                                  ),
+                                                                  trailing:
+                                                                      Container(
+                                                                          child:
+                                                                              (() {
+                                                                    if (editCategory) {
+                                                                      return GestureDetector(
+                                                                        child:
+                                                                            Text(
+                                                                          'Edit',
+                                                                          style: TextStyle(
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.bold),
+                                                                        ),
+                                                                        onTap:
+                                                                            () {
+                                                                          _updateDialog(
+                                                                              _categories[index].toString(),
+                                                                              _categoryId[index]);
+                                                                        },
+                                                                      );
+                                                                    } else if (deleteCategory) {
+                                                                      return GestureDetector(
+                                                                        child:
+                                                                            Container(
+                                                                          width:
+                                                                              100,
+                                                                          height:
+                                                                              100,
+                                                                          child:
+                                                                              CheckboxListTile(
+                                                                            activeColor:
+                                                                                Theme.of(context).primaryColor,
+                                                                            value:
+                                                                                checkBox[index],
+                                                                            onChanged:
+                                                                                (newValue) {
+                                                                              setState(() {
+                                                                                checkBox[index] = newValue;
+                                                                                deleteItem.contains(_categoryId[index]) ? deleteItem.remove(_categoryId[index]) : deleteItem.add(_categoryId[index].toString());
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                        ),
+                                                                        onTap:
+                                                                            () {
+                                                                          print(
+                                                                              _categoryId[index]);
+                                                                        },
+                                                                      );
+                                                                    }
+                                                                    return Image
+                                                                        .asset(
+                                                                            'assets/images/category.png');
+                                                                  }()))))),
+                                                      onTap: () async {
+                                                        SharedPreferences
+                                                            sharedPreferences =
+                                                            await SharedPreferences
+                                                                .getInstance();
+                                                        sharedPreferences
+                                                            .remove('id');
+                                                        _addToCart.addID(
+                                                            _categoryId[index],
+                                                            _categories[index]);
+                                                        _addToCart.setFireId(
+                                                            _firebaseKeys[
+                                                                index]);
+                                                        _addProductNotifier
+                                                            .setCategoryId(
+                                                                _categoryId[
+                                                                    index]);
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        ProductListPage()));
+                                                      },
+                                                    );
+                                                  }),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                  }
+                                  return Column(
+                                      children: [CircularProgressIndicator()]);
+                                });
+                          }
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Center(child: Text('Add product.')),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Center(
+                              child: GestureDetector(
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Center(
+                                      child: Icon(Icons.add,
+                                          size: 50, color: Colors.white)),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FormPage()));
+                                },
+                              ),
+                            )
+                          ],
+                        );
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  ),
+            floatingActionButton: FloatingActionButton(
+              focusColor: Theme.of(context).canvasColor,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => FormPage()));
+              },
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
               ),
-        floatingActionButton: FloatingActionButton(
-          focusColor: Theme.of(context).canvasColor,
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => FormPage()));
-          },
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
+              backgroundColor: Colors.blue[700],
+            ),
           ),
-          backgroundColor: Colors.black,
         ),
       ),
     );

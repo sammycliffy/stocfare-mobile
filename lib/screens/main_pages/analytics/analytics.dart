@@ -20,36 +20,51 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         child: WillPopScope(
           onWillPop: () => Navigator.push(context,
               MaterialPageRoute(builder: (context) => BottomNavigationPage())),
-          child: Scaffold(
-              backgroundColor: Colors.grey[200],
-              drawer: DrawerPage(),
-              appBar: AppBar(
-                bottom: TabBar(
-                  tabs: [
-                    Tab(
-                      text: 'Sales',
-                    ),
-                    Tab(
-                      text: 'Products',
-                    ),
-                    Tab(
-                      text: 'Profits',
-                    ),
-                  ],
-                ),
-                title: Text('Product Analytics'),
-              ),
-              body: Column(children: [
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      SalesPageAnalytics(),
-                      ProductPageAnalytics(),
-                      ProfitAndLossPage(),
+          child: Container(
+            decoration: new BoxDecoration(
+                gradient: new LinearGradient(
+                    colors: [
+                  Colors.red[200],
+                  Colors.white,
+                ],
+                    stops: [
+                  0.0,
+                  1.0
+                ],
+                    begin: FractionalOffset.topCenter,
+                    end: FractionalOffset.bottomCenter,
+                    tileMode: TileMode.repeated)),
+            child: Scaffold(
+                backgroundColor: Colors.transparent,
+                drawer: DrawerPage(),
+                appBar: AppBar(
+                  bottom: TabBar(
+                    tabs: [
+                      Tab(
+                        text: 'Sales',
+                      ),
+                      Tab(
+                        text: 'Products',
+                      ),
+                      Tab(
+                        text: 'Profits',
+                      ),
                     ],
                   ),
+                  title: Text('Product Analytics'),
                 ),
-              ])),
+                body: Column(children: [
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        SalesPageAnalytics(),
+                        ProductPageAnalytics(),
+                        ProfitAndLossPage(),
+                      ],
+                    ),
+                  ),
+                ])),
+          ),
         ));
   }
 }

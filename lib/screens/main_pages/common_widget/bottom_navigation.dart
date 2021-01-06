@@ -40,56 +40,53 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
         elevation: 2.0,
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.red[800],
         items: [
           BottomNavigationBarItem(
             icon: Icon(
               Icons.dashboard,
-              color: Colors.black,
+              color: Colors.white,
             ),
             title: Text(
               'Dashboard',
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
-            backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.shopping_basket,
-              color: Colors.black,
+              color: Colors.white,
             ),
             title: Text(
               'Checkout',
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
-            backgroundColor: Colors.deepOrange,
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.card_giftcard,
-              color: Colors.black,
+              color: Colors.white,
             ),
             title: Text(
               'Products',
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
-            backgroundColor: Colors.green,
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.multiline_chart,
-              color: Colors.black,
+              color: Colors.white,
             ),
             title: Text(
               'Analytics',
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
             backgroundColor: Colors.white,

@@ -47,80 +47,48 @@ class _FormPageState extends State<FormPage> {
   @override
   Widget build(BuildContext context) {
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
-    return Scaffold(
-        appBar: AppBar(title: Text('Add Products')),
-        key: _scaffoldKey,
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: 20),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        validator: (input) =>
-                            input.isEmpty ? "Enter product Category" : null,
-                        onChanged: (val) => setState(() {
-                          _productCategory = val;
-                        }),
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(12),
-                          labelText: 'Enter product Category',
-                          labelStyle:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .focusColor
-                                  .withOpacity(0.7)),
-                          hintText: 'Enter Product Category E.g. Soft Drinks',
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.5))),
-                        ),
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: Tooltip(
-                        message: 'James',
+    return Container(
+      decoration: new BoxDecoration(
+          gradient: new LinearGradient(
+              colors: [
+            Colors.red[200],
+            Colors.white,
+          ],
+              stops: [
+            0.0,
+            1.0
+          ],
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+              tileMode: TileMode.repeated)),
+      child: Scaffold(
+          appBar: AppBar(title: Text('Add Products')),
+          key: _scaffoldKey,
+          backgroundColor: Colors.transparent,
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: 20),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40, right: 40),
                         child: TextFormField(
                           keyboardType: TextInputType.text,
-                          validator: (input) {
-                            if (input.isEmpty) {
-                              return "Enter Product Name ";
-                            } else if (input.length > 23) {
-                              return 'Product Name Too Long';
-                            }
-                            return null;
-                          },
+                          validator: (input) =>
+                              input.isEmpty ? "Enter product Category" : null,
                           onChanged: (val) => setState(() {
-                            _unitProductName = val;
+                            _productCategory = val;
                           }),
                           decoration: InputDecoration(
-                            labelText: 'Enter product Name',
+                            fillColor: Colors.white,
+                            filled: true,
                             contentPadding: EdgeInsets.all(12),
-                            labelStyle: TextStyle(
-                                color: Theme.of(context).primaryColor),
+                            labelText: 'Enter product Category',
+                            labelStyle: TextStyle(color: Colors.black),
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Theme.of(context)
@@ -130,7 +98,7 @@ class _FormPageState extends State<FormPage> {
                                 color: Theme.of(context)
                                     .focusColor
                                     .withOpacity(0.7)),
-                            hintText: 'Enter Product Name E.g. Cocacola',
+                            hintText: 'Enter Product Category E.g. Soft Drinks',
                             enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Theme.of(context)
@@ -145,28 +113,120 @@ class _FormPageState extends State<FormPage> {
                           style: TextStyle(color: Colors.black),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(
-                          width: 150,
-                          child: Tooltip(
-                            message: 'You must know what you are doing',
+                      SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40, right: 40),
+                        child: Tooltip(
+                          message: 'James',
+                          child: TextFormField(
+                            keyboardType: TextInputType.text,
+                            validator: (input) {
+                              if (input.isEmpty) {
+                                return "Enter Product Name ";
+                              } else if (input.length > 23) {
+                                return 'Product Name Too Long';
+                              }
+                              return null;
+                            },
+                            onChanged: (val) => setState(() {
+                              _unitProductName = val;
+                            }),
+                            decoration: InputDecoration(
+                              labelText: 'Enter product Name',
+                              contentPadding: EdgeInsets.all(12),
+                              fillColor: Colors.white,
+                              filled: true,
+                              labelStyle: TextStyle(color: Colors.black),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .focusColor
+                                          .withOpacity(0.2))),
+                              hintStyle: TextStyle(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.7)),
+                              hintText: 'Enter Product Name E.g. Cocacola',
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .focusColor
+                                          .withOpacity(0.2))),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .focusColor
+                                          .withOpacity(0.5))),
+                            ),
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 150,
+                            child: Tooltip(
+                              message: 'You must know what you are doing',
+                              child: TextFormField(
+                                controller: secondController,
+                                keyboardType: TextInputType.number,
+                                validator: (input) => input.isEmpty
+                                    ? "Enter Product Price"
+                                    : null,
+                                onChanged: (val) => setState(() {
+                                  _unitProductCostPrice = int.parse(val);
+                                }),
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  labelText: 'Cost price',
+                                  contentPadding: EdgeInsets.all(12),
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context)
+                                              .focusColor
+                                              .withOpacity(0.2))),
+                                  hintStyle: TextStyle(
+                                      color: Theme.of(context)
+                                          .focusColor
+                                          .withOpacity(0.7)),
+                                  hintText: 'Unit price',
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context)
+                                              .focusColor
+                                              .withOpacity(0.2))),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context)
+                                              .focusColor
+                                              .withOpacity(0.5))),
+                                ),
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          SizedBox(
+                            width: 150,
                             child: TextFormField(
-                              controller: secondController,
+                              controller: controller,
                               keyboardType: TextInputType.number,
                               validator: (input) =>
-                                  input.isEmpty ? "Enter Product Price" : null,
+                                  input.isEmpty ? "Enter Selling Price" : null,
                               onChanged: (val) => setState(() {
-                                _unitProductCostPrice = int.parse(val);
+                                _unitProductSellingPrice = int.parse(val);
                               }),
                               decoration: InputDecoration(
-                                labelText: 'Cost price',
+                                fillColor: Colors.white,
+                                filled: true,
+                                labelText: 'Selling price',
                                 contentPadding: EdgeInsets.all(12),
-                                labelStyle: TextStyle(
-                                    color: Theme.of(context).primaryColor),
+                                labelStyle: TextStyle(color: Colors.black),
                                 border: OutlineInputBorder(
                                     borderSide: BorderSide(
                                         color: Theme.of(context)
@@ -191,601 +251,563 @@ class _FormPageState extends State<FormPage> {
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 5),
-                        SizedBox(
-                          width: 150,
-                          child: TextFormField(
-                            controller: controller,
-                            keyboardType: TextInputType.number,
-                            validator: (input) =>
-                                input.isEmpty ? "Enter Selling Price" : null,
-                            onChanged: (val) => setState(() {
-                              _unitProductSellingPrice = int.parse(val);
-                            }),
-                            decoration: InputDecoration(
-                              labelText: 'Selling price',
-                              contentPadding: EdgeInsets.all(12),
-                              labelStyle: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.2))),
-                              hintStyle: TextStyle(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.7)),
-                              hintText: 'Unit price',
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.2))),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.5))),
-                            ),
-                            style: TextStyle(color: Colors.black),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40, right: 40),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (input) =>
+                              input.isEmpty ? "Enter Quantity " : null,
+                          onChanged: (val) => setState(() {
+                            _unitQuantity = int.parse(val);
+                          }),
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            labelText: 'Quantity',
+                            contentPadding: EdgeInsets.all(12),
+                            labelStyle: TextStyle(color: Colors.black),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.2))),
+                            hintStyle: TextStyle(color: Colors.black),
+                            hintText: 'Quantity',
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.2))),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.5))),
                           ),
+                          style: TextStyle(color: Colors.black),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        validator: (input) =>
-                            input.isEmpty ? "Enter Quantity " : null,
-                        onChanged: (val) => setState(() {
-                          _unitQuantity = int.parse(val);
-                        }),
-                        decoration: InputDecoration(
-                          labelText: 'Quantity',
-                          contentPadding: EdgeInsets.all(12),
-                          labelStyle:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .focusColor
-                                  .withOpacity(0.7)),
-                          hintText: 'Quantity',
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.5))),
-                        ),
-                        style: TextStyle(color: Colors.black),
                       ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                        validator: (val) {
-                          if (val.isEmpty) {
-                            return 'Limit cannot be empty';
-                          } else if (int.parse(val) > _unitQuantity) {
-                            return 'Limit cannot be greater than quantity';
-                          }
-                          return null;
-                        },
-                        keyboardType: TextInputType.number,
-                        onChanged: (val) => setState(() {
-                          _unitLimit = int.parse(val);
-                        }),
-                        decoration: InputDecoration(
-                          labelText: 'Unit Limit',
-                          contentPadding: EdgeInsets.all(12),
-                          labelStyle:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .focusColor
-                                  .withOpacity(0.7)),
-                          hintText: 'Lowest stock quantity',
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.5))),
-                        ),
-                        style: TextStyle(color: Colors.black),
+                      SizedBox(
+                        height: 30,
                       ),
-                    ),
-                    SizedBox(height: 5),
-                    GestureDetector(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 200),
-                        child: Text('What is this?', style: TextStyle()),
-                      ),
-                      onTap: () {
-                        _productLimit(context);
-                      },
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        onChanged: (val) => setState(() {
-                          _productDescription = val;
-                        }),
-                        decoration: InputDecoration(
-                          labelText: 'Description',
-                          contentPadding: EdgeInsets.all(12),
-                          labelStyle:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .focusColor
-                                  .withOpacity(0.7)),
-                          hintText: 'Give a brief description of your product',
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.2))),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .focusColor
-                                      .withOpacity(0.5))),
-                        ),
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    SizedBox(height: 25),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        InkWell(
-                            child: Container(
-                              width: 150,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: Colors.green[700]),
-                              child: Center(
-                                child: Text('Add pack products',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    )),
-                              ),
-                            ),
-                            onTap: () {
-                              if (_formKey.currentState.validate()) {
-                                _addProduct.setFirstProduct(
-                                    _productCategory,
-                                    _unitProductName,
-                                    _unitLimit,
-                                    _unitQuantity,
-                                    controller.numberValue.round(),
-                                    _productDescription,
-                                    _productDiscount,
-                                    _productWeight,
-                                    secondController.numberValue.round(),
-                                    _data);
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AddPackPage()));
-                              }
-                            }),
-                        SizedBox(width: 20),
-                        //check if the extra details button is clicked
-                        addExtraDetails
-                            ? GestureDetector(
-                                child: Text(
-                                  'Add Extra Detals',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey),
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    addExtraDetails = false;
-                                  });
-                                },
-                              )
-                            : GestureDetector(
-                                child: Text(
-                                  'Add Extra Detals',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    addExtraDetails = true;
-                                  });
-                                },
-                              )
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    addExtraDetails
-                        ? Column(
-                            children: <Widget>[
-                              SizedBox(
-                                width: 300,
-                                child: TextFormField(
-                                  // inputFormatters: [controller],
-                                  // controller: textEditingController,
-                                  keyboardType: TextInputType.number,
-
-                                  onChanged: (val) => setState(() {
-                                    _productDiscount = int.parse(val);
-                                  }),
-                                  decoration: InputDecoration(
-                                    labelText: 'Product Discount',
-                                    contentPadding: EdgeInsets.all(12),
-                                    labelStyle: TextStyle(
-                                        color: Theme.of(context).primaryColor),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.2))),
-                                    hintStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .focusColor
-                                            .withOpacity(0.7)),
-                                    hintText: 'Product Discounts (%)',
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.2))),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.5))),
-                                  ),
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              SizedBox(
-                                width: 300,
-                                child: TextFormField(
-                                  // inputFormatters: [controller],
-                                  // controller: textEditingController,
-                                  keyboardType: TextInputType.number,
-
-                                  onChanged: (val) => setState(() {
-                                    _productWeight = int.parse(val);
-                                  }),
-                                  decoration: InputDecoration(
-                                    labelText: 'Product Weight',
-                                    contentPadding: EdgeInsets.all(12),
-                                    labelStyle: TextStyle(
-                                        color: Theme.of(context).primaryColor),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.2))),
-                                    hintStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .focusColor
-                                            .withOpacity(0.7)),
-                                    hintText: 'Product Weight in (Kg)',
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.2))),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .focusColor
-                                                .withOpacity(0.5))),
-                                  ),
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              color.length == 0
-                                  ? SizedBox()
-                                  : Container(
-                                      height: 150,
-                                      width: 320,
-                                      child: ListView.builder(
-                                          padding: const EdgeInsets.all(8),
-                                          itemCount: color.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 5, bottom: 5),
-                                              child: Container(
-                                                width: 320,
-                                                height: 50,
-                                                color: Colors.grey[200],
-                                                child: Center(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    children: <Widget>[
-                                                      Text(color[index]),
-                                                      IconButton(
-                                                          icon: Icon(
-                                                              Icons.cancel),
-                                                          onPressed: () {
-                                                            setState(() {
-                                                              color.remove(
-                                                                  color[index]);
-                                                            });
-                                                          })
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          }),
-                                    ),
-                              //Add color form
-                              Padding(
-                                padding: const EdgeInsets.only(right: 150.0),
-                                child: Text('Add Colors',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        color: Theme.of(context).primaryColor)),
-                              ),
-                              Container(
-                                width: 300,
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            width: 3,
-                                            color: Colors.grey[200]))),
-                              ),
-                              SizedBox(height: 20),
-                              Form(
-                                key: _secondKey,
-                                child: Column(
-                                  children: <Widget>[
-                                    SizedBox(
-                                      width: 300,
-                                      child: TextFormField(
-                                        keyboardType: TextInputType.text,
-                                        validator: (val) => val.isEmpty
-                                            ? 'Cannot be empty'
-                                            : null,
-                                        onChanged: (val) => setState(() {
-                                          _colorName = val;
-                                        }),
-                                        decoration: InputDecoration(
-                                          labelText: 'Color Name',
-                                          contentPadding: EdgeInsets.all(12),
-                                          labelStyle: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .focusColor
-                                                      .withOpacity(0.2))),
-                                          hintStyle: TextStyle(
-                                              color: Theme.of(context)
-                                                  .focusColor
-                                                  .withOpacity(0.7)),
-                                          hintText: 'Color Name',
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .focusColor
-                                                      .withOpacity(0.2))),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .focusColor
-                                                      .withOpacity(0.5))),
-                                        ),
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ),
-                                    SizedBox(height: 20),
-                                    SizedBox(
-                                      width: 300,
-                                      child: TextFormField(
-                                        keyboardType: TextInputType.number,
-                                        onChanged: (val) => setState(() {
-                                          _colorQuantity = int.parse(val);
-                                        }),
-                                        validator: (val) {
-                                          if (val.isEmpty) {
-                                            return 'Cannot be empty';
-                                          } else if (int.parse(val) <
-                                              _colorLimit) {
-                                            return 'Quantity cannot be < limit';
-                                          }
-                                          return null;
-                                        },
-                                        decoration: InputDecoration(
-                                          labelText: 'Color Quantity',
-                                          contentPadding: EdgeInsets.all(12),
-                                          labelStyle: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .focusColor
-                                                      .withOpacity(0.2))),
-                                          hintStyle: TextStyle(
-                                              color: Theme.of(context)
-                                                  .focusColor
-                                                  .withOpacity(0.7)),
-                                          hintText: 'Color Quantity',
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .focusColor
-                                                      .withOpacity(0.2))),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .focusColor
-                                                      .withOpacity(0.5))),
-                                        ),
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ),
-                                    SizedBox(height: 20),
-                                    SizedBox(
-                                      width: 300,
-                                      child: TextFormField(
-                                        // inputFormatters: [controller],
-                                        // controller: textEditingController,
-                                        keyboardType: TextInputType.number,
-                                        validator: (val) => val.isEmpty
-                                            ? 'Cannot be empty'
-                                            : null,
-                                        onChanged: (val) => setState(() {
-                                          _colorLimit = int.parse(val);
-                                        }),
-                                        decoration: InputDecoration(
-                                          labelText: 'Color limit',
-                                          contentPadding: EdgeInsets.all(12),
-                                          labelStyle: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .focusColor
-                                                      .withOpacity(0.2))),
-                                          hintStyle: TextStyle(
-                                              color: Theme.of(context)
-                                                  .focusColor
-                                                  .withOpacity(0.7)),
-                                          hintText: 'Color Limit',
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .focusColor
-                                                      .withOpacity(0.2))),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .focusColor
-                                                      .withOpacity(0.5))),
-                                        ),
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              RaisedButton(
-                                onPressed: () {
-                                  if (_secondKey.currentState.validate()) {
-                                    setState(() {
-                                      color.add(
-                                          '$_colorName (Quantity: $_colorQuantity pcs)  (Limit: $_colorLimit pcs)');
-                                    });
-                                    ColorDataModel _colorData = ColorDataModel(
-                                        colorName: _colorName,
-                                        colorQuantity: _colorQuantity,
-                                        colorLimit: _colorLimit);
-                                    _data.add(_colorData);
-                                    print(_data);
-                                  }
-                                },
-                                child: const Text('Add Color',
-                                    style: TextStyle(fontSize: 20)),
-                              )
-                            ],
-                          )
-                        : SizedBox(),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    GestureDetector(
-                        child: Center(
-                          child: Container(
-                            height: 40,
-                            width: 200,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Center(
-                                child: Text(
-                              'Add',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
-                            )),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40, right: 40),
+                        child: TextFormField(
+                          validator: (val) {
+                            if (val.isEmpty) {
+                              return 'Limit cannot be empty';
+                            } else if (int.parse(val) > _unitQuantity) {
+                              return 'Limit cannot be greater than quantity';
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.number,
+                          onChanged: (val) => setState(() {
+                            _unitLimit = int.parse(val);
+                          }),
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            labelText: 'Unit Limit',
+                            contentPadding: EdgeInsets.all(12),
+                            labelStyle: TextStyle(color: Colors.black),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.2))),
+                            hintStyle: TextStyle(color: Colors.black),
+                            hintText: 'Lowest stock quantity',
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.2))),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.5))),
                           ),
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      GestureDetector(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 200),
+                          child: Text('What is this?', style: TextStyle()),
                         ),
                         onTap: () {
-                          print(_data);
-                          if (_formKey.currentState.validate()) {
-                            _addProduct.setFirstProduct(
-                              _productCategory,
-                              _unitProductName,
-                              _unitLimit,
-                              _unitQuantity,
-                              controller.numberValue.round(),
-                              _productDescription,
-                              _productDiscount,
-                              _productWeight,
-                              secondController.numberValue.round(),
-                              _data,
-                            );
+                          _productLimit(context);
+                        },
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40, right: 40),
+                        child: TextFormField(
+                          keyboardType: TextInputType.text,
+                          onChanged: (val) => setState(() {
+                            _productDescription = val;
+                          }),
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            labelText: 'Description',
+                            contentPadding: EdgeInsets.all(12),
+                            labelStyle: TextStyle(color: Colors.black),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.2))),
+                            hintStyle: TextStyle(color: Colors.black),
+                            hintText:
+                                'Give a brief description of your product',
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.2))),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .focusColor
+                                        .withOpacity(0.5))),
+                          ),
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      SizedBox(height: 25),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          InkWell(
+                              child: Container(
+                                width: 150,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.green[700]),
+                                child: Center(
+                                  child: Text('Add pack products',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      )),
+                                ),
+                              ),
+                              onTap: () {
+                                if (_formKey.currentState.validate()) {
+                                  _addProduct.setFirstProduct(
+                                      _productCategory,
+                                      _unitProductName,
+                                      _unitLimit,
+                                      _unitQuantity,
+                                      controller.numberValue.round(),
+                                      _productDescription,
+                                      _productDiscount,
+                                      _productWeight,
+                                      secondController.numberValue.round(),
+                                      _data);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => AddPackPage()));
+                                }
+                              }),
+                          SizedBox(width: 100),
+                          //check if the extra details button is clicked
+                          // addExtraDetails
+                          //     ? GestureDetector(
+                          //         child: Text(
+                          //           'Add Extra Detals',
+                          //           style: TextStyle(
+                          //               fontWeight: FontWeight.bold,
+                          //               color: Colors.grey),
+                          //         ),
+                          //         onTap: () {
+                          //           setState(() {
+                          //             addExtraDetails = false;
+                          //           });
+                          //         },
+                          //       )
+                          //     : GestureDetector(
+                          //         child: Text(
+                          //           'Add Extra Detals',
+                          //           style:
+                          //               TextStyle(fontWeight: FontWeight.bold),
+                          //         ),
+                          //         onTap: () {
+                          //           setState(() {
+                          //             addExtraDetails = true;
+                          //           });
+                          //         },
+                          //       )
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      addExtraDetails
+                          ? Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 300,
+                                  child: TextFormField(
+                                    // inputFormatters: [controller],
+                                    // controller: textEditingController,
+                                    keyboardType: TextInputType.number,
 
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => BarcodePage()));
-                          }
-                        }),
-                    SizedBox(
-                      height: 30,
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ));
+                                    onChanged: (val) => setState(() {
+                                      _productDiscount = int.parse(val);
+                                    }),
+                                    decoration: InputDecoration(
+                                      labelText: 'Product Discount',
+                                      contentPadding: EdgeInsets.all(12),
+                                      labelStyle: TextStyle(
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .focusColor
+                                                  .withOpacity(0.2))),
+                                      hintStyle: TextStyle(
+                                          color: Theme.of(context)
+                                              .focusColor
+                                              .withOpacity(0.7)),
+                                      hintText: 'Product Discounts (%)',
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .focusColor
+                                                  .withOpacity(0.2))),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .focusColor
+                                                  .withOpacity(0.5))),
+                                    ),
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                SizedBox(
+                                  width: 300,
+                                  child: TextFormField(
+                                    // inputFormatters: [controller],
+                                    // controller: textEditingController,
+                                    keyboardType: TextInputType.number,
+
+                                    onChanged: (val) => setState(() {
+                                      _productWeight = int.parse(val);
+                                    }),
+                                    decoration: InputDecoration(
+                                      labelText: 'Product Weight',
+                                      contentPadding: EdgeInsets.all(12),
+                                      labelStyle: TextStyle(
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .focusColor
+                                                  .withOpacity(0.2))),
+                                      hintStyle: TextStyle(
+                                          color: Theme.of(context)
+                                              .focusColor
+                                              .withOpacity(0.7)),
+                                      hintText: 'Product Weight in (Kg)',
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .focusColor
+                                                  .withOpacity(0.2))),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .focusColor
+                                                  .withOpacity(0.5))),
+                                    ),
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                color.length == 0
+                                    ? SizedBox()
+                                    : Container(
+                                        height: 150,
+                                        width: 320,
+                                        child: ListView.builder(
+                                            padding: const EdgeInsets.all(8),
+                                            itemCount: color.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 5, bottom: 5),
+                                                child: Container(
+                                                  width: 320,
+                                                  height: 50,
+                                                  color: Colors.grey[200],
+                                                  child: Center(
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: <Widget>[
+                                                        Text(color[index]),
+                                                        IconButton(
+                                                            icon: Icon(
+                                                                Icons.cancel),
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                color.remove(
+                                                                    color[
+                                                                        index]);
+                                                              });
+                                                            })
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+                                      ),
+                                //Add color form
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 150.0),
+                                  child: Text('Add Colors',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color:
+                                              Theme.of(context).primaryColor)),
+                                ),
+                                Container(
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              width: 3,
+                                              color: Colors.grey[200]))),
+                                ),
+                                SizedBox(height: 20),
+                                Form(
+                                  key: _secondKey,
+                                  child: Column(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        width: 300,
+                                        child: TextFormField(
+                                          keyboardType: TextInputType.text,
+                                          validator: (val) => val.isEmpty
+                                              ? 'Cannot be empty'
+                                              : null,
+                                          onChanged: (val) => setState(() {
+                                            _colorName = val;
+                                          }),
+                                          decoration: InputDecoration(
+                                            labelText: 'Color Name',
+                                            contentPadding: EdgeInsets.all(12),
+                                            labelStyle: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .focusColor
+                                                        .withOpacity(0.2))),
+                                            hintStyle: TextStyle(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.7)),
+                                            hintText: 'Color Name',
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .focusColor
+                                                        .withOpacity(0.2))),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .focusColor
+                                                        .withOpacity(0.5))),
+                                          ),
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                      SizedBox(height: 20),
+                                      SizedBox(
+                                        width: 300,
+                                        child: TextFormField(
+                                          keyboardType: TextInputType.number,
+                                          onChanged: (val) => setState(() {
+                                            _colorQuantity = int.parse(val);
+                                          }),
+                                          validator: (val) {
+                                            if (val.isEmpty) {
+                                              return 'Cannot be empty';
+                                            } else if (int.parse(val) <
+                                                _colorLimit) {
+                                              return 'Quantity cannot be < limit';
+                                            }
+                                            return null;
+                                          },
+                                          decoration: InputDecoration(
+                                            labelText: 'Color Quantity',
+                                            contentPadding: EdgeInsets.all(12),
+                                            labelStyle: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .focusColor
+                                                        .withOpacity(0.2))),
+                                            hintStyle: TextStyle(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.7)),
+                                            hintText: 'Color Quantity',
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .focusColor
+                                                        .withOpacity(0.2))),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .focusColor
+                                                        .withOpacity(0.5))),
+                                          ),
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                      SizedBox(height: 20),
+                                      SizedBox(
+                                        width: 300,
+                                        child: TextFormField(
+                                          // inputFormatters: [controller],
+                                          // controller: textEditingController,
+                                          keyboardType: TextInputType.number,
+                                          validator: (val) => val.isEmpty
+                                              ? 'Cannot be empty'
+                                              : null,
+                                          onChanged: (val) => setState(() {
+                                            _colorLimit = int.parse(val);
+                                          }),
+                                          decoration: InputDecoration(
+                                            labelText: 'Color limit',
+                                            contentPadding: EdgeInsets.all(12),
+                                            labelStyle: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .focusColor
+                                                        .withOpacity(0.2))),
+                                            hintStyle: TextStyle(
+                                                color: Theme.of(context)
+                                                    .focusColor
+                                                    .withOpacity(0.7)),
+                                            hintText: 'Color Limit',
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .focusColor
+                                                        .withOpacity(0.2))),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .focusColor
+                                                        .withOpacity(0.5))),
+                                          ),
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                RaisedButton(
+                                  onPressed: () {
+                                    if (_secondKey.currentState.validate()) {
+                                      setState(() {
+                                        color.add(
+                                            '$_colorName (Quantity: $_colorQuantity pcs)  (Limit: $_colorLimit pcs)');
+                                      });
+                                      ColorDataModel _colorData =
+                                          ColorDataModel(
+                                              colorName: _colorName,
+                                              colorQuantity: _colorQuantity,
+                                              colorLimit: _colorLimit);
+                                      _data.add(_colorData);
+                                      print(_data);
+                                    }
+                                  },
+                                  child: const Text('Add Color',
+                                      style: TextStyle(fontSize: 20)),
+                                )
+                              ],
+                            )
+                          : SizedBox(),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      GestureDetector(
+                          child: Center(
+                            child: Container(
+                              height: 40,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Center(
+                                  child: Text(
+                                'Add',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              )),
+                            ),
+                          ),
+                          onTap: () {
+                            print(_data);
+                            if (_formKey.currentState.validate()) {
+                              _addProduct.setFirstProduct(
+                                _productCategory,
+                                _unitProductName,
+                                _unitLimit,
+                                _unitQuantity,
+                                controller.numberValue.round(),
+                                _productDescription,
+                                _productDiscount,
+                                _productWeight,
+                                secondController.numberValue.round(),
+                                _data,
+                              );
+
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BarcodePage()));
+                            }
+                          }),
+                      SizedBox(
+                        height: 30,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          )),
+    );
   }
 
   _displaySnackBar(BuildContext context) {

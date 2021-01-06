@@ -46,5 +46,9 @@
   "loss-list": "http://stockfare-io.herokuapp.com/api/v1/analytics/sale-loss-list/",
   "profit-list": "http://stockfare-io.herokuapp.com/api/v1/analytics/sale-profit-list/",
   "base-url": "stockfare-io.herokuapp.com/",
-  "version-number": "https://stockfare-io.herokuapp.com/api/v2/users/verision-number/"
+  "version-number": "https://stockfare-io.herokuapp.com/api/v2/users/verision-number/",
+  "sales-report": "https://stockfare-io.herokuapp.com/api/v1/sales/sales-report/"
+
+
+  
 }

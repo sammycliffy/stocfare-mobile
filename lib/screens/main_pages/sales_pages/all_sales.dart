@@ -92,130 +92,147 @@ class _AllSalesListState extends State<AllSalesList> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => BottomNavigationPage())),
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: Text('Sales History'),
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(50.0),
-            child: Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 10,
-                ),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 5),
-                      child: Container(
-                        height: 45,
-                        width: 300,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.grey[200],
+    return Container(
+      decoration: new BoxDecoration(
+          gradient: new LinearGradient(
+              colors: [
+            Colors.red[200],
+            Colors.white,
+          ],
+              stops: [
+            0.0,
+            1.0
+          ],
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+              tileMode: TileMode.repeated)),
+      child: WillPopScope(
+        onWillPop: () => Navigator.push(context,
+            MaterialPageRoute(builder: (context) => BottomNavigationPage())),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          key: _scaffoldKey,
+          appBar: AppBar(
+            title: Text('Sales History'),
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(50.0),
+              child: Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 10,
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 5),
+                        child: Container(
+                          height: 45,
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.grey[200],
+                          ),
+                          child: TextField(
+                              onChanged: (val) {
+                                if (val.length > 0) {
+                                  setState(() {
+                                    searchFilter(val);
+                                  });
+                                } else if (val.length <= 0) {
+                                  setState(() {
+                                    _searchSales = false;
+                                  });
+                                }
+                              },
+                              decoration: InputDecoration(
+                                prefixIcon: IconButton(
+                                  icon: Icon(Icons.search),
+                                  color: Colors.black,
+                                  iconSize: 20.0,
+                                  onPressed: () {},
+                                ),
+                                border: InputBorder.none,
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(25, 8, 0, 5),
+                                hintText: 'Search Stockfare',
+                              )),
                         ),
-                        child: TextField(
-                            onChanged: (val) {
-                              if (val.length > 0) {
-                                setState(() {
-                                  searchFilter(val);
-                                });
-                              } else if (val.length <= 0) {
-                                setState(() {
-                                  _searchSales = false;
-                                });
-                              }
-                            },
-                            decoration: InputDecoration(
-                              prefixIcon: IconButton(
-                                icon: Icon(Icons.search),
-                                color: Colors.black,
-                                iconSize: 20.0,
-                                onPressed: () {},
-                              ),
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.fromLTRB(25, 8, 0, 5),
-                              hintText: 'Search Stockfare',
-                            )),
                       ),
-                    ),
-                  ],
-                )),
-          ),
-        ),
-        body: (() {
-          if (isNetwork == false) {
-            return GestureDetector(
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                child: Column(
-                  children: [
-                    SizedBox(height: 200),
-                    Icon(
-                      Icons.mood_bad,
-                      size: 40,
-                    ),
-                    SizedBox(height: 10),
-                    Center(
-                      child: Text(
-                        'An error occured',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              onTap: () {},
-            );
-          } else if (_error == true) {
-            return Center(
-              child: Text(
-                _errorMessage,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18),
-              ),
-            );
-          } else if (_sortedDate == true) {
-            return Column(
-              children: [
-                SizedBox(height: 20),
-                GestureDetector(
-                  child: Center(
-                      child: Container(
-                    width: 150,
-                    height: 40,
-                    color: Colors.black,
-                    child: Center(
-                        child: Text('Back to sales',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold))),
+                    ],
                   )),
-                  onTap: () {
-                    setState(() {
-                      _sortedDate = false;
-                      _searchSales = false;
-                    });
-                    _loadSales();
-                  },
+            ),
+          ),
+          body: (() {
+            if (isNetwork == false) {
+              return GestureDetector(
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 200),
+                      Icon(
+                        Icons.mood_bad,
+                        size: 40,
+                      ),
+                      SizedBox(height: 10),
+                      Center(
+                        child: Text(
+                          'An error occured',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-                Expanded(
-                  child: _listView(),
-                )
-              ],
-            );
-          } else if (isLoading == true) {
-            return Column(
-              children: [LinearProgressIndicator()],
-            );
-          } else {
-            return _listView();
-          }
-        }()),
+                onTap: () {},
+              );
+            } else if (_error == true) {
+              return Center(
+                child: Text(
+                  _errorMessage,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18),
+                ),
+              );
+            } else if (_sortedDate == true) {
+              return Column(
+                children: [
+                  SizedBox(height: 20),
+                  GestureDetector(
+                    child: Center(
+                        child: Container(
+                      width: 150,
+                      height: 40,
+                      color: Colors.black,
+                      child: Center(
+                          child: Text('Back to sales',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold))),
+                    )),
+                    onTap: () {
+                      setState(() {
+                        _sortedDate = false;
+                        _searchSales = false;
+                      });
+                      _loadSales();
+                    },
+                  ),
+                  Expanded(
+                    child: _listView(),
+                  )
+                ],
+              );
+            } else if (isLoading == true) {
+              return Column(
+                children: [LinearProgressIndicator()],
+              );
+            } else {
+              return _listView();
+            }
+          }()),
+        ),
       ),
     );
   }
@@ -455,13 +472,17 @@ class _AllSalesListState extends State<AllSalesList> {
           child: Container(
             width: 200,
             height: 40,
-            color: Colors.grey[200],
+            color: Colors.blue[700],
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Sort Sales with date'),
+                Text('Sort Sales with date',
+                    style: TextStyle(color: Colors.white)),
                 SizedBox(width: 20),
-                Icon(Icons.date_range)
+                Icon(
+                  Icons.date_range,
+                  color: Colors.white,
+                )
               ],
             ),
           ),
@@ -518,11 +539,11 @@ class _AllSalesListState extends State<AllSalesList> {
                           return GestureDetector(
                             child: Card(
                               child: ListTile(
-                                leading: Icon(Icons.monetization_on,
-                                    color: Colors.grey),
+                                leading: Image.asset('assets/images/sales.png'),
                                 title: Text(
                                   names[index],
                                   style: TextStyle(
+                                      color: Colors.blue[700],
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
                                 ),
@@ -538,8 +559,7 @@ class _AllSalesListState extends State<AllSalesList> {
                                           child: Text(
                                             'Buyer :  ${customerNames[index].toString()}',
                                             style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
+                                                color: Colors.deepPurple,
                                                 fontFamily: 'FireSans'),
                                           ),
                                         ),
@@ -550,7 +570,7 @@ class _AllSalesListState extends State<AllSalesList> {
                                           child: Text(
                                             'Seller :  ${sellerNames[index].toString()}',
                                             style: TextStyle(
-                                                color: Colors.green,
+                                                color: Colors.grey[600],
                                                 fontFamily: 'FireSans'),
                                           ),
                                         ),
@@ -570,7 +590,8 @@ class _AllSalesListState extends State<AllSalesList> {
                                   ],
                                 ),
                                 trailing: IconButton(
-                                    icon: Icon(Icons.delete),
+                                    icon: Icon(Icons.cancel,
+                                        color: Colors.red[800]),
                                     onPressed: () {
                                       _confirmDelete(context, index);
                                     }),

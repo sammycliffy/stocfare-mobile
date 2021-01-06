@@ -140,7 +140,7 @@ class _SubOptionsState extends State<SubOptions> {
     SignupNotifier _signupNotifier =
         Provider.of<SignupNotifier>(context, listen: false);
     Charge charge = Charge()
-      ..amount = 300000
+      ..amount = 3
       ..reference = _getReference()
       ..email = _email;
     CheckoutResponse response = await PaystackPlugin.checkout(
@@ -174,7 +174,6 @@ class _SubOptionsState extends State<SubOptions> {
         } else {
           setState(() {
             _error = 'Please check your internet connection';
-
             _displaySnackBar(context);
           });
         }

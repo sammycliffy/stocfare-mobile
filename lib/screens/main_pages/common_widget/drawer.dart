@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
+import 'package:stockfare_mobile/screens/auth_pages/login.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/customers.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/feedback.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/help.dart';
-import 'package:stockfare_mobile/screens/drawer_pages/logout.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/settings/settings_home.dart';
 import 'package:stockfare_mobile/screens/drawer_pages/workers/list_of_workers.dart';
 import 'package:stockfare_mobile/screens/subscription/sub_home.dart';
@@ -80,7 +80,7 @@ class DrawerPage extends StatelessWidget {
               Navigator.pop(context, true);
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => LogoutPage()),
+                MaterialPageRoute(builder: (context) => Login()),
               );
             },
           ),

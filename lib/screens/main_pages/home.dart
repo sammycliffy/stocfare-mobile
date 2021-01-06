@@ -188,137 +188,130 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: () => Navigator.push(context,
           MaterialPageRoute(builder: (context) => BottomNavigationPage())),
-      child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            focusColor: Theme.of(context).canvasColor,
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => FormPage()));
-            },
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
+      child: Container(
+        decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+                colors: [
+              Colors.red[200],
+              Colors.white,
+            ],
+                stops: [
+              0.0,
+              1.0
+            ],
+                begin: FractionalOffset.topCenter,
+                end: FractionalOffset.bottomCenter,
+                tileMode: TileMode.repeated)),
+        child: Scaffold(
+            backgroundColor: Colors.transparent,
+            floatingActionButton: FloatingActionButton(
+              focusColor: Theme.of(context).canvasColor,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => FormPage()));
+              },
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              backgroundColor: Colors.blue[700],
             ),
-            backgroundColor: Colors.black,
-          ),
-          appBar: PreferredSize(
-              preferredSize: Size.fromHeight(120.0), // here the desired height
-              child: AppBar(
-                elevation: 0.0,
-                flexibleSpace: Padding(
-                  padding: const EdgeInsets.only(top: 40),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SizedBox(width: 10),
-                          Text(
-                            'Checkout',
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          GestureDetector(
-                            child: Container(
-                              width: 100,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Center(
-                                child: Text('Sales History',
-                                    style: TextStyle(
-                                      color: Colors.white,
+            appBar: PreferredSize(
+                preferredSize:
+                    Size.fromHeight(120.0), // here the desired height
+                child: AppBar(
+                  elevation: 0.0,
+                  flexibleSpace: Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            SizedBox(width: 10),
+                            Text(
+                              'Checkout',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            GestureDetector(
+                              child: Container(
+                                width: 100,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Center(
+                                  child: Text('Sales History',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      )),
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AllSalesList()));
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            SizedBox(width: 10),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 10,
+                              ),
+                              child: Container(
+                                height: 50,
+                                width: 280,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.grey[200],
+                                ),
+                                child: TextFormField(
+                                    onChanged: (val) {
+                                      if (val.length > 0) {
+                                        setState(() {
+                                          search(val);
+                                        });
+                                      } else if (val.length <= 0) {
+                                        setState(() {
+                                          isSearched = false;
+                                        });
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                      prefixIcon: IconButton(
+                                        icon: Icon(Icons.search),
+                                        color: Colors.black,
+                                        iconSize: 20.0,
+                                        onPressed: () {},
+                                      ),
+                                      border: InputBorder.none,
+                                      contentPadding:
+                                          EdgeInsets.fromLTRB(25, 8, 0, 5),
+                                      hintText: _scanBarcode == null
+                                          ? 'Search Stockfare'
+                                          : _scanBarcode,
                                     )),
                               ),
                             ),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AllSalesList()));
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SizedBox(width: 10),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 10,
-                            ),
-                            child: Container(
-                              height: 50,
-                              width: 280,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: Colors.grey[200],
-                              ),
-                              child: TextFormField(
-                                  onChanged: (val) {
-                                    if (val.length > 0) {
-                                      setState(() {
-                                        search(val);
-                                      });
-                                    } else if (val.length <= 0) {
-                                      setState(() {
-                                        isSearched = false;
-                                      });
-                                    }
-                                  },
-                                  decoration: InputDecoration(
-                                    prefixIcon: IconButton(
-                                      icon: Icon(Icons.search),
-                                      color: Colors.black,
-                                      iconSize: 20.0,
-                                      onPressed: () {},
-                                    ),
-                                    border: InputBorder.none,
-                                    contentPadding:
-                                        EdgeInsets.fromLTRB(25, 8, 0, 5),
-                                    hintText: _scanBarcode == null
-                                        ? 'Search Stockfare'
-                                        : _scanBarcode,
-                                  )),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          _scanBarcode == null
-                              ? Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 20, right: 20),
-                                  child: InkWell(
-                                    child: Container(
-                                      width: 50,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Center(
-                                          child: IconButton(
-                                              icon: FaIcon(
-                                                  FontAwesomeIcons.barcode,
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                              onPressed: null)),
-                                    ),
-                                    onTap: () {
-                                      scanBarcodeNormal();
-                                    },
-                                  ))
-                              : Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 20, right: 20),
-                                  child: InkWell(
-                                    child: Container(
+                            SizedBox(width: 10),
+                            _scanBarcode == null
+                                ? Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 20, right: 20),
+                                    child: InkWell(
+                                      child: Container(
                                         width: 50,
                                         height: 40,
                                         decoration: BoxDecoration(
@@ -327,442 +320,468 @@ class _HomePageState extends State<HomePage> {
                                                 BorderRadius.circular(10)),
                                         child: Center(
                                             child: IconButton(
-                                                icon: Icon(Icons.search),
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                onPressed: null))),
-                                    onTap: () {
-                                      searchBarcode(_scanBarcode);
-                                    },
-                                  )),
-                        ],
-                      ),
-                    ],
+                                                icon: FaIcon(
+                                                    FontAwesomeIcons.barcode,
+                                                    color: Theme.of(context)
+                                                        .primaryColor),
+                                                onPressed: null)),
+                                      ),
+                                      onTap: () {
+                                        scanBarcodeNormal();
+                                      },
+                                    ))
+                                : Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 20, right: 20),
+                                    child: InkWell(
+                                      child: Container(
+                                          width: 50,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Center(
+                                              child: IconButton(
+                                                  icon: Icon(Icons.search),
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  onPressed: null))),
+                                      onTap: () {
+                                        searchBarcode(_scanBarcode);
+                                      },
+                                    )),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              )),
-          drawer: DrawerPage(),
-          body: Column(
-            children: <Widget>[
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  SizedBox(width: 5),
-                  InkWell(
-                    child: Container(
-                      width: 250,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Finish',
+                )),
+            drawer: DrawerPage(),
+            body: Column(
+              children: <Widget>[
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    SizedBox(width: 5),
+                    InkWell(
+                      child: Container(
+                        width: 250,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Colors.blue[700],
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Finish',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                _addProduct.quantityToSell?.length == null
+                                    ? '0'
+                                    : _addProduct.quantityToSell?.length
+                                        .toString(),
                                 style: TextStyle(
                                     fontSize: 19,
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.bold)),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Text(
-                              _addProduct.quantityToSell?.length == null
-                                  ? '0'
-                                  : _addProduct.quantityToSell?.length
-                                      .toString(),
-                              style: TextStyle(
-                                  fontSize: 19,
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        _addProduct.addItem(_items);
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => AddCart()));
+                      },
+                    ),
+                    GestureDetector(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          right: 10,
+                          top: 5,
+                        ),
+                        child: Stack(
+                          children: [
+                            Icon(Icons.shopping_cart,
+                                size: 30, color: Colors.black),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10, left: 20),
+                              child: Container(
+                                width: 40,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: Colors.black),
+                                child: Center(
+                                    child:
+                                        Icon(Icons.clear, color: Colors.white)),
+                              ),
                             )
                           ],
                         ),
                       ),
+                      onTap: () {
+                        setState(() {
+                          _items.clear();
+                          _quantityToSell.clear();
+                        });
+                      },
                     ),
-                    onTap: () {
-                      _addProduct.addItem(_items);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => AddCart()));
-                    },
-                  ),
-                  GestureDetector(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        right: 10,
-                        top: 5,
-                      ),
-                      child: Stack(
-                        children: [
-                          Icon(Icons.shopping_cart,
-                              size: 30, color: Colors.black),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10, left: 20),
-                            child: Container(
-                              width: 40,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: Colors.black),
-                              child: Center(
-                                  child:
-                                      Icon(Icons.clear, color: Colors.white)),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    onTap: () {
-                      setState(() {
-                        _items.clear();
-                        _quantityToSell.clear();
-                      });
-                    },
-                  ),
-                  SizedBox(width: 5),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              isSearched
-                  ? Expanded(
-                      child: GridView.builder(
-                        itemCount: _categoriesSearch.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: (itemWidth / itemHeight),
-                            crossAxisCount: 2),
-                        itemBuilder: (BuildContext context, int index) {
-                          controller.updateValue(
-                              _productPriceSearch[index].toDouble());
-                          controller1.updateValue(
-                              _productPackPriceSearch[index].toDouble());
-                          return new Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: GestureDetector(
-                              child: ClipRRect(
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.grey[200],
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: (() {
-                                      if (_isLowStockSearch[index] == true) {
-                                        return _lowStock(
-                                            _productImageSearch,
-                                            index,
-                                            _categoriesSearch,
-                                            context,
-                                            _productQuantitySearch,
-                                            _packQuantitySearch,
-                                            controller,
-                                            controller1);
-                                      } else if (_isOutOfStockSearch[index] ==
-                                          true) {
-                                        return _outOfStock(
-                                            _productImageSearch,
-                                            index,
-                                            _categoriesSearch,
-                                            context,
-                                            _productQuantitySearch,
-                                            _packQuantitySearch,
-                                            controller,
-                                            controller1);
-                                      } else {
-                                        return _realBox(
-                                            _productImageSearch,
-                                            index,
-                                            _categoriesSearch,
-                                            context,
-                                            _productQuantitySearch,
-                                            _packQuantitySearch,
-                                            controller,
-                                            controller1);
-                                      }
-                                    }())),
-                              ),
-                              onTap: () {
-                                //check whether it is pack or unit
-                                if (_productPackPriceSearch[index] == 0) {
-                                  var map = Map();
-                                  _quantityToSell.forEach((element) {
-                                    if (!map.containsKey(element)) {
-                                      map[element] = 1;
-                                    } else {
-                                      map[element] += 1;
-                                    }
-                                  });
-                                  // when you change anything here make sure you change it in search
-                                  if (map[_productIdSearch[index]] == null) {
-                                    map[_productIdSearch[index]] = 0;
-                                  }
-                                  if (_productQuantitySearch[index] == 0 ||
-                                      map[_productIdSearch[index]] -
-                                              _productQuantitySearch[index] ==
-                                          0) {
-                                    DialogBoxes().productOutOfRange(context);
-                                  } else {
-                                    _quantityToSell
-                                        .add(_productIdSearch[index]);
-                                    _addProduct
-                                        .setQuantityToSell(_quantityToSell);
-
-                                    sellUnitProduct(
-                                      _productIdSearch[index],
-                                      _categoriesSearch[index],
-                                      _productPriceSearch[index],
-                                      _unitCostPriceSearch[index],
-                                    );
-                                  }
-                                  print(_quantityToSell);
-                                } else {
-                                  // send pack to the dialog page
-
-                                  _sellPackProduct(
-                                      _packQuantitySearch[index],
-                                      _productQuantitySearch[index],
-                                      _productIdSearch[index],
-                                      _categoriesSearch[index],
-                                      _productPackPriceSearch[index],
-                                      _productPriceSearch[index],
-                                      _packCostPriceSearch[index]);
-                                }
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    )
-                  : StreamBuilder(
-                      stream: firebaseDb,
-                      builder: (context, AsyncSnapshot<Event> snapshot) {
-                        if (snapshot.hasData) {
-                          if (snapshot.data.snapshot.value != null) {
-                            _categories.clear();
-                            _productName.clear();
-                            _topCategory.clear();
-                            _unitCostPrice.clear();
-                            _packCostPrice.clear();
-                            _isLowStock.clear();
-                            _isOutOfStock.clear();
-                            DataSnapshot dataValues = snapshot.data.snapshot;
-                            var data = dataValues
-                                .value['${_signupNotifier.firebaseId}'];
-                            if (data is String) {
-                              print('yes');
-                            } else {
-                              Map<dynamic, dynamic> values = dataValues
-                                  .value['${_signupNotifier.firebaseId}'];
-                              print(values);
-                              values?.forEach((key, values) {
-                                print(values['products']?.map((value) {
-                                      _categories.add(StringUtils.capitalize(
-                                          value['name']));
-                                      _productId.add(value['id']);
-                                      print(
-                                          value['product_image']?.map((value) {
-                                                _productImage
-                                                    .add(value['image_link']);
-                                              }) ??
-                                              '[]');
-                                      _barcode.add(value['bar_code']);
-
-                                      _productQuantity.add(
-                                          value['product_unit']['quantity']);
-                                      _isLowStock.add(value['product_unit']
-                                          ['is_low_of_stock']);
-                                      _isOutOfStock.add(value['product_unit']
-                                          ['is_out_of_stock']);
-                                      _isPackLowStock.add(value['product_pack']
-                                          ['is_low_of_stock']);
-                                      _isPackOutOfStock.add(
-                                          value['product_pack']
-                                              ['is_low_of_stock']);
-                                      _unitCostPrice.add(
-                                          value['product_unit']['cost_price']);
-                                      _packQuantity.add(
-                                          value['product_pack']['quantity']);
-                                      _productPrice
-                                          .add(value['product_unit']['price']);
-                                      _productUnitLimit
-                                          .add(value['product_unit']['limit']);
-                                      _productPackLimit
-                                          .add(value['product_pack']['limit']);
-                                      _productPackPrice
-                                          .add(value['product_pack']['price']);
-                                      _packCostPrice.add(
-                                          value['product_pack']['cost_price']);
-                                    }) ??
-                                    '[]');
-
-                                _topCategory.add(values['name']);
-                              });
-                              print(_isLowStock);
-                              return Expanded(
-                                child: GridView.builder(
-                                  itemCount: _categories.length,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio:
-                                              (itemWidth / itemHeight),
-                                          crossAxisCount: 2),
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    controller.updateValue(
-                                        _productPrice[index].toDouble());
-                                    controller1.updateValue(
-                                        _productPackPrice[index].toDouble());
-                                    checkForLowStock(_productQuantity[index],
-                                        _productUnitLimit[index]);
-                                    return Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: GestureDetector(
-                                        child: ClipRRect(
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: Colors.grey[200],
-                                                  width: 2,
-                                                ),
-                                              ),
-                                              child: (() {
-                                                if (_isLowStock[index] ==
-                                                    true) {
-                                                  return _lowStock(
-                                                      _productImage,
-                                                      index,
-                                                      _categories,
-                                                      context,
-                                                      _productQuantity,
-                                                      _packQuantity,
-                                                      controller,
-                                                      controller1);
-                                                } else if (_isOutOfStock[
-                                                        index] ==
-                                                    true) {
-                                                  return _outOfStock(
-                                                      _productImage,
-                                                      index,
-                                                      _categories,
-                                                      context,
-                                                      _productQuantity,
-                                                      _packQuantity,
-                                                      controller,
-                                                      controller1);
-                                                } else {
-                                                  return _realBox(
-                                                      _productImage,
-                                                      index,
-                                                      _categories,
-                                                      context,
-                                                      _productQuantity,
-                                                      _packQuantity,
-                                                      controller,
-                                                      controller1);
-                                                }
-                                              }())
-                                              // ),
-                                              ),
+                    SizedBox(width: 5),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                isSearched
+                    ? Expanded(
+                        child: GridView.builder(
+                          itemCount: _categoriesSearch.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  childAspectRatio: (itemWidth / itemHeight),
+                                  crossAxisCount: 2),
+                          itemBuilder: (BuildContext context, int index) {
+                            controller.updateValue(
+                                _productPriceSearch[index].toDouble());
+                            controller1.updateValue(
+                                _productPackPriceSearch[index].toDouble());
+                            return new Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: GestureDetector(
+                                child: ClipRRect(
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey[200],
+                                          width: 2,
                                         ),
-                                        onTap: () {
-                                          //check whether it is pack or unit
-                                          if (_productPackPrice[index] == 0) {
-                                            var map = Map();
-                                            _quantityToSell.forEach((element) {
-                                              if (!map.containsKey(element)) {
-                                                map[element] = 1;
-                                              } else {
-                                                map[element] += 1;
-                                              }
-                                            });
-                                            // when you change anything here make sure you change it in search
-                                            if (map[_productId[index]] ==
-                                                null) {
-                                              map[_productId[index]] = 0;
-                                            }
-                                            if (_productQuantity[index] == 0 ||
-                                                map[_productId[index]] -
-                                                        _productQuantity[
-                                                            index] ==
-                                                    0) {
-                                              DialogBoxes()
-                                                  .productOutOfRange(context);
-                                            } else {
-                                              _quantityToSell
-                                                  .add(_productId[index]);
-                                              _addProduct.setQuantityToSell(
-                                                  _quantityToSell);
-
-                                              sellUnitProduct(
-                                                _productId[index],
-                                                _categories[index],
-                                                _productPrice[index],
-                                                _unitCostPrice[index],
-                                              );
-                                            }
-                                            // print(_productQuantity[index]);
-                                            // print(map[_productId[index]]);
-                                          } else {
-                                            // send pack to the dialog page
-
-                                            _sellPackProduct(
-                                                _packQuantity[index],
-                                                _productQuantity[index],
-                                                _productId[index],
-                                                _categories[index],
-                                                _productPackPrice[index],
-                                                _productPrice[index],
-                                                _packCostPrice[index]);
-                                          }
-                                        },
                                       ),
-                                    );
-                                  },
-                                ),
-                              );
-                            }
-                          }
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: 80,
-                              ),
-                              Text('Add product.'),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              GestureDetector(
-                                child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Center(
-                                      child: Icon(Icons.add,
-                                          size: 50, color: Colors.white)),
+                                      child: (() {
+                                        if (_isLowStockSearch[index] == true) {
+                                          return _lowStock(
+                                              _productImageSearch,
+                                              index,
+                                              _categoriesSearch,
+                                              context,
+                                              _productQuantitySearch,
+                                              _packQuantitySearch,
+                                              controller,
+                                              controller1);
+                                        } else if (_isOutOfStockSearch[index] ==
+                                            true) {
+                                          return _outOfStock(
+                                              _productImageSearch,
+                                              index,
+                                              _categoriesSearch,
+                                              context,
+                                              _productQuantitySearch,
+                                              _packQuantitySearch,
+                                              controller,
+                                              controller1);
+                                        } else {
+                                          return _realBox(
+                                              _productImageSearch,
+                                              index,
+                                              _categoriesSearch,
+                                              context,
+                                              _productQuantitySearch,
+                                              _packQuantitySearch,
+                                              controller,
+                                              controller1);
+                                        }
+                                      }())),
                                 ),
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => FormPage()));
+                                  //check whether it is pack or unit
+                                  if (_productPackPriceSearch[index] == 0) {
+                                    var map = Map();
+                                    _quantityToSell.forEach((element) {
+                                      if (!map.containsKey(element)) {
+                                        map[element] = 1;
+                                      } else {
+                                        map[element] += 1;
+                                      }
+                                    });
+                                    // when you change anything here make sure you change it in search
+                                    if (map[_productIdSearch[index]] == null) {
+                                      map[_productIdSearch[index]] = 0;
+                                    }
+                                    if (_productQuantitySearch[index] == 0 ||
+                                        map[_productIdSearch[index]] -
+                                                _productQuantitySearch[index] ==
+                                            0) {
+                                      DialogBoxes().productOutOfRange(context);
+                                    } else {
+                                      _quantityToSell
+                                          .add(_productIdSearch[index]);
+                                      _addProduct
+                                          .setQuantityToSell(_quantityToSell);
+
+                                      sellUnitProduct(
+                                        _productIdSearch[index],
+                                        _categoriesSearch[index],
+                                        _productPriceSearch[index],
+                                        _unitCostPriceSearch[index],
+                                      );
+                                    }
+                                    print(_quantityToSell);
+                                  } else {
+                                    // send pack to the dialog page
+
+                                    _sellPackProduct(
+                                        _packQuantitySearch[index],
+                                        _productQuantitySearch[index],
+                                        _productIdSearch[index],
+                                        _categoriesSearch[index],
+                                        _productPackPriceSearch[index],
+                                        _productPriceSearch[index],
+                                        _packCostPriceSearch[index]);
+                                  }
                                 },
-                              )
-                            ],
-                          );
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      })
-            ],
-          )),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    : StreamBuilder(
+                        stream: firebaseDb,
+                        builder: (context, AsyncSnapshot<Event> snapshot) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data.snapshot.value != null) {
+                              _categories.clear();
+                              _productName.clear();
+                              _topCategory.clear();
+                              _unitCostPrice.clear();
+                              _packCostPrice.clear();
+                              _isLowStock.clear();
+                              _isOutOfStock.clear();
+                              DataSnapshot dataValues = snapshot.data.snapshot;
+                              var data = dataValues
+                                  .value['${_signupNotifier.firebaseId}'];
+                              if (data is String) {
+                                print('yes');
+                              } else {
+                                Map<dynamic, dynamic> values = dataValues
+                                    .value['${_signupNotifier.firebaseId}'];
+                                print(values);
+                                values?.forEach((key, values) {
+                                  print(values['products']?.map((value) {
+                                        _categories.add(StringUtils.capitalize(
+                                            value['name']));
+                                        _productId.add(value['id']);
+                                        print(value['product_image']
+                                                ?.map((value) {
+                                              _productImage
+                                                  .add(value['image_link']);
+                                            }) ??
+                                            '[]');
+                                        _barcode.add(value['bar_code']);
+
+                                        _productQuantity.add(
+                                            value['product_unit']['quantity']);
+                                        _isLowStock.add(value['product_unit']
+                                            ['is_low_of_stock']);
+                                        _isOutOfStock.add(value['product_unit']
+                                            ['is_out_of_stock']);
+                                        _isPackLowStock.add(
+                                            value['product_pack']
+                                                ['is_low_of_stock']);
+                                        _isPackOutOfStock.add(
+                                            value['product_pack']
+                                                ['is_low_of_stock']);
+                                        _unitCostPrice.add(value['product_unit']
+                                            ['cost_price']);
+                                        _packQuantity.add(
+                                            value['product_pack']['quantity']);
+                                        _productPrice.add(
+                                            value['product_unit']['price']);
+                                        _productUnitLimit.add(
+                                            value['product_unit']['limit']);
+                                        _productPackLimit.add(
+                                            value['product_pack']['limit']);
+                                        _productPackPrice.add(
+                                            value['product_pack']['price']);
+                                        _packCostPrice.add(value['product_pack']
+                                            ['cost_price']);
+                                      }) ??
+                                      '[]');
+
+                                  _topCategory.add(values['name']);
+                                });
+                                print(_isLowStock);
+                                return Expanded(
+                                  child: GridView.builder(
+                                    itemCount: _categories.length,
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                            childAspectRatio:
+                                                (itemWidth / itemHeight),
+                                            crossAxisCount: 2),
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      controller.updateValue(
+                                          _productPrice[index].toDouble());
+                                      controller1.updateValue(
+                                          _productPackPrice[index].toDouble());
+                                      checkForLowStock(_productQuantity[index],
+                                          _productUnitLimit[index]);
+                                      return Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: GestureDetector(
+                                          child: ClipRRect(
+                                            child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                ),
+                                                child: (() {
+                                                  if (_isLowStock[index] ==
+                                                      true) {
+                                                    return _lowStock(
+                                                        _productImage,
+                                                        index,
+                                                        _categories,
+                                                        context,
+                                                        _productQuantity,
+                                                        _packQuantity,
+                                                        controller,
+                                                        controller1);
+                                                  } else if (_isOutOfStock[
+                                                          index] ==
+                                                      true) {
+                                                    return _outOfStock(
+                                                        _productImage,
+                                                        index,
+                                                        _categories,
+                                                        context,
+                                                        _productQuantity,
+                                                        _packQuantity,
+                                                        controller,
+                                                        controller1);
+                                                  } else {
+                                                    return _realBox(
+                                                        _productImage,
+                                                        index,
+                                                        _categories,
+                                                        context,
+                                                        _productQuantity,
+                                                        _packQuantity,
+                                                        controller,
+                                                        controller1);
+                                                  }
+                                                }())
+                                                // ),
+                                                ),
+                                          ),
+                                          onTap: () {
+                                            //check whether it is pack or unit
+                                            if (_productPackPrice[index] == 0) {
+                                              var map = Map();
+                                              _quantityToSell
+                                                  .forEach((element) {
+                                                if (!map.containsKey(element)) {
+                                                  map[element] = 1;
+                                                } else {
+                                                  map[element] += 1;
+                                                }
+                                              });
+                                              // when you change anything here make sure you change it in search
+                                              if (map[_productId[index]] ==
+                                                  null) {
+                                                map[_productId[index]] = 0;
+                                              }
+                                              if (_productQuantity[index] ==
+                                                      0 ||
+                                                  map[_productId[index]] -
+                                                          _productQuantity[
+                                                              index] ==
+                                                      0) {
+                                                DialogBoxes()
+                                                    .productOutOfRange(context);
+                                              } else {
+                                                _quantityToSell
+                                                    .add(_productId[index]);
+                                                _addProduct.setQuantityToSell(
+                                                    _quantityToSell);
+
+                                                sellUnitProduct(
+                                                  _productId[index],
+                                                  _categories[index],
+                                                  _productPrice[index],
+                                                  _unitCostPrice[index],
+                                                );
+                                              }
+                                              // print(_productQuantity[index]);
+                                              // print(map[_productId[index]]);
+                                            } else {
+                                              // send pack to the dialog page
+
+                                              _sellPackProduct(
+                                                  _packQuantity[index],
+                                                  _productQuantity[index],
+                                                  _productId[index],
+                                                  _categories[index],
+                                                  _productPackPrice[index],
+                                                  _productPrice[index],
+                                                  _packCostPrice[index]);
+                                            }
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
+                            }
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 80,
+                                ),
+                                Text('Add product.'),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                GestureDetector(
+                                  child: Container(
+                                    width: 100,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Center(
+                                        child: Icon(Icons.add,
+                                            size: 50, color: Colors.white)),
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => FormPage()));
+                                  },
+                                )
+                              ],
+                            );
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        })
+              ],
+            )),
+      ),
     );
   }
 

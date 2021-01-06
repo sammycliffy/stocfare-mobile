@@ -96,19 +96,18 @@ class AuthServices {
     int newDate = Jiffy(d).add(days: 6).millisecondsSinceEpoch;
     print(url);
     try {
-      final http.Response response = await http
-          .post(
-            url,
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: jsonEncode(<String, String>{
-              "username": username,
-              "password": password,
-              "registration_id": firebaseToken
-            }),
-          )
-          .timeout(Duration(seconds: 20));
+      final http.Response response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          "username": username,
+          "password": password,
+          "registration_id": firebaseToken
+        }),
+      );
+      // .timeout(Duration(seconds: 30));
       if (response.statusCode == 200 || response.statusCode == 201) {
         var responseJson = json.decode(response.body);
         print(responseJson);

@@ -130,6 +130,31 @@ class SalesServices {
     }
   }
 
+  Future<dynamic> getSalesReport(int startDate, int endDate, email) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String branchId = sharedPreferences.getString('branchId');
+    String token = sharedPreferences.getString('token');
+    try {
+      final String url = GlobalConfiguration().get("sales-report") +
+          '$branchId/?start_date=$startDate&end_date=$endDate';
+      final http.Response response = await http.post(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: json.encode(<String, String>{'email': email}));
+      if (response.statusCode == 200) {
+        print(response.body);
+        return response.statusCode;
+      } else {
+        return json.decode(response.body);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<GetSalesModel> sortedDatePages(int sortedDate, pageNumber) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');

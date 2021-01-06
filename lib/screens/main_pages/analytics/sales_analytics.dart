@@ -249,21 +249,21 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                           ),
                                         ),
                                       ),
-                                      onTap: () {
-                                        _checkSales
-                                            .analyticsDetails('day')
-                                            .then((value) {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      AnalyticsDetailsPage(
-                                                          filterBy: 'day',
-                                                          analyticsData: value,
-                                                          pageTitle:
-                                                              'Today\'s Report')));
-                                        });
-                                      },
+                                      // onTap: () {
+                                      //   _checkSales
+                                      //       .analyticsDetails('day')
+                                      //       .then((value) {
+                                      //     Navigator.push(
+                                      //         context,
+                                      //         MaterialPageRoute(
+                                      //             builder: (context) =>
+                                      //                 AnalyticsDetailsPage(
+                                      //                     filterBy: 'day',
+                                      //                     analyticsData: value,
+                                      //                     pageTitle:
+                                      //                         'Today\'s Report')));
+                                      //   });
+                                      // },
                                     ),
                                     GestureDetector(
                                       child: Card(
@@ -307,21 +307,21 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                           ),
                                         ),
                                       ),
-                                      onTap: () {
-                                        _checkSales
-                                            .analyticsDetails('week')
-                                            .then((value) {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      AnalyticsDetailsPage(
-                                                          filterBy: 'week',
-                                                          analyticsData: value,
-                                                          pageTitle:
-                                                              'Week\'s Report')));
-                                        });
-                                      },
+                                      // onTap: () {
+                                      //   _checkSales
+                                      //       .analyticsDetails('week')
+                                      //       .then((value) {
+                                      //     Navigator.push(
+                                      //         context,
+                                      //         MaterialPageRoute(
+                                      //             builder: (context) =>
+                                      //                 AnalyticsDetailsPage(
+                                      //                     filterBy: 'week',
+                                      //                     analyticsData: value,
+                                      //                     pageTitle:
+                                      //                         'Week\'s Report')));
+                                      //   });
+                                      // },
                                     )
                                   ],
                                 ),
@@ -375,21 +375,21 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                           ),
                                         ),
                                       ),
-                                      onTap: () {
-                                        _checkSales
-                                            .analyticsDetails('month')
-                                            .then((value) {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      AnalyticsDetailsPage(
-                                                          filterBy: 'month',
-                                                          analyticsData: value,
-                                                          pageTitle:
-                                                              'Month\'s Report')));
-                                        });
-                                      },
+                                      // onTap: () {
+                                      //   _checkSales
+                                      //       .analyticsDetails('month')
+                                      //       .then((value) {
+                                      //     Navigator.push(
+                                      //         context,
+                                      //         MaterialPageRoute(
+                                      //             builder: (context) =>
+                                      //                 AnalyticsDetailsPage(
+                                      //                     filterBy: 'month',
+                                      //                     analyticsData: value,
+                                      //                     pageTitle:
+                                      //                         'Month\'s Report')));
+                                      //   });
+                                      // },
                                     ),
                                     GestureDetector(
                                       child: Card(
@@ -434,21 +434,21 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                           ),
                                         ),
                                       ),
-                                      onTap: () {
-                                        _checkSales
-                                            .analyticsDetails('quarter')
-                                            .then((value) {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      AnalyticsDetailsPage(
-                                                          filterBy: 'quarter',
-                                                          analyticsData: value,
-                                                          pageTitle:
-                                                              'Quarter\'s Report')));
-                                        });
-                                      },
+                                      // onTap: () {
+                                      //   _checkSales
+                                      //       .analyticsDetails('quarter')
+                                      //       .then((value) {
+                                      //     Navigator.push(
+                                      //         context,
+                                      //         MaterialPageRoute(
+                                      //             builder: (context) =>
+                                      //                 AnalyticsDetailsPage(
+                                      //                     filterBy: 'quarter',
+                                      //                     analyticsData: value,
+                                      //                     pageTitle:
+                                      //                         'Quarter\'s Report')));
+                                      //   });
+                                      // },
                                     )
                                   ],
                                 ),
@@ -505,21 +505,21 @@ class _SalesPageAnalyticsState extends State<SalesPageAnalytics> {
                                     ],
                                   ),
                                 ),
-                                onTap: () {
-                                  _checkSales
-                                      .analyticsDetails('year')
-                                      .then((value) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                AnalyticsDetailsPage(
-                                                    filterBy: 'year',
-                                                    analyticsData: value,
-                                                    pageTitle:
-                                                        'Year\'s Report')));
-                                  });
-                                },
+                                // onTap: () {
+                                //   _checkSales
+                                //       .analyticsDetails('year')
+                                //       .then((value) {
+                                //     Navigator.push(
+                                //         context,
+                                //         MaterialPageRoute(
+                                //             builder: (context) =>
+                                //                 AnalyticsDetailsPage(
+                                //                     filterBy: 'year',
+                                //                     analyticsData: value,
+                                //                     pageTitle:
+                                //                         'Year\'s Report')));
+                                //   });
+                                // },
                               )
                             ],
                           ),

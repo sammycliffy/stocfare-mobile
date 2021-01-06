@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:global_configuration/global_configuration.dart';
@@ -17,16 +14,17 @@ class ProfitAndLoss {
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
     final String url = GlobalConfiguration().get("profit-list") + '$branchId/';
-    Options _cacheOptions = buildCacheOptions(
-      Duration(seconds: 60),
-    );
 
-    _cacheOptions.headers.addAll({
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
     try {
+      _dioCacheManager = DioCacheManager(CacheConfig());
+      Options _cacheOptions = buildCacheOptions(
+        Duration(seconds: 120),
+      );
+      _cacheOptions.headers.addAll({
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
       Dio _dio = Dio();
       _dio.interceptors.add(_dioCacheManager.interceptor);
       Response response = await _dio.get(url, options: _cacheOptions);
@@ -39,16 +37,20 @@ class ProfitAndLoss {
         return _model;
       } else {
         print(response.statusCode);
-        return Future.error(json.decode(response.data));
+        return Future.error(response.data['detail']);
       }
-    } on DioError catch (e) {
-      if (e.type == DioErrorType.CONNECT_TIMEOUT) {
-        return Future.error('Network Issue');
-      } else if (e.type == DioErrorType.RECEIVE_TIMEOUT) {
-        return Future.error('Network Issue');
+    } catch (e) {
+      if (e is DioError) {
+        print(e.response.data);
+        var result;
+        e.response.data == null
+            ? result = 'Network Error'
+            : result = e.response.data['detail'];
+        return Future.error(result);
+      } else {
+        print(e.toString());
       }
-    } on SocketException catch (e) {
-      return Future.error('Network Issue');
+      //return e
     }
   }
 
@@ -58,7 +60,7 @@ class ProfitAndLoss {
     String token = sharedPreferences.getString('token');
     final String url = GlobalConfiguration().get("loss-list") + '$branchId/';
     Options _cacheOptions = buildCacheOptions(
-      Duration(seconds: 60),
+      Duration(seconds: 120),
     );
     _cacheOptions.headers.addAll({
       'Content-Type': 'application/json; charset=UTF-8',
@@ -83,18 +85,29 @@ class ProfitAndLoss {
         return Future.error(response.data);
       }
     } catch (e) {
-      print(e.toString());
+      if (e is DioError) {
+        print(e.response.data);
+        var result;
+        e.response.data == null
+            ? result = 'Network Error'
+            : result = e.response.data['detail'];
+        return Future.error(result);
+      } else {
+        print(e.toString());
+      }
+      //return e
     }
   }
 
   Future<ExpensesSummary> getAllLoss() async {
+    _dioCacheManager = DioCacheManager(CacheConfig());
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
     final String url =
         GlobalConfiguration().get("get-all-losses") + '$branchId/';
     Options _cacheOptions = buildCacheOptions(
-      Duration(seconds: 60),
+      Duration(seconds: 120),
     );
     _cacheOptions.headers.addAll({
       'Content-Type': 'application/json; charset=UTF-8',
@@ -113,18 +126,29 @@ class ProfitAndLoss {
         return Future.error(response.data);
       }
     } catch (e) {
-      print(e.toString());
+      if (e is DioError) {
+        print(e.response.data);
+        var result;
+        e.response.data == null
+            ? result = 'Network Error'
+            : result = e.response.data['detail'];
+        return Future.error(result);
+      } else {
+        print(e.toString());
+      }
+      //return e
     }
   }
 
   Future<ExpensesSummary> getAllProfit() async {
+    _dioCacheManager = DioCacheManager(CacheConfig());
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
     final String url =
         GlobalConfiguration().get("get-all-profits") + '$branchId/';
     Options _cacheOptions = buildCacheOptions(
-      Duration(seconds: 60),
+      Duration(seconds: 120),
     );
     _cacheOptions.headers.addAll({
       'Content-Type': 'application/json; charset=UTF-8',
@@ -143,7 +167,17 @@ class ProfitAndLoss {
         return Future.error(response.data);
       }
     } catch (e) {
-      print(e.toString());
+      if (e is DioError) {
+        print(e.response.data);
+        var result;
+        e.response.data == null
+            ? result = 'Network Error'
+            : result = e.response.data['detail'];
+        return Future.error(result);
+      } else {
+        print(e.toString());
+      }
+      //return e
     }
   }
 }

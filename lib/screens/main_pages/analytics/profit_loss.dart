@@ -92,365 +92,413 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
         thousandSeparator: ',',
         leftSymbol: ' ${_signupNotifier.country} ');
 
-    return Scaffold(
-        body: (() {
-      if (_isNetwork == false) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.signal_cellular_connected_no_internet_4_bar,
-              size: 40,
-            ),
-            SizedBox(height: 10),
-            Center(
-              child: Text(
-                'no Internet',
+    return Container(
+      decoration: new BoxDecoration(
+          gradient: new LinearGradient(
+              colors: [
+            Colors.red[200],
+            Colors.white,
+          ],
+              stops: [
+            0.0,
+            1.0
+          ],
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+              tileMode: TileMode.repeated)),
+      child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: (() {
+            if (_isNetwork == false) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.signal_cellular_connected_no_internet_4_bar,
+                    size: 40,
+                  ),
+                  SizedBox(height: 10),
+                  Center(
+                    child: Text(
+                      'no Internet',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  )
+                ],
+              );
+            } else if (_permission == false) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                      child: Text(
+                    'Your current plan does not support this activity. \nPlease upgrade to enjoy.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18),
+                  )),
+                  SizedBox(height: 20),
+                  GestureDetector(
+                    child: Container(
+                        width: 100,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Center(
+                            child: Text('Upgrade',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18)))),
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SubscriptionPage())),
+                  )
+                ],
+              );
+            } else if (_error == true) {
+              return Center(
+                  child: Text(
+                _errorMessage ?? 'Sorry an Error Occured',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18),
-              ),
-            )
-          ],
-        );
-      } else if (_permission == false) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-                child: Text(
-              'Your current plan does not support this activity. \nPlease upgrade to enjoy.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18),
-            )),
-            SizedBox(height: 20),
-            GestureDetector(
-              child: Container(
-                  width: 100,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Center(
-                      child: Text('Upgrade',
-                          style:
-                              TextStyle(color: Colors.white, fontSize: 18)))),
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SubscriptionPage())),
-            )
-          ],
-        );
-      } else if (_error == true) {
-        return Center(
-            child: Text(
-          _errorMessage ?? 'Sorry an Error Occured',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18),
-        ));
-      } else {
-        return SingleChildScrollView(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          FutureBuilder<ExpensesSummary>(
-              future: _profitAndLoss.getAllProfit(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  controller.updateValue(snapshot.data.todaySummary.toDouble());
-                  controller1.updateValue(snapshot.data.weekSummary.toDouble());
-                  controller2
-                      .updateValue(snapshot.data.monthSummary.toDouble());
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 30.0),
-                        child: Text(
-                          'Profit',
-                          style: TextStyle(fontSize: 30),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                            height: 120,
-                            width: 330,
-                            decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Column(
+              ));
+            } else {
+              return SingleChildScrollView(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    FutureBuilder<ExpensesSummary>(
+                        future: _profitAndLoss.getAllProfit(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            controller.updateValue(
+                                snapshot.data.todaySummary.toDouble());
+                            controller1.updateValue(
+                                snapshot.data.weekSummary.toDouble());
+                            controller2.updateValue(
+                                snapshot.data.monthSummary.toDouble());
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 30.0),
+                                  child: Text(
+                                    'Profit',
+                                    style: TextStyle(fontSize: 30),
+                                  ),
+                                ),
+                                Center(
+                                  child: Container(
+                                      height: 120,
+                                      width: 330,
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey[100],
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                _container('Today', 1),
+                                                _container('Week', 2),
+                                                _container('Month', 3)
+                                              ]),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 25.0, top: 10),
+                                            child: Text(
+                                              (() {
+                                                if (week) {
+                                                  return controller1.text;
+                                                } else if (month) {
+                                                  return controller2.text;
+                                                } else {
+                                                  return controller.text;
+                                                }
+                                              }()),
+                                              style: TextStyle(
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green),
+                                            ),
+                                          )
+                                        ],
+                                      )),
+                                ),
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      _container('Today', 1),
-                                      _container('Week', 2),
-                                      _container('Month', 3)
-                                    ]),
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 25.0, top: 10),
-                                  child: Text(
-                                    (() {
-                                      if (week) {
-                                        return controller1.text;
-                                      } else if (month) {
-                                        return controller2.text;
-                                      } else {
-                                        return controller.text;
-                                      }
-                                    }()),
-                                    style: TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.green),
-                                  ),
-                                )
-                              ],
-                            )),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                        child: ExpansionTile(
-                          key: PageStorageKey('myScrollable'),
-                          title: Text(
-                            "View All",
-                            style:
-                                TextStyle(fontSize: 18.0, color: Colors.green),
-                          ),
-                          children: <Widget>[
-                            FutureBuilder<List<ProfitModel>>(
-                                future: _profitAndLoss.getProfitList(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    _profitListName.clear();
-                                    _profitListAmount.clear();
-                                    _profitListQuantity.clear();
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 40.0),
+                                  child: ExpansionTile(
+                                    key: PageStorageKey('myScrollable'),
+                                    title: Text(
+                                      "View All",
+                                      style: TextStyle(
+                                          fontSize: 18.0, color: Colors.green),
+                                    ),
+                                    children: <Widget>[
+                                      FutureBuilder<List<ProfitModel>>(
+                                          future:
+                                              _profitAndLoss.getProfitList(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              _profitListName.clear();
+                                              _profitListAmount.clear();
+                                              _profitListQuantity.clear();
 
-                                    print(snapshot.data.map((e) {
-                                      _profitListName
-                                          .add(e.productInfo[0].name);
-                                      _profitListAmount
-                                          .add(e.productInfo[0].amount);
-                                      _profitListQuantity
-                                          .add(e.productInfo[0].quantity);
-                                    }));
-                                    return Container(
-                                      height: 150,
-                                      child: ListView.builder(
-                                          key: PageStorageKey('myScrollable'),
-                                          itemBuilder:
-                                              (BuildContext context, index) {
-                                            return GestureDetector(
-                                              child: ListTile(
-                                                title: Text(
-                                                    _profitListName[index],
-                                                    style: TextStyle(
-                                                        fontSize: 18,
-                                                        color: Colors.grey,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                trailing: Text(
-                                                  _profitListAmount[index]
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      fontSize: 17,
-                                                      color: Colors.green),
-                                                ),
-                                              ),
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ProfitDetails(
-                                                              productIndex:
-                                                                  index,
-                                                              profitList:
-                                                                  snapshot.data,
-                                                            )));
-                                              },
-                                            );
-                                          },
-                                          itemCount: _profitListName.length),
-                                    );
-                                  }
-                                  return Column(
-                                      children: [LinearProgressIndicator()]);
-                                })
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                }
-                return Column(children: [LinearProgressIndicator()]);
-              }),
-          SizedBox(height: 10),
-          FutureBuilder<ExpensesSummary>(
-              future: _profitAndLoss.getAllLoss(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  controller.updateValue(snapshot.data.todaySummary.toDouble());
-                  controller1.updateValue(snapshot.data.weekSummary.toDouble());
-                  controller2
-                      .updateValue(snapshot.data.monthSummary.toDouble());
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 30.0),
-                        child: Text(
-                          'Loss',
-                          style: TextStyle(fontSize: 30),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                            height: 120,
-                            width: 330,
-                            decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Column(
+                                              print(snapshot.data.map((e) {
+                                                _profitListName
+                                                    .add(e.productInfo[0].name);
+                                                _profitListAmount.add(
+                                                    e.productInfo[0].amount);
+                                                _profitListQuantity.add(
+                                                    e.productInfo[0].quantity);
+                                              }));
+                                              return Container(
+                                                height: 150,
+                                                child: ListView.builder(
+                                                    key: PageStorageKey(
+                                                        'myScrollable'),
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            index) {
+                                                      return GestureDetector(
+                                                        child: ListTile(
+                                                          title: Text(
+                                                              _profitListName[
+                                                                  index],
+                                                              style: TextStyle(
+                                                                  fontSize: 18,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                          trailing: Text(
+                                                            _profitListAmount[
+                                                                    index]
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                fontSize: 17,
+                                                                color: Colors
+                                                                    .green),
+                                                          ),
+                                                        ),
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ProfitDetails(
+                                                                            productIndex:
+                                                                                index,
+                                                                            profitList:
+                                                                                snapshot.data,
+                                                                          )));
+                                                        },
+                                                      );
+                                                    },
+                                                    itemCount:
+                                                        _profitListName.length),
+                                              );
+                                            }
+                                            return Column(children: [
+                                              LinearProgressIndicator()
+                                            ]);
+                                          })
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          return Column(children: [LinearProgressIndicator()]);
+                        }),
+                    SizedBox(height: 10),
+                    FutureBuilder<ExpensesSummary>(
+                        future: _profitAndLoss.getAllLoss(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            controller.updateValue(
+                                snapshot.data.todaySummary.toDouble());
+                            controller1.updateValue(
+                                snapshot.data.weekSummary.toDouble());
+                            controller2.updateValue(
+                                snapshot.data.monthSummary.toDouble());
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 30.0),
+                                  child: Text(
+                                    'Loss',
+                                    style: TextStyle(fontSize: 30),
+                                  ),
+                                ),
+                                Center(
+                                  child: Container(
+                                      height: 120,
+                                      width: 330,
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey[100],
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                _container('Today', 1),
+                                                _container('Week', 2),
+                                                _container('Month', 3)
+                                              ]),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 25.0, top: 10),
+                                            child: Text(
+                                              (() {
+                                                if (week) {
+                                                  return controller1.text;
+                                                } else if (month) {
+                                                  return controller2.text;
+                                                } else {
+                                                  return controller.text;
+                                                }
+                                              }()),
+                                              style: TextStyle(
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                            ),
+                                          )
+                                        ],
+                                      )),
+                                ),
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      _container('Today', 1),
-                                      _container('Week', 2),
-                                      _container('Month', 3)
-                                    ]),
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 25.0, top: 10),
-                                  child: Text(
-                                    (() {
-                                      if (week) {
-                                        return controller1.text;
-                                      } else if (month) {
-                                        return controller2.text;
-                                      } else {
-                                        return controller.text;
-                                      }
-                                    }()),
-                                    style: TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context).primaryColor),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 40.0),
+                                  child: ExpansionTile(
+                                    key: PageStorageKey('myScrollable'),
+                                    title: Text(
+                                      "View All",
+                                      style: TextStyle(
+                                          fontSize: 18.0, color: Colors.green),
+                                    ),
+                                    children: <Widget>[
+                                      FutureBuilder<List<LossModel>>(
+                                          future: _profitAndLoss.getLossList(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              _lossListName.clear();
+                                              _lossListAmount.clear();
+                                              _lossListQuantity.clear();
+                                              print(snapshot.data.map((e) {
+                                                print(e.productInfo.map((e) {
+                                                  _lossListName.add(e.name);
+                                                  _lossListAmount.add(e.amount);
+                                                  _lossListQuantity
+                                                      .add(e.quantity);
+                                                }));
+                                              }));
+                                              print(_lossListName);
+                                              if (_lossListName.length == 0) {
+                                                return Center(
+                                                  child: Text('No Loss'),
+                                                );
+                                              } else {
+                                                return Container(
+                                                  height: 150,
+                                                  child: ListView.builder(
+                                                      key: PageStorageKey(
+                                                          'myScrollable'),
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                              index) {
+                                                        return GestureDetector(
+                                                            child: ListTile(
+                                                              title: Text(
+                                                                  _lossListName
+                                                                          ?.elementAt(
+                                                                              index) ??
+                                                                      "",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)),
+                                                              trailing: Text(
+                                                                _lossListAmount
+                                                                        ?.elementAt(
+                                                                            index) ??
+                                                                    "",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        17,
+                                                                    color: Colors
+                                                                        .green),
+                                                              ),
+                                                            ),
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          LossDetails(
+                                                                            productIndex:
+                                                                                index,
+                                                                            profitList:
+                                                                                snapshot.data,
+                                                                          )));
+                                                            });
+                                                      },
+                                                      itemCount:
+                                                          _lossListName.length),
+                                                );
+                                              }
+                                            }
+                                            return Column(children: [
+                                              LinearProgressIndicator()
+                                            ]);
+                                          })
+                                    ],
                                   ),
-                                )
+                                ),
                               ],
-                            )),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                        child: ExpansionTile(
-                          key: PageStorageKey('myScrollable'),
-                          title: Text(
-                            "View All",
-                            style:
-                                TextStyle(fontSize: 18.0, color: Colors.green),
-                          ),
-                          children: <Widget>[
-                            FutureBuilder<List<LossModel>>(
-                                future: _profitAndLoss.getLossList(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    _lossListName.clear();
-                                    _lossListAmount.clear();
-                                    _lossListQuantity.clear();
-                                    print(snapshot.data.map((e) {
-                                      print(e.productInfo.map((e) {
-                                        _lossListName.add(e.name);
-                                        _lossListAmount.add(e.amount);
-                                        _lossListQuantity.add(e.quantity);
-                                      }));
-                                    }));
-                                    print(_lossListName);
-                                    if (_lossListName.length == 0) {
-                                      return Center(
-                                        child: Text('No Loss'),
-                                      );
-                                    } else {
-                                      return Container(
-                                        height: 150,
-                                        child: ListView.builder(
-                                            key: PageStorageKey('myScrollable'),
-                                            itemBuilder:
-                                                (BuildContext context, index) {
-                                              return GestureDetector(
-                                                  child: ListTile(
-                                                    title: Text(
-                                                        _lossListName
-                                                                ?.elementAt(
-                                                                    index) ??
-                                                            "",
-                                                        style: TextStyle(
-                                                            fontSize: 18,
-                                                            color: Colors.grey,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
-                                                    trailing: Text(
-                                                      _lossListAmount
-                                                              ?.elementAt(
-                                                                  index) ??
-                                                          "",
-                                                      style: TextStyle(
-                                                          fontSize: 17,
-                                                          color: Colors.green),
-                                                    ),
-                                                  ),
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    LossDetails(
-                                                                      productIndex:
-                                                                          index,
-                                                                      profitList:
-                                                                          snapshot
-                                                                              .data,
-                                                                    )));
-                                                  });
-                                            },
-                                            itemCount: _lossListName.length),
-                                      );
-                                    }
-                                  }
-                                  return Column(
-                                      children: [LinearProgressIndicator()]);
-                                })
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                }
-                return SizedBox();
-              }),
-          SizedBox(height: 50),
-        ]));
-      }
-    }()));
+                            );
+                          }
+                          return SizedBox();
+                        }),
+                    SizedBox(height: 50),
+                  ]));
+            }
+          }())),
+    );
   }
 
   _container(day, route) => GestureDetector(

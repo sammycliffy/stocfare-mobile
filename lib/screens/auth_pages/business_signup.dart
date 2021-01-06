@@ -31,375 +31,386 @@ class _SignupPage extends State<BusinessSignupPage> {
   @override
   Widget build(BuildContext context) {
     SignupNotifier _signupNotifier = Provider.of<SignupNotifier>(context);
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: SafeArea(
-            child: loading
-                ? Loading()
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Center(
-                          child: Image.asset('assets/images/logo.png',
-                              width: 40, height: 40)),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40),
-                        child: Text(
-                          'Business Signup',
-                          style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red),
+    return Container(
+      decoration: new BoxDecoration(
+          gradient: new LinearGradient(
+              colors: [
+            Colors.red[300],
+            Colors.white,
+          ],
+              stops: [
+            0.0,
+            1.0
+          ],
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+              tileMode: TileMode.repeated)),
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Colors.transparent,
+        body: SingleChildScrollView(
+          child: SafeArea(
+              child: loading
+                  ? Loading()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 20,
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40),
-                        child: Text(
-                            'We just need a few information about your business',
-                            style: TextStyle(
-                              fontSize: 12,
-                            )),
-                      ),
-                      SizedBox(
-                        height: 22,
-                      ),
-                      Form(
-                        key: _formkey,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 40, right: 40),
-                              child: TextFormField(
-                                style: TextStyle(color: Colors.black),
-                                keyboardType: TextInputType.text,
-                                validator: (input) => input.isEmpty
-                                    ? 'Enter your Business name'
-                                    : null,
-                                onChanged: (val) => setState(() {
-                                  businessName = val;
-                                }),
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(12),
-                                  labelStyle: TextStyle(
-                                      color: Theme.of(context).accentColor),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.2))),
-                                  hintStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.7)),
-                                  prefixIcon: Icon(Icons.create,
-                                      color: Theme.of(context).accentColor),
-                                  hintText: 'Enter Business name',
-                                  filled: true,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.2))),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.5))),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: Container(
+                              width: 80,
+                              height: 80,
+                              color: Colors.white,
+                              child: Center(
+                                  child: Image.asset('assets/images/logo.png',
+                                      width: 40, height: 40))),
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 40),
+                          child: Text(
+                              'We just need a few information about your business',
+                              style: TextStyle(
+                                fontSize: 15,
+                              )),
+                        ),
+                        SizedBox(
+                          height: 22,
+                        ),
+                        Form(
+                          key: _formkey,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 40, right: 40),
+                                child: TextFormField(
+                                  style: TextStyle(color: Colors.black),
+                                  keyboardType: TextInputType.text,
+                                  validator: (input) => input.isEmpty
+                                      ? 'Enter your Business name'
+                                      : null,
+                                  onChanged: (val) => setState(() {
+                                    businessName = val;
+                                  }),
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(12),
+                                    labelStyle: TextStyle(
+                                        color: Theme.of(context).accentColor),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.2))),
+                                    hintStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.7)),
+                                    hintText: 'Enter Business name',
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.2))),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.5))),
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 40, right: 40),
-                              child: TextFormField(
-                                readOnly: true,
-                                keyboardType: TextInputType.text,
-                                validator: (val) {
-                                  if (_selectedDialogCountry == null) {
-                                    return 'Select Country';
-                                  }
-                                  return null;
-                                },
-                                onTap: () => _openCurrencyPickerDialog(),
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(12),
-                                  labelStyle: TextStyle(
-                                      color: Theme.of(context).primaryColor),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.2))),
-                                  hintStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.7)),
-                                  prefixIcon: Icon(Icons.location_on,
-                                      color: Theme.of(context).accentColor),
-                                  hintText: (() {
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 40, right: 40),
+                                child: TextFormField(
+                                  readOnly: true,
+                                  keyboardType: TextInputType.text,
+                                  validator: (val) {
                                     if (_selectedDialogCountry == null) {
                                       return 'Select Country';
                                     }
-                                    return _selectedDialogCountry.name;
-                                  }()),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.2))),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.5))),
-                                ),
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 40, right: 40),
-                              child: TextFormField(
-                                style: TextStyle(color: Colors.black),
-                                keyboardType: TextInputType.text,
-                                validator: (input) => input.isEmpty
-                                    ? 'Enter Business Address'
-                                    : null,
-                                onChanged: (val) => setState(() {
-                                  businessAddress = val;
-                                }),
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(12),
-                                  labelStyle: TextStyle(
-                                      color: Theme.of(context).accentColor),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.2))),
-                                  hintStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.7)),
-                                  prefixIcon: Icon(Icons.location_on,
-                                      color: Theme.of(context).accentColor),
-                                  hintText: 'Enter Business Address',
-                                  filled: true,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.2))),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.5))),
+                                    return null;
+                                  },
+                                  onTap: () => _openCurrencyPickerDialog(),
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(12),
+                                    labelStyle: TextStyle(
+                                        color: Theme.of(context).primaryColor),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.2))),
+                                    hintStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.7)),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    hintText: (() {
+                                      if (_selectedDialogCountry == null) {
+                                        return 'Select Country';
+                                      }
+                                      return _selectedDialogCountry.name;
+                                    }()),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.2))),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.5))),
+                                  ),
+                                  style: TextStyle(color: Colors.black),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 40, right: 40),
-                              child: TextFormField(
-                                style: TextStyle(color: Colors.black),
-                                keyboardType: TextInputType.text,
-                                validator: (input) => input.isEmpty
-                                    ? 'Enter your business type'
-                                    : null,
-                                onChanged: (val) => setState(() {
-                                  businessType = val;
-                                }),
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(12),
-                                  labelStyle: TextStyle(
-                                      color: Theme.of(context).accentColor),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.2))),
-                                  hintStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.7)),
-                                  prefixIcon: Icon(Icons.short_text,
-                                      color: Theme.of(context).accentColor),
-                                  hintText: 'Enter Business type',
-                                  filled: true,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.2))),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.5))),
-                                ),
+                              SizedBox(
+                                height: 16,
                               ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 40, right: 40),
-                              child: TextFormField(
-                                style: TextStyle(color: Colors.black),
-                                keyboardType: TextInputType.number,
-                                onChanged: (val) => setState(() {
-                                  referralCode = val;
-                                }),
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(12),
-                                  labelStyle: TextStyle(
-                                      color: Theme.of(context).accentColor),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.2))),
-                                  hintStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .focusColor
-                                          .withOpacity(0.7)),
-                                  prefixIcon: Icon(Icons.confirmation_number,
-                                      color: Theme.of(context).accentColor),
-                                  hintText: 'Referral code (optional)',
-                                  filled: true,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.2))),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .focusColor
-                                              .withOpacity(0.5))),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            GestureDetector(
-                                child: Center(
-                                  child: Container(
-                                    height: 40,
-                                    width: 200,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.red, width: 3),
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Center(
-                                        child: Text(
-                                      'Signup',
-                                      style: TextStyle(
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold),
-                                    )),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 40, right: 40),
+                                child: TextFormField(
+                                  style: TextStyle(color: Colors.black),
+                                  keyboardType: TextInputType.text,
+                                  validator: (input) => input.isEmpty
+                                      ? 'Enter Business Address'
+                                      : null,
+                                  onChanged: (val) => setState(() {
+                                    businessAddress = val;
+                                  }),
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(12),
+                                    labelStyle: TextStyle(
+                                        color: Theme.of(context).accentColor),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.2))),
+                                    hintStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.7)),
+                                    hintText: 'Enter Business Address',
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.2))),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.5))),
                                   ),
                                 ),
-                                onTap: () async {
-                                  if (_formkey.currentState.validate()) {
-                                    _activitiesServices
-                                        .checkForInternet()
-                                        .then((value) async {
-                                      if (value == true) {
-                                        DialogBoxes().loading(context);
-                                        dynamic result =
-                                            await _auth.userRegistration(
-                                                _signupNotifier.firstName,
-                                                _signupNotifier.lastName,
-                                                _signupNotifier.email,
-                                                _signupNotifier.password,
-                                                _signupNotifier.phone,
-                                                businessName,
-                                                businessAddress,
-                                                _selectedDialogCountry
-                                                    .currencyCode,
-                                                businessType,
-                                                referralCode ?? '0');
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 40, right: 40),
+                                child: TextFormField(
+                                  style: TextStyle(color: Colors.black),
+                                  keyboardType: TextInputType.text,
+                                  validator: (input) => input.isEmpty
+                                      ? 'Enter your business type'
+                                      : null,
+                                  onChanged: (val) => setState(() {
+                                    businessType = val;
+                                  }),
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(12),
+                                    labelStyle: TextStyle(
+                                        color: Theme.of(context).accentColor),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.2))),
+                                    hintStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.7)),
+                                    hintText: 'Enter Business type',
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.2))),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.5))),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 40, right: 40),
+                                child: TextFormField(
+                                  style: TextStyle(color: Colors.black),
+                                  keyboardType: TextInputType.number,
+                                  onChanged: (val) => setState(() {
+                                    referralCode = val;
+                                  }),
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(12),
+                                    labelStyle: TextStyle(
+                                        color: Theme.of(context).accentColor),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.2))),
+                                    hintStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.7)),
+                                    hintText: 'Referral code (optional)',
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.2))),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.5))),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 40,
+                              ),
+                              GestureDetector(
+                                  child: Center(
+                                    child: Container(
+                                      height: 40,
+                                      width: 250,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: Colors.white, width: 3),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Center(
+                                          child: Text(
+                                        'Signup',
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                    ),
+                                  ),
+                                  onTap: () async {
+                                    if (_formkey.currentState.validate()) {
+                                      _activitiesServices
+                                          .checkForInternet()
+                                          .then((value) async {
+                                        if (value == true) {
+                                          DialogBoxes().loading(context);
+                                          dynamic result =
+                                              await _auth.userRegistration(
+                                                  _signupNotifier.firstName,
+                                                  _signupNotifier.lastName,
+                                                  _signupNotifier.email,
+                                                  _signupNotifier.password,
+                                                  _signupNotifier.phone,
+                                                  businessName,
+                                                  businessAddress,
+                                                  _selectedDialogCountry
+                                                      .currencyCode,
+                                                  businessType,
+                                                  referralCode ?? '0');
 
-                                        print(result.toString() +
-                                            'this is result');
+                                          print(result.toString() +
+                                              'this is result');
 
-                                        if (result != true) {
-                                          Navigator.pop(context);
+                                          if (result != true) {
+                                            Navigator.pop(context);
+                                            setState(() {
+                                              result == null
+                                                  ? _error =
+                                                      'Opps! An Error Occured. Please try again.'
+                                                  : _error = result[0];
+                                              _displaySnackBar(context);
+                                            });
+                                          } else {
+                                            SaveUser().saveUser(context);
+                                          }
+                                        } else {
                                           setState(() {
-                                            result == null
-                                                ? _error =
-                                                    'Opps! An Error Occured. Please try again.'
-                                                : _error = result[0];
+                                            _error =
+                                                'Check your internet connection';
+
                                             _displaySnackBar(context);
                                           });
-                                        } else {
-                                          SaveUser().saveUser(context);
                                         }
-                                      } else {
-                                        setState(() {
-                                          _error =
-                                              'Check your internet connection';
-
-                                          _displaySnackBar(context);
-                                        });
-                                      }
-                                    });
-                                  }
-                                }),
-                            SizedBox(height: 30),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Already registered?',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                GestureDetector(
-                                  child: Text(
-                                    'Login',
+                                      });
+                                    }
+                                  }),
+                              SizedBox(height: 30),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Already registered?',
                                     style: TextStyle(
-                                        fontSize: 14, color: Colors.red),
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Login()));
-                                  },
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  )),
+                                  SizedBox(width: 10),
+                                  GestureDetector(
+                                    child: Text(
+                                      'Login',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Login()));
+                                    },
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    )),
+        ),
       ),
     );
   }

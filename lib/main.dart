@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
@@ -11,25 +8,27 @@ import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/intro_pages/splashscreen.dart';
-
 import 'package:stockfare_mobile/screens/main_pages/all_products_list/product_details.dart';
 
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-getTokenz() async {
-  String token = await _firebaseMessaging.getToken();
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  sharedPreferences.setString('firebaseToken', token);
+getToken() async {
+  try {
+    String token = await _firebaseMessaging.getToken();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('firebaseToken', token);
+  } catch (error) {
+    String token = '';
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('firebaseToken', token);
+  }
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GlobalConfiguration().loadFromAsset("live_url");
-  getTokenz();
+  await GlobalConfiguration().loadFromAsset("url");
+  getToken();
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterDownloader.initialize(
-      debug: true // optional: set false to disable printing logs to console
-      );
   runApp(
     MultiProvider(
       providers: [

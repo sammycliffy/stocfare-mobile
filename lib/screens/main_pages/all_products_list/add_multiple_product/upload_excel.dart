@@ -150,111 +150,130 @@ class _UploadExcelPageState extends State<UploadExcelPage> {
   Widget build(BuildContext context) {
     AddProductNotifier _addProductNotifier =
         Provider.of<AddProductNotifier>(context);
-    return Scaffold(
-      key: _scaffoldKey,
-      body: Column(children: [
-        SizedBox(
-          height: 25,
-        ),
-        Center(
-            child: Text(
-          'Upload Excel file',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        )),
-        Center(
-          child: Text(toSend.toString()),
-        ),
-        SizedBox(
-          height: 30,
-        ),
-        GestureDetector(
-            child: Center(
-                child: Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey)),
-                    child: toSend == null
-                        ? Icon(Icons.file_upload, size: 70, color: Colors.green)
-                        : Icon(Icons.file_download,
-                            size: 70, color: Colors.green))),
-            onTap: () {
-              _getFile().then((value) {
-                setState(() {
-                  toSend = value;
-                });
-              });
-            }),
-        SizedBox(
-          height: 30,
-        ),
-        Text(
-          '$_progress',
-          style: Theme.of(context).textTheme.display1,
-        ),
-        InkWell(
-          child: Text(
-            'Download Excel Sample',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+    return Container(
+      decoration: new BoxDecoration(
+          gradient: new LinearGradient(
+              colors: [
+            Colors.red[200],
+            Colors.white,
+          ],
+              stops: [
+            0.0,
+            1.0
+          ],
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+              tileMode: TileMode.repeated)),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        key: _scaffoldKey,
+        body: Column(children: [
+          SizedBox(
+            height: 25,
           ),
-          onTap: () {
-            _download();
-          },
-        ),
-        SizedBox(
-          height: 30,
-        ),
-        GestureDetector(
-            child: Center(
-              child: Container(
-                height: 40,
-                width: 180,
-                decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    border: Border.all(
-                        color: Theme.of(context).primaryColor, width: 3),
-                    borderRadius: BorderRadius.circular(20)),
-                child: Center(
-                    child: Text(
-                  'Upload',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                )),
-              ),
+          Center(
+              child: Text(
+            'Upload Excel file',
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          )),
+          Center(
+            child: Text(toSend.toString()),
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          GestureDetector(
+              child: Center(
+                  child: Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.grey)),
+                      child: toSend == null
+                          ? Icon(Icons.file_upload,
+                              size: 70, color: Colors.green)
+                          : Icon(Icons.file_download,
+                              size: 70, color: Colors.green))),
+              onTap: () {
+                _getFile().then((value) {
+                  setState(() {
+                    toSend = value;
+                  });
+                });
+              }),
+          SizedBox(
+            height: 30,
+          ),
+          Text(
+            '$_progress',
+            style: Theme.of(context).textTheme.display1,
+          ),
+          InkWell(
+            child: Text(
+              'Download Excel Sample',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
             ),
             onTap: () {
-              Subscription().getSubscriptionPlan().then((value) {
-                if (value == 'PREMIUM') {
-                  if (toSend == null) {
-                    setState(() {
-                      _error = 'You must select a file first';
-                      _displaySnackBar(context);
-                    });
+              _download();
+            },
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          GestureDetector(
+              child: Center(
+                child: Container(
+                  height: 40,
+                  width: 180,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      border: Border.all(
+                          color: Theme.of(context).primaryColor, width: 3),
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Center(
+                      child: Text(
+                    'Upload',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  )),
+                ),
+              ),
+              onTap: () {
+                Subscription().getSubscriptionPlan().then((value) {
+                  if (value == 'PREMIUM') {
+                    if (toSend == null) {
+                      setState(() {
+                        _error = 'You must select a file first';
+                        _displaySnackBar(context);
+                      });
+                    } else {
+                      DialogBoxes().loading(context);
+                      _productServices
+                          .productFileUpload(
+                              _addProductNotifier.categoryId, toSend)
+                          .then((value) {
+                        print(value);
+                        if (value != 201 || value != 200) {
+                          Navigator.pop(context);
+                          setState(() {
+                            _error = value;
+                            _displaySnackBar(context);
+                          });
+                        } else {
+                          Navigator.pop(context);
+                          DialogBoxes().success(context);
+                        }
+                      });
+                    }
                   } else {
-                    DialogBoxes().loading(context);
-                    _productServices
-                        .productFileUpload(
-                            _addProductNotifier.categoryId, toSend)
-                        .then((value) {
-                      print(value);
-                      if (value != 201 || value != 200) {
-                        Navigator.pop(context);
-                        setState(() {
-                          _error = value;
-                          _displaySnackBar(context);
-                        });
-                      } else {
-                        Navigator.pop(context);
-                        DialogBoxes().success(context);
-                      }
-                    });
+                    DialogBoxes().invalidSubscription(context);
                   }
-                } else {
-                  DialogBoxes().invalidSubscription(context);
-                }
-              });
-            }),
-      ]),
+                });
+              }),
+        ]),
+      ),
     );
   }
 
