@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:provider/provider.dart';
+import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
+import 'package:stockfare_mobile/services/accounting_services.dart';
+import 'package:stockfare_mobile/services/activities_services.dart';
 
 class BalanceSheet extends StatefulWidget {
   @override
@@ -6,78 +12,119 @@ class BalanceSheet extends StatefulWidget {
 }
 
 class _BalanceSheetState extends State<BalanceSheet> {
-  int cash = 0;
-  int inventory = 0;
-  int accountReceivable = 0;
-  int prepaidExpenses = 0;
-  int shortTermInvestments = 0;
-  int totalCurrentAssets = 0;
+  AccountingServices _accountingServices = AccountingServices();
+  ActivitiesServices _activitiesServices = ActivitiesServices();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _error = '';
+  int year = 0;
+  var cash = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var inventory = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var accountReceivable = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var prepaidExpenses = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var shortTermInvestments = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  bool preview = true;
+  double totalCurrentAssets = 0;
 
-  int longTermInvestments = 0;
-  int propertyPlantAndEquipments = 0;
-  int intangibleAssets = 0;
-  int totalFixedAssets = 0;
-  int totalAssets = 0;
+  var longTermInvestments = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var propertyPlantAndEquipments = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var varangibleAssets = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  double totalFixedAssets = 0;
+  double totalAssets = 0;
 
-  int accountPayable = 0;
-  int shortTermLoans = 0;
-  int incomeTaxesPayable = 0;
-  int accruedSalariesAndWages = 0;
-  int unearnedRevenue = 0;
-  int totalCurrentLiabilities = 0;
+  var accountPayable = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var shortTermLoans = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var incomeTaxesPayable = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var accruedSalariesAndWages = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var unearnedRevenue = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  double totalCurrentLiabilities = 0;
 
-  int longTermDebt = 0;
-  int deferredIncomeTax = 0;
-  int longTermOthers = 0;
-  int totalLongTermLiabilities = 0;
+  var deferredIncomeTaxOtherAsset = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var otherAsset = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  double totalOtherAsset = 0;
 
-  int ownersInvestment = 0;
-  int retainedEarnings = 0;
-  int ownersOthers = 0;
-  int totalOwnersEquity = 0;
-  int totalLiabilitiesAndOwnersEquity = 0;
+  var longTermDebt = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var deferredIncomeTax = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var longTermOthers = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  double totalLongTermLiabilities = 0;
 
+  var ownersInvestment = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var retainedEarnings = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var ownersOthers = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  double totalOwnersEquity = 0;
+  double totalLiabilitiesAndOwnersEquity = 0;
   double debtRatio = 0;
   double currentRatio = 0;
-  int workingCapital = 0;
+  double workingCapital = 0;
   double assetToEquityRatio = 0;
-  int debtToEquityRatio = 0;
-
+  double debtToEquityRatio = 0;
   @override
   Widget build(BuildContext context) {
-    totalCurrentAssets = (cash +
-        inventory +
-        accountReceivable +
-        prepaidExpenses +
-        shortTermInvestments);
-    totalFixedAssets =
-        (longTermInvestments + propertyPlantAndEquipments + intangibleAssets);
-    totalAssets = totalCurrentAssets + totalFixedAssets;
-    totalCurrentLiabilities = (accountPayable +
-        shortTermLoans +
-        incomeTaxesPayable +
-        accruedSalariesAndWages +
-        unearnedRevenue);
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
 
-    totalLongTermLiabilities =
-        (longTermDebt + deferredIncomeTax + longTermOthers);
-
-    totalOwnersEquity = (ownersInvestment + retainedEarnings + ownersOthers);
-    totalLiabilitiesAndOwnersEquity = (totalCurrentLiabilities +
-        totalLongTermLiabilities +
-        totalOwnersEquity);
-
-    debtRatio =
-        ((totalCurrentLiabilities + totalLongTermLiabilities) / totalAssets);
-    currentRatio =
-        (totalAssets / (totalCurrentLiabilities + totalLongTermLiabilities));
-
-    workingCapital =
-        (totalAssets - (totalCurrentLiabilities + totalLongTermLiabilities));
-
-    assetToEquityRatio = (totalAssets / totalOwnersEquity);
-    debtToEquityRatio = ((totalCurrentLiabilities + totalLongTermLiabilities) -
-        totalOwnersEquity);
     return Container(
       decoration: new BoxDecoration(
           gradient: new LinearGradient(
@@ -94,6 +141,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
               tileMode: TileMode.repeated)),
       child: Scaffold(
           backgroundColor: Colors.transparent,
+          key: _scaffoldKey,
           appBar: AppBar(title: Text('Balance Sheet')),
           body: SafeArea(
               child: SingleChildScrollView(
@@ -106,7 +154,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                   ),
                 ),
                 Text(
-                  '[Alibaba Group]',
+                  '[${_signupNotifier.branchName}]',
                   style: TextStyle(
                       fontSize: 20, color: Theme.of(context).primaryColor),
                 ),
@@ -116,17 +164,30 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     fontSize: 17,
                   ),
                 ),
+                SizedBox(height: 10),
                 Container(
                   width: 100,
                   child: TextFormField(
-                    decoration: InputDecoration(),
+                    onChanged: (val) => setState(() {
+                      year = int.parse(val);
+                    }),
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      contentPadding: EdgeInsets.all(5),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.2))),
+                    ),
                   ),
                 ),
                 SizedBox(height: 20),
                 Container(
                   padding: EdgeInsets.all(20),
                   width: 360,
-                  height: 850,
+                  height: 1100,
                   decoration: BoxDecoration(
                       color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(8)),
@@ -178,11 +239,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) {
-                                      setState(() {
-                                        cash = int.parse(val);
-                                      });
-                                    },
+                                    controller: cash,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -200,9 +257,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      inventory = int.parse(val);
-                                    }),
+                                    controller: inventory,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -220,9 +275,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      accountReceivable = int.parse(val);
-                                    }),
+                                    controller: accountReceivable,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -240,9 +293,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      prepaidExpenses = int.parse(val);
-                                    }),
+                                    controller: prepaidExpenses,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -260,9 +311,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      shortTermInvestments = int.parse(val);
-                                    }),
+                                    controller: shortTermInvestments,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -281,6 +330,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
+                                    readOnly: true,
                                     decoration: InputDecoration(
                                         hintText: 'N ' +
                                             totalCurrentAssets.toString()),
@@ -320,9 +370,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      longTermInvestments = int.parse(val);
-                                    }),
+                                    controller: longTermInvestments,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -341,10 +389,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      propertyPlantAndEquipments =
-                                          int.parse(val);
-                                    }),
+                                    controller: propertyPlantAndEquipments,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -355,16 +400,14 @@ class _BalanceSheetState extends State<BalanceSheet> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  'Intangible assets           ',
+                                  'varangible assets           ',
                                   style: TextStyle(fontSize: 17),
                                   textAlign: TextAlign.left,
                                 ),
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      intangibleAssets = int.parse(val);
-                                    }),
+                                    controller: varangibleAssets,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -383,9 +426,88 @@ class _BalanceSheetState extends State<BalanceSheet> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
+                                    readOnly: true,
                                     decoration: InputDecoration(
                                         hintText:
                                             'N ' + totalFixedAssets.toString()),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 120),
+                        child: Text(
+                          'Other Asset              ',
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        width: 350,
+                        height: 200,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey[400]),
+                            borderRadius: BorderRadius.circular(9)),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'Deferred Income             \n tax',
+                                  style: TextStyle(fontSize: 17),
+                                  textAlign: TextAlign.left,
+                                ),
+                                Container(
+                                  width: 100,
+                                  child: TextFormField(
+                                    controller: deferredIncomeTaxOtherAsset,
+                                    decoration:
+                                        InputDecoration(hintText: 'N0.00'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'Other                               ',
+                                  style: TextStyle(fontSize: 17),
+                                  textAlign: TextAlign.left,
+                                ),
+                                Container(
+                                  width: 100,
+                                  child: TextFormField(
+                                    controller: otherAsset,
+                                    decoration:
+                                        InputDecoration(hintText: 'N0.00'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'TOTAL OTHER ASSETS     ',
+                                  style: TextStyle(
+                                      fontSize: 17, color: Colors.green),
+                                  textAlign: TextAlign.left,
+                                ),
+                                Container(
+                                  width: 100,
+                                  child: TextFormField(
+                                    readOnly: true,
+                                    decoration: InputDecoration(
+                                        hintText:
+                                            'N ' + totalOtherAsset.toString()),
                                   ),
                                 ),
                               ],
@@ -404,6 +526,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                           Container(
                             width: 100,
                             child: TextFormField(
+                              readOnly: true,
                               decoration: InputDecoration(
                                   hintText: 'N ' + totalAssets.toString()),
                             ),
@@ -477,9 +600,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          accountPayable = int.parse(val);
-                        }),
+                        controller: accountPayable,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -496,9 +617,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          shortTermLoans = int.parse(val);
-                        }),
+                        controller: shortTermLoans,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -515,11 +634,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) {
-                          setState(() {
-                            incomeTaxesPayable = int.parse(val);
-                          });
-                        },
+                        controller: incomeTaxesPayable,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -536,9 +651,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          accruedSalariesAndWages = int.parse(val);
-                        }),
+                        controller: accruedSalariesAndWages,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -555,9 +668,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          unearnedRevenue = int.parse(val);
-                        }),
+                        controller: unearnedRevenue,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -574,6 +685,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
+                        readOnly: true,
                         decoration: InputDecoration(
                             hintText:
                                 'N ' + totalCurrentLiabilities.toString()),
@@ -612,9 +724,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          longTermDebt = int.parse(val);
-                        }),
+                        controller: longTermDebt,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -631,9 +741,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          deferredIncomeTax = int.parse(val);
-                        }),
+                        controller: deferredIncomeTax,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -650,9 +758,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          longTermOthers = int.parse(val);
-                        }),
+                        controller: longTermOthers,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -669,6 +775,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
+                        readOnly: true,
                         decoration: InputDecoration(
                             hintText:
                                 'N ' + totalLongTermLiabilities.toString()),
@@ -707,9 +814,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          ownersInvestment = int.parse(val);
-                        }),
+                        controller: ownersInvestment,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -726,9 +831,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          retainedEarnings = int.parse(val);
-                        }),
+                        controller: retainedEarnings,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -745,9 +848,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          ownersOthers = int.parse(val);
-                        }),
+                        controller: ownersOthers,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -764,9 +865,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          totalOwnersEquity = int.parse(val);
-                        }),
+                        readOnly: true,
                         decoration: InputDecoration(
                             hintText: 'N ' + totalOwnersEquity.toString()),
                       ),
@@ -788,6 +887,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
               Container(
                 width: 100,
                 child: TextFormField(
+                  readOnly: true,
                   decoration: InputDecoration(
                       hintText:
                           'N ' + totalLiabilitiesAndOwnersEquity.toString()),
@@ -844,11 +944,9 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          debtRatio = double.parse(val);
-                        }),
+                        readOnly: true,
                         decoration: InputDecoration(
-                            hintText: 'N ' + debtRatio.toString()),
+                            hintText: debtRatio.toStringAsFixed(2)),
                       ),
                     ),
                   ],
@@ -865,11 +963,12 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
+                        readOnly: true,
                         onChanged: (val) => setState(() {
                           currentRatio = double.parse(val);
                         }),
                         decoration: InputDecoration(
-                            hintText: 'N ' + currentRatio.toString()),
+                            hintText: currentRatio.toStringAsFixed(2)),
                       ),
                     ),
                   ],
@@ -886,11 +985,9 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          workingCapital = int.parse(val);
-                        }),
+                        readOnly: true,
                         decoration: InputDecoration(
-                            hintText: 'N ' + workingCapital.toString()),
+                            hintText: workingCapital.toStringAsFixed(2)),
                       ),
                     ),
                   ],
@@ -907,11 +1004,12 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
+                        readOnly: true,
                         onChanged: (val) => setState(() {
                           assetToEquityRatio = double.parse(val);
                         }),
                         decoration: InputDecoration(
-                            hintText: 'N ' + assetToEquityRatio.toString()),
+                            hintText: assetToEquityRatio.toStringAsFixed(2)),
                       ),
                     ),
                   ],
@@ -928,29 +1026,176 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          debtToEquityRatio = int.parse(val);
-                        }),
+                        readOnly: true,
+                        onChanged: (val) => setState(() {}),
                         decoration: InputDecoration(
-                            hintText: 'N ' + debtToEquityRatio.toString()),
+                            hintText: debtToEquityRatio.toStringAsFixed(2)),
                       ),
                     ),
                   ],
                 ),
               ])),
           SizedBox(height: 20),
-          InkWell(
-            child: Container(
-              width: 150,
-              height: 40,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.blue[600]),
-              child: Center(
-                  child: Text('Generate',
-                      style: TextStyle(fontSize: 17, color: Colors.white))),
-            ),
-          )
+          preview
+              ? InkWell(
+                  child: Container(
+                    width: 150,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.green[600]),
+                    child: Center(
+                        child: Text('Preview',
+                            style:
+                                TextStyle(fontSize: 17, color: Colors.white))),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      preview = false;
+                    });
+                    _calculation();
+                  })
+              : InkWell(
+                  child: Container(
+                    width: 150,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.blue[600]),
+                    child: Center(
+                        child: Text('Generate',
+                            style:
+                                TextStyle(fontSize: 17, color: Colors.white))),
+                  ),
+                  onTap: () async {
+                    _activitiesServices.checkForInternet().then((value) async {
+                      if (value == true) {
+                        if (debtRatio == (0 / 0)) {
+                          print('space cannot be empty');
+                        }
+                        DialogBoxes().loading(context);
+                        dynamic result = await _accountingServices.balanceSheet(
+                            cash.numberValue.round(),
+                            inventory.numberValue.round(),
+                            accountReceivable.numberValue.round(),
+                            prepaidExpenses.numberValue.round(),
+                            shortTermInvestments.numberValue.round(),
+                            totalCurrentAssets,
+                            longTermInvestments.numberValue.round(),
+                            propertyPlantAndEquipments.numberValue.round(),
+                            varangibleAssets.numberValue.round(),
+                            totalFixedAssets,
+                            deferredIncomeTaxOtherAsset.numberValue.round(),
+                            otherAsset.numberValue.round(),
+                            totalOtherAsset,
+                            totalAssets,
+                            accountPayable.numberValue.round(),
+                            shortTermLoans.numberValue.round(),
+                            incomeTaxesPayable.numberValue.round(),
+                            accruedSalariesAndWages.numberValue.round(),
+                            unearnedRevenue.numberValue.round(),
+                            totalCurrentLiabilities,
+                            longTermDebt.numberValue.round(),
+                            deferredIncomeTax.numberValue.round(),
+                            longTermOthers.numberValue.round(),
+                            totalLongTermLiabilities,
+                            ownersInvestment.numberValue.round(),
+                            retainedEarnings.numberValue.round(),
+                            ownersOthers.numberValue.round(),
+                            totalOwnersEquity,
+                            totalLiabilitiesAndOwnersEquity,
+                            debtRatio.toStringAsFixed(2),
+                            currentRatio.toStringAsFixed(2),
+                            workingCapital,
+                            assetToEquityRatio.toStringAsFixed(2),
+                            debtToEquityRatio.toStringAsFixed(2),
+                            year);
+
+                        if (result == 201) {
+                          Navigator.pop(context);
+                          setState(() {
+                            _error =
+                                'Your Balance Sheet has been sent to your email';
+                            _displaySnackBarSuccess(context);
+                          });
+                        } else {
+                          Navigator.pop(context);
+                          setState(() {
+                            _error = result.toString();
+                            _displaySnackBar(context);
+                          });
+                        }
+                      }
+                    });
+                  },
+                )
         ]));
+  }
+
+  _displaySnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+        duration: Duration(seconds: 5),
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Text(
+          _error.toString(),
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  _displaySnackBarSuccess(BuildContext context) {
+    final snackBar = SnackBar(
+        duration: Duration(seconds: 5),
+        backgroundColor: Colors.green,
+        content: Text(
+          _error.toString(),
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  _calculation() {
+    setState(() {
+      totalCurrentAssets = (cash.numberValue +
+          inventory.numberValue +
+          accountReceivable.numberValue +
+          prepaidExpenses.numberValue +
+          shortTermInvestments.numberValue);
+      totalOtherAsset =
+          (deferredIncomeTaxOtherAsset.numberValue + otherAsset.numberValue);
+      totalFixedAssets = (longTermInvestments.numberValue +
+          propertyPlantAndEquipments.numberValue +
+          varangibleAssets.numberValue);
+      totalAssets = totalCurrentAssets + totalFixedAssets + totalOtherAsset;
+      totalCurrentLiabilities = (accountPayable.numberValue +
+          shortTermLoans.numberValue +
+          incomeTaxesPayable.numberValue +
+          accruedSalariesAndWages.numberValue +
+          unearnedRevenue.numberValue);
+
+      totalLongTermLiabilities = (longTermDebt.numberValue +
+          deferredIncomeTax.numberValue +
+          longTermOthers.numberValue);
+
+      totalOwnersEquity = (ownersInvestment.numberValue +
+          retainedEarnings.numberValue +
+          ownersOthers.numberValue);
+      totalLiabilitiesAndOwnersEquity = (totalCurrentLiabilities +
+          totalLongTermLiabilities +
+          totalOwnersEquity);
+
+      debtRatio =
+          ((totalCurrentLiabilities + totalLongTermLiabilities) / totalAssets);
+      currentRatio =
+          (totalAssets / (totalCurrentLiabilities + totalLongTermLiabilities));
+
+      workingCapital =
+          (totalAssets - (totalCurrentLiabilities + totalLongTermLiabilities));
+
+      assetToEquityRatio = (totalAssets / totalOwnersEquity);
+      debtToEquityRatio =
+          ((totalCurrentLiabilities + totalLongTermLiabilities) -
+              totalOwnersEquity);
+    });
   }
 }

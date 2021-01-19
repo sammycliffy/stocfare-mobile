@@ -22,6 +22,7 @@ class AuthServices {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String firebaseToken = sharedPreferences.get('firebaseToken');
     print(firebaseToken);
+    print(phone);
     DateTime d = DateTime.now();
     int newDate = Jiffy(d).add(days: 6).millisecondsSinceEpoch;
     try {
@@ -47,7 +48,7 @@ class AuthServices {
                 "referral": referralCode,
                 "business_type": businessType
               }))
-          .timeout(Duration(seconds: 15));
+          .timeout(Duration(seconds: 25));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         var responseJson = json.decode(response.body);
@@ -68,12 +69,20 @@ class AuthServices {
 
         return true;
       } else {
+        String _error;
         print(response.body);
-        return json.decode(response.body)['name'] ??
-            json.decode(response.body)['registration_id'] ??
-            json.decode(response.body)['account']['phone_number'] ??
-            json.decode(response.body)['account']['email'] ??
-            json.decode(response.body)['account']['error'];
+        Map result = json.decode(response.body);
+        print(response.statusCode);
+        result.forEach((k, v) {
+          if (v is Map) {
+            v.forEach((key, value) {
+              _error = '${value[0]}';
+            });
+          } else {
+            _error = v;
+          }
+        });
+        return _error;
 
         // return json.decode(response.body);
       }

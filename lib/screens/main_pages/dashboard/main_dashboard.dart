@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/sales_analytics_model.dart';
@@ -99,242 +100,244 @@ class _DashBoardState extends State<DashBoard> {
         decimalSeparator: '.',
         thousandSeparator: ',',
         leftSymbol: ' ${_signupNotifier.country} ');
-    return Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          backgroundColor: Colors.red[800],
-          title: Text(
-            'Home',
+    return WillPopScope(
+      onWillPop: () =>
+          SystemChannels.platform.invokeMethod('SystemNavigator.pop'),
+      child: Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            backgroundColor: Colors.red[800],
+            title: Text(
+              'Home',
+            ),
+            actions: [
+              GestureDetector(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 50),
+                  child:
+                      Icon(Icons.notifications, size: 30, color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ActivitiesPage()));
+                },
+              ),
+            ],
           ),
-          actions: [
-            GestureDetector(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 50),
-                child: Icon(Icons.notifications, size: 30, color: Colors.white),
-              ),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ActivitiesPage()));
-              },
-            ),
-          ],
-        ),
-        drawer: DrawerPage(),
-        body: SingleChildScrollView(
-            child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 5,
+          drawer: DrawerPage(),
+          body: SingleChildScrollView(
+              child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 5,
+                    ),
+                    child: Text(
+                      'Welcome ${_signupNotifier.fullName}!',
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
-                  child: Text(
-                    'Welcome ${_signupNotifier.fullName}!',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-                // Container(
-                //   height: 60,
-                //   width: 50,
-                //   decoration: BoxDecoration(
-                //       color: Colors.green[300],
-                //       border: Border.all(color: Colors.white, width: 3),
-                //       borderRadius: BorderRadius.circular(8)),
-                //   child: Center(
-                //       child: Text(
-                //     'Wallet',
-                //     style: TextStyle(
-                //         color: Colors.white, fontWeight: FontWeight.bold),
-                //   )),
-                // ),
-              ],
-            ),
-
-            SizedBox(
-              height: 5,
-            ),
-            InkWell(
-              onTap: () => Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => FormPage())),
-              child: Card(
-                child: ListTile(
-                  leading: Image.asset('assets/images/add.png'),
-                  title: Text('Add Product',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  subtitle: Text('Click to add product'),
-                  trailing:
-                      Icon(Icons.arrow_forward, size: 30, color: Colors.blue),
-                ),
+                  // Container(
+                  //   height: 60,
+                  //   width: 50,
+                  //   decoration: BoxDecoration(
+                  //       color: Colors.green[300],
+                  //       border: Border.all(color: Colors.white, width: 3),
+                  //       borderRadius: BorderRadius.circular(8)),
+                  //   child: Center(
+                  //       child: Text(
+                  //     'Wallet',
+                  //     style: TextStyle(
+                  //         color: Colors.white, fontWeight: FontWeight.bold),
+                  //   )),
+                  // ),
+                ],
               ),
-            ),
 
-            InkWell(
-              onTap: () {
-                SignupNotifier _signupNotifier =
-                    Provider.of<SignupNotifier>(context, listen: false);
-                _signupNotifier.setPageNumber(1);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BottomNavigationPage()));
-              },
-              child: Card(
-                child: ListTile(
-                  leading: Image.asset('assets/images/checkout.png'),
-                  title: Text('Checkout',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  subtitle: Text('Click to create a sale'),
-                  trailing:
-                      Icon(Icons.arrow_forward, size: 30, color: Colors.blue),
-                ),
+              SizedBox(
+                height: 5,
               ),
-            ),
-
-            InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ExpensesHome()));
-              },
-              child: Card(
-                child: ListTile(
-                  leading: Image.asset('assets/images/monthly.png'),
-                  title: Text('Monthly Expense',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  subtitle: Text('Click to create a sale'),
-                  trailing:
-                      Icon(Icons.arrow_forward, size: 30, color: Colors.blue),
-                ),
-              ),
-            ),
-
-            InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => BalanceSheet()));
-              },
-              child: Card(
-                child: ListTile(
-                  leading: Image.asset('assets/images/balancesheet.png'),
-                  title: Text('Balance Sheet',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  subtitle: Text('Click to generate Balance Sheet'),
-                  trailing:
-                      Icon(Icons.arrow_forward, size: 30, color: Colors.blue),
-                ),
-              ),
-            ),
-
-            InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SalesReportPage()));
-              },
-              child: Card(
-                child: ListTile(
-                  leading: Image.asset('assets/images/report.png'),
-                  title: Text('Sales Report',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  subtitle: Text('Click to generate Report'),
-                  trailing:
-                      Icon(Icons.arrow_forward, size: 30, color: Colors.blue),
-                ),
-              ),
-            ),
-
-            InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CashFlow()));
-              },
-              child: Card(
-                child: ListTile(
-                  leading: Image.asset('assets/images/cashflow.png'),
-                  title: Text('Cash Flow',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  subtitle: Text('Click to generate Balance Sheet'),
-                  trailing:
-                      Icon(Icons.arrow_forward, size: 30, color: Colors.blue),
-                ),
-              ),
-            ),
-
-            Container(
-                child: Center(
-                    child: Text('Adverts',
+              InkWell(
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => FormPage())),
+                child: Card(
+                  child: ListTile(
+                    leading: Image.asset('assets/images/add.png'),
+                    title: Text('Add Product',
                         style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.purple)))),
-            ImageSlider(),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 5, right: 150),
-            //   child: Text(
-            //     'YOUR BUSINESS REPORT',
-            //     style: TextStyle(
-            //         fontSize: 18,
-            //         color: Colors.grey[800],
-            //         fontWeight: FontWeight.bold),
-            //   ),
-            // ),
-            (() {
-              if (_error == true) {
-                return Center(
-                  child: Text(
-                    _errorData,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18),
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    subtitle: Text('Click to add product'),
+                    trailing:
+                        Icon(Icons.arrow_forward, size: 30, color: Colors.blue),
                   ),
-                );
-              } else {
-                return isNetwork == false
-                    ? Center(child: Text('No Internet'))
-                    : SizedBox();
-                // : Container(
-                //     height: 50,
-                //     child: FutureBuilder<SalesAnalytics>(
-                //         future: _checkSales.getAllAnalytics(),
-                //         builder: (context, snapshot) {
-                //           if (snapshot.hasData) {
-                //             controller.updateValue(
-                //                 snapshot.data.monthSalesAmount.toDouble());
-                //             controller1.updateValue(
-                //                 snapshot.data.todaySalesAmount.toDouble());
-                //             controller2.updateValue(
-                //                 snapshot.data.weekSalesAmount.toDouble());
-                //             controller3.updateValue(
-                //                 snapshot.data.monthSalesAmount.toDouble());
-                //             controller4.updateValue(snapshot
-                //                 .data.quarterSalesAmount
-                //                 .toDouble());
-                //             controller5.updateValue(
-                //                 snapshot.data.yearSalesAmount.toDouble());
-                //             return ListView(
-                //               // This next line does the trick.
-                //               scrollDirection: Axis.horizontal,
-                //               children: <Widget>[
-                //                 _daysCount('Today', controller1.text),
-                //                 _daysCount('Week', controller2.text),
-                //                 _daysCount('Month', controller3.text),
-                //                 _daysCount('Quarter', controller4.text),
-                //                 _daysCount('Year', controller5.text)
-                //               ],
-                //             );
-                //           }
-                //           return Center(child: SizedBox());
-                //         }),
-                //   );
-              }
-            }())
-          ],
-        )));
+                ),
+              ),
+
+              InkWell(
+                onTap: () {
+                  SignupNotifier _signupNotifier =
+                      Provider.of<SignupNotifier>(context, listen: false);
+                  _signupNotifier.setPageNumber(1);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BottomNavigationPage()));
+                },
+                child: Card(
+                  child: ListTile(
+                    leading: Image.asset('assets/images/checkout.png'),
+                    title: Text('Checkout',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    subtitle: Text('Click to create a sale'),
+                    trailing:
+                        Icon(Icons.arrow_forward, size: 30, color: Colors.blue),
+                  ),
+                ),
+              ),
+
+              InkWell(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ExpensesHome()));
+                },
+                child: Card(
+                  child: ListTile(
+                    leading: Image.asset('assets/images/monthly.png'),
+                    title: Text('Monthly Expense',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    subtitle: Text('Click to create a sale'),
+                    trailing:
+                        Icon(Icons.arrow_forward, size: 30, color: Colors.blue),
+                  ),
+                ),
+              ),
+
+              InkWell(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => BalanceSheet()));
+                },
+                child: Card(
+                  child: ListTile(
+                    leading: Image.asset('assets/images/balancesheet.png'),
+                    title: Text('Balance Sheet',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    subtitle: Text('Click to generate Balance Sheet'),
+                    trailing:
+                        Icon(Icons.arrow_forward, size: 30, color: Colors.blue),
+                  ),
+                ),
+              ),
+
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SalesReportPage()));
+                },
+                child: Card(
+                  child: ListTile(
+                    leading: Image.asset('assets/images/report.png'),
+                    title: Text('Sales Report',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    subtitle: Text('Click to generate Report'),
+                    trailing:
+                        Icon(Icons.arrow_forward, size: 30, color: Colors.blue),
+                  ),
+                ),
+              ),
+
+              InkWell(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CashFlow()));
+                },
+                child: Card(
+                  child: ListTile(
+                    leading: Image.asset('assets/images/cashflow.png'),
+                    title: Text('Cash Flow',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    subtitle: Text('Click to generate Balance Sheet'),
+                    trailing:
+                        Icon(Icons.arrow_forward, size: 30, color: Colors.blue),
+                  ),
+                ),
+              ),
+
+              ImageSlider(),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 5, right: 150),
+              //   child: Text(
+              //     'YOUR BUSINESS REPORT',
+              //     style: TextStyle(
+              //         fontSize: 18,
+              //         color: Colors.grey[800],
+              //         fontWeight: FontWeight.bold),
+              //   ),
+              // ),
+              (() {
+                if (_error == true) {
+                  return Center(
+                    child: Text(
+                      _errorData,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  );
+                } else {
+                  return isNetwork == false
+                      ? Center(child: Text('No Internet'))
+                      : SizedBox();
+                  // : Container(
+                  //     height: 50,
+                  //     child: FutureBuilder<SalesAnalytics>(
+                  //         future: _checkSales.getAllAnalytics(),
+                  //         builder: (context, snapshot) {
+                  //           if (snapshot.hasData) {
+                  //             controller.updateValue(
+                  //                 snapshot.data.monthSalesAmount.toDouble());
+                  //             controller1.updateValue(
+                  //                 snapshot.data.todaySalesAmount.toDouble());
+                  //             controller2.updateValue(
+                  //                 snapshot.data.weekSalesAmount.toDouble());
+                  //             controller3.updateValue(
+                  //                 snapshot.data.monthSalesAmount.toDouble());
+                  //             controller4.updateValue(snapshot
+                  //                 .data.quarterSalesAmount
+                  //                 .toDouble());
+                  //             controller5.updateValue(
+                  //                 snapshot.data.yearSalesAmount.toDouble());
+                  //             return ListView(
+                  //               // This next line does the trick.
+                  //               scrollDirection: Axis.horizontal,
+                  //               children: <Widget>[
+                  //                 _daysCount('Today', controller1.text),
+                  //                 _daysCount('Week', controller2.text),
+                  //                 _daysCount('Month', controller3.text),
+                  //                 _daysCount('Quarter', controller4.text),
+                  //                 _daysCount('Year', controller5.text)
+                  //               ],
+                  //             );
+                  //           }
+                  //           return Center(child: SizedBox());
+                  //         }),
+                  //   );
+                }
+              }())
+            ],
+          ))),
+    );
   }
 
   _daysCount(date, prices) => Padding(

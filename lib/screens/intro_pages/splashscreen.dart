@@ -41,34 +41,49 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  currentImage,
-                ]),
-          ),
-          Center(
-            child: Column(children: <Widget>[
-              Text(
-                'From Contrail Store Ltd.',
-                style: TextStyle(
-                  fontSize: 16,
+    return Container(
+      decoration: new BoxDecoration(
+          gradient: new LinearGradient(
+              colors: [
+            Colors.red[200],
+            Colors.white,
+          ],
+              stops: [
+            0.0,
+            1.0
+          ],
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+              tileMode: TileMode.repeated)),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    currentImage,
+                  ]),
+            ),
+            Center(
+              child: Column(children: <Widget>[
+                Text(
+                  'From Contrail Store Ltd.',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              )
-            ]),
-          ),
-        ],
+                SizedBox(
+                  height: 20,
+                )
+              ]),
+            ),
+          ],
+        ),
       ),
     );
   }

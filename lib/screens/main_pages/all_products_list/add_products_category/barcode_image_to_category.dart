@@ -104,195 +104,216 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
   Widget build(BuildContext context) {
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
 
-    return Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: Colors.white,
-        appBar: AppBar(title: Text('Add Image & Barcode')),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 40,
-              ),
-              Center(
-                  child: Column(children: [
-                InkWell(
-                  child: Container(
-                      width: 150,
-                      height: 150,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.grey)),
-                      child: IconButton(
-                        icon: FaIcon(
-                          FontAwesomeIcons.barcode,
-                          size: 100,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        onPressed: null,
-                      )),
-                  onTap: () {
-                    scanBarcodeNormal();
-                  },
-                ),
+    return Container(
+      decoration: new BoxDecoration(
+          gradient: new LinearGradient(
+              colors: [
+            Colors.red[200],
+            Colors.white,
+          ],
+              stops: [
+            0.0,
+            1.0
+          ],
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+              tileMode: TileMode.repeated)),
+      child: Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(title: Text('Add Image & Barcode')),
+          body: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
                 SizedBox(
-                  height: 10,
+                  height: 40,
                 ),
-                Container(
-                  height: 30,
-                  width: 150,
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 2, color: Colors.grey)),
-                  child: Center(
-                      child: _scanBarcode == null
-                          ? Text('Barcode will show here',
-                              style: TextStyle(color: Colors.grey))
-                          : Text(
-                              _scanBarcode,
-                              style: TextStyle(color: Colors.black),
-                            )),
-                ),
-                SizedBox(
-                  height: 9,
-                ),
-                Text(
-                  'Click box to scan barcode',
-                  style:
-                      TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  '(Optional)',
-                  style: TextStyle(
-                      color: Colors.grey, fontWeight: FontWeight.bold),
-                ),
-              ])),
-              SizedBox(
-                height: 60,
-              ),
-              Center(
-                  child: Column(children: [
-                InkWell(
-                  child: _image == null
-                      ? Container(
-                          width: 150,
-                          height: 150,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.grey)),
-                          child: Icon(Icons.add_a_photo,
-                              size: 50, color: Colors.red))
-                      : Image.file(
-                          _image,
-                          fit: BoxFit.cover,
-                          width: 150,
-                          height: 150,
-                        ),
-                  onTap: () {
-                    _showPicker(context);
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  height: 9,
-                ),
-                Text(
-                  'Add Image',
-                  style:
-                      TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  '(Optional)',
-                  style: TextStyle(
-                      color: Colors.grey, fontWeight: FontWeight.bold),
-                ),
-              ])),
-              SizedBox(
-                height: 30,
-              ),
-              GestureDetector(
-                  child: Center(
+                Center(
+                    child: Column(children: [
+                  InkWell(
                     child: Container(
-                      height: 40,
-                      width: 200,
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Center(
-                          child: Text(
-                        'Add',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      )),
-                    ),
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.grey)),
+                        child: IconButton(
+                          icon: FaIcon(
+                            FontAwesomeIcons.barcode,
+                            size: 100,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          onPressed: null,
+                        )),
+                    onTap: () {
+                      scanBarcodeNormal();
+                    },
                   ),
-                  onTap: () async {
-                    _activitiesServices.checkForInternet().then((value) async {
-                      if (value == true) {
-                        DialogBoxes().loading(context);
-                        SharedPreferences sharedPreferences =
-                            await SharedPreferences.getInstance();
-                        String id = sharedPreferences.getString('id');
-                        print(id);
-                        String noImage = await getImageFileFromAssets();
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: 30,
+                    width: 150,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(width: 2, color: Colors.grey)),
+                    child: Center(
+                        child: _scanBarcode == null
+                            ? Text('Barcode will show here',
+                                style: TextStyle(color: Colors.grey))
+                            : Text(
+                                _scanBarcode,
+                                style: TextStyle(color: Colors.black),
+                              )),
+                  ),
+                  SizedBox(
+                    height: 9,
+                  ),
+                  Text(
+                    'Click box to scan barcode',
+                    style: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '(Optional)',
+                    style: TextStyle(
+                        color: Colors.green, fontWeight: FontWeight.bold),
+                  ),
+                ])),
+                SizedBox(
+                  height: 60,
+                ),
+                Center(
+                    child: Column(children: [
+                  InkWell(
+                    child: _image == null
+                        ? Container(
+                            width: 150,
+                            height: 150,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.grey)),
+                            child: Icon(Icons.add_a_photo,
+                                size: 50, color: Colors.red))
+                        : Image.file(
+                            _image,
+                            fit: BoxFit.cover,
+                            width: 150,
+                            height: 150,
+                          ),
+                    onTap: () {
+                      _showPicker(context);
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 9,
+                  ),
+                  Text(
+                    'Add Image',
+                    style: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '(Optional)',
+                    style: TextStyle(
+                        color: Colors.green, fontWeight: FontWeight.bold),
+                  ),
+                ])),
+                SizedBox(
+                  height: 30,
+                ),
+                GestureDetector(
+                    child: Center(
+                      child: Container(
+                        height: 40,
+                        width: 200,
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Center(
+                            child: Text(
+                          'Add',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        )),
+                      ),
+                    ),
+                    onTap: () async {
+                      _activitiesServices
+                          .checkForInternet()
+                          .then((value) async {
                         if (value == true) {
-                          List<int> imageBytes;
-                          String base64Image;
-                          if (_image == null) {
-                            base64Image = noImage;
-                          } else {
-                            imageBytes = _image.readAsBytesSync();
-                            base64Image = base64.encode(imageBytes);
-                          }
-                          dynamic result =
-                              await _productServices.addProductToCategory(
-                                  _addProduct.unitproductName,
-                                  _addProduct.unitproductPrice,
-                                  _addProduct.unitCostPrice,
-                                  _addProduct.unitproductQuantity,
-                                  _addProduct.unitLimit,
-                                  _addProduct.packProductSellingPriceToCategory,
-                                  _addProduct.packProductCostPriceToCategory,
-                                  _addProduct.packProductQuantityToCategory,
-                                  _addProduct.packProductLimitToCategory,
-                                  _scanBarcode,
-                                  _addProduct.productDescription,
-                                  base64Image,
-                                  _addProduct.productDiscount,
-                                  _addProduct.productWeight,
-                                  _addProduct.data,
-                                  id ?? _addProduct.categoryId);
+                          DialogBoxes().loading(context);
+                          SharedPreferences sharedPreferences =
+                              await SharedPreferences.getInstance();
+                          String id = sharedPreferences.getString('id');
+                          print(id);
+                          String noImage = await getImageFileFromAssets();
+                          if (value == true) {
+                            List<int> imageBytes;
+                            String base64Image;
+                            if (_image == null) {
+                              base64Image = noImage;
+                            } else {
+                              imageBytes = _image.readAsBytesSync();
+                              base64Image = base64.encode(imageBytes);
+                            }
+                            dynamic result =
+                                await _productServices.addProductToCategory(
+                                    _addProduct.unitproductName,
+                                    _addProduct.unitproductPrice,
+                                    _addProduct.unitCostPrice,
+                                    _addProduct.unitproductQuantity,
+                                    _addProduct.unitLimit,
+                                    _addProduct
+                                        .packProductSellingPriceToCategory,
+                                    _addProduct.packProductCostPriceToCategory,
+                                    _addProduct.packProductQuantityToCategory,
+                                    _addProduct.packProductLimitToCategory,
+                                    _scanBarcode,
+                                    _addProduct.productDescription,
+                                    base64Image,
+                                    _addProduct.productDiscount,
+                                    _addProduct.productWeight,
+                                    _addProduct.data,
+                                    id ?? _addProduct.categoryId);
 
-                          if (result != true) {
-                            Navigator.pop(context);
-                            setState(() {
-                              result == null
-                                  ? _error =
-                                      'Opps! Error occured, please try again.'
-                                  : _error = result.toString();
-                              _displaySnackBar(context);
-                            });
-                          } else {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProductSuccess()));
+                            if (result != true) {
+                              Navigator.pop(context);
+                              setState(() {
+                                result == null
+                                    ? _error =
+                                        'Opps! Error occured, please try again.'
+                                    : _error = result.toString();
+                                _displaySnackBar(context);
+                              });
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ProductSuccess()));
+                            }
                           }
+                        } else {
+                          setState(() {
+                            _error = 'Check your internet connection';
+                            _displaySnackBar(context);
+                          });
                         }
-                      } else {
-                        setState(() {
-                          _error = 'Check your internet connection';
-                          _displaySnackBar(context);
-                        });
-                      }
-                    });
-                  }),
-              SizedBox(
-                height: 50,
-              ),
-            ],
-          ),
-        ));
+                      });
+                    }),
+                SizedBox(
+                  height: 50,
+                ),
+              ],
+            ),
+          )),
+    );
   }
 
   _displaySnackBar(BuildContext context) {

@@ -31,7 +31,7 @@ class _ImageSliderState extends State<ImageSlider> {
                     url,
                     fit: BoxFit.cover,
                     width: 1000.0,
-                    height: 200,
+                    height: 250,
                   )),
             );
           },

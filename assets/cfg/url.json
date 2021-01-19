@@ -45,10 +45,11 @@
   "get-all-profits": "http://stockfare-io.herokuapp.com/api/v1/analytics/profit/",
   "loss-list": "http://stockfare-io.herokuapp.com/api/v1/analytics/sale-loss-list/",
   "profit-list": "http://stockfare-io.herokuapp.com/api/v1/analytics/sale-profit-list/",
-  "base-url": "stockfare-io.herokuapp.com/",
+  "base-url": "stockfare-io.herokuapp.com",
   "version-number": "https://stockfare-io.herokuapp.com/api/v2/users/verision-number/",
-  "sales-report": "https://stockfare-io.herokuapp.com/api/v1/sales/sales-report/"
+  "sales-report": "https://stockfare-io.herokuapp.com/api/v1/sales/sales-report/",
+  "cash-flow": "https://stockfare-io.herokuapp.com/api/v1/report/generate/cash-flow-statement/",
+  "balance-sheet": "https://stockfare-io.herokuapp.com/api/v1/report/generate/balance-sheet/"
 
 
-  
 }

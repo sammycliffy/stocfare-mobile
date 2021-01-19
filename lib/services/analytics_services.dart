@@ -35,6 +35,7 @@ class Analytics {
         print(response.data);
         return SalesAnalytics.fromJson(response.data);
       } else {
+        print(response.data);
         return Future.error(response.data['detail']);
       }
     } on DioError catch (e) {

@@ -360,7 +360,7 @@ class _SignupPage extends State<BusinessSignupPage> {
                                               result == null
                                                   ? _error =
                                                       'Opps! An Error Occured. Please try again.'
-                                                  : _error = result[0];
+                                                  : _error = result;
                                               _displaySnackBar(context);
                                             });
                                           } else {

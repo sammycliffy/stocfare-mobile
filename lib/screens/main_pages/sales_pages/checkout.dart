@@ -3,6 +3,7 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/notifiers/add_to_cart.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/bottom_navigation.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/screens/main_pages/dashboard/main_dashboard.dart';
 import 'package:stockfare_mobile/screens/main_pages/sales_pages/sales_receipt.dart';
@@ -70,6 +71,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
     });
   }
 
+  goback(context) {
+    Navigator.of(context).pop(true);
+  }
+
   @override
   Widget build(BuildContext context) {
     AddProductToCart addProduct = Provider.of<AddProductToCart>(context);
@@ -100,8 +105,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
               end: FractionalOffset.bottomCenter,
               tileMode: TileMode.repeated)),
       child: WillPopScope(
-        onWillPop: () => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => DashBoard())),
+        onWillPop: () {
+          return goback(context);
+        },
         child: Scaffold(
             backgroundColor: Colors.transparent,
             key: _scaffoldKey,

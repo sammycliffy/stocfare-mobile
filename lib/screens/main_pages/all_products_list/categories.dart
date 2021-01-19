@@ -62,6 +62,10 @@ class _CategoryPageState extends State<CategoryPage> {
     // });
   }
 
+  goback(context) {
+    Navigator.of(context).pop(true);
+  }
+
   @override
   Widget build(BuildContext context) {
     AddProductNotifier _addProductNotifier =
@@ -74,8 +78,9 @@ class _CategoryPageState extends State<CategoryPage> {
     final _firebaseNotification = _productServices
         .getFirebaseNotification(_signupNotifier.notificationId);
     return WillPopScope(
-      onWillPop: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => BottomNavigationPage())),
+      onWillPop: () {
+        return goback(context);
+      },
       child: Container(
         decoration: new BoxDecoration(
             gradient: new LinearGradient(

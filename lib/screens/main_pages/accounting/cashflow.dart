@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:provider/provider.dart';
+import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
+import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
+import 'package:stockfare_mobile/services/accounting_services.dart';
+import 'package:stockfare_mobile/services/activities_services.dart';
 
 class CashFlow extends StatefulWidget {
   @override
@@ -6,83 +12,127 @@ class CashFlow extends StatefulWidget {
 }
 
 class _CashFlowState extends State<CashFlow> {
-  int cash = 0;
-  int inventory = 0;
-  int accountReceivable = 0;
-  int prepaidExpenses = 0;
-  int shortTermInvestments = 0;
-  int totalCurrentAssets = 0;
-
-  int longTermInvestments = 0;
-  int propertyPlantAndEquipments = 0;
-  int intangibleAssets = 0;
-  int totalFixedAssets = 0;
-  int totalAssets = 0;
-
-  int accountPayable = 0;
-  int shortTermLoans = 0;
-  int incomeTaxesPayable = 0;
-  int accruedSalariesAndWages = 0;
-  int unearnedRevenue = 0;
-  int totalCurrentLiabilities = 0;
-
-  int longTermDebt = 0;
-  int deferredIncomeTax = 0;
-  int longTermOthers = 0;
-  int totalLongTermLiabilities = 0;
-
-  int ownersInvestment = 0;
-  int retainedEarnings = 0;
-  int ownersOthers = 0;
-  int totalOwnersEquity = 0;
-  int totalLiabilitiesAndOwnersEquity = 0;
-
-  double debtRatio = 0;
-  double currentRatio = 0;
-  int workingCapital = 0;
-  double assetToEquityRatio = 0;
-  int debtToEquityRatio = 0;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  AccountingServices _accountingServices = AccountingServices();
+  ActivitiesServices _activitiesServices = ActivitiesServices();
+  String _error = '';
+  bool preview = true;
+  var year = 0;
+  var cashAtBeginingOfYear = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var otherOperationReceipt = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var customer = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var inventory = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var administrativeExpenses = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var wagesSalaryExpenses = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var interest = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var incomeTaxes = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var otherOperations = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  double netCashFlowOperations = 0;
+  var salePropertyAndEquipment = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var collectionOfPrincipalOnLoans = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var saleOfInvestmentSecurities = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var otherReturns = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var purchaseOfPropertyandEquipment = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var makingLoanstoOtherEntities = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var purchaseOfInvestmentSecurities = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var otherInvestments = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  double netCashInvestment = 0;
+  var insuranceSupplies = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var borrowing = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var otherFinancialIncomeCash = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var repurchaseOfStock = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var dividends = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var repaymentOfLoans = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  var otherFinancialOutgoingCash = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
+  double netCashFlowFinancing = 0;
+  double netIncreaseIncash = 0;
+  var cashAtEndOfYear = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
 
   @override
   Widget build(BuildContext context) {
-    totalCurrentAssets = (cash +
-        inventory +
-        accountReceivable +
-        prepaidExpenses +
-        shortTermInvestments);
-    totalFixedAssets =
-        (longTermInvestments + propertyPlantAndEquipments + intangibleAssets);
-    totalAssets = totalCurrentAssets + totalFixedAssets;
-    totalCurrentLiabilities = (accountPayable +
-        shortTermLoans +
-        incomeTaxesPayable +
-        accruedSalariesAndWages +
-        unearnedRevenue);
+    SignupNotifier _signupNotifier =
+        Provider.of<SignupNotifier>(context, listen: false);
 
-    totalLongTermLiabilities =
-        (longTermDebt + deferredIncomeTax + longTermOthers);
-
-    totalOwnersEquity = (ownersInvestment + retainedEarnings + ownersOthers);
-    totalLiabilitiesAndOwnersEquity = (totalCurrentLiabilities +
-        totalLongTermLiabilities +
-        totalOwnersEquity);
-
-    debtRatio =
-        ((totalCurrentLiabilities + totalLongTermLiabilities) / totalAssets);
-    currentRatio =
-        (totalAssets / (totalCurrentLiabilities + totalLongTermLiabilities));
-
-    workingCapital =
-        (totalAssets - (totalCurrentLiabilities + totalLongTermLiabilities));
-
-    assetToEquityRatio = (totalAssets / totalOwnersEquity);
-    debtToEquityRatio = ((totalCurrentLiabilities + totalLongTermLiabilities) -
-        totalOwnersEquity);
     return Container(
       decoration: new BoxDecoration(
           gradient: new LinearGradient(
               colors: [
-            Colors.red[200],
+            Colors.red[100],
             Colors.white,
           ],
               stops: [
@@ -94,6 +144,7 @@ class _CashFlowState extends State<CashFlow> {
               tileMode: TileMode.repeated)),
       child: Scaffold(
           backgroundColor: Colors.transparent,
+          key: _scaffoldKey,
           appBar: AppBar(title: Text('Cash Flow')),
           body: SafeArea(
               child: SingleChildScrollView(
@@ -106,7 +157,7 @@ class _CashFlowState extends State<CashFlow> {
                   ),
                 ),
                 Text(
-                  '[Alibaba Group]',
+                  '[${_signupNotifier.branchName}]',
                   style: TextStyle(
                       fontSize: 20, color: Theme.of(context).primaryColor),
                 ),
@@ -122,7 +173,19 @@ class _CashFlowState extends State<CashFlow> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        decoration: InputDecoration(),
+                        onChanged: (val) => setState(() {
+                          year = int.parse(val);
+                        }),
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          contentPadding: EdgeInsets.all(5),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                        ),
                       ),
                     ),
                   ],
@@ -139,6 +202,7 @@ class _CashFlowState extends State<CashFlow> {
                     Container(
                       width: 100,
                       child: TextFormField(
+                        controller: cashAtBeginingOfYear,
                         decoration: InputDecoration(),
                       ),
                     ),
@@ -148,7 +212,7 @@ class _CashFlowState extends State<CashFlow> {
                 Container(
                   padding: EdgeInsets.all(20),
                   width: 360,
-                  height: 850,
+                  height: 780,
                   decoration: BoxDecoration(
                       color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(8)),
@@ -200,11 +264,7 @@ class _CashFlowState extends State<CashFlow> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) {
-                                      setState(() {
-                                        cash = int.parse(val);
-                                      });
-                                    },
+                                    controller: customer,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -222,9 +282,7 @@ class _CashFlowState extends State<CashFlow> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      inventory = int.parse(val);
-                                    }),
+                                    controller: otherOperationReceipt,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -263,9 +321,7 @@ class _CashFlowState extends State<CashFlow> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      longTermInvestments = int.parse(val);
-                                    }),
+                                    controller: inventory,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -284,10 +340,7 @@ class _CashFlowState extends State<CashFlow> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      propertyPlantAndEquipments =
-                                          int.parse(val);
-                                    }),
+                                    controller: administrativeExpenses,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -305,9 +358,7 @@ class _CashFlowState extends State<CashFlow> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      intangibleAssets = int.parse(val);
-                                    }),
+                                    controller: wagesSalaryExpenses,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -325,9 +376,7 @@ class _CashFlowState extends State<CashFlow> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      intangibleAssets = int.parse(val);
-                                    }),
+                                    controller: interest,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -345,9 +394,7 @@ class _CashFlowState extends State<CashFlow> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      intangibleAssets = int.parse(val);
-                                    }),
+                                    controller: incomeTaxes,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -365,9 +412,7 @@ class _CashFlowState extends State<CashFlow> {
                                 Container(
                                   width: 100,
                                   child: TextFormField(
-                                    onChanged: (val) => setState(() {
-                                      intangibleAssets = int.parse(val);
-                                    }),
+                                    controller: otherOperations,
                                     decoration:
                                         InputDecoration(hintText: 'N0.00'),
                                   ),
@@ -390,7 +435,8 @@ class _CashFlowState extends State<CashFlow> {
                             width: 100,
                             child: TextFormField(
                               decoration: InputDecoration(
-                                  hintText: 'N ' + totalAssets.toString()),
+                                  hintText:
+                                      'N ' + netCashFlowOperations.toString()),
                             ),
                           ),
                         ],
@@ -401,7 +447,7 @@ class _CashFlowState extends State<CashFlow> {
                 SizedBox(height: 50),
                 investingActivities(),
                 SizedBox(height: 50),
-                commonRatios()
+                financialActivities()
               ],
             ),
           ))),
@@ -412,7 +458,7 @@ class _CashFlowState extends State<CashFlow> {
     return Container(
       padding: EdgeInsets.all(20),
       width: 350,
-      height: 1200,
+      height: 800,
       decoration: BoxDecoration(
           color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
       child: Column(
@@ -438,14 +484,14 @@ class _CashFlowState extends State<CashFlow> {
           Padding(
             padding: const EdgeInsets.only(right: 150),
             child: Text(
-              'Current Liabilities:',
+              'Cash receipt from:',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
             ),
           ),
           SizedBox(height: 10),
           Container(
             width: 350,
-            height: 350,
+            height: 240,
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey[400]),
                 borderRadius: BorderRadius.circular(9)),
@@ -455,16 +501,14 @@ class _CashFlowState extends State<CashFlow> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Account Payable             ',
+                      'Sale of Property &          \nequipment',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          accountPayable = int.parse(val);
-                        }),
+                        controller: salePropertyAndEquipment,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -474,16 +518,14 @@ class _CashFlowState extends State<CashFlow> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Short-term loans            ',
+                      'Collection of principal    \n on loans',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          shortTermLoans = int.parse(val);
-                        }),
+                        controller: collectionOfPrincipalOnLoans,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -493,18 +535,14 @@ class _CashFlowState extends State<CashFlow> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Income taxes payable    ',
+                      'Sales of Investment        \n securities',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) {
-                          setState(() {
-                            incomeTaxesPayable = int.parse(val);
-                          });
-                        },
+                        controller: saleOfInvestmentSecurities,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -514,54 +552,15 @@ class _CashFlowState extends State<CashFlow> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Accrued Salaries &        \n wages',
+                      'Other Returns                ',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          accruedSalariesAndWages = int.parse(val);
-                        }),
+                        controller: otherReturns,
                         decoration: InputDecoration(hintText: 'N0.00'),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Unearned revenue       ',
-                      style: TextStyle(fontSize: 17),
-                      textAlign: TextAlign.left,
-                    ),
-                    Container(
-                      width: 100,
-                      child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          unearnedRevenue = int.parse(val);
-                        }),
-                        decoration: InputDecoration(hintText: 'N0.00'),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'TOTAL CURRENT          \n LIABILITIES',
-                      style: TextStyle(fontSize: 17, color: Colors.green),
-                      textAlign: TextAlign.left,
-                    ),
-                    Container(
-                      width: 100,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            hintText:
-                                'N ' + totalCurrentLiabilities.toString()),
                       ),
                     ),
                   ],
@@ -573,7 +572,7 @@ class _CashFlowState extends State<CashFlow> {
           Padding(
             padding: const EdgeInsets.only(right: 100),
             child: Text(
-              'Long-Term Liabilities',
+              'Cash paid for',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
             ),
           ),
@@ -586,20 +585,55 @@ class _CashFlowState extends State<CashFlow> {
                 borderRadius: BorderRadius.circular(9)),
             child: Column(
               children: [
+                SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Long-term debt          ',
+                      'Purchase of Property       \n & Equipment',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          longTermDebt = int.parse(val);
-                        }),
+                        controller: purchaseOfPropertyandEquipment,
+                        decoration: InputDecoration(hintText: 'N0.00'),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'Making loans to                  \n other entities',
+                      style: TextStyle(fontSize: 17),
+                      textAlign: TextAlign.left,
+                    ),
+                    Container(
+                      width: 100,
+                      child: TextFormField(
+                        controller: makingLoanstoOtherEntities,
+                        decoration: InputDecoration(hintText: 'N0.00'),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'Purchase of Investment   \n securities',
+                      style: TextStyle(fontSize: 17),
+                      textAlign: TextAlign.left,
+                    ),
+                    Container(
+                      width: 100,
+                      child: TextFormField(
+                        controller: purchaseOfInvestmentSecurities,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -609,16 +643,99 @@ class _CashFlowState extends State<CashFlow> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Deferred Income Tax',
+                      'Other Investments         ',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          deferredIncomeTax = int.parse(val);
-                        }),
+                        controller: otherInvestments,
+                        decoration: InputDecoration(hintText: 'N0.00'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                'Net Cash from                 \n Investment',
+                style: TextStyle(fontSize: 17, color: Colors.green),
+                textAlign: TextAlign.left,
+              ),
+              Container(
+                width: 100,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                      hintText: 'N ' + netCashInvestment.toString()),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  financialActivities() {
+    return Container(
+      padding: EdgeInsets.all(20),
+      width: 360,
+      height: 980,
+      decoration: BoxDecoration(
+          color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 100),
+            child: Container(
+              width: 200,
+              height: 40,
+              decoration: BoxDecoration(
+                  color: Colors.grey[700],
+                  borderRadius: BorderRadius.circular(5)),
+              child: Center(
+                child: Text(
+                  'FINANCIAL ACTIVITIES',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.only(right: 170),
+            child: Text(
+              'Cash Receipt from:',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+            ),
+          ),
+          Container(
+            width: 350,
+            height: 190,
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey[400]),
+                borderRadius: BorderRadius.circular(9)),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'Insurance of supplies        ',
+                      style: TextStyle(fontSize: 17),
+                      textAlign: TextAlign.left,
+                    ),
+                    Container(
+                      width: 100,
+                      child: TextFormField(
+                        controller: insuranceSupplies,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -628,16 +745,14 @@ class _CashFlowState extends State<CashFlow> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Others                        ',
+                      'Borrowing                         ',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          longTermOthers = int.parse(val);
-                        }),
+                        controller: borrowing,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -647,16 +762,15 @@ class _CashFlowState extends State<CashFlow> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'TOTAL LONG-TERM \n LIABILITIES     ',
-                      style: TextStyle(fontSize: 17, color: Colors.green),
+                      'Other Financial                  \n incoming cash ',
+                      style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
                     Container(
                       width: 100,
                       child: TextFormField(
-                        decoration: InputDecoration(
-                            hintText:
-                                'N ' + totalLongTermLiabilities.toString()),
+                        controller: otherFinancialIncomeCash,
+                        decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
                   ],
@@ -666,9 +780,9 @@ class _CashFlowState extends State<CashFlow> {
           ),
           SizedBox(height: 20),
           Padding(
-            padding: const EdgeInsets.only(right: 100),
+            padding: const EdgeInsets.only(right: 130),
             child: Text(
-              'Owner\'s Equity',
+              'Cash Paid for:              ',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
             ),
           ),
@@ -681,20 +795,19 @@ class _CashFlowState extends State<CashFlow> {
                 borderRadius: BorderRadius.circular(9)),
             child: Column(
               children: [
+                SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Owner\'s Investment    ',
+                      'Repurchase of Supplies      \n (treasure stock)',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          ownersInvestment = int.parse(val);
-                        }),
+                        controller: repurchaseOfStock,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -704,16 +817,15 @@ class _CashFlowState extends State<CashFlow> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Retained Earnings     ',
+                      'Dividends               ',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
+                    SizedBox(width: 23),
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          retainedEarnings = int.parse(val);
-                        }),
+                        controller: dividends,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -723,16 +835,14 @@ class _CashFlowState extends State<CashFlow> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Others                        ',
+                      'Repayment of loans          ',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          ownersOthers = int.parse(val);
-                        }),
+                        controller: repaymentOfLoans,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -742,18 +852,15 @@ class _CashFlowState extends State<CashFlow> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'TOTAL OWNER\'S      \n EQUITY        ',
-                      style: TextStyle(fontSize: 17, color: Colors.green),
+                      'Other Financial                \noutgoing cash',
+                      style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
                     Container(
                       width: 100,
                       child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          totalOwnersEquity = int.parse(val);
-                        }),
-                        decoration: InputDecoration(
-                            hintText: 'N ' + totalOwnersEquity.toString()),
+                        controller: otherFinancialOutgoingCash,
+                        decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
                   ],
@@ -766,176 +873,192 @@ class _CashFlowState extends State<CashFlow> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                'TOTAL LIABILITIES AND    \n OWNER\'S EQUITY',
-                style: TextStyle(fontSize: 20, color: Colors.green),
+                'Net Cash Flow from \nFinancing',
+                style: TextStyle(fontSize: 17, color: Colors.green),
                 textAlign: TextAlign.left,
               ),
               Container(
                 width: 100,
                 child: TextFormField(
                   decoration: InputDecoration(
-                      hintText:
-                          'N ' + totalLiabilitiesAndOwnersEquity.toString()),
+                      hintText: 'N ' + netCashFlowFinancing.toString()),
                 ),
               ),
             ],
           ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                'Net Increase in cash',
+                style: TextStyle(fontSize: 17, color: Colors.green),
+                textAlign: TextAlign.left,
+              ),
+              Container(
+                width: 100,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                      hintText: 'N ' + netIncreaseIncash.toString()),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                'Cash at the end of year',
+                style: TextStyle(fontSize: 17, color: Colors.green),
+                textAlign: TextAlign.left,
+              ),
+              Container(
+                width: 100,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                      hintText: 'N ' + cashAtEndOfYear.toString()),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 50),
+          preview
+              ? InkWell(
+                  child: Container(
+                    width: 150,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.green[600]),
+                    child: Center(
+                        child: Text('Preview',
+                            style:
+                                TextStyle(fontSize: 17, color: Colors.white))),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      preview = false;
+                    });
+                    _calculation();
+                  })
+              : InkWell(
+                  child: Container(
+                    width: 150,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.blue[600]),
+                    child: Center(
+                        child: Text('Generate',
+                            style:
+                                TextStyle(fontSize: 17, color: Colors.white))),
+                  ),
+                  onTap: () async {
+                    _activitiesServices.checkForInternet().then((value) async {
+                      if (value == true) {
+                        DialogBoxes().loading(context);
+                        dynamic result = await _accountingServices.cashFlow(
+                            year,
+                            cashAtBeginingOfYear.numberValue.round(),
+                            otherOperationReceipt.numberValue.round(),
+                            customer.numberValue.round(),
+                            inventory.numberValue.round(),
+                            administrativeExpenses.numberValue.round(),
+                            wagesSalaryExpenses.numberValue.round(),
+                            interest.numberValue.round(),
+                            incomeTaxes.numberValue.round(),
+                            otherOperations.numberValue.round(),
+                            netCashFlowOperations.round(),
+                            salePropertyAndEquipment.numberValue.round(),
+                            collectionOfPrincipalOnLoans.numberValue.round(),
+                            saleOfInvestmentSecurities.numberValue.round(),
+                            otherReturns.numberValue.round(),
+                            purchaseOfPropertyandEquipment.numberValue.round(),
+                            makingLoanstoOtherEntities.numberValue.round(),
+                            purchaseOfInvestmentSecurities.numberValue.round(),
+                            otherInvestments.numberValue.round(),
+                            netCashInvestment.round(),
+                            insuranceSupplies.numberValue.round(),
+                            borrowing.numberValue.round(),
+                            otherFinancialIncomeCash.numberValue.round(),
+                            repurchaseOfStock.numberValue.round(),
+                            dividends.numberValue.round(),
+                            repaymentOfLoans.numberValue.round(),
+                            otherFinancialOutgoingCash.numberValue.round(),
+                            netCashFlowFinancing.round(),
+                            netIncreaseIncash.round(),
+                            cashAtEndOfYear.numberValue.round());
+                        if (result == 201) {
+                          Navigator.pop(context);
+                          setState(() {
+                            _error =
+                                'Your Cash Flow has been sent to your email';
+                            _displaySnackBarSuccess(context);
+                          });
+                        } else {
+                          Navigator.pop(context);
+                          setState(() {
+                            _error = result.toString();
+                            _displaySnackBar(context);
+                          });
+                        }
+                      }
+                    });
+                  },
+                ),
+          SizedBox(height: 20)
         ],
       ),
     );
   }
 
-  commonRatios() {
-    return Container(
-        padding: EdgeInsets.all(20),
-        width: 350,
-        height: 650,
-        decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 50),
-            child: Container(
-              width: 300,
-              height: 40,
-              decoration: BoxDecoration(
-                  color: Colors.blue[700],
-                  borderRadius: BorderRadius.circular(5)),
-              child: Center(
-                child: Text(
-                  'COMMON FINANCIAL RATIOS',
-                  style: TextStyle(color: Colors.white, fontSize: 17),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          Container(
-              width: 350,
-              height: 500,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey[400]),
-                  borderRadius: BorderRadius.circular(9)),
-              child: Column(children: [
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Debt Ratio \n(Total Liabilities /                \nTotal Assets )            ',
-                      style: TextStyle(fontSize: 15),
-                      textAlign: TextAlign.left,
-                    ),
-                    Container(
-                      width: 100,
-                      child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          debtRatio = double.parse(val);
-                        }),
-                        decoration: InputDecoration(
-                            hintText: 'N ' + debtRatio.toString()),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Current Ratio \n(Current Assets /\nCurrent Liabilities )            ',
-                      style: TextStyle(fontSize: 15),
-                      textAlign: TextAlign.left,
-                    ),
-                    Container(
-                      width: 100,
-                      child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          currentRatio = double.parse(val);
-                        }),
-                        decoration: InputDecoration(
-                            hintText: 'N ' + currentRatio.toString()),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Working Capital \n(Current Assets -\nCurrent Liabilities )            ',
-                      style: TextStyle(fontSize: 15),
-                      textAlign: TextAlign.left,
-                    ),
-                    Container(
-                      width: 100,
-                      child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          workingCapital = int.parse(val);
-                        }),
-                        decoration: InputDecoration(
-                            hintText: 'N ' + workingCapital.toString()),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Asset-to-Equity Ratio     \n(Total Assets /\nOwner\'s Equity )            ',
-                      style: TextStyle(fontSize: 15),
-                      textAlign: TextAlign.left,
-                    ),
-                    Container(
-                      width: 100,
-                      child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          assetToEquityRatio = double.parse(val);
-                        }),
-                        decoration: InputDecoration(
-                            hintText: 'N ' + assetToEquityRatio.toString()),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Debt-to-Equity Ratio   \n(Total Liabilities -\nOwner\'s Equity )            ',
-                      style: TextStyle(fontSize: 15),
-                      textAlign: TextAlign.left,
-                    ),
-                    Container(
-                      width: 100,
-                      child: TextFormField(
-                        onChanged: (val) => setState(() {
-                          debtToEquityRatio = int.parse(val);
-                        }),
-                        decoration: InputDecoration(
-                            hintText: 'N ' + debtToEquityRatio.toString()),
-                      ),
-                    ),
-                  ],
-                ),
-              ])),
-          SizedBox(height: 20),
-          InkWell(
-            child: Container(
-              width: 150,
-              height: 40,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.blue[600]),
-              child: Center(
-                  child: Text('Generate',
-                      style: TextStyle(fontSize: 17, color: Colors.white))),
-            ),
-          )
-        ]));
+  _displaySnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+        duration: Duration(seconds: 5),
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Text(
+          _error.toString(),
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  _displaySnackBarSuccess(BuildContext context) {
+    final snackBar = SnackBar(
+        duration: Duration(seconds: 5),
+        backgroundColor: Colors.green,
+        content: Text(
+          _error.toString(),
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  _calculation() {
+    netCashFlowOperations =
+        ((customer.numberValue + otherOperationReceipt.numberValue) -
+            (inventory.numberValue +
+                administrativeExpenses.numberValue +
+                wagesSalaryExpenses.numberValue +
+                interest.numberValue +
+                incomeTaxes.numberValue +
+                otherOperations.numberValue));
+    netCashInvestment = ((salePropertyAndEquipment.numberValue +
+            collectionOfPrincipalOnLoans.numberValue +
+            saleOfInvestmentSecurities.numberValue +
+            otherReturns.numberValue) -
+        (purchaseOfPropertyandEquipment.numberValue +
+            makingLoanstoOtherEntities.numberValue +
+            purchaseOfInvestmentSecurities.numberValue +
+            otherInvestments.numberValue));
+    netCashFlowFinancing = ((insuranceSupplies.numberValue +
+            borrowing.numberValue +
+            otherFinancialIncomeCash.numberValue) +
+        (repurchaseOfStock.numberValue +
+            dividends.numberValue +
+            repaymentOfLoans.numberValue +
+            otherFinancialOutgoingCash.numberValue));
+    netIncreaseIncash = netCashInvestment + netCashFlowFinancing;
   }
 }

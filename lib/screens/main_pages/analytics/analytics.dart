@@ -13,13 +13,18 @@ class AnalyticsPage extends StatefulWidget {
 }
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
+  goback(context) {
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 3,
         child: WillPopScope(
-          onWillPop: () => Navigator.push(context,
-              MaterialPageRoute(builder: (context) => BottomNavigationPage())),
+          onWillPop: () {
+            return goback(context);
+          },
           child: Container(
             decoration: new BoxDecoration(
                 gradient: new LinearGradient(
