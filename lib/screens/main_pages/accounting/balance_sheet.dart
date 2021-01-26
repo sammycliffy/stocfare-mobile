@@ -187,7 +187,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                 Container(
                   padding: EdgeInsets.all(20),
                   width: 360,
-                  height: 1100,
+                  height: 850,
                   decoration: BoxDecoration(
                       color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(8)),
@@ -345,7 +345,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                       Padding(
                         padding: const EdgeInsets.only(right: 120),
                         child: Text(
-                          'Fixed (Long Term) Asset',
+                          'Non Current Asset',
                           style: TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w500),
                         ),
@@ -400,7 +400,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  'varangible assets           ',
+                                  'Intangible assets           ',
                                   style: TextStyle(fontSize: 17),
                                   textAlign: TextAlign.left,
                                 ),
@@ -430,84 +430,6 @@ class _BalanceSheetState extends State<BalanceSheet> {
                                     decoration: InputDecoration(
                                         hintText:
                                             'N ' + totalFixedAssets.toString()),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 120),
-                        child: Text(
-                          'Other Asset              ',
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Container(
-                        width: 350,
-                        height: 200,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey[400]),
-                            borderRadius: BorderRadius.circular(9)),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  'Deferred Income             \n tax',
-                                  style: TextStyle(fontSize: 17),
-                                  textAlign: TextAlign.left,
-                                ),
-                                Container(
-                                  width: 100,
-                                  child: TextFormField(
-                                    controller: deferredIncomeTaxOtherAsset,
-                                    decoration:
-                                        InputDecoration(hintText: 'N0.00'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  'Other                               ',
-                                  style: TextStyle(fontSize: 17),
-                                  textAlign: TextAlign.left,
-                                ),
-                                Container(
-                                  width: 100,
-                                  child: TextFormField(
-                                    controller: otherAsset,
-                                    decoration:
-                                        InputDecoration(hintText: 'N0.00'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  'TOTAL OTHER ASSETS     ',
-                                  style: TextStyle(
-                                      fontSize: 17, color: Colors.green),
-                                  textAlign: TextAlign.left,
-                                ),
-                                Container(
-                                  width: 100,
-                                  child: TextFormField(
-                                    readOnly: true,
-                                    decoration: InputDecoration(
-                                        hintText:
-                                            'N ' + totalOtherAsset.toString()),
                                   ),
                                 ),
                               ],
@@ -550,7 +472,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
     return Container(
       padding: EdgeInsets.all(20),
       width: 350,
-      height: 1200,
+      height: 1300,
       decoration: BoxDecoration(
           color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
       child: Column(
@@ -627,7 +549,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Income taxes payable    ',
+                      'Current Tax Payable    ',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
@@ -734,7 +656,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Deferred Income Tax',
+                      'Deferred Tax              ',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
@@ -788,26 +710,45 @@ class _BalanceSheetState extends State<BalanceSheet> {
           ),
           SizedBox(height: 20),
           Padding(
-            padding: const EdgeInsets.only(right: 100),
+            padding: const EdgeInsets.only(right: 150),
             child: Text(
-              'Owner\'s Equity',
+              'Equity           ',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
             ),
           ),
           SizedBox(height: 10),
           Container(
             width: 350,
-            height: 250,
+            height: 280,
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey[400]),
                 borderRadius: BorderRadius.circular(9)),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
                       'Owner\'s Investment    ',
+                      style: TextStyle(fontSize: 17),
+                      textAlign: TextAlign.left,
+                    ),
+                    Container(
+                      width: 100,
+                      child: TextFormField(
+                        controller: ownersInvestment,
+                        decoration: InputDecoration(hintText: 'N0.00'),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'Share Holder\'s              \n Investment',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
@@ -858,7 +799,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'TOTAL OWNER\'S      \n EQUITY        ',
+                      'TOTAL  EQUITY        ',
                       style: TextStyle(fontSize: 17, color: Colors.green),
                       textAlign: TextAlign.left,
                     ),
@@ -904,7 +845,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
     return Container(
         padding: EdgeInsets.all(20),
         width: 350,
-        height: 650,
+        height: 830,
         decoration: BoxDecoration(
             color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -924,20 +865,19 @@ class _BalanceSheetState extends State<BalanceSheet> {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 30),
           Container(
               width: 350,
-              height: 500,
+              height: 630,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey[400]),
                   borderRadius: BorderRadius.circular(9)),
               child: Column(children: [
-                SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Debt Ratio \n(Total Liabilities /                \nTotal Assets )            ',
+                      'Gross Profit Margin                \n(Gross Profit / \nSales Revenue )            ',
                       style: TextStyle(fontSize: 15),
                       textAlign: TextAlign.left,
                     ),
@@ -956,7 +896,64 @@ class _BalanceSheetState extends State<BalanceSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Current Ratio \n(Current Assets /\nCurrent Liabilities )            ',
+                      'Operating Profit Margin         \n(Pt. before Int. & Tax / \nSales Revenue )            ',
+                      style: TextStyle(fontSize: 15),
+                      textAlign: TextAlign.left,
+                    ),
+                    Container(
+                      width: 100,
+                      child: TextFormField(
+                        readOnly: true,
+                        decoration: InputDecoration(
+                            hintText: debtRatio.toStringAsFixed(2)),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'Return on Capital Employed \n(Pt. before Int. & Tax / \nCapital Employed )            ',
+                      style: TextStyle(fontSize: 15),
+                      textAlign: TextAlign.left,
+                    ),
+                    Container(
+                      width: 100,
+                      child: TextFormField(
+                        readOnly: true,
+                        decoration: InputDecoration(
+                            hintText: debtRatio.toStringAsFixed(2)),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'Debt Ratio                           \n(Total Liabilities /\nTotal Assets )',
+                      style: TextStyle(fontSize: 15),
+                      textAlign: TextAlign.left,
+                    ),
+                    Container(
+                      width: 100,
+                      child: TextFormField(
+                        readOnly: true,
+                        decoration: InputDecoration(
+                            hintText: debtRatio.toStringAsFixed(2)),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'Current Ratio      \n(Current Assets /     \nCurrent Liabilities )            ',
                       style: TextStyle(fontSize: 15),
                       textAlign: TextAlign.left,
                     ),
@@ -997,29 +994,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Asset-to-Equity Ratio     \n(Total Assets /\nOwner\'s Equity )            ',
-                      style: TextStyle(fontSize: 15),
-                      textAlign: TextAlign.left,
-                    ),
-                    Container(
-                      width: 100,
-                      child: TextFormField(
-                        readOnly: true,
-                        onChanged: (val) => setState(() {
-                          assetToEquityRatio = double.parse(val);
-                        }),
-                        decoration: InputDecoration(
-                            hintText: assetToEquityRatio.toStringAsFixed(2)),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Debt-to-Equity Ratio   \n(Total Liabilities -\nOwner\'s Equity )            ',
+                      'Financial Gerring   \n(Long-term Loan /\nEquity + LT Loan )            ',
                       style: TextStyle(fontSize: 15),
                       textAlign: TextAlign.left,
                     ),

@@ -212,7 +212,7 @@ class _CashFlowState extends State<CashFlow> {
                 Container(
                   padding: EdgeInsets.all(20),
                   width: 360,
-                  height: 780,
+                  height: 750,
                   decoration: BoxDecoration(
                       color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(8)),
@@ -236,7 +236,7 @@ class _CashFlowState extends State<CashFlow> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.only(right: 170),
                         child: Text(
@@ -304,7 +304,7 @@ class _CashFlowState extends State<CashFlow> {
                       SizedBox(height: 10),
                       Container(
                         width: 350,
-                        height: 350,
+                        height: 300,
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey[400]),
                             borderRadius: BorderRadius.circular(9)),
@@ -401,24 +401,6 @@ class _CashFlowState extends State<CashFlow> {
                                 ),
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  'Other Operations                ',
-                                  style: TextStyle(fontSize: 17),
-                                  textAlign: TextAlign.left,
-                                ),
-                                Container(
-                                  width: 100,
-                                  child: TextFormField(
-                                    controller: otherOperations,
-                                    decoration:
-                                        InputDecoration(hintText: 'N0.00'),
-                                  ),
-                                ),
-                              ],
-                            ),
                           ],
                         ),
                       ),
@@ -458,7 +440,7 @@ class _CashFlowState extends State<CashFlow> {
     return Container(
       padding: EdgeInsets.all(20),
       width: 350,
-      height: 800,
+      height: 680,
       decoration: BoxDecoration(
           color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
       child: Column(
@@ -480,7 +462,7 @@ class _CashFlowState extends State<CashFlow> {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.only(right: 150),
             child: Text(
@@ -491,7 +473,7 @@ class _CashFlowState extends State<CashFlow> {
           SizedBox(height: 10),
           Container(
             width: 350,
-            height: 240,
+            height: 200,
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey[400]),
                 borderRadius: BorderRadius.circular(9)),
@@ -548,23 +530,6 @@ class _CashFlowState extends State<CashFlow> {
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Other Returns                ',
-                      style: TextStyle(fontSize: 17),
-                      textAlign: TextAlign.left,
-                    ),
-                    Container(
-                      width: 100,
-                      child: TextFormField(
-                        controller: otherReturns,
-                        decoration: InputDecoration(hintText: 'N0.00'),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
@@ -579,7 +544,7 @@ class _CashFlowState extends State<CashFlow> {
           SizedBox(height: 10),
           Container(
             width: 350,
-            height: 250,
+            height: 200,
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey[400]),
                 borderRadius: BorderRadius.circular(9)),
@@ -639,23 +604,6 @@ class _CashFlowState extends State<CashFlow> {
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Other Investments         ',
-                      style: TextStyle(fontSize: 17),
-                      textAlign: TextAlign.left,
-                    ),
-                    Container(
-                      width: 100,
-                      child: TextFormField(
-                        controller: otherInvestments,
-                        decoration: InputDecoration(hintText: 'N0.00'),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
@@ -708,7 +656,7 @@ class _CashFlowState extends State<CashFlow> {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.only(right: 170),
             child: Text(
@@ -718,7 +666,7 @@ class _CashFlowState extends State<CashFlow> {
           ),
           Container(
             width: 350,
-            height: 190,
+            height: 120,
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey[400]),
                 borderRadius: BorderRadius.circular(9)),
@@ -728,7 +676,7 @@ class _CashFlowState extends State<CashFlow> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Insurance of supplies        ',
+                      'Issuance of Stock        ',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
@@ -758,23 +706,6 @@ class _CashFlowState extends State<CashFlow> {
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Other Financial                  \n incoming cash ',
-                      style: TextStyle(fontSize: 17),
-                      textAlign: TextAlign.left,
-                    ),
-                    Container(
-                      width: 100,
-                      child: TextFormField(
-                        controller: otherFinancialIncomeCash,
-                        decoration: InputDecoration(hintText: 'N0.00'),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
@@ -782,14 +713,14 @@ class _CashFlowState extends State<CashFlow> {
           Padding(
             padding: const EdgeInsets.only(right: 130),
             child: Text(
-              'Cash Paid for:              ',
+              'Cash Paid for:                   ',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
             ),
           ),
           SizedBox(height: 10),
           Container(
             width: 350,
-            height: 250,
+            height: 200,
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey[400]),
                 borderRadius: BorderRadius.circular(9)),
@@ -800,7 +731,7 @@ class _CashFlowState extends State<CashFlow> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'Repurchase of Supplies      \n (treasure stock)',
+                      'Repurchase of Stock          \n (treasure stock)',
                       style: TextStyle(fontSize: 17),
                       textAlign: TextAlign.left,
                     ),
@@ -843,23 +774,6 @@ class _CashFlowState extends State<CashFlow> {
                       width: 100,
                       child: TextFormField(
                         controller: repaymentOfLoans,
-                        decoration: InputDecoration(hintText: 'N0.00'),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Other Financial                \noutgoing cash',
-                      style: TextStyle(fontSize: 17),
-                      textAlign: TextAlign.left,
-                    ),
-                    Container(
-                      width: 100,
-                      child: TextFormField(
-                        controller: otherFinancialOutgoingCash,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),

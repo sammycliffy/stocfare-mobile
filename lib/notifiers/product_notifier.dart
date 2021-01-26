@@ -11,6 +11,7 @@ class AddProductNotifier with ChangeNotifier {
   int _productBarcode = 0;
   int _productDiscount = 0;
   int _productWeight = 0;
+  double _tax = 0;
   List<ColorDataModel> _data;
   int _packProductSellingPriceToCategory = 0;
   int _packProductCostPriceToCategory = 0;
@@ -44,6 +45,7 @@ class AddProductNotifier with ChangeNotifier {
   int get productIndex => _productIndex;
   int get productDiscount => _productDiscount;
   int get productWeight => _productWeight;
+  double get tax => _tax;
   String get categoryId => _categoryId;
   String get firebasekey => _firebaseKey;
   List<ColorDataModel> get data => _data;
@@ -62,6 +64,7 @@ class AddProductNotifier with ChangeNotifier {
     int productDiscount,
     int productWeight,
     int unitCostPrice,
+    double tax,
     List<ColorDataModel> data,
   ) {
     _productCategory = productCategory;
@@ -73,6 +76,7 @@ class AddProductNotifier with ChangeNotifier {
     _productDiscount = productDiscount;
     _productWeight = productWeight;
     _unitProductCostPrice = unitCostPrice;
+    _tax = tax;
 
     _data = data;
     notifyListeners();

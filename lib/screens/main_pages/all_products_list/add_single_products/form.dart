@@ -44,6 +44,8 @@ class _FormPageState extends State<FormPage> {
   );
   var secondController = new MoneyMaskedTextController(
       decimalSeparator: '.', thousandSeparator: ',');
+  var tax = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',');
   @override
   Widget build(BuildContext context) {
     AddProductNotifier _addProduct = Provider.of<AddProductNotifier>(context);
@@ -254,41 +256,79 @@ class _FormPageState extends State<FormPage> {
                         ],
                       ),
                       SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40, right: 40),
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          validator: (input) =>
-                              input.isEmpty ? "Enter Quantity " : null,
-                          onChanged: (val) => setState(() {
-                            _unitQuantity = int.parse(val);
-                          }),
-                          decoration: InputDecoration(
-                            fillColor: Colors.white,
-                            filled: true,
-                            labelText: 'Quantity',
-                            contentPadding: EdgeInsets.all(12),
-                            labelStyle: TextStyle(color: Colors.black),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context)
-                                        .focusColor
-                                        .withOpacity(0.2))),
-                            hintStyle: TextStyle(color: Colors.black),
-                            hintText: 'Quantity',
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context)
-                                        .focusColor
-                                        .withOpacity(0.2))),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context)
-                                        .focusColor
-                                        .withOpacity(0.5))),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 150,
+                            child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              validator: (input) =>
+                                  input.isEmpty ? "Enter Quantity " : null,
+                              onChanged: (val) => setState(() {
+                                _unitQuantity = int.parse(val);
+                              }),
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                labelText: 'Quantity',
+                                contentPadding: EdgeInsets.all(12),
+                                labelStyle: TextStyle(color: Colors.black),
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.2))),
+                                hintStyle: TextStyle(color: Colors.black),
+                                hintText: 'Quantity',
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.2))),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.5))),
+                              ),
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
-                          style: TextStyle(color: Colors.black),
-                        ),
+                          SizedBox(width: 5),
+                          SizedBox(
+                            width: 150,
+                            child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              controller: tax,
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                labelText: 'Tax (VAT)',
+                                contentPadding: EdgeInsets.all(12),
+                                labelStyle: TextStyle(color: Colors.black),
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.2))),
+                                hintStyle: TextStyle(color: Colors.black),
+                                hintText: '',
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.2))),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.5))),
+                              ),
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 30,
@@ -414,6 +454,7 @@ class _FormPageState extends State<FormPage> {
                                       _productDiscount,
                                       _productWeight,
                                       secondController.numberValue.round(),
+                                      tax.numberValue,
                                       _data);
                                   Navigator.push(
                                       context,
@@ -789,6 +830,7 @@ class _FormPageState extends State<FormPage> {
                                 _productDiscount,
                                 _productWeight,
                                 secondController.numberValue.round(),
+                                tax.numberValue,
                                 _data,
                               );
 

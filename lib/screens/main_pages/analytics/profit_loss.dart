@@ -191,7 +191,7 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                                 ),
                                 Center(
                                   child: Container(
-                                      height: 120,
+                                      height: 250,
                                       width: 330,
                                       decoration: BoxDecoration(
                                           color: Colors.grey[100],
@@ -218,17 +218,81 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                                             child: Text(
                                               (() {
                                                 if (week) {
-                                                  return controller1.text;
+                                                  return 'Gross ${controller1.text}';
                                                 } else if (month) {
-                                                  return controller2.text;
+                                                  return 'Gross ${controller2.text}';
                                                 } else {
-                                                  return controller.text;
+                                                  return 'Gross ${controller.text}';
                                                 }
                                               }()),
                                               style: TextStyle(
-                                                  fontSize: 30,
+                                                  fontSize: 25,
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.green),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 25.0, top: 5),
+                                            child: Text(
+                                              (() {
+                                                if (week) {
+                                                  return ' Net    ${controller1.text}';
+                                                } else if (month) {
+                                                  return ' Net    ${controller2.text}';
+                                                } else {
+                                                  return ' Net    ${controller.text}';
+                                                }
+                                              }()),
+                                              style: TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green[800]),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 30),
+                                            child: Divider(
+                                              color: Colors.grey[400],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 25.0, top: 5),
+                                            child: Text(
+                                              (() {
+                                                if (week) {
+                                                  return ' Net    ${controller1.text}';
+                                                } else if (month) {
+                                                  return ' Net    ${controller2.text}';
+                                                } else {
+                                                  return ' Profit After tax ${controller.text}';
+                                                }
+                                              }()),
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color:
+                                                      Colors.greenAccent[800]),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 25.0, top: 5),
+                                            child: Text(
+                                              (() {
+                                                if (week) {
+                                                  return ' Net    ${controller1.text}';
+                                                } else if (month) {
+                                                  return ' Net    ${controller2.text}';
+                                                } else {
+                                                  return ' Retained Earnings ${controller.text}';
+                                                }
+                                              }()),
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color:
+                                                      Colors.greenAccent[900]),
                                             ),
                                           )
                                         ],

@@ -279,6 +279,7 @@ class _BarcodePageState extends State<BarcodePage> {
                                   base64Image,
                                   _addProduct.productDiscount,
                                   _addProduct.productWeight,
+                                  _addProduct.tax,
                                   _addProduct.data)
                               .timeout(Duration(seconds: 25),
                                   onTimeout: () => null);

@@ -26,6 +26,7 @@ class ProductServices {
       String image,
       int productDiscount,
       int productWeight,
+      double tax,
       List<ColorDataModel> data) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
@@ -102,6 +103,7 @@ class ProductServices {
     String image,
     int productDiscount,
     int productWeight,
+    double tax,
     List<ColorDataModel> data,
     String categoryId,
   ) async {

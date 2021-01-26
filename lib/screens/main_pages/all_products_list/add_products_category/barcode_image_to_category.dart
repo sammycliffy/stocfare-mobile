@@ -280,6 +280,7 @@ class _BarcodePageProductState extends State<BarcodePageProduct> {
                                     base64Image,
                                     _addProduct.productDiscount,
                                     _addProduct.productWeight,
+                                    _addProduct.tax,
                                     _addProduct.data,
                                     id ?? _addProduct.categoryId);
 
