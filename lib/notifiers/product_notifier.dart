@@ -20,12 +20,15 @@ class AddProductNotifier with ChangeNotifier {
   int _packProductPrice = 0;
   int _packLimit = 0;
   int _packQuantity = 0;
-
+  double _grossProfit = 0;
+  double _netProfit = 0;
+  double _retainedEarnings = 0;
   //this is used to transfer the product index to the next page
   int _categoryIndex;
   int _productIndex = 0;
   int _unitProductCostPrice = 0;
   int _packProductCostPrice = 0;
+  double _salesRevenue = 0;
   //set categoryid to be used to add product;
   String _categoryId;
   String _firebaseKey;
@@ -45,6 +48,11 @@ class AddProductNotifier with ChangeNotifier {
   int get productIndex => _productIndex;
   int get productDiscount => _productDiscount;
   int get productWeight => _productWeight;
+
+  double get grossProfit => _grossProfit;
+  double get netProfit => _netProfit;
+  double get retainedEarnings => _retainedEarnings;
+  double get salesRevenue => _salesRevenue;
   double get tax => _tax;
   String get categoryId => _categoryId;
   String get firebasekey => _firebaseKey;
@@ -82,6 +90,12 @@ class AddProductNotifier with ChangeNotifier {
     notifyListeners();
   }
 
+  void setBalanceSheetValues(grossProfit, netProfit, retainedEarnings) {
+    _netProfit = netProfit;
+    _grossProfit = grossProfit;
+    _retainedEarnings = retainedEarnings;
+  }
+
   void setPackProducts(
     int packProductPrice,
     int packLimit,
@@ -93,6 +107,10 @@ class AddProductNotifier with ChangeNotifier {
     _packQuantity = packQuantity;
     _packProductCostPrice = packCostPrice;
     notifyListeners();
+  }
+
+  void setSalesRevenue(salesRevenue) {
+    _salesRevenue = salesRevenue;
   }
 
   void setPackProductsToCategory(

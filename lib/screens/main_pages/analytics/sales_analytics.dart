@@ -1,13 +1,11 @@
 import 'dart:async';
-
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/models/sales_analytics_model.dart';
+import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
-import 'package:stockfare_mobile/screens/main_pages/analytics/sales_report.dart';
 import 'package:stockfare_mobile/services/activities_services.dart';
 import 'package:stockfare_mobile/services/analytics_services.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';

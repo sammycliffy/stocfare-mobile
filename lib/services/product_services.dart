@@ -59,6 +59,7 @@ class ProductServices {
               },
               "image": image,
               "name": unitproductName,
+              "tax": tax,
               "barcode": barcode,
               "description": productDescription,
               "weight": productWeight,
@@ -138,6 +139,7 @@ class ProductServices {
             "image": image,
             "description": productDescription,
             "weight": productWeight,
+            "tax": tax,
             "bar_code": barcode,
             "discount": productDiscount
           }));
@@ -258,6 +260,7 @@ class ProductServices {
     String productDescription,
     int productDiscount,
     int productWeight,
+    double tax,
     List<ColorDataModel> data,
     String productId,
   ) async {
@@ -295,6 +298,7 @@ class ProductServices {
             "name": unitproductName,
             "description": productDescription,
             "weight": productWeight,
+            "tax": tax,
             "bar_code": barcode,
             "discount": productDiscount
           }));

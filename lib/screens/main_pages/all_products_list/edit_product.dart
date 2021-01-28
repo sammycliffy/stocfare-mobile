@@ -36,6 +36,8 @@ class _EditProductPageState extends State<EditProductPage> {
       decimalSeparator: '.', thousandSeparator: ',');
   var packCostPrice = new MoneyMaskedTextController(
       decimalSeparator: '.', thousandSeparator: ',');
+  var _tax = new MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',');
   bool loading = false;
   ProductServices _productServices = ProductServices();
 
@@ -62,6 +64,7 @@ class _EditProductPageState extends State<EditProductPage> {
   List _listBarcode = [];
   List _listDiscount = [];
   List _listWeight = [];
+  List _listTax = [];
   List _listColors = [];
   List _listUnitCostPrice = [];
   List _listPackCostPrice = [];
@@ -147,6 +150,7 @@ class _EditProductPageState extends State<EditProductPage> {
                     _listWeight.clear();
                     _listPackCostPrice.clear();
                     _listUnitCostPrice.clear();
+                    _listTax.clear();
 
                     if (snapshot.hasData) {
                       if (snapshot.data.snapshot
@@ -167,6 +171,7 @@ class _EditProductPageState extends State<EditProductPage> {
                           _listPackCostPrice
                               .add(value['product_pack']['cost_price']);
                           _listBarcode.add(value['bar_code']);
+                          _listTax.add(value['tax']);
                           _listDiscount.add(value['discount']);
                           _listWeight.add(value['weight']);
                           if (value['product_colour'] == null) {
@@ -508,6 +513,44 @@ class _EditProductPageState extends State<EditProductPage> {
                                                 .toString() +
                                             ' (Description)',
                                     hintText: 'product Description',
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.2))),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.5))),
+                                  ),
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 40, right: 40),
+                                child: TextFormField(
+                                  keyboardType: TextInputType.text,
+                                  controller: _tax,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(12),
+                                    labelStyle: TextStyle(
+                                        color: Theme.of(context).primaryColor),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .focusColor
+                                                .withOpacity(0.2))),
+                                    hintStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .focusColor
+                                            .withOpacity(0.7)),
+                                    labelText:
+                                        _listTax[widget.index].toString() +
+                                            ' (Tax)',
+                                    hintText: 'Tax',
                                     enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
                                             color: Theme.of(context)
@@ -1236,6 +1279,9 @@ class _EditProductPageState extends State<EditProductPage> {
                                               _productWeight == 0
                                                   ? _listWeight[widget.index]
                                                   : _productWeight,
+                                              _tax.numberValue == 0
+                                                  ? _listTax[widget.index]
+                                                  : _tax.numberValue,
                                               _data,
                                               widget.productId)
                                           .then((value) {

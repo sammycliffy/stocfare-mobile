@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
+import 'package:stockfare_mobile/models/new_profit.dart';
+import 'package:stockfare_mobile/models/sales_analytics_model.dart';
+import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/common_widget/dialog_boxes.dart';
 import 'package:stockfare_mobile/services/accounting_services.dart';
 import 'package:stockfare_mobile/services/activities_services.dart';
+import 'package:stockfare_mobile/services/analytics_services.dart';
+import 'package:stockfare_mobile/services/profit_loss_services.dart';
 
 class BalanceSheet extends StatefulWidget {
   @override
@@ -17,6 +22,21 @@ class _BalanceSheetState extends State<BalanceSheet> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String _error = '';
   int year = 0;
+  GrossProfit _profitSummary;
+  ProfitAndLoss _profitAndLoss = ProfitAndLoss();
+  Analytics _checkSales = Analytics();
+  SalesAnalytics _salesAnalytics;
+  @override
+  void initState() {
+    super.initState();
+    _profitAndLoss.getAllProfit().then((value) {
+      _profitSummary = value;
+    });
+    _checkSales.getAllAnalytics().then((value) {
+      _salesAnalytics = value;
+    });
+  }
+
   var cash = new MoneyMaskedTextController(
     decimalSeparator: '.',
     thousandSeparator: ',',
@@ -52,6 +72,10 @@ class _BalanceSheetState extends State<BalanceSheet> {
     decimalSeparator: '.',
     thousandSeparator: ',',
   );
+  var shareHolderInvestment = new MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+  );
   double totalFixedAssets = 0;
   double totalAssets = 0;
 
@@ -77,10 +101,6 @@ class _BalanceSheetState extends State<BalanceSheet> {
   );
   double totalCurrentLiabilities = 0;
 
-  var deferredIncomeTaxOtherAsset = new MoneyMaskedTextController(
-    decimalSeparator: '.',
-    thousandSeparator: ',',
-  );
   var otherAsset = new MoneyMaskedTextController(
     decimalSeparator: '.',
     thousandSeparator: ',',
@@ -105,10 +125,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
     decimalSeparator: '.',
     thousandSeparator: ',',
   );
-  var retainedEarnings = new MoneyMaskedTextController(
-    decimalSeparator: '.',
-    thousandSeparator: ',',
-  );
+  double retainedEarnings = 0;
   var ownersOthers = new MoneyMaskedTextController(
     decimalSeparator: '.',
     thousandSeparator: ',',
@@ -119,9 +136,15 @@ class _BalanceSheetState extends State<BalanceSheet> {
   double currentRatio = 0;
   double workingCapital = 0;
   double assetToEquityRatio = 0;
-  double debtToEquityRatio = 0;
+  double financialGerring = 0;
+  double grossProfitMargin = 0;
+  double operatingProfitMargin = 0;
+  double returnOnCapitalEmployed = 0;
+  double capitalEmployed = 0;
   @override
   Widget build(BuildContext context) {
+    AddProductNotifier _productNotifier =
+        Provider.of<AddProductNotifier>(context, listen: false);
     SignupNotifier _signupNotifier =
         Provider.of<SignupNotifier>(context, listen: false);
 
@@ -318,6 +341,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -329,13 +353,13 @@ class _BalanceSheetState extends State<BalanceSheet> {
                                 ),
                                 Container(
                                   width: 100,
-                                  child: TextFormField(
-                                    readOnly: true,
-                                    decoration: InputDecoration(
-                                        hintText: 'N ' +
-                                            totalCurrentAssets.toString()),
-                                  ),
-                                ),
+                                  child: Center(
+                                      child: Text(
+                                    'N ' + totalCurrentAssets.toString(),
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.blue),
+                                  )),
+                                )
                               ],
                             ),
                           ],
@@ -414,29 +438,31 @@ class _BalanceSheetState extends State<BalanceSheet> {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 30),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  'TOTAL FIXED ASSETS     ',
+                                  'TOTAL NON \nCURRENT ASSETS     ',
                                   style: TextStyle(
                                       fontSize: 17, color: Colors.green),
                                   textAlign: TextAlign.left,
                                 ),
                                 Container(
                                   width: 100,
-                                  child: TextFormField(
-                                    readOnly: true,
-                                    decoration: InputDecoration(
-                                        hintText:
-                                            'N ' + totalFixedAssets.toString()),
-                                  ),
-                                ),
+                                  child: Center(
+                                      child: Text(
+                                    'N ' + totalFixedAssets.toString(),
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.blue),
+                                  )),
+                                )
                               ],
                             ),
                           ],
                         ),
                       ),
+                      SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -447,12 +473,13 @@ class _BalanceSheetState extends State<BalanceSheet> {
                           ),
                           Container(
                             width: 100,
-                            child: TextFormField(
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                  hintText: 'N ' + totalAssets.toString()),
-                            ),
-                          ),
+                            child: Center(
+                                child: Text(
+                              'N ' + totalAssets.toString(),
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.blue),
+                            )),
+                          )
                         ],
                       ),
                     ],
@@ -596,6 +623,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     ),
                   ],
                 ),
+                SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -606,13 +634,12 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     ),
                     Container(
                       width: 100,
-                      child: TextFormField(
-                        readOnly: true,
-                        decoration: InputDecoration(
-                            hintText:
-                                'N ' + totalCurrentLiabilities.toString()),
-                      ),
-                    ),
+                      child: Center(
+                          child: Text(
+                        'N ' + totalCurrentLiabilities.toString(),
+                        style: TextStyle(fontSize: 18, color: Colors.blue),
+                      )),
+                    )
                   ],
                 ),
               ],
@@ -686,6 +713,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     ),
                   ],
                 ),
+                SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -696,13 +724,12 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     ),
                     Container(
                       width: 100,
-                      child: TextFormField(
-                        readOnly: true,
-                        decoration: InputDecoration(
-                            hintText:
-                                'N ' + totalLongTermLiabilities.toString()),
-                      ),
-                    ),
+                      child: Center(
+                          child: Text(
+                        'N ' + totalLongTermLiabilities.toString(),
+                        style: TextStyle(fontSize: 18, color: Colors.blue),
+                      )),
+                    )
                   ],
                 ),
               ],
@@ -755,7 +782,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        controller: ownersInvestment,
+                        controller: shareHolderInvestment,
                         decoration: InputDecoration(hintText: 'N0.00'),
                       ),
                     ),
@@ -772,8 +799,9 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     Container(
                       width: 100,
                       child: TextFormField(
-                        controller: retainedEarnings,
-                        decoration: InputDecoration(hintText: 'N0.00'),
+                        readOnly: true,
+                        decoration: InputDecoration(
+                            hintText: retainedEarnings.toStringAsFixed(2)),
                       ),
                     ),
                   ],
@@ -795,6 +823,7 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     ),
                   ],
                 ),
+                SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -805,12 +834,12 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     ),
                     Container(
                       width: 100,
-                      child: TextFormField(
-                        readOnly: true,
-                        decoration: InputDecoration(
-                            hintText: 'N ' + totalOwnersEquity.toString()),
-                      ),
-                    ),
+                      child: Center(
+                          child: Text(
+                        'N ' + totalOwnersEquity.toString(),
+                        style: TextStyle(fontSize: 18, color: Colors.blue),
+                      )),
+                    )
                   ],
                 ),
               ],
@@ -827,13 +856,12 @@ class _BalanceSheetState extends State<BalanceSheet> {
               ),
               Container(
                 width: 100,
-                child: TextFormField(
-                  readOnly: true,
-                  decoration: InputDecoration(
-                      hintText:
-                          'N ' + totalLiabilitiesAndOwnersEquity.toString()),
-                ),
-              ),
+                child: Center(
+                    child: Text(
+                  'N ' + totalLiabilitiesAndOwnersEquity.toString(),
+                  style: TextStyle(fontSize: 18, color: Colors.blue),
+                )),
+              )
             ],
           ),
         ],
@@ -883,12 +911,12 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     ),
                     Container(
                       width: 100,
-                      child: TextFormField(
-                        readOnly: true,
-                        decoration: InputDecoration(
-                            hintText: debtRatio.toStringAsFixed(2)),
-                      ),
-                    ),
+                      child: Center(
+                          child: Text(
+                        grossProfitMargin.toStringAsFixed(2) + ' %',
+                        style: TextStyle(fontSize: 18, color: Colors.blue),
+                      )),
+                    )
                   ],
                 ),
                 SizedBox(height: 10),
@@ -902,12 +930,12 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     ),
                     Container(
                       width: 100,
-                      child: TextFormField(
-                        readOnly: true,
-                        decoration: InputDecoration(
-                            hintText: debtRatio.toStringAsFixed(2)),
-                      ),
-                    ),
+                      child: Center(
+                          child: Text(
+                        operatingProfitMargin.toStringAsFixed(2) + ' %',
+                        style: TextStyle(fontSize: 18, color: Colors.blue),
+                      )),
+                    )
                   ],
                 ),
                 SizedBox(height: 10),
@@ -921,12 +949,12 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     ),
                     Container(
                       width: 100,
-                      child: TextFormField(
-                        readOnly: true,
-                        decoration: InputDecoration(
-                            hintText: debtRatio.toStringAsFixed(2)),
-                      ),
-                    ),
+                      child: Center(
+                          child: Text(
+                        returnOnCapitalEmployed.toStringAsFixed(2) + ' %',
+                        style: TextStyle(fontSize: 18, color: Colors.blue),
+                      )),
+                    )
                   ],
                 ),
                 SizedBox(height: 10),
@@ -940,12 +968,12 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     ),
                     Container(
                       width: 100,
-                      child: TextFormField(
-                        readOnly: true,
-                        decoration: InputDecoration(
-                            hintText: debtRatio.toStringAsFixed(2)),
-                      ),
-                    ),
+                      child: Center(
+                          child: Text(
+                        debtRatio.toStringAsFixed(2) + ' %',
+                        style: TextStyle(fontSize: 18, color: Colors.blue),
+                      )),
+                    )
                   ],
                 ),
                 SizedBox(height: 10),
@@ -959,15 +987,12 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     ),
                     Container(
                       width: 100,
-                      child: TextFormField(
-                        readOnly: true,
-                        onChanged: (val) => setState(() {
-                          currentRatio = double.parse(val);
-                        }),
-                        decoration: InputDecoration(
-                            hintText: currentRatio.toStringAsFixed(2)),
-                      ),
-                    ),
+                      child: Center(
+                          child: Text(
+                        currentRatio.toStringAsFixed(2) + ' %',
+                        style: TextStyle(fontSize: 18, color: Colors.blue),
+                      )),
+                    )
                   ],
                 ),
                 SizedBox(height: 10),
@@ -981,12 +1006,12 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     ),
                     Container(
                       width: 100,
-                      child: TextFormField(
-                        readOnly: true,
-                        decoration: InputDecoration(
-                            hintText: workingCapital.toStringAsFixed(2)),
-                      ),
-                    ),
+                      child: Center(
+                          child: Text(
+                        workingCapital.toStringAsFixed(2) + ' %',
+                        style: TextStyle(fontSize: 18, color: Colors.blue),
+                      )),
+                    )
                   ],
                 ),
                 SizedBox(height: 10),
@@ -1000,13 +1025,12 @@ class _BalanceSheetState extends State<BalanceSheet> {
                     ),
                     Container(
                       width: 100,
-                      child: TextFormField(
-                        readOnly: true,
-                        onChanged: (val) => setState(() {}),
-                        decoration: InputDecoration(
-                            hintText: debtToEquityRatio.toStringAsFixed(2)),
-                      ),
-                    ),
+                      child: Center(
+                          child: Text(
+                        financialGerring.toStringAsFixed(2) + ' %',
+                        style: TextStyle(fontSize: 18, color: Colors.blue),
+                      )),
+                    )
                   ],
                 ),
               ])),
@@ -1050,40 +1074,40 @@ class _BalanceSheetState extends State<BalanceSheet> {
                         }
                         DialogBoxes().loading(context);
                         dynamic result = await _accountingServices.balanceSheet(
-                            cash.numberValue.round(),
-                            inventory.numberValue.round(),
-                            accountReceivable.numberValue.round(),
-                            prepaidExpenses.numberValue.round(),
-                            shortTermInvestments.numberValue.round(),
-                            totalCurrentAssets,
-                            longTermInvestments.numberValue.round(),
-                            propertyPlantAndEquipments.numberValue.round(),
-                            varangibleAssets.numberValue.round(),
-                            totalFixedAssets,
-                            deferredIncomeTaxOtherAsset.numberValue.round(),
-                            otherAsset.numberValue.round(),
-                            totalOtherAsset,
-                            totalAssets,
-                            accountPayable.numberValue.round(),
-                            shortTermLoans.numberValue.round(),
-                            incomeTaxesPayable.numberValue.round(),
-                            accruedSalariesAndWages.numberValue.round(),
-                            unearnedRevenue.numberValue.round(),
-                            totalCurrentLiabilities,
-                            longTermDebt.numberValue.round(),
-                            deferredIncomeTax.numberValue.round(),
-                            longTermOthers.numberValue.round(),
-                            totalLongTermLiabilities,
-                            ownersInvestment.numberValue.round(),
-                            retainedEarnings.numberValue.round(),
+                            cash.numberValue.toStringAsFixed(2),
+                            inventory.numberValue.toStringAsFixed(2),
+                            accountReceivable.numberValue.toStringAsFixed(2),
+                            prepaidExpenses.numberValue.toStringAsFixed(2),
+                            shortTermInvestments.numberValue.toStringAsFixed(2),
+                            totalCurrentAssets.toStringAsFixed(2),
+                            longTermInvestments.numberValue.toStringAsFixed(2),
+                            propertyPlantAndEquipments.numberValue
+                                .toStringAsFixed(2),
+                            varangibleAssets.numberValue.toStringAsFixed(2),
+                            totalFixedAssets.toStringAsFixed(2),
+                            totalAssets.toStringAsFixed(2),
+                            accountPayable.numberValue.toStringAsFixed(2),
+                            shortTermLoans.numberValue.toStringAsFixed(2),
+                            incomeTaxesPayable.numberValue.toStringAsFixed(2),
+                            accruedSalariesAndWages.numberValue
+                                .toStringAsFixed(2),
+                            unearnedRevenue.numberValue.toStringAsFixed(2),
+                            totalCurrentLiabilities.toStringAsFixed(2),
+                            longTermDebt.numberValue.toStringAsFixed(2),
+                            deferredIncomeTax.numberValue.toStringAsFixed(2),
+                            longTermOthers.numberValue.toStringAsFixed(2),
+                            totalLongTermLiabilities.toStringAsFixed(2),
+                            ownersInvestment.numberValue.toStringAsFixed(2),
+                            retainedEarnings.toStringAsFixed(2),
                             ownersOthers.numberValue.round(),
-                            totalOwnersEquity,
-                            totalLiabilitiesAndOwnersEquity,
+                            totalOwnersEquity.toStringAsFixed(2),
+                            totalLiabilitiesAndOwnersEquity.toStringAsFixed(2),
                             debtRatio.toStringAsFixed(2),
                             currentRatio.toStringAsFixed(2),
-                            workingCapital,
-                            assetToEquityRatio.toStringAsFixed(2),
-                            debtToEquityRatio.toStringAsFixed(2),
+                            workingCapital.toStringAsFixed(2),
+                            shareHolderInvestment.numberValue
+                                .toStringAsFixed(2),
+                            financialGerring.toStringAsFixed(2),
                             year);
 
                         if (result == 201) {
@@ -1130,14 +1154,28 @@ class _BalanceSheetState extends State<BalanceSheet> {
   }
 
   _calculation() {
+    capitalEmployed = totalOwnersEquity + longTermDebt.numberValue;
     setState(() {
+      retainedEarnings = _profitSummary.retainedEarnings.toDouble();
+      grossProfitMargin =
+          (_profitSummary.grossProfit.year.totalAmount.toDouble() /
+                  _salesAnalytics.yearSalesAmount.toDouble()) *
+              100 /
+              1;
+      operatingProfitMargin = (_profitSummary.netProfit.year.toDouble() /
+              _salesAnalytics.yearSalesAmount.toDouble()) *
+          100 /
+          1;
+
+      returnOnCapitalEmployed =
+          (_profitSummary.netProfit.year.toDouble() / capitalEmployed) *
+              100 /
+              1;
       totalCurrentAssets = (cash.numberValue +
           inventory.numberValue +
           accountReceivable.numberValue +
           prepaidExpenses.numberValue +
           shortTermInvestments.numberValue);
-      totalOtherAsset =
-          (deferredIncomeTaxOtherAsset.numberValue + otherAsset.numberValue);
       totalFixedAssets = (longTermInvestments.numberValue +
           propertyPlantAndEquipments.numberValue +
           varangibleAssets.numberValue);
@@ -1153,7 +1191,8 @@ class _BalanceSheetState extends State<BalanceSheet> {
           longTermOthers.numberValue);
 
       totalOwnersEquity = (ownersInvestment.numberValue +
-          retainedEarnings.numberValue +
+          retainedEarnings +
+          shareHolderInvestment.numberValue +
           ownersOthers.numberValue);
       totalLiabilitiesAndOwnersEquity = (totalCurrentLiabilities +
           totalLongTermLiabilities +
@@ -1168,9 +1207,10 @@ class _BalanceSheetState extends State<BalanceSheet> {
           (totalAssets - (totalCurrentLiabilities + totalLongTermLiabilities));
 
       assetToEquityRatio = (totalAssets / totalOwnersEquity);
-      debtToEquityRatio =
-          ((totalCurrentLiabilities + totalLongTermLiabilities) -
-              totalOwnersEquity);
+      financialGerring = (longTermDebt.numberValue /
+              (totalOwnersEquity + longTermDebt.numberValue)) *
+          100 /
+          1;
     });
   }
 }

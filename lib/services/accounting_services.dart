@@ -16,9 +16,6 @@ class AccountingServices {
       propertyPlantAndEquipment,
       intangibleAssets,
       totalFixedAsset,
-      deferredIncomeTaxOtherAsset,
-      otherAsset,
-      totalOtherAsset,
       totalAsset,
       accountPayable,
       shortTermLoans,
@@ -38,7 +35,7 @@ class AccountingServices {
       debtRatio,
       currentRatio,
       workingCapital,
-      assetToEquityRatio,
+      shareHolderInvesment,
       debtToEquityRatio,
       year) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -71,11 +68,6 @@ class AccountingServices {
                     "intangible_asset": intangibleAssets,
                     "total_fixed_asset": totalFixedAsset,
                   },
-                  "other_asset": {
-                    "deferred_income_tax": deferredIncomeTaxOtherAsset,
-                    "other": otherAsset,
-                    "total_other_asset": totalOtherAsset,
-                  },
                   "total_assets": totalAsset
                 },
                 "liabilities_and_owners_equity": {
@@ -106,7 +98,7 @@ class AccountingServices {
                   "debt_ratio": debtRatio,
                   "current_ratio": currentRatio,
                   "working_capital": workingCapital,
-                  "assets_to_equity_ratio": assetToEquityRatio,
+                  "assets_to_equity_ratio": shareHolderInvesment,
                   "debt_to_equity_ratio": debtToEquityRatio
                 },
                 "for_the_year": year

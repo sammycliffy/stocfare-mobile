@@ -1,13 +1,13 @@
 import 'dart:async';
-
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
 import 'package:stockfare_mobile/helpers/sub_helpers.dart';
 import 'package:stockfare_mobile/models/expenses-summary.dart';
 import 'package:stockfare_mobile/models/loss_model.dart';
+import 'package:stockfare_mobile/models/new_profit.dart';
 import 'package:stockfare_mobile/models/profit.dart';
+import 'package:stockfare_mobile/notifiers/product_notifier.dart';
 import 'package:stockfare_mobile/notifiers/signup_notifier.dart';
 import 'package:stockfare_mobile/screens/main_pages/analytics/profit_details.dart';
 import 'package:stockfare_mobile/screens/subscription/sub_home.dart';
@@ -26,7 +26,7 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
   DateTime selectedDate = DateTime.now();
   bool _isNew = false;
 
-  Future<ExpensesSummary> _profitSummary;
+  Future<GrossProfit> _profitSummary;
   Future<ExpensesSummary> _lossSummary;
   Future<List<ProfitModel>> _profitList;
   Future<List<LossModel>> _lossList;
@@ -88,6 +88,34 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
         thousandSeparator: ',',
         leftSymbol: ' ${_signupNotifier.country} ');
     var controller2 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller3 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller4 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller5 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller6 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller7 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller8 = new MoneyMaskedTextController(
+        decimalSeparator: '.',
+        thousandSeparator: ',',
+        leftSymbol: ' ${_signupNotifier.country} ');
+    var controller9 = new MoneyMaskedTextController(
         decimalSeparator: '.',
         thousandSeparator: ',',
         leftSymbol: ' ${_signupNotifier.country} ');
@@ -168,16 +196,33 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                    FutureBuilder<ExpensesSummary>(
+                    FutureBuilder<GrossProfit>(
                         future: _profitAndLoss.getAllProfit(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            controller.updateValue(
-                                snapshot.data.todaySummary.toDouble());
-                            controller1.updateValue(
-                                snapshot.data.weekSummary.toDouble());
-                            controller2.updateValue(
-                                snapshot.data.monthSummary.toDouble());
+                            controller.updateValue(snapshot
+                                .data.grossProfit.today.totalAmount
+                                .toDouble());
+                            controller1.updateValue(snapshot
+                                .data.grossProfit.week.totalAmount
+                                .toDouble());
+                            controller2.updateValue(snapshot
+                                .data.grossProfit.month.totalAmount
+                                .toDouble());
+                            controller3.updateValue(
+                                snapshot.data.netProfit.today.toDouble());
+                            controller4.updateValue(
+                                snapshot.data.netProfit.week.toDouble());
+                            controller5.updateValue(
+                                snapshot.data.netProfit.month.toDouble());
+                            controller6.updateValue(
+                                snapshot.data.profitAfterTax.today.toDouble());
+                            controller7.updateValue(
+                                snapshot.data.profitAfterTax.week.toDouble());
+                            controller8.updateValue(
+                                snapshot.data.profitAfterTax.month.toDouble());
+                            controller9.updateValue(
+                                snapshot.data.retainedEarnings.toDouble());
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,7 +273,7 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                                               style: TextStyle(
                                                   fontSize: 25,
                                                   fontWeight: FontWeight.bold,
-                                                  color: Colors.green),
+                                                  color: Colors.green[800]),
                                             ),
                                           ),
                                           Padding(
@@ -237,11 +282,11 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                                             child: Text(
                                               (() {
                                                 if (week) {
-                                                  return ' Net    ${controller1.text}';
+                                                  return ' Net    ${controller3.text}';
                                                 } else if (month) {
-                                                  return ' Net    ${controller2.text}';
+                                                  return ' Net    ${controller4.text}';
                                                 } else {
-                                                  return ' Net    ${controller.text}';
+                                                  return ' Net    ${controller5.text}';
                                                 }
                                               }()),
                                               style: TextStyle(
@@ -263,11 +308,11 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                                             child: Text(
                                               (() {
                                                 if (week) {
-                                                  return ' Net    ${controller1.text}';
+                                                  return 'Profit After tax ${controller6.text}';
                                                 } else if (month) {
-                                                  return ' Net    ${controller2.text}';
+                                                  return ' Profit After tax ${controller7.text}';
                                                 } else {
-                                                  return ' Profit After tax ${controller.text}';
+                                                  return ' Profit After tax ${controller8.text}';
                                                 }
                                               }()),
                                               style: TextStyle(
@@ -280,15 +325,7 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                                             padding: const EdgeInsets.only(
                                                 left: 25.0, top: 5),
                                             child: Text(
-                                              (() {
-                                                if (week) {
-                                                  return ' Net    ${controller1.text}';
-                                                } else if (month) {
-                                                  return ' Net    ${controller2.text}';
-                                                } else {
-                                                  return ' Retained Earnings ${controller.text}';
-                                                }
-                                              }()),
+                                              ' Retained Earnings ${controller9.text}',
                                               style: TextStyle(
                                                   fontSize: 20,
                                                   color:
@@ -301,90 +338,90 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 40.0),
-                                  child: ExpansionTile(
-                                    key: PageStorageKey('myScrollable'),
-                                    title: Text(
-                                      "View All",
-                                      style: TextStyle(
-                                          fontSize: 18.0, color: Colors.green),
-                                    ),
-                                    children: <Widget>[
-                                      FutureBuilder<List<ProfitModel>>(
-                                          future:
-                                              _profitAndLoss.getProfitList(),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.hasData) {
-                                              _profitListName.clear();
-                                              _profitListAmount.clear();
-                                              _profitListQuantity.clear();
+                                // Padding(
+                                //   padding: const EdgeInsets.symmetric(
+                                //       horizontal: 40.0),
+                                //   child: ExpansionTile(
+                                //     key: PageStorageKey('myScrollable'),
+                                //     title: Text(
+                                //       "View All",
+                                //       style: TextStyle(
+                                //           fontSize: 18.0, color: Colors.green),
+                                //     ),
+                                //     children: <Widget>[
+                                //       FutureBuilder<List<ProfitModel>>(
+                                //           future:
+                                //               _profitAndLoss.getProfitList(),
+                                //           builder: (context, snapshot) {
+                                //             if (snapshot.hasData) {
+                                //               _profitListName.clear();
+                                //               _profitListAmount.clear();
+                                //               _profitListQuantity.clear();
 
-                                              print(snapshot.data.map((e) {
-                                                _profitListName
-                                                    .add(e.productInfo[0].name);
-                                                _profitListAmount.add(
-                                                    e.productInfo[0].amount);
-                                                _profitListQuantity.add(
-                                                    e.productInfo[0].quantity);
-                                              }));
-                                              return Container(
-                                                height: 150,
-                                                child: ListView.builder(
-                                                    key: PageStorageKey(
-                                                        'myScrollable'),
-                                                    itemBuilder:
-                                                        (BuildContext context,
-                                                            index) {
-                                                      return GestureDetector(
-                                                        child: ListTile(
-                                                          title: Text(
-                                                              _profitListName[
-                                                                  index],
-                                                              style: TextStyle(
-                                                                  fontSize: 18,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                          trailing: Text(
-                                                            _profitListAmount[
-                                                                    index]
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                                fontSize: 17,
-                                                                color: Colors
-                                                                    .green),
-                                                          ),
-                                                        ),
-                                                        onTap: () {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          ProfitDetails(
-                                                                            productIndex:
-                                                                                index,
-                                                                            profitList:
-                                                                                snapshot.data,
-                                                                          )));
-                                                        },
-                                                      );
-                                                    },
-                                                    itemCount:
-                                                        _profitListName.length),
-                                              );
-                                            }
-                                            return Column(children: [
-                                              LinearProgressIndicator()
-                                            ]);
-                                          })
-                                    ],
-                                  ),
-                                ),
+                                //               print(snapshot.data.map((e) {
+                                //                 _profitListName
+                                //                     .add(e.productInfo[0].name);
+                                //                 _profitListAmount.add(
+                                //                     e.productInfo[0].amount);
+                                //                 _profitListQuantity.add(
+                                //                     e.productInfo[0].quantity);
+                                //               }));
+                                //               return Container(
+                                //                 height: 150,
+                                //                 child: ListView.builder(
+                                //                     key: PageStorageKey(
+                                //                         'myScrollable'),
+                                //                     itemBuilder:
+                                //                         (BuildContext context,
+                                //                             index) {
+                                //                       return GestureDetector(
+                                //                         child: ListTile(
+                                //                           title: Text(
+                                //                               _profitListName[
+                                //                                   index],
+                                //                               style: TextStyle(
+                                //                                   fontSize: 18,
+                                //                                   color: Colors
+                                //                                       .grey,
+                                //                                   fontWeight:
+                                //                                       FontWeight
+                                //                                           .bold)),
+                                //                           trailing: Text(
+                                //                             _profitListAmount[
+                                //                                     index]
+                                //                                 .toString(),
+                                //                             style: TextStyle(
+                                //                                 fontSize: 17,
+                                //                                 color: Colors
+                                //                                     .green),
+                                //                           ),
+                                //                         ),
+                                //                         onTap: () {
+                                //                           Navigator.push(
+                                //                               context,
+                                //                               MaterialPageRoute(
+                                //                                   builder:
+                                //                                       (context) =>
+                                //                                           ProfitDetails(
+                                //                                             productIndex:
+                                //                                                 index,
+                                //                                             profitList:
+                                //                                                 snapshot.data,
+                                //                                           )));
+                                //                         },
+                                //                       );
+                                //                     },
+                                //                     itemCount:
+                                //                         _profitListName.length),
+                                //               );
+                                //             }
+                                //             return Column(children: [
+                                //               LinearProgressIndicator()
+                                //             ]);
+                                //           })
+                                //     ],
+                                //   ),
+                                // ),
                               ],
                             );
                           }
@@ -461,98 +498,98 @@ class _ProfitAndLossPageState extends State<ProfitAndLossPage> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 40.0),
-                                  child: ExpansionTile(
-                                    key: PageStorageKey('myScrollable'),
-                                    title: Text(
-                                      "View All",
-                                      style: TextStyle(
-                                          fontSize: 18.0, color: Colors.green),
-                                    ),
-                                    children: <Widget>[
-                                      FutureBuilder<List<LossModel>>(
-                                          future: _profitAndLoss.getLossList(),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.hasData) {
-                                              _lossListName.clear();
-                                              _lossListAmount.clear();
-                                              _lossListQuantity.clear();
-                                              print(snapshot.data.map((e) {
-                                                print(e.productInfo.map((e) {
-                                                  _lossListName.add(e.name);
-                                                  _lossListAmount.add(e.amount);
-                                                  _lossListQuantity
-                                                      .add(e.quantity);
-                                                }));
-                                              }));
-                                              print(_lossListName);
-                                              if (_lossListName.length == 0) {
-                                                return Center(
-                                                  child: Text('No Loss'),
-                                                );
-                                              } else {
-                                                return Container(
-                                                  height: 150,
-                                                  child: ListView.builder(
-                                                      key: PageStorageKey(
-                                                          'myScrollable'),
-                                                      itemBuilder:
-                                                          (BuildContext context,
-                                                              index) {
-                                                        return GestureDetector(
-                                                            child: ListTile(
-                                                              title: Text(
-                                                                  _lossListName
-                                                                          ?.elementAt(
-                                                                              index) ??
-                                                                      "",
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          18,
-                                                                      color: Colors
-                                                                          .grey,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold)),
-                                                              trailing: Text(
-                                                                _lossListAmount
-                                                                        ?.elementAt(
-                                                                            index) ??
-                                                                    "",
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        17,
-                                                                    color: Colors
-                                                                        .green),
-                                                              ),
-                                                            ),
-                                                            onTap: () {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) =>
-                                                                          LossDetails(
-                                                                            productIndex:
-                                                                                index,
-                                                                            profitList:
-                                                                                snapshot.data,
-                                                                          )));
-                                                            });
-                                                      },
-                                                      itemCount:
-                                                          _lossListName.length),
-                                                );
-                                              }
-                                            }
-                                            return Column(children: [
-                                              LinearProgressIndicator()
-                                            ]);
-                                          })
-                                    ],
-                                  ),
-                                ),
+                                // Padding(
+                                //   padding: const EdgeInsets.symmetric(
+                                //       horizontal: 40.0),
+                                //   child: ExpansionTile(
+                                //     key: PageStorageKey('myScrollable'),
+                                //     title: Text(
+                                //       "View All",
+                                //       style: TextStyle(
+                                //           fontSize: 18.0, color: Colors.green),
+                                //     ),
+                                //     children: <Widget>[
+                                //       FutureBuilder<List<LossModel>>(
+                                //           future: _profitAndLoss.getLossList(),
+                                //           builder: (context, snapshot) {
+                                //             if (snapshot.hasData) {
+                                //               _lossListName.clear();
+                                //               _lossListAmount.clear();
+                                //               _lossListQuantity.clear();
+                                //               print(snapshot.data.map((e) {
+                                //                 print(e.productInfo.map((e) {
+                                //                   _lossListName.add(e.name);
+                                //                   _lossListAmount.add(e.amount);
+                                //                   _lossListQuantity
+                                //                       .add(e.quantity);
+                                //                 }));
+                                //               }));
+                                //               print(_lossListName);
+                                //               if (_lossListName.length == 0) {
+                                //                 return Center(
+                                //                   child: Text('No Loss'),
+                                //                 );
+                                //               } else {
+                                //                 return Container(
+                                //                   height: 150,
+                                //                   child: ListView.builder(
+                                //                       key: PageStorageKey(
+                                //                           'myScrollable'),
+                                //                       itemBuilder:
+                                //                           (BuildContext context,
+                                //                               index) {
+                                //                         return GestureDetector(
+                                //                             child: ListTile(
+                                //                               title: Text(
+                                //                                   _lossListName
+                                //                                           ?.elementAt(
+                                //                                               index) ??
+                                //                                       "",
+                                //                                   style: TextStyle(
+                                //                                       fontSize:
+                                //                                           18,
+                                //                                       color: Colors
+                                //                                           .grey,
+                                //                                       fontWeight:
+                                //                                           FontWeight
+                                //                                               .bold)),
+                                //                               trailing: Text(
+                                //                                 _lossListAmount
+                                //                                         ?.elementAt(
+                                //                                             index) ??
+                                //                                     "",
+                                //                                 style: TextStyle(
+                                //                                     fontSize:
+                                //                                         17,
+                                //                                     color: Colors
+                                //                                         .green),
+                                //                               ),
+                                //                             ),
+                                //                             onTap: () {
+                                //                               Navigator.push(
+                                //                                   context,
+                                //                                   MaterialPageRoute(
+                                //                                       builder: (context) =>
+                                //                                           LossDetails(
+                                //                                             productIndex:
+                                //                                                 index,
+                                //                                             profitList:
+                                //                                                 snapshot.data,
+                                //                                           )));
+                                //                             });
+                                //                       },
+                                //                       itemCount:
+                                //                           _lossListName.length),
+                                //                 );
+                                //               }
+                                //             }
+                                //             return Column(children: [
+                                //               LinearProgressIndicator()
+                                //             ]);
+                                //           })
+                                //     ],
+                                //   ),
+                                // ),
                               ],
                             );
                           }

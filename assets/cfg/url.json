@@ -49,7 +49,8 @@
   "version-number": "https://stockfare-io.herokuapp.com/api/v2/users/verision-number/",
   "sales-report": "https://stockfare-io.herokuapp.com/api/v1/sales/sales-report/",
   "cash-flow": "https://stockfare-io.herokuapp.com/api/v1/report/generate/cash-flow-statement/",
-  "balance-sheet": "https://stockfare-io.herokuapp.com/api/v1/report/generate/balance-sheet/"
+  "balance-sheet": "https://stockfare-io.herokuapp.com/api/v1/report/generate/balance-sheet/",
+  "net-profit": "https://stockfare-io.herokuapp.com/api/v2/analytics/profit/"
 
 
 }

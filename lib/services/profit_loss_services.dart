@@ -4,6 +4,7 @@ import 'package:global_configuration/global_configuration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockfare_mobile/models/expenses-summary.dart';
 import 'package:stockfare_mobile/models/loss_model.dart';
+import 'package:stockfare_mobile/models/new_profit.dart';
 import 'package:stockfare_mobile/models/profit.dart';
 
 class ProfitAndLoss {
@@ -140,13 +141,12 @@ class ProfitAndLoss {
     }
   }
 
-  Future<ExpensesSummary> getAllProfit() async {
+  Future<GrossProfit> getAllProfit() async {
     _dioCacheManager = DioCacheManager(CacheConfig());
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('branchId');
     String token = sharedPreferences.getString('token');
-    final String url =
-        GlobalConfiguration().get("get-all-profits") + '$branchId/';
+    final String url = GlobalConfiguration().get("net-profit") + '$branchId/';
     Options _cacheOptions = buildCacheOptions(
       Duration(seconds: 120),
     );
@@ -161,9 +161,9 @@ class ProfitAndLoss {
       Response response = await _dio.get(url, options: _cacheOptions);
       if (response.statusCode == 200) {
         print(response.data);
-        return ExpensesSummary.fromJson(response.data);
+        return GrossProfit.fromJson(response.data);
       } else {
-        print(response.statusCode);
+        print(response.data);
         return Future.error(response.data);
       }
     } catch (e) {
