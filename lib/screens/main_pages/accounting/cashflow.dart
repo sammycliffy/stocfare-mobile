@@ -118,10 +118,7 @@ class _CashFlowState extends State<CashFlow> {
   );
   double netCashFlowFinancing = 0;
   double netIncreaseIncash = 0;
-  var cashAtEndOfYear = new MoneyMaskedTextController(
-    decimalSeparator: '.',
-    thousandSeparator: ',',
-  );
+  double cashAtEndOfYear = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -416,6 +413,7 @@ class _CashFlowState extends State<CashFlow> {
                           Container(
                             width: 100,
                             child: TextFormField(
+                              readOnly: true,
                               decoration: InputDecoration(
                                   hintText:
                                       'N ' + netCashFlowOperations.toString()),
@@ -619,6 +617,7 @@ class _CashFlowState extends State<CashFlow> {
               Container(
                 width: 100,
                 child: TextFormField(
+                  readOnly: true,
                   decoration: InputDecoration(
                       hintText: 'N ' + netCashInvestment.toString()),
                 ),
@@ -794,6 +793,7 @@ class _CashFlowState extends State<CashFlow> {
               Container(
                 width: 100,
                 child: TextFormField(
+                  readOnly: true,
                   decoration: InputDecoration(
                       hintText: 'N ' + netCashFlowFinancing.toString()),
                 ),
@@ -874,35 +874,45 @@ class _CashFlowState extends State<CashFlow> {
                         DialogBoxes().loading(context);
                         dynamic result = await _accountingServices.cashFlow(
                             year,
-                            cashAtBeginingOfYear.numberValue.round(),
-                            otherOperationReceipt.numberValue.round(),
-                            customer.numberValue.round(),
-                            inventory.numberValue.round(),
-                            administrativeExpenses.numberValue.round(),
-                            wagesSalaryExpenses.numberValue.round(),
-                            interest.numberValue.round(),
-                            incomeTaxes.numberValue.round(),
-                            otherOperations.numberValue.round(),
-                            netCashFlowOperations.round(),
-                            salePropertyAndEquipment.numberValue.round(),
-                            collectionOfPrincipalOnLoans.numberValue.round(),
-                            saleOfInvestmentSecurities.numberValue.round(),
-                            otherReturns.numberValue.round(),
-                            purchaseOfPropertyandEquipment.numberValue.round(),
-                            makingLoanstoOtherEntities.numberValue.round(),
-                            purchaseOfInvestmentSecurities.numberValue.round(),
-                            otherInvestments.numberValue.round(),
-                            netCashInvestment.round(),
-                            insuranceSupplies.numberValue.round(),
-                            borrowing.numberValue.round(),
-                            otherFinancialIncomeCash.numberValue.round(),
-                            repurchaseOfStock.numberValue.round(),
-                            dividends.numberValue.round(),
-                            repaymentOfLoans.numberValue.round(),
-                            otherFinancialOutgoingCash.numberValue.round(),
-                            netCashFlowFinancing.round(),
-                            netIncreaseIncash.round(),
-                            cashAtEndOfYear.numberValue.round());
+                            cashAtBeginingOfYear.numberValue.toStringAsFixed(2),
+                            otherOperationReceipt.numberValue
+                                .toStringAsFixed(2),
+                            customer.numberValue.toStringAsFixed(2),
+                            inventory.numberValue.toStringAsFixed(2),
+                            administrativeExpenses.numberValue
+                                .toStringAsFixed(2),
+                            wagesSalaryExpenses.numberValue.toStringAsFixed(2),
+                            interest.numberValue.toStringAsFixed(2),
+                            incomeTaxes.numberValue.toStringAsFixed(2),
+                            otherOperations.numberValue.toStringAsFixed(2),
+                            netCashFlowOperations.toStringAsFixed(2),
+                            salePropertyAndEquipment.numberValue
+                                .toStringAsFixed(2),
+                            collectionOfPrincipalOnLoans.numberValue
+                                .toStringAsFixed(2),
+                            saleOfInvestmentSecurities.numberValue
+                                .toStringAsFixed(2),
+                            otherReturns.numberValue.toStringAsFixed(2),
+                            purchaseOfPropertyandEquipment.numberValue
+                                .toStringAsFixed(2),
+                            makingLoanstoOtherEntities.numberValue
+                                .toStringAsFixed(2),
+                            purchaseOfInvestmentSecurities.numberValue
+                                .toStringAsFixed(2),
+                            otherInvestments.numberValue.toStringAsFixed(2),
+                            netCashInvestment.toStringAsFixed(2),
+                            insuranceSupplies.numberValue.toStringAsFixed(2),
+                            borrowing.numberValue.toStringAsFixed(2),
+                            otherFinancialIncomeCash.numberValue
+                                .toStringAsFixed(2),
+                            repurchaseOfStock.numberValue.toStringAsFixed(2),
+                            dividends.numberValue.toStringAsFixed(2),
+                            repaymentOfLoans.numberValue.toStringAsFixed(2),
+                            otherFinancialOutgoingCash.numberValue
+                                .toStringAsFixed(2),
+                            netCashFlowFinancing.toStringAsFixed(2),
+                            netIncreaseIncash.toStringAsFixed(2),
+                            cashAtEndOfYear.toStringAsFixed(2));
                         if (result == 201) {
                           Navigator.pop(context);
                           setState(() {
@@ -974,5 +984,7 @@ class _CashFlowState extends State<CashFlow> {
             repaymentOfLoans.numberValue +
             otherFinancialOutgoingCash.numberValue));
     netIncreaseIncash = netCashInvestment + netCashFlowFinancing;
+    cashAtEndOfYear =
+        (netCashFlowOperations + netCashInvestment + netCashFlowFinancing);
   }
 }

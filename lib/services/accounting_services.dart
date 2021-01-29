@@ -32,18 +32,21 @@ class AccountingServices {
       ownersOthers,
       totalOwnersEquity,
       totalLiabilitiesAndOwnersEquity,
+      grossProfitMargin,
+      operatingProfitMargin,
+      returnOnCapitalEmployed,
       debtRatio,
       currentRatio,
       workingCapital,
       shareHolderInvesment,
-      debtToEquityRatio,
+      financialGerring,
       year) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('businessId');
     String token = sharedPreferences.getString('token');
     final String url =
         GlobalConfiguration().get("balance-sheet") + '$branchId/';
-    String _error = '';
+
     try {
       final http.Response response = await http
           .post(url,
@@ -59,10 +62,10 @@ class AccountingServices {
                     "inventory": inventory,
                     "account_receivable": accountReceivable,
                     "prepaid_expenses": prepaidExpenses,
-                    "short_time_expenses": shortTermInvestments,
+                    "short_time_investments": shortTermInvestments,
                     "total_current_asset": totalCurrentAsset
                   },
-                  "fixed_asset": {
+                  "non_current_asset": {
                     "long_time_investment": longTermInvestment,
                     "property_plan_and_equipment": propertyPlantAndEquipment,
                     "intangible_asset": intangibleAssets,
@@ -74,9 +77,9 @@ class AccountingServices {
                   "current_liabilities": {
                     "account_payable": accountPayable,
                     "short_term_loans": shortTermLoans,
-                    "income_tax_payable": incomeTaxesPayable,
+                    "current_tax_payable": incomeTaxesPayable,
                     "accured_salaries_and_wages": accruedSalariesAndWages,
-                    "unearned_revenues": unearnedRevenue,
+                    "unearned_revenue": unearnedRevenue,
                     "total_current_liabilities": totalCurrentLiabilities,
                   },
                   "long_term_liabilities": {
@@ -85,9 +88,10 @@ class AccountingServices {
                     "others": longTermOthers,
                     "total_long_time_liabilities": totalLongTermLiabilities,
                   },
-                  "owners_equity": {
+                  "equity": {
                     "owners_investment": ownersInvestment,
                     "retained_earnings": retainedEarnings,
+                    "share_holders_investment": shareHolderInvesment,
                     "others": ownersOthers,
                     "total_owners_equity": totalOwnersEquity,
                   },
@@ -95,11 +99,13 @@ class AccountingServices {
                       totalLiabilitiesAndOwnersEquity
                 },
                 "common_financial_ratios": {
+                  "gross_profit_margin": grossProfitMargin,
+                  "operating_profit_margin": operatingProfitMargin,
+                  "return_on_capital_employed": returnOnCapitalEmployed,
                   "debt_ratio": debtRatio,
                   "current_ratio": currentRatio,
                   "working_capital": workingCapital,
-                  "assets_to_equity_ratio": shareHolderInvesment,
-                  "debt_to_equity_ratio": debtToEquityRatio
+                  "financial_gerring": financialGerring
                 },
                 "for_the_year": year
               }))
@@ -107,51 +113,51 @@ class AccountingServices {
       if (response.statusCode == 201) {
         return response.statusCode;
       } else {
+        String _error = '';
         print(response.body);
         Map result = json.decode(response.body);
-        print(response.statusCode);
         result.forEach((k, v) {
-          _error = ' ${v[0]}';
+          _error = '$k ${v[0]}';
         });
         return _error;
       }
     } catch (e) {
       print(e.toString());
-      return Future.error(_error);
+      return Future.error(e.toString);
     }
   }
 
   Future<dynamic> cashFlow(
-    int year,
-    int cashAtBeginingOfYear,
-    int otherOperationReceipt,
-    int customer,
-    int inventory,
-    int administrativeExpenses,
-    int wagesSalaryExpenses,
-    int interest,
-    int incomeTaxes,
-    int otherOperations,
-    int netCashFlowOperations,
-    int salePropertyAndEquipment,
-    int collectionOfPrincipalOnLoans,
-    int saleOfInvestmentSecurities,
-    int otherReturns,
-    int purchaseOfPropertyandEquipment,
-    int makingLoanstoOtherEntities,
-    int purchaseOfInvestmentSecurities,
-    int otherInvestments,
-    int netCashInvestment,
-    int insuranceSupplies,
-    int borrowing,
-    int otherFinancialIncomeCash,
-    int repurchaseOfStock,
-    int dividends,
-    int repaymentOfLoans,
-    int otherFinancialOutgoingCash,
-    int netCashFlowFinancing,
-    int netIncreaseIncash,
-    int cashAtEndOfYear,
+    year,
+    cashAtBeginingOfYear,
+    otherOperationReceipt,
+    customer,
+    inventory,
+    administrativeExpenses,
+    wagesSalaryExpenses,
+    interest,
+    incomeTaxes,
+    otherOperations,
+    netCashFlowOperations,
+    salePropertyAndEquipment,
+    collectionOfPrincipalOnLoans,
+    saleOfInvestmentSecurities,
+    otherReturns,
+    purchaseOfPropertyandEquipment,
+    makingLoanstoOtherEntities,
+    purchaseOfInvestmentSecurities,
+    otherInvestments,
+    netCashInvestment,
+    insuranceSupplies,
+    borrowing,
+    otherFinancialIncomeCash,
+    repurchaseOfStock,
+    dividends,
+    repaymentOfLoans,
+    otherFinancialOutgoingCash,
+    netCashFlowFinancing,
+    netIncreaseIncash,
+    cashAtEndOfYear,
   ) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String branchId = sharedPreferences.getString('businessId');
@@ -204,7 +210,7 @@ class AccountingServices {
                 },
                 "financial_activities": {
                   "cash_receipt_from": {
-                    "insurance_of_supplies": insuranceSupplies,
+                    "insurance_of_stocks": insuranceSupplies,
                     "borrowing": borrowing,
                     "other_financial_incoming_cash": otherFinancialIncomeCash
                   },
@@ -214,10 +220,10 @@ class AccountingServices {
                     "repayment_of_loans": repaymentOfLoans,
                     "other_financial_outgoing_cash": otherFinancialOutgoingCash
                   },
-                  "net_cash_flow_from_financing": netCashFlowFinancing
                 },
                 "net_increase_in_cash": netIncreaseIncash,
                 "cash_at_the_end_of_the_year": cashAtEndOfYear,
+                "net_cash_flow_from_financing": netCashFlowFinancing,
                 "cash_at_the_beginning_of_the_year": cashAtBeginingOfYear,
                 "for_the_year_ending": cashAtBeginingOfYear
               }))
