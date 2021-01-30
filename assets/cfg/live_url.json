@@ -46,5 +46,9 @@
   "loss-list": "https://api-lexical-dance.stockfare.co/api/v1/analytics/sale-loss-list/",
   "profit-list": "https://api-lexical-dance.stockfare.co/api/v1/analytics/sale-profit-list/",
   "base-url": "api-lexical-dance.stockfare.co",
-  "version-number": "https://api-lexical-dance.stockfare.co/api/v2/users/verision-number/"
+  "version-number": "https://api-lexical-dance.stockfare.co/api/v2/users/verision-number/",
+  "sales-report": "https://api-lexical-dance.stockfare.co/api/v1/sales/sales-report/",
+  "cash-flow": "https://api-lexical-dance.stockfare.co/api/v1/report/generate/cash-flow-statement/",
+  "balance-sheet": "https://api-lexical-dance.stockfare.co/api/v1/report/generate/balance-sheet/",
+  "net-profit": "https://api-lexical-dance.stockfare.co/api/v2/analytics/profit/"
 }

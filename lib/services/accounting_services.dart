@@ -35,7 +35,6 @@ class AccountingServices {
       grossProfitMargin,
       operatingProfitMargin,
       returnOnCapitalEmployed,
-      debtRatio,
       currentRatio,
       workingCapital,
       shareHolderInvesment,
@@ -102,7 +101,6 @@ class AccountingServices {
                   "gross_profit_margin": grossProfitMargin,
                   "operating_profit_margin": operatingProfitMargin,
                   "return_on_capital_employed": returnOnCapitalEmployed,
-                  "debt_ratio": debtRatio,
                   "current_ratio": currentRatio,
                   "working_capital": workingCapital,
                   "financial_gerring": financialGerring
@@ -123,7 +121,7 @@ class AccountingServices {
       }
     } catch (e) {
       print(e.toString());
-      return Future.error(e.toString);
+      return Future.error(e);
     }
   }
 
@@ -156,7 +154,6 @@ class AccountingServices {
     repaymentOfLoans,
     otherFinancialOutgoingCash,
     netCashFlowFinancing,
-    netIncreaseIncash,
     cashAtEndOfYear,
   ) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -221,7 +218,6 @@ class AccountingServices {
                     "other_financial_outgoing_cash": otherFinancialOutgoingCash
                   },
                 },
-                "net_increase_in_cash": netIncreaseIncash,
                 "cash_at_the_end_of_the_year": cashAtEndOfYear,
                 "net_cash_flow_from_financing": netCashFlowFinancing,
                 "cash_at_the_beginning_of_the_year": cashAtBeginingOfYear,
@@ -240,7 +236,7 @@ class AccountingServices {
       }
     } catch (e) {
       print(e.toString());
-      return Future.error(_error);
+      return Future.error(e);
     }
   }
 }

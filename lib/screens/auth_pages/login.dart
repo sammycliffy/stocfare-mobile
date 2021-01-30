@@ -198,7 +198,7 @@ class _LoginState extends State<Login> {
                                   setState(() {
                                     result == null
                                         ? _error =
-                                            'Opps! Error occured, please try again.'
+                                            'Network error! If the problem persists, exit the app\n and try again.'
                                         : _error = result;
                                     _displaySnackBar(context);
                                   });

@@ -117,7 +117,6 @@ class _CashFlowState extends State<CashFlow> {
     thousandSeparator: ',',
   );
   double netCashFlowFinancing = 0;
-  double netIncreaseIncash = 0;
   double cashAtEndOfYear = 0;
 
   @override
@@ -649,7 +648,7 @@ class _CashFlowState extends State<CashFlow> {
                   borderRadius: BorderRadius.circular(5)),
               child: Center(
                 child: Text(
-                  'FINANCIAL ACTIVITIES',
+                  'FINANCING ACTIVITIES',
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
@@ -801,23 +800,6 @@ class _CashFlowState extends State<CashFlow> {
             ],
           ),
           SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(
-                'Net Increase in cash',
-                style: TextStyle(fontSize: 17, color: Colors.green),
-                textAlign: TextAlign.left,
-              ),
-              Container(
-                width: 100,
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      hintText: 'N ' + netIncreaseIncash.toString()),
-                ),
-              ),
-            ],
-          ),
           SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -911,7 +893,6 @@ class _CashFlowState extends State<CashFlow> {
                             otherFinancialOutgoingCash.numberValue
                                 .toStringAsFixed(2),
                             netCashFlowFinancing.toStringAsFixed(2),
-                            netIncreaseIncash.toStringAsFixed(2),
                             cashAtEndOfYear.toStringAsFixed(2));
                         if (result == 201) {
                           Navigator.pop(context);
@@ -923,7 +904,7 @@ class _CashFlowState extends State<CashFlow> {
                         } else {
                           Navigator.pop(context);
                           setState(() {
-                            _error = result.toString();
+                            _error = '$result';
                             _displaySnackBar(context);
                           });
                         }
@@ -978,12 +959,11 @@ class _CashFlowState extends State<CashFlow> {
             otherInvestments.numberValue));
     netCashFlowFinancing = ((insuranceSupplies.numberValue +
             borrowing.numberValue +
-            otherFinancialIncomeCash.numberValue) +
+            otherFinancialIncomeCash.numberValue) -
         (repurchaseOfStock.numberValue +
             dividends.numberValue +
             repaymentOfLoans.numberValue +
             otherFinancialOutgoingCash.numberValue));
-    netIncreaseIncash = netCashInvestment + netCashFlowFinancing;
     cashAtEndOfYear =
         (netCashFlowOperations + netCashInvestment + netCashFlowFinancing);
   }

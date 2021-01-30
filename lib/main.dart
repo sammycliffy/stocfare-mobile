@@ -26,7 +26,7 @@ getToken() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GlobalConfiguration().loadFromAsset("url");
+  await GlobalConfiguration().loadFromAsset("live_url");
   getToken();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(

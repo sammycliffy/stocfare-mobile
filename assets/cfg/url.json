@@ -11,7 +11,7 @@
   "analytics-details": "https://stockfare-io.herokuapp.com/api/v1/analytics/list-sales/",
   "product-analytics-details": "http://stockfare-io.herokuapp.com/api/v1/analytics/product-analysis-detail/",
   "get-sales": "https://stockfare-io.herokuapp.com/api/v1/sales/sales/",
-  "create-sales": "http://stockfare-io.herokuapp.com/api/v1/sales/create-sale/",
+  "create-sales": "https://stockfare-io.herokuapp.com/api/v1/sales/create-sale/",
   "get-workers-list": "https://stockfare-io.herokuapp.com/api/v1/agents/",
   "add-worker": "https://stockfare-io.herokuapp.com/api/v1/agents/register-worker/",
   "delete-worker": "https://stockfare-io.herokuapp.com/api/v1/agents/delete-worker/",

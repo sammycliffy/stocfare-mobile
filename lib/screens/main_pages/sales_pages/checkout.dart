@@ -179,87 +179,40 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                     SizedBox(height: 20),
                     Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(
-                            width: 120,
-                            child: TextFormField(
-                              keyboardType: TextInputType.number,
-                              onChanged: (val) => setState(() {
-                                tax = int.parse(val);
-                              }),
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                filled: true,
-                                contentPadding: EdgeInsets.all(12),
-                                labelStyle: TextStyle(
-                                    color: Theme.of(context).primaryColor),
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .focusColor
-                                            .withOpacity(0.2))),
-                                hintStyle: TextStyle(
-                                    color: Theme.of(context)
-                                        .focusColor
-                                        .withOpacity(0.7)),
-                                hintText: 'Tax',
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .focusColor
-                                            .withOpacity(0.2))),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .focusColor
-                                            .withOpacity(0.5))),
-                              ),
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          SizedBox(
-                            width: 120,
-                            child: TextFormField(
-                              keyboardType: TextInputType.number,
-                              onChanged: (val) => setState(() {
-                                customerChange = int.parse(val);
-                              }),
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                filled: true,
-                                contentPadding: EdgeInsets.all(12),
-                                labelStyle: TextStyle(
-                                    color: Theme.of(context).primaryColor),
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .focusColor
-                                            .withOpacity(0.2))),
-                                hintStyle: TextStyle(
-                                    color: Theme.of(context)
-                                        .focusColor
-                                        .withOpacity(0.7)),
-                                hintText: 'Change',
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .focusColor
-                                            .withOpacity(0.2))),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .focusColor
-                                            .withOpacity(0.5))),
-                              ),
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                          SizedBox(width: 50),
-                        ],
+                      padding: const EdgeInsets.only(right: 20),
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        onChanged: (val) => setState(() {
+                          customerChange = int.parse(val);
+                        }),
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          contentPadding: EdgeInsets.all(12),
+                          labelStyle:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .focusColor
+                                  .withOpacity(0.7)),
+                          hintText: 'Change',
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .focusColor
+                                      .withOpacity(0.5))),
+                        ),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -544,12 +497,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     _prices.reduce((a, b) => a + b))
                                 .catchError((e) {
                               return null;
-                            }).timeout(Duration(seconds: 10),
-                                    onTimeout: () => null);
+                            });
 
-                            if (_createSales == null) {
+                            if (_createSales != 200) {
+                              Navigator.pop(context);
                               setState(() {
-                                _error = 'Network Error, please try again.';
+                                _error = '$_createSales';
 
                                 _displaySnackBar(context);
                               });
@@ -664,6 +617,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       onChanged: (val) => setState(() {
                             editedPrice = int.parse(val);
                           }),
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: price,
                         hintText: price,

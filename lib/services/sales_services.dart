@@ -203,6 +203,7 @@ class SalesServices {
     final String url = GlobalConfiguration().get("create-sales") + '$branchId/';
     String _error = '';
     try {
+      print(url);
       final http.Response response = await http
           .post(url,
               headers: <String, String>{
@@ -242,7 +243,6 @@ class SalesServices {
       }
     } catch (e) {
       print(e.toString());
-      return Future.error(_error);
     }
   }
 
